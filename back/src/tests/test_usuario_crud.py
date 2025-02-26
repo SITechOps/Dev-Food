@@ -1,5 +1,5 @@
 import pytest
-from back.src.model.repositories.RepUsuario import RepositoryUsuario
+from src.model.repositories.RepUsuario import RepositoryUsuario
 
 db = RepositoryUsuario()
 
