@@ -116,7 +116,7 @@ docker ps
 
 ### 🔹 Entrar no terminal do container
 ```bash
-docker exec -it mysql-container bash
+docker exec -it mysql_container bash
 ```
 
 ### 🔹 Acessar o MySQL
