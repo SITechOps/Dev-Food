@@ -17,7 +17,11 @@ export default function ModalEndereco() {
 				<legend className="text-center !mb-[2rem]">
 					Entregamos tudo o que precisa na porta da sua casa, informe seu endereço
 				</legend>
+<<<<<<< HEAD
 				<div className="teste">
+=======
+				<div className="">
+>>>>>>> 48134fa (nova tela modal)
 					<Input type="text" value={pesquisa} placeholder={"Digite o endereço..."} onChange={setPesquisa} className="!p-4 mb-6" />
 					<Input type="text" value={pesquisa} placeholder={"Digite o endereço..."} onChange={setPesquisa} className="!p-4 mb-6" />
 					<Input type="text" value={pesquisa} placeholder={"Digite o endereço..."} onChange={setPesquisa} className="!p-4 mb-6" />

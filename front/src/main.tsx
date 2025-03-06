@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
+import CadastroEndereco from "./pages/CadastroEndereco/CadastroEndereco.tsx";
 
 const router = createBrowserRouter([
   {
