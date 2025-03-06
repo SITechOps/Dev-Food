@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@import "tailwindcss/theme";
+
+body{
+  width: 80%;
+  margin: 0 auto;
+  background-color: white;
+
+  p, h1, h2, h3, input, select, label, legend{
+    color: var(--color-blue);
+    font-family: var(--font-Dosis);
+  }
+
+  h1{
+    font-size: var(--font-h1);
+  }
+  
+  h2{
+    font-size: var(--font-h2);
+  }
+  
+  h3{
+    font-size: var(--font-h3);
+  }
+  
+  p{
+    font-size: var(--font-p);
+  }
+}
+
+
+body::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-brown-ligth);
+  left: 0;
+  top: 0;
+  clip-path: ellipse(50% 100% at left center); /* Forma arredondada na borda esquerda */
+  z-index: -1;
+}
+
+@theme {
+  /* Variavéis de FONTE  */
+  --font-Dosis: "Dosis", serif;
+  --font-h1: 2.25rem; /* 36px */
+  --font-h2: 1.875rem; /* 30px */
+  --font-h3: 1.5rem;   /* 24px */
+  --font-p: 1rem;     /* 16px */
+
+
+  /* Variaveis das CORES  */
+  --color-gray-claro: #f1f1f1;
+  --color-gray-medio: #a9a9a9;
+  --color-green: #b5c865;
+  --color-blue: #374957;
+  --color-brown-ligth: #fdedee;
+  --color-brown-ligth-active: #fac8cb;
+  --color-brown-normal: #ee4c58;
+  --color-brown-dark: #c0434d;
+}
+
