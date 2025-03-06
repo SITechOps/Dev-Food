@@ -44,7 +44,13 @@ export default function Cadastro() {
         Como deseja continuar?
       </legend>
       <div className="w-full">
-        <Input label="Informe o seu nome:" id="nome" type="text" value={nome} placeholder={"Fulando de tal"} onChange={setNome} />
+        {/* 
+        rua, av bla 
+        numero
+        completo
+         */}
+
+        <Input label="Informe o seu nome:" id="nome" type="text" value={nome} placeholder={"Fulando de tal"} onChange={setNome} /> 
         <Input label="Informe o seu email:" id="email" type="email" value={email} placeholder={"fulando@exemplo.com"} onChange={setEmail} />
         <Input label="Informe uma senha:" id="senha" type="text" value={senha} onChange={setSenha} />
       </div>

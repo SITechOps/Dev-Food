@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import CadastroEndereco from "./pages/CadastroEndereco/CadastroEndereco.tsx";
+import ModalEndereco from "./pages/CadastroEndereco/ModalEndereco.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,14 @@ const router = createBrowserRouter([
   {
     path: "/cadastro",
     element: <Cadastro />,
+  },
+  {
+    path: "/cadastro-endereco",
+    element: <CadastroEndereco />,
+  },
+  {
+    path: "/modal-endereco",
+    element: <ModalEndereco />,
   }
 ]);
 
