@@ -21,8 +21,11 @@ export default function Cadastro() {
     return true;
   };
 
+  function fazerLogin(){
+    console.log('login realizado')
+  }
+
   function handleSubmit() {
-    console.log("oie");
     localStorage.setItem("nomeUsuario", nome);
     localStorage.setItem("nomeEmail", email);
 
@@ -31,36 +34,36 @@ export default function Cadastro() {
     }
   }
 
-  return (
-    <div className="space-y-4 p-8 mt-6 bg-white rounded-md shadow flex flex-col w-100">
-      <legend className="text-center">Falta pouco para matar sua fome!</legend>
-      <Input
-        label="Informe o seu nome:"
-        id="nome"
-        type="text"
-        value={nome}
-        placeholder={"Fulando de tal"}
-        onChange={setNome}
-      />
-      <Input
-        label="Informe o seu email:"
-        id="email"
-        type="email"
-        value={email}
-        placeholder={"fulando@exemplo.com"}
-        onChange={setEmail}
-      />
-      <Input
-        label="Informe sua Senha:"
-        id="senha"
-        type="text"
-        value={senha}
-        onChange={setSenha}
-      />
+  function cadastroGoogle(){
+    console.log('feito o cadastro com o google')
+  }
 
-      <Button variant="filled" onClick={handleSubmit}>
+  return (
+    <form className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col w-100" onSubmit={handleSubmit}>
+      <legend className="text-center !mb-2">
+        Como deseja continuar?
+      </legend>
+      <div className="w-full">
+        <Input label="Informe o seu nome:" id="nome" type="text" value={nome} placeholder={"Fulando de tal"} onChange={setNome} />
+        <Input label="Informe o seu email:" id="email" type="email" value={email} placeholder={"fulando@exemplo.com"} onChange={setEmail} />
+        <Input label="Informe uma senha:" id="senha" type="text" value={senha} onChange={setSenha} />
+      </div>
+
+      <div className="flex justify-end">
+        <span className="text-gray-medio">Já tenho conta</span>
+        <Button variant="plain" onClick={fazerLogin} className="!w-[6rem] !p-0 !m-0">
+          Fazer login
+        </Button>
+      </div>
+
+      <Button variant="filled" onClick={handleSubmit} className="!mt-5">
         Continuar
       </Button>
-    </div>
+
+      <span className="text-center text-gray-medio mt-4">-------------- OU --------------</span>
+      <Button variant="filledIcon" color='secundary' img onClick={cadastroGoogle} className="!mt-6">
+        Fazer cadastro com o Google
+      </Button>
+    </form>
   );
 }

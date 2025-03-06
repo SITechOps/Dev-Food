@@ -2,9 +2,9 @@ import Cadastro from "./pages/Cadastro";
 
 function App() {
   return (
-    <div className="w-screen h-screen bg-red-100 flex flex-col items-center p-6">
-      <h1 className="text-3xl text-stone-950 font-bold text-center m-2">
-        Cadastre-se
+    <div className="flex flex-col items-center justify-center min-h-screen w-full m-auto">
+      <h1 className="text-3xl font-bold text-center m-2">
+      Falta pouco para matar sua fome!
       </h1>
       <Cadastro />
     </div>
