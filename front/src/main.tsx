@@ -9,6 +9,7 @@ import Account from "./pages/Account/Account.tsx";
 import { AuthProvider } from "./connection/AuthContext"; 
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import CadastroEndereco from "./pages/CadastroEndereco/CadastroEndereco.tsx";
 
 const router = createBrowserRouter([
   {
