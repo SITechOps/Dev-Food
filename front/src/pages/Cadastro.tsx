@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { data, useNavigate } from "react-router-dom";
+import { FormEvent, useState } from "react";
 import Button from "../componentes/Button";
 import Input from "../componentes/Input";
+import { api } from "../connection/axios";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -21,8 +22,8 @@ export default function Cadastro() {
     return true;
   };
 
-  function fazerLogin(){
-    console.log('login realizado')
+  function fazerLogin() {
+    console.log("login realizado");
   }
 
   function handleSubmit() {
@@ -34,24 +35,65 @@ export default function Cadastro() {
     }
   }
 
-  function cadastroGoogle(){
-    console.log('feito o cadastro com o google')
+  function cadastroGoogle() {
+    console.log("feito o cadastro com o google");
+  }
+
+  async function cadastrarUsuario(context: FormEvent<HTMLFormElement>) {
+    context.preventDefault();
+    const dados = new FormData(context.currentTarget);
+    const nomeForm = dados.get("nome")?.toString();
+    const emailForm = dados.get("email")?.toString();
+    const senhaForm = dados.get("senha")?.toString();
+
+    await api.post("/user", {
+      data: {
+        nome: nomeForm,
+        email: emailForm,
+        senha: senhaForm,
+      },
+    });
   }
 
   return (
-    <form className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col w-100" onSubmit={handleSubmit}>
-      <legend className="text-center !mb-2">
-        Como deseja continuar?
-      </legend>
+    <form
+      className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col w-100"
+      onSubmit={cadastrarUsuario}
+    >
+      <legend className="text-center !mb-2">Como deseja continuar?</legend>
       <div className="w-full">
-        <Input label="Informe o seu nome:" id="nome" type="text" value={nome} placeholder={"Fulando de tal"} onChange={setNome} />
-        <Input label="Informe o seu email:" id="email" type="email" value={email} placeholder={"fulando@exemplo.com"} onChange={setEmail} />
-        <Input label="Informe uma senha:" id="senha" type="text" value={senha} onChange={setSenha} />
+        <Input
+          label="Informe o seu nome:"
+          id="nome"
+          type="text"
+          value={nome}
+          placeholder={"Fulando de tal"}
+          onChange={setNome}
+        />
+        <Input
+          label="Informe o seu email:"
+          id="email"
+          type="email"
+          value={email}
+          placeholder={"fulando@exemplo.com"}
+          onChange={setEmail}
+        />
+        <Input
+          label="Informe uma senha:"
+          id="senha"
+          type="text"
+          value={senha}
+          onChange={setSenha}
+        />
       </div>
 
       <div className="flex justify-end">
         <span className="text-gray-medio">Já tenho conta</span>
-        <Button variant="plain" onClick={fazerLogin} className="!w-[6rem] !p-0 !m-0">
+        <Button
+          variant="plain"
+          onClick={fazerLogin}
+          className="!w-[6rem] !p-0 !m-0"
+        >
           Fazer login
         </Button>
       </div>
@@ -60,12 +102,18 @@ export default function Cadastro() {
         Continuar
       </Button>
 
-      <span className="text-center text-gray-medio mt-4">-------------- OU --------------</span>
-      <Button variant="filledIcon" color='secundary' img onClick={cadastroGoogle} className="!mt-6">
+      <span className="text-center text-gray-medio mt-4">
+        -------------- OU --------------
+      </span>
+      <Button
+        variant="filledIcon"
+        color="secundary"
+        img
+        onClick={cadastroGoogle}
+        className="!mt-6"
+      >
         Fazer cadastro com o Google
       </Button>
     </form>
   );
 }
-
-
