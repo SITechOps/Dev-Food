@@ -5,7 +5,6 @@ import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
-import CadastroEndereco from "./pages/CadastroEndereco.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,11 +18,7 @@ const router = createBrowserRouter([
   {
     path: "/cadastro",
     element: <Cadastro />,
-  },
-  {
-    path: "/cadastro-endereco",
-    element: <CadastroEndereco />,
-  },
+  }
 ]);
 
 createRoot(document.getElementById("root")!).render(
