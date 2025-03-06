@@ -1,33 +1,15 @@
 @import "tailwindcss";
 @import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+
 
 body{
   width: 80%;
   margin: 0 auto;
   background-color: white;
-
-  p, h1, h2, h3, input, select, label, legend{
-    color: var(--color-blue);
-    font-family: var(--font-Dosis);
-  }
-
-  h1{
-    font-size: var(--font-h1);
-  }
+  margin: 0 auto;
   
-  h2{
-    font-size: var(--font-h2);
-  }
-  
-  h3{
-    font-size: var(--font-h3);
-  }
-  
-  p{
-    font-size: var(--font-p);
-  }
 }
-
 
 body::before {
   content: "";
@@ -41,13 +23,41 @@ body::before {
   z-index: -1;
 }
 
+@layer utilities  {
+  .icon{
+    @apply text-brown-normal text-[1.5rem] 
+    
+  }
+  p, h1, h2, h3, input, select, label, legend{
+    @apply text-blue font-Dosis
+    
+  }
+
+  h1{
+     @apply text-[2.25rem];
+  }
+
+  h2{
+     @apply text-[1.875rem];
+  }
+
+  h3{
+     @apply text-[1.5rem];
+  }
+
+ p{
+     @apply text-[1rem];
+  }
+}
+
+
 @theme {
   /* Variavéis de FONTE  */
   --font-Dosis: "Dosis", serif;
-  --font-h1: 2.25rem; /* 36px */
-  --font-h2: 1.875rem; /* 30px */
-  --font-h3: 1.5rem;   /* 24px */
-  --font-p: 1rem;     /* 16px */
+  /*--font-h1: 2.25rem;  36px */
+  /*--font-h2: 1.875rem;  30px */
+  /*--font-h3: 1.5rem;   24px */
+  /*--font-p: 1rem;     16px */
 
 
   /* Variaveis das CORES  */
@@ -60,4 +70,7 @@ body::before {
   --color-brown-normal: #ee4c58;
   --color-brown-dark: #c0434d;
 }
+
+
+
 
