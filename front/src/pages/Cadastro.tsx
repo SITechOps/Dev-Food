@@ -30,7 +30,7 @@ export default function Cadastro() {
     localStorage.setItem("nomeEmail", email);
 
     if (validarCampos()) {
-      navigate("/home");
+      navigate("/account");
     }
   }
 
