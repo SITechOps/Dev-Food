@@ -10,6 +10,7 @@ import { AuthProvider } from "./connection/AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CadastroEndereco from "./pages/CadastroEndereco/CadastroEndereco.tsx";
+import ModalEndereco from "./pages/CadastroEndereco/ModalEndereco.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
   {
     path: "/account",
     element: <Account />,
+  },
+  {
+    path: "/cadastro-endereco",
+    element: <CadastroEndereco />,
+  },
+  {
+    path: "/modal-endereco",
+    element: <ModalEndereco />,
   }
 ]);
 

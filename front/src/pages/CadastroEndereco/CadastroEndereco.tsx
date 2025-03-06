@@ -1,13 +1,18 @@
 import { useState } from "react";
 import Button from "../../componentes/Button";
 import Input from "../../componentes/Input";
+import { useNavigate } from "react-router-dom";
 
 export default function CadastroEndereco() {
 	const [pesquisa, setPesquisa] = useState("");
+	const navigate = useNavigate();
+
 
 	const handleSearch = (e: any) => {
 		e.preventDefault()
 		console.log("Realizando pesquisa sobre:", pesquisa);
+		navigate("/modal-endereco");
+
 	};
 	return (
 		<section className="flex flex-col items-center justify-center min-h-screen w-full m-auto">
