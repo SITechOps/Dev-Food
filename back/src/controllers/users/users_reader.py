@@ -12,7 +12,14 @@ class UsersReader:
         users = self.__users_repo.list_users()
 
         if not users:
-            raise Exception("No users in the list!")
+            return HttpResponse(
+                body={
+                    "data": {
+                        "message": "Não há usuários cadastrados!"
+                    }
+                },
+                status_code=200
+                )
 
         return self.__format_response(users)
 
