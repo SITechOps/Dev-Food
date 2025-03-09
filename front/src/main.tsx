@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import Account from "./pages/Account/Account.tsx";
+import { GoogleOAuthProvider } from "@react-oauth/google"
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+  <GoogleOAuthProvider clientId='712065091138-0iaa0qpolcm1646nmnd91thctaqinv9v.apps.googleusercontent.com'>
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>
+  </GoogleOAuthProvider>
 );
