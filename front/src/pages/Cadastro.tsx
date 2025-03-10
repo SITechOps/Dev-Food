@@ -2,8 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Button from "../componentes/Button";
 import Input from "../componentes/Input";
+import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from '@react-oauth/google';
 
 export default function Cadastro() {
+
+  //google messages handlers
+  const responseMessage = (response) => {
+    console.log(response);
+  };
+  const errorMessage = (error) => {
+      console.log(error);
+  };
+  const [ user, setUser ] = useState([]);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -25,6 +36,12 @@ export default function Cadastro() {
     console.log('login realizado')
   }
 
+  //login com o google
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log('Login Failed:', error)
+  });
+
   function handleSubmit() {
     localStorage.setItem("nomeUsuario", nome);
     localStorage.setItem("nomeEmail", email);
@@ -33,11 +50,6 @@ export default function Cadastro() {
       navigate("/account");
     }
   }
-
-  function cadastroGoogle(){
-    console.log('feito o cadastro com o google')
-  }
-
   return (
     <form className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col w-100" onSubmit={handleSubmit}>
       <legend className="text-center !mb-2">
@@ -59,11 +71,10 @@ export default function Cadastro() {
       <Button variant="filled" onClick={handleSubmit} className="!mt-5">
         Continuar
       </Button>
-
       <span className="text-center text-gray-medio mt-4">-------------- OU --------------</span>
-      <Button variant="filledIcon" color='secundary' img onClick={cadastroGoogle} className="!mt-6">
-        Fazer cadastro com o Google
-      </Button>
+      <div className="items-center justify-center flex w-full">
+        <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+      </div>
     </form>
   );
 }
