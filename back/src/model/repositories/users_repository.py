@@ -11,6 +11,7 @@ class UsersRepository(IUsersRepository):
                 new_user = User(nome=nome, email=email, senha=senha, is_admin=is_admin)  
                 db.session.add(new_user)
                 db.session.commit()
+                return new_user.id
             except Exception as exception:
                 db.session.rollback()
                 raise exception
@@ -48,16 +49,14 @@ class UsersRepository(IUsersRepository):
             return user
     
 
-    def update_user(self, user_id: int, nome: str, email: str, senha: str, is_admin: bool) -> None:
+    def update_user(self, user_id: int, nome: str, senha: str) -> None:
         with DBConnectionHandler() as db:
             try:
                 user = self.get_user_by_id(user_id)     
                 if not user:
                     raise Exception("User not found!")      
                 user.nome = nome
-                user.email = email
                 user.senha = senha
-                user.is_admin = is_admin
                 db.session.add(user)
                 db.session.commit()
             except Exception as exception:

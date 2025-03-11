@@ -22,7 +22,7 @@ class IUsersRepository(ABC):
 
 
     @abstractmethod
-    def update_user(self, user_id: int, nome: str, email: str, senha: str, is_admin: bool) -> None: pass
+    def update_user(self, user_id: int, nome: str, senha: str) -> None: pass
 
 
     @abstractmethod

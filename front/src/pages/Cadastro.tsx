@@ -24,7 +24,8 @@ export default function Cadastro() {
     return true;
   };
 
-  function fazerLogin() {
+  function fazerLogin(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
     console.log("login realizado");
   }
 
@@ -35,20 +36,23 @@ export default function Cadastro() {
     const email = dados.get("email")?.toString();
     const senha = dados.get("senha")?.toString();
 
-    await api.post("/user", {
-      data: {
-        nome,
-        email,
-        senha,
-      },
-    });
+    try {
+      const response = await api.post("/user", {
+        data: { nome, email, senha },
+      });
 
-    localStorage.setItem("nomeUsuario", nome || "");
-    localStorage.setItem("emailUsuario", email || "");
-    localStorage.setItem("senhaUsuario", senha || "");
+      const userId = response.data.userInfo.id;
 
-    if (validarCampos()) {
-      navigate("/account");
+      localStorage.setItem("nomeUsuario", nome || "");
+      localStorage.setItem("emailUsuario", email || "");
+      localStorage.setItem("senhaUsuario", senha || "");
+      localStorage.setItem("userId", userId);
+
+      if (validarCampos()) {
+        navigate("/account");
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
     }
   }
 
@@ -64,11 +68,18 @@ export default function Cadastro() {
     onError: (error) => console.log("Login Failed:", error),
   });
 
+  const verificarEmail = () => {
+    console.log("Verificando email:", email);
+    // Adicione aqui a lógica para verificar o email
+  };
+
   return (
     <div className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">
       <form onSubmit={cadastrarUsuario}>
-        <legend className="text-center !mb-2">Como deseja continuar?</legend>
-        <div className="w-full">
+        <legend className="text-center mb-4 text-2xl">
+          Como deseja continuar?
+        </legend>
+        <div className="w-full space-y-4">
           <Input
             label="Informe o seu nome:"
             id="nome"
@@ -77,18 +88,22 @@ export default function Cadastro() {
             placeholder={"Fulando de tal"}
             onChange={setNome}
           />
-          <Input
-            label="Informe o seu email:"
-            id="email"
-            type="email"
-            value={email}
-            placeholder={"fulando@exemplo.com"}
-            onChange={setEmail}
-          />
+          <div className="flex items-center justify-end space-x-2">
+            <Input
+              label="Informe o seu email:"
+              id="email"
+              type="email"
+              value={email}
+              placeholder={"fulando@exemplo.com"}
+              onChange={setEmail}
+              className="flex-grow"
+            />
+          </div>
           <Input
             label="Informe uma senha:"
             id="senha"
             type="text"
+            placeholder={"Digite sua senha"}
             value={senha}
             onChange={setSenha}
           />

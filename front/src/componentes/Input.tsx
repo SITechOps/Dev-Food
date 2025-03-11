@@ -11,7 +11,7 @@ export default function Input({
   onChange,
 }: IInputProps) {
   return (
-    <div className="flex flex-col">
+    <div className="">
       <label htmlFor={id} className="font-medium !m-0 py-2">
         {label}
       </label>

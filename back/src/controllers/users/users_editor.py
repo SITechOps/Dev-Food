@@ -9,13 +9,12 @@ class UsersEditor:
 
 
     def update_user(self, http_request: HttpRequest) -> HttpResponse:
+        print(http_request)
         users_info = http_request.body["data"]
 
         user_id = int(http_request.params["id"])
         user_name = users_info["nome"]
-        user_email = users_info["email"]
         user_passwd = users_info["senha"]
-        user_is_admin = users_info["is_admin"]
 
         if not self.__check_user(user_id):
             return HttpResponse(
@@ -23,7 +22,7 @@ class UsersEditor:
                 status_code=404
             )
 
-        return self.__update_user(user_id, user_name, user_email, user_passwd, user_is_admin)
+        return self.__update_user(user_id, user_name, user_passwd)
 
 
     def __check_user(self, user_id: int) -> bool:
@@ -31,9 +30,9 @@ class UsersEditor:
         return user is not None
 
 
-    def __update_user(self, user_id: int, user_name: str, user_email: str, user_passwd: str, is_admin: bool) -> HttpResponse:
+    def __update_user(self, user_id: int, user_name: str, user_passwd: str) -> HttpResponse:
         try:
-            self.__users_repo.update_user(user_id, user_name, user_email, user_passwd, is_admin)
+            self.__users_repo.update_user(user_id, user_name, user_passwd)
             return self.__format_response(user_id)
         
         except Exception as e:
@@ -49,7 +48,7 @@ class UsersEditor:
                 "data": {
                     "Type": "User",
                     "count": 1,
-                    "attributes": user_id,
+                    "UserId": user_id,
                     "response": "User updated!"
                 }
             },

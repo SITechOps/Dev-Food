@@ -15,8 +15,8 @@ class UsersCreator:
         user_passwd = users_info["senha"]
 
         self.__check_user(user_email)
-        self.__create_user(user_name, user_email, user_passwd)
-        return self.__format_response(user_name, user_email, user_passwd)
+        id_user = self.__create_user(user_name, user_email, user_passwd)
+        return self.__format_response(id_user, user_name, user_email, user_passwd)
 
 
     def __check_user(self, user_email: str) -> None:
@@ -25,14 +25,16 @@ class UsersCreator:
 
 
     def __create_user(self, user_name: str, user_email: str, user_passwd: str) -> None:
-        self.__users_repo.create_user(user_name, user_email, user_passwd)
+        id_user = self.__users_repo.create_user(user_name, user_email, user_passwd)
+        return id_user
 
 
-    def __format_response(self, user_name: str, user_email: str, user_passwd: str) -> HttpResponse:
+    def __format_response(self, user_id: int, user_name: str, user_email: str, user_passwd: str) -> HttpResponse:
         return HttpResponse(
             body={
-                "data": {
+                "userInfo": {
                     "Type": "User",
+                    "id": user_id,
                     "count": 1,
                     "attributes": {
                         "nome": user_name,

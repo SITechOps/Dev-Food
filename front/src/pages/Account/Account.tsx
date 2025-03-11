@@ -6,12 +6,14 @@ import { AiOutlineDelete } from "react-icons/ai";
 import Input from "../../componentes/Input";
 import Button from "../../componentes/Button";
 import { api } from "../../connection/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Account() {
   const [isEditing, setIsEditing] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const nomeUsuario = localStorage.getItem("nomeUsuario") || "";
@@ -25,15 +27,17 @@ export default function Account() {
   async function alterarUsuario(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const dados = new FormData(event.currentTarget);
-    const nome = dados.get("nome");
-    const email = dados.get("email");
-    const senha = dados.get("senha");
+    const nome = dados.get("nome")?.toString();
+    const senha = dados.get("senha")?.toString();
+    const idUsuario = localStorage.getItem("userId");
 
     try {
-      await api.put(`/user/${email}`, { nome, senha });
+      await api.put(`/user/${idUsuario}`, { data: { nome, senha } });
       alert("Usuário alterado com sucesso!");
+
+      localStorage.setItem("nomeUsuario", nome || "");
+      localStorage.setItem("senhaUsuario", senha || "");
     } catch (error) {
-      console.error("Erro ao alterar usuário:", error);
       alert("Erro ao alterar usuário. Tente novamente.");
     }
   }
@@ -42,12 +46,19 @@ export default function Account() {
     setIsEditing(!isEditing);
   }
 
-  const handleSave = () => {
-    // Aqui você pode salvar as alterações no localStorage ou fazer outra lógica
-    // localStorage.setItem("nomeUsuario", nomeEdit);
-    // localStorage.setItem("nomeEmail", emailEdit);
-    setIsEditing(false); // Desativa o modo de edição
-  };
+  async function deletarUsuario() {
+    const idUsuario = localStorage.getItem("userId");
+    try {
+      await api.delete(`/user/${idUsuario}`);
+      alert("Usuário removido com sucesso!");
+
+      localStorage.clear();
+      navigate("/cadastro");
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao deletar usuário. Tente novamente.");
+    }
+  }
 
   return (
     <section className="flex flex-col items-center justify-center !m-auto !mt-[3rem] bg-white rounded-md shadow w-[50%] !p-5">
@@ -70,6 +81,7 @@ export default function Account() {
             id="deletar"
             type="submit"
             className="icon cursor-pointer"
+            onClick={deletarUsuario}
           />
         </div>
 
@@ -85,7 +97,14 @@ export default function Account() {
         <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
           Email:
           {isEditing ? (
-            <Input type="text" id="email" value={email} onChange={setEmail} />
+            <Input
+              type="text"
+              id="email"
+              value={email}
+              onChange={setEmail}
+              disabled={true}
+              className="cursor-not-allowed"
+            />
           ) : (
             <span className="!font-semibold">{email}</span>
           )}
@@ -109,9 +128,8 @@ export default function Account() {
 
         {/* Botão para salvar alterações */}
         {isEditing && (
-          <Button type="submit" className="mt-[3rem]">
-            {" "}
-            Salvar{" "}
+          <Button type="submit" className="mt-[3rem] cursor-pointer">
+            Salvar
           </Button>
         )}
       </form>
