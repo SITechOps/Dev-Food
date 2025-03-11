@@ -1,29 +1,51 @@
-import { useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import { PiUserFocusThin } from "react-icons/pi";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Input from "../../componentes/Input";
 import Button from "../../componentes/Button";
+import { api } from "../../connection/axios";
 
 export default function Account() {
-  // Defina um valor padrão para os campos
-  const nome = localStorage.getItem("nomeUsuario") || "";  // Valor padrão vazio se for null
-  const email = localStorage.getItem("nomeEmail") || "";  // Valor padrão vazio se for null
-
-  // Crie estados para controlar os campos editáveis
   const [isEditing, setIsEditing] = useState(false);
-  const [nomeEdit, setNomeEdit] = useState(nome);
-  const [emailEdit, setEmailEdit] = useState(email);
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
-  const handleEditClick = () => {
-    setIsEditing(true); // Ativa o modo de edição
-  };
+  useEffect(() => {
+    const nomeUsuario = localStorage.getItem("nomeUsuario") || "";
+    const emailUsuario = localStorage.getItem("emailUsuario") || "";
+    const senhaUsuario = localStorage.getItem("senhaUsuario") || "";
+    setNome(nomeUsuario);
+    setEmail(emailUsuario);
+    setSenha(senhaUsuario);
+  }, []);
+
+  async function alterarUsuario(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const dados = new FormData(event.currentTarget);
+    const nome = dados.get("nome");
+    const email = dados.get("email");
+    const senha = dados.get("senha");
+
+    try {
+      await api.put(`/user/${email}`, { nome, senha });
+      alert("Usuário alterado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao alterar usuário:", error);
+      alert("Erro ao alterar usuário. Tente novamente.");
+    }
+  }
+
+  function handleEditUser() {
+    setIsEditing(!isEditing);
+  }
 
   const handleSave = () => {
     // Aqui você pode salvar as alterações no localStorage ou fazer outra lógica
-    localStorage.setItem("nomeUsuario", nomeEdit);
-    localStorage.setItem("nomeEmail", emailEdit);
+    // localStorage.setItem("nomeUsuario", nomeEdit);
+    // localStorage.setItem("nomeEmail", emailEdit);
     setIsEditing(false); // Desativa o modo de edição
   };
 
@@ -37,50 +59,62 @@ export default function Account() {
         <PiUserFocusThin className="text-[8rem] text-gray-medio" />
       </div>
 
-      <div className="text-center !mt-5">
+      <form onSubmit={alterarUsuario} className="text-center !mt-5">
         <div id="icones-de-acao" className="flex gap-4 justify-end">
           <FiEdit2
             id="Editar"
             className="icon cursor-pointer"
-            onClick={handleEditClick}
+            onClick={handleEditUser}
           />
-          <AiOutlineDelete id="deletar" className="icon cursor-pointer" />
+          <AiOutlineDelete
+            id="deletar"
+            type="submit"
+            className="icon cursor-pointer"
+          />
         </div>
 
-        <p className="uppercase !pt-5 text-xl !font-semibold">
+        <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
+          Nome:
           {isEditing ? (
-			<Input
-              value={nomeEdit}
-              onChange={setNomeEdit}
-            />
+            <Input type="text" id="nome" value={nome} onChange={setNome} />
           ) : (
-            nomeEdit
+            <span className="!font-semibold">{nome}</span>
           )}
         </p>
 
         <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
-          Email:{" "}
+          Email:
           {isEditing ? (
-			<Input
-			type="email"
-			value={emailEdit}
-			onChange={setEmailEdit}
-		  />
+            <Input type="text" id="email" value={email} onChange={setEmail} />
           ) : (
-            <span className="!font-semibold">{emailEdit}</span>
+            <span className="!font-semibold">{email}</span>
           )}
         </p>
 
-        <p className="!pt-4 text-lg">
-          Endereço: <span className="!font-semibold">Rua Da Saúde nº12 - 06352-663 - SP</span>
+        <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
+          Senha:
+          {isEditing ? (
+            <Input type="text" id="senha" value={senha} onChange={setSenha} />
+          ) : (
+            <span className="!font-semibold">{senha}</span>
+          )}
         </p>
+
+        {/* <p className="!pt-4 text-lg">
+          Endereço:{" "}
+          <span className="!font-semibold">
+            Rua Da Saúde nº12 - 06352-663 - SP
+          </span>
+        </p> */}
 
         {/* Botão para salvar alterações */}
         {isEditing && (
-          <Button onClick={handleSave} className="mt-[3rem]"> Salvar </Button>
+          <Button type="submit" className="mt-[3rem]">
+            {" "}
+            Salvar{" "}
+          </Button>
         )}
-      </div>
-
+      </form>
     </section>
   );
 }

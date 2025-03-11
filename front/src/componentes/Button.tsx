@@ -5,7 +5,8 @@ export default function Button({
   color = "default",
   variant = "filled",
   img = false,
-  className =  "",
+  className = "",
+  type,
   onClick,
 }: {
   children: React.ReactNode;
@@ -13,10 +14,10 @@ export default function Button({
   variant?: IButtonPropsVariant;
   img?: boolean;
   className?: string;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  type?: "submit" | "reset" | "button";
+  onClick?: (event: React.MouseEvent<HTMLButtonElement> | any) => void;
 }) {
-  const defaultButtonClasses =
-    "font-Dosis font-medium p-4 rounded-sm w-full";
+  const defaultButtonClasses = "font-Dosis font-medium p-4 rounded-sm w-full";
 
   const variants = {
     filled: {
@@ -45,10 +46,11 @@ export default function Button({
   };
   return (
     <button
-    className={`${defaultButtonClasses} ${variants[variant][color]} ${className}`} 
-    onClick={onClick}    
+      className={`${defaultButtonClasses} ${variants[variant][color]} ${className}`}
+      onClick={onClick}
+      type={type}
     >
-      {img ? <img src="img/google.svg" alt="" className="w-6 pr-2" /> : null}
+      {img ? <img src="img/google.svg" alt="" className="size-4" /> : null}
       {children}
     </button>
   );
