@@ -37,6 +37,8 @@ export default function Account() {
 
       localStorage.setItem("nomeUsuario", nome || "");
       localStorage.setItem("senhaUsuario", senha || "");
+      setIsEditing(false)
+      
     } catch (error) {
       alert("Erro ao alterar usuário. Tente novamente.");
     }
@@ -53,7 +55,7 @@ export default function Account() {
       alert("Usuário removido com sucesso!");
 
       localStorage.clear();
-      navigate("/cadastro");
+      navigate("/");
     } catch (error) {
       console.error(error);
       alert("Erro ao deletar usuário. Tente novamente.");

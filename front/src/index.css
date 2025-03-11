@@ -5,9 +5,8 @@
 
 body{
   width: 80%;
-  margin: 0 auto;
+  margin: auto;
   background-color: white;
-  margin: 0 auto;
   
 }
 
@@ -29,7 +28,7 @@ body::before {
     
   }
   p, h1, h2, h3, input, select, label, legend{
-    @apply text-blue font-Dosis
+    @apply !text-blue font-Dosis
     
   }
 

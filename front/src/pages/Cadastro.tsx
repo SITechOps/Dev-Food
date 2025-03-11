@@ -121,7 +121,7 @@ export default function Cadastro() {
         </div>
 
         <Button variant="filled" type="submit" className="!mt-5">
-          Continuar
+          Cadastrar
         </Button>
       </form>
       <span className="text-center text-gray-medio mt-4 mb-6">

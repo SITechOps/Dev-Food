@@ -7,6 +7,7 @@ import Home from "./pages/Home.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import Account from "./pages/Account/Account.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google"
+import Login from "./pages/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "/cadastro",
     element: <Cadastro />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
   {
     path: "/account",
