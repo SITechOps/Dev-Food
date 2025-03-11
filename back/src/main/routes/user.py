@@ -13,7 +13,6 @@ from src.model.repositories.users_repository import UsersRepository
 
 user_route_bp = Blueprint('user_route', __name__)
 
-
 @user_route_bp.route('/user', methods=['POST'])
 def create_new_user():
     users_creator_validator(request)

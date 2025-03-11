@@ -1,10 +1,9 @@
-import { data, useNavigate } from "react-router-dom";
 import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { api } from "../connection/axios";
+import { useGoogleLogin } from "@react-oauth/google";
 import Button from "../componentes/Button";
 import Input from "../componentes/Input";
-import { api } from "../connection/axios";
-import { GoogleLogin } from "@react-oauth/google";
-import { useGoogleLogin } from "@react-oauth/google";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -57,21 +56,51 @@ export default function Cadastro() {
   }
 
   const handleCadastroGoogle = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      api.post("/auth/google", {
-        data: {
-          token: tokenResponse.access_token,
-        },
-      });
-      console.log(tokenResponse);
+    onSuccess: async (tokenResponse) => {
+      try {
+        const userInfoResponse = await api.get(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+          }
+        );
+        const {
+          name: nome,
+          email,
+          sub: senha,
+          email_verified,
+        } = userInfoResponse.data;
+
+        if (email_verified) {
+          const response = await api.post("/user", {
+            data: { nome, email, senha: senha.substring(0, 12) },
+          });
+
+          const userId = response.data.userInfo.id;
+
+          localStorage.setItem("nomeUsuario", nome || "");
+          localStorage.setItem("emailUsuario", email || "");
+          localStorage.setItem("userId", userId);
+
+          navigate("/account");
+        } else {
+          alert("Email não verificado!");
+        }
+      } catch (error) {
+        console.error("Usuário já existe!");
+      }
     },
     onError: (error) => console.log("Login Failed:", error),
   });
-
-  const verificarEmail = () => {
-    console.log("Verificando email:", email);
-    // Adicione aqui a lógica para verificar o email
-  };
+  // api.post("/auth/google", {
+  //   data: {
+  //     token: tokenResponse.access_token,
+  //   },
+  // });
+  // console.log(tokenResponse);
+  // },
 
   return (
     <div className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">

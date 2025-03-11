@@ -25,14 +25,10 @@ class EmailSender:
         return self.__format_response(verification_code)
         
     def __get_email(self, http_request: HttpRequest) -> str:
-        return http_request.body["data"]["email"]
+        return http_request.body.get("data").get("email")
     
     def __generate_code(self) -> int:
         return randint(100000, 999999)
-    
-    def __load_template(self):
-        with open(self.template_path, "r", encoding="utf-8") as file:
-            return file.read()
     
     def __format_response(self, verification_code: int) -> HttpResponse:
         return HttpResponse(
