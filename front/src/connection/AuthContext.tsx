@@ -1,25 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, } from "react";
+import { IAuthContextType, IAuthProviderProps, IUser } from "../interface/IAuthContext";
 
-interface User {
-  nome: string;
-  email: string;
-  id: number;
-  is_admin: boolean;
-}
+const AuthContext = createContext<IAuthContextType | null>(null);
 
-interface AuthContextType {
-  userLogged: User | null;
-  setUserLogged: (user: User | null) => void;
-}
-
-interface AuthProviderProps {
-  children: ReactNode; // Define corretamente o tipo de children
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
-
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [userLogged, setUserLogged] = useState<User | null>(null);
+export function AuthProvider({ children }: IAuthProviderProps) {
+  const [userLogged, setUserLogged] = useState<IUser | null>(null);
 
   return (
     <AuthContext.Provider value={{ userLogged, setUserLogged }}>
