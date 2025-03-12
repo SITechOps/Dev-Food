@@ -98,7 +98,7 @@ export default function Cadastro() {
 
 
   return (
-    <div className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">
+    <div className="space-y-4 p-8 my-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">
       <a href="/home" className="self-start mb-5">
         <FaAngleLeft className="icon" />
       </a>

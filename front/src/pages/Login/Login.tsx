@@ -55,7 +55,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col w-full m-auto items-center justify-center mt-[3rem]">
+    <div className="flex flex-col w-full m-auto my-[3rem] items-center justify-center mt-[3rem]">
       <h1 className="font-bold mt-4">
         Faça o seu login
       </h1>
