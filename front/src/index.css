@@ -8,6 +8,10 @@ body{
   margin: auto;
   background-color: white;
   
+  /* p, h1, h2, h3, input, select, label, legend{
+   color: var(--color-blue);
+   font-family: var(--font-Dosis)
+  } */
 }
 
 body::before {
@@ -28,7 +32,7 @@ body::before {
     
   }
   p, h1, h2, h3, input, select, label, legend{
-    @apply !text-blue font-Dosis
+    @apply text-blue font-Dosis
     
   }
 
@@ -44,7 +48,7 @@ body::before {
      @apply text-[1.5rem];
   }
 
- p{
+ p, legend{
      @apply text-[1rem];
   }
 }

@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { FaAngleLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { api } from "../connection/axios";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -25,7 +26,7 @@ export default function Cadastro() {
 
   function fazerLogin(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
-    console.log("login realizado");
+    navigate('/login')
   }
 
   async function cadastrarUsuario(event: FormEvent<HTMLFormElement>) {
@@ -94,18 +95,15 @@ export default function Cadastro() {
     },
     onError: (error) => console.log("Login Failed:", error),
   });
-  // api.post("/auth/google", {
-  //   data: {
-  //     token: tokenResponse.access_token,
-  //   },
-  // });
-  // console.log(tokenResponse);
-  // },
+
 
   return (
     <div className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">
+      <a href="/home" className="self-start mb-5">
+        <FaAngleLeft className="icon" />
+      </a>
       <form onSubmit={cadastrarUsuario}>
-        <legend className="text-center mb-4 text-2xl">
+        <legend className="text-center mb-4 font-bold">
           Como deseja continuar?
         </legend>
         <div className="w-full space-y-4">
@@ -138,21 +136,21 @@ export default function Cadastro() {
           />
         </div>
 
-        <div className="flex justify-end">
-          <span className="text-gray-medio">Já tenho conta</span>
-          <Button
-            variant="plain"
-            onClick={fazerLogin}
-            className="!w-[6rem] !p-0 !m-0"
-          >
-            Fazer login
-          </Button>
-        </div>
-
-        <Button variant="filled" type="submit" className="!mt-5">
+        <Button variant="filled" type="submit" className="!mt-5" disabled={!nome || !email || !senha}>
           Cadastrar
         </Button>
       </form>
+
+      <div className="flex justify-end mt-1">
+        <span className="text-gray-medio">Já tenho conta</span>
+        <Button
+          variant="plain"
+          onClick={fazerLogin}
+          className="!w-[6rem] !p-0 !m-0"
+        >
+          Fazer login
+        </Button>
+      </div>
       <span className="text-center text-gray-medio mt-4 mb-6">
         -------------- OU --------------
       </span>
@@ -161,7 +159,6 @@ export default function Cadastro() {
         color="secundary"
         img
         onClick={handleCadastroGoogle}
-        className="items-center justify-center flex gap-4 cursor-pointer"
       >
         Fazer cadastro com o Google
       </Button>
