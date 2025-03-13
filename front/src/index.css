@@ -23,7 +23,7 @@ body::before {
 
 @layer utilities  {
   .icon{
-    @apply text-brown-normal text-[1.5rem] 
+    @apply text-brown-normal text-[1.5rem] cursor-pointer
     
   }
   p, h1, h2, h3, input, select, label, legend{
