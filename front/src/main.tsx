@@ -34,19 +34,19 @@ const router = createBrowserRouter([
     element: <Account />,
   },
   {
-    path: "/cadastro-endereco",
+    path: "/c-endereco",
     element: <CadastroEndereco />,
   },
   {
-    path: "/complemento-endereco",
+    path: "/compl-endereco",
     element: <ComplementoEndereco />,
-  }
+  },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId='712065091138-0iaa0qpolcm1646nmnd91thctaqinv9v.apps.googleusercontent.com'>
     <StrictMode>
-      <AuthProvider>  {/* 🔹 Envolva tudo dentro do AuthProvider */}
+      <AuthProvider> 
         <RouterProvider router={router} />
       </AuthProvider>
     </StrictMode>

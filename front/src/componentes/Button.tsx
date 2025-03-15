@@ -35,7 +35,7 @@ export default function Button({
         "bg-gray-claro text-gray-medio border boder-transparent bg-transparent",
     },
     plain: {
-      default: "text-brown-normal hover:text-brown-dark w-6 p-2",
+      default: "text-brown-normal hover:text-brown-dark",
       secundary: "",
       disable: "",
     },

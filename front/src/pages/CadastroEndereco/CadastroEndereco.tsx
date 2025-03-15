@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "../../componentes/Button";
 import Input from "../../componentes/Input";
 import { useNavigate } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
+
 
 export default function CadastroEndereco() {
     const [pesquisa, setPesquisa] = useState("");
@@ -10,7 +12,6 @@ export default function CadastroEndereco() {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulando busca de endereços
         const resultados = [
             "Rua das Flores, 547",
             "Rua das Flores, 456",
@@ -20,7 +21,7 @@ export default function CadastroEndereco() {
     };
 
 	const handleSelectAddress = (endereco: string) => {
-        navigate("/complemento-endereco", { state: { enderecoSelecionado: endereco } });
+        navigate("/compl-endereco", { state: { enderecoSelecionado: endereco } });
     };
 
     return (
@@ -31,13 +32,20 @@ export default function CadastroEndereco() {
                     Entregamos tudo o que precisa na porta da sua casa, informe seu endereço
                 </legend>
                 <div className="relative">
-                    <Input 
-                        type="text" 
-                        value={pesquisa} 
-                        placeholder="Digite o endereço..." 
-                        onChange={setPesquisa} 
-                        className="!p-4 w-full" 
-                    />
+                <div className="grid grid-cols-[auto_3rem] gap-2">
+                        <Input
+                            type="text"
+                            value={pesquisa}
+                            placeholder="Digite o endereço..."
+                            onChange={setPesquisa}
+                            className="!p-4 w-full !m-0 row-span-2"
+                        />
+                        <Button 
+                            type="submit" 
+                            className="!w-[3rem] flex justify-center items-center"
+                            disabled={!pesquisa}
+                        > <FiSearch className={`icon ${!pesquisa ? "!text-blue" : "!text-brown-ligth"}`} /></Button>
+                    </div>
                     {enderecos.length > 0 && (
                         <ul className="absolute left-0 right-0 bg-white border border-brown-ligth-active rounded-md shadow-md z-10">
                             {enderecos.map((endereco, index) => (
@@ -52,7 +60,6 @@ export default function CadastroEndereco() {
                         </ul>
                     )}
                 </div>
-                <Button type="submit" className="mt-6">Buscar</Button>
             </form>
         </section>
     );
