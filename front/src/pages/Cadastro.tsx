@@ -99,13 +99,15 @@ export default function Cadastro() {
 
   return (
     <div className="space-y-4 p-8 my-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">
-      <a href="/home" className="self-start mb-5">
-        <FaAngleLeft className="icon" />
-      </a>
+
       <form onSubmit={cadastrarUsuario}>
+        <button onClick={() => navigate(-1)} className="self-start mb-5">
+          <FaAngleLeft className="icon" />
+        </button>
         <legend className="text-center mb-4 font-bold">
-          Como deseja continuar?
+          Cadastra-se
         </legend>
+
         <div className="w-full space-y-4">
           <Input
             label="Informe o seu nome:"
@@ -141,7 +143,7 @@ export default function Cadastro() {
         </Button>
       </form>
 
-      <div className="flex justify-end mt-1">
+      <div className="flex justify-end">
         <span className="text-gray-medio">Já tenho conta</span>
         <Button
           variant="plain"
@@ -151,7 +153,7 @@ export default function Cadastro() {
           Fazer login
         </Button>
       </div>
-      <span className="text-center text-gray-medio mt-4 mb-6">
+      <span className="text-center text-gray-medio mt-2 mb-6">
         -------------- OU --------------
       </span>
       <Button

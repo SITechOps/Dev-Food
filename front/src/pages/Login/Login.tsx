@@ -68,7 +68,7 @@ export default function Login() {
 
         <LogarGoogle />
 
-        <span className="text-center text-gray-medio mt-4">
+        <span className="text-center text-gray-medio mb-4">
           -------------- OU --------------
         </span>
 
@@ -88,6 +88,7 @@ export default function Login() {
             id="senha"
             type="text"
             value={senha}
+            placeholder={"Digite sua senha"}
             onChange={setSenha}
             className="mb-6"
           />
