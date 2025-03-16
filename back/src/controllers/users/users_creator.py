@@ -35,7 +35,6 @@ class UsersCreator:
                 "userInfo": {
                     "Type": "User",
                     "id": user_id,
-                    "count": 1,
                     "attributes": {
                         "nome": user_name,
                         "email": user_email,
