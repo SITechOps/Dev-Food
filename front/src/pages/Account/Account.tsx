@@ -13,15 +13,32 @@ export default function Account() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const nomeUsuario = localStorage.getItem("nomeUsuario") || "";
-    const emailUsuario = localStorage.getItem("emailUsuario") || "";
-    const senhaUsuario = localStorage.getItem("senhaUsuario") || "";
-    setNome(nomeUsuario);
-    setEmail(emailUsuario);
-    setSenha(senhaUsuario);
+    async function fetchUserData() {
+      try {
+        const idUsuario = localStorage.getItem("userId");
+        const response = await api.get(`/user/${idUsuario}`);
+        const { nome, email, senha } = response.data;
+        const loginGoogle = localStorage.getItem("loginGoogle");
+
+        setIsGoogleLogin(loginGoogle === "true");
+
+        setNome(nome);
+        setEmail(email);
+        setSenha(senha);
+
+        localStorage.setItem("nomeUsuario", nome);
+        localStorage.setItem("emailUsuario", email);
+        localStorage.setItem("senhaUsuario", senha);
+      } catch (error) {
+        console.error("Erro ao buscar usuário:", error);
+      }
+    }
+
+    fetchUserData();
   }, []);
 
   async function alterarUsuario(event: FormEvent<HTMLFormElement>) {
@@ -37,8 +54,7 @@ export default function Account() {
 
       localStorage.setItem("nomeUsuario", nome || "");
       localStorage.setItem("senhaUsuario", senha || "");
-      setIsEditing(false)
-      
+      setIsEditing(false);
     } catch (error) {
       alert("Erro ao alterar usuário. Tente novamente.");
     }
@@ -62,14 +78,19 @@ export default function Account() {
     }
   }
 
+  function handleLogout() {
+    localStorage.clear();
+    navigate("/Login");
+  }
+
   return (
     <section className="flex flex-col items-center justify-center !m-auto !mt-[3rem] bg-white rounded-md shadow w-[50%] !p-5">
       <a href="/home" className="self-start ml-4 mb-5">
         <FaAngleLeft className="icon" />
       </a>
 
-      <div className="w-[10rem] h-[10rem] bg-gray-claro rounded-full flex flex-col items-center justify-center ">
-        <PiUserFocusThin className="text-[8rem] text-gray-medio" />
+      <div className="w-[10rem] h-[10rem] bg-[#FDEDEE] rounded-full flex flex-col items-center justify-center transition-all duration-300 hover:bg-[#FAC8CB] cursor-pointer">
+        <PiUserFocusThin className="text-[8rem] text-[#EE4C58]" />
       </div>
 
       <form onSubmit={alterarUsuario} className="text-center !mt-5">
@@ -115,7 +136,13 @@ export default function Account() {
         <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
           Senha:
           {isEditing ? (
-            <Input type="text" id="senha" value={senha} onChange={setSenha} />
+            <Input
+              type="text"
+              id="senha"
+              value={senha}
+              onChange={setSenha}
+              disabled={isGoogleLogin}
+            />
           ) : (
             <span className="!font-semibold">{senha}</span>
           )}
@@ -134,6 +161,14 @@ export default function Account() {
             Salvar
           </Button>
         )}
+
+        <Button
+          type="button"
+          className="mt-5 bg-red-500 text-white px-10 py-2 rounded"
+          onClick={handleLogout}
+        >
+          Sair
+        </Button>
       </form>
     </section>
   );
