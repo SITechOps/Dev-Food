@@ -27,8 +27,6 @@ Nosso projeto está em constante evolução, e planejamos adicionar novas funcio
 
 ### 📸 Capturas de Tela
 
-![Exemplo da Interface](https://via.placeholder.com/600x300.png)
-
 ## 🏗️ Arquitetura do Sistema
 
 O DevFood é baseado em uma arquitetura modular, separando o frontend e o backend:
