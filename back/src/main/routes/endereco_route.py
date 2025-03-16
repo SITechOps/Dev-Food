@@ -5,7 +5,7 @@ from src.controllers.enderecos_manager import EnderecosManager
 from src.model.repositories.enderecos_repository import EnderecosRepository
 from src.http_types.http_request import HttpRequest
 
-endereco_route_bp = Blueprint('endereco', __name__)
+endereco_route_bp = Blueprint('endereco_route', __name__)
 
 @endereco_route_bp.post('/endereco')
 def create_new_endereco():

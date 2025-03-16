@@ -3,20 +3,17 @@ from flask_mail import Mail, Message
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
 from random import randint
-import os
 
 class EmailSender:
-    def __init__(self):
-        from ..main.server.server import app
+    def __init__(self, app):
         self.mail = Mail(app)
-        self.template_path = os.path.join(os.path.dirname(__file__), 'email_template.html')
 
     def send_email(self, http_request: HttpRequest) -> HttpResponse:
         destination_email = self.__get_email(http_request)
         verification_code = self.__generate_code()
         message = render_template("email_message_template.html", verification_code=verification_code)
         msg = Message(
-            subject="Seu código de verificação chegou! 🔐 ",
+            subject="Seu código de verificação chegou! 🔐",
             sender="devfoodsender@gmail.com",
             recipients=[destination_email],
             html=message

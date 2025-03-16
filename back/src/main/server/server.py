@@ -1,19 +1,18 @@
 from flask import Flask
 from flask_cors import CORS
-from src.main.routes.user import user_route_bp
-from src.main.routes.send_email import email_route_bp
-from src.main.routes.endereco import endereco_route_bp
+from src.services.email_config import configure_mail
+from src.main.routes.user_route import user_route_bp
+from src.main.routes.email_route import email_route_bp
+from src.main.routes.endereco_route import endereco_route_bp
 
-app = Flask(__name__, template_folder='../../services/templates')
-CORS(app)
+def create_app():
+    app = Flask(__name__, template_folder='../../services/templates')
+    CORS(app)
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'devfoodsender@gmail.com'
-app.config['MAIL_PASSWORD'] = 'hmmw mwim ofij jvnd'
+    app = configure_mail(app)
+    app.register_blueprint(user_route_bp)
+    app.register_blueprint(email_route_bp)
+    app.register_blueprint(endereco_route_bp)
+    return app
 
-app.register_blueprint(user_route_bp)
-app.register_blueprint(email_route_bp)
-app.register_blueprint(endereco_route_bp)
+app = create_app()
