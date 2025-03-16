@@ -9,7 +9,7 @@ class User(Base):
     senha = Column(String(12))
     is_admin = Column(Boolean)
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "id": self.id,
             "nome": self.nome,
