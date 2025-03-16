@@ -37,9 +37,9 @@ class EnderecosManager:
         return self.__format_modify_response("deletado")
         
 
-    def __check_user(self, id_usuario: str) -> None:
+    def __check_user(self, id_usuario: int) -> None:
         response = self.__users_repo.get_user_by_id(id_usuario)
-        if not response: raise Exception('Usuário não encontrado!')
+        if not response: raise LookupError('Usuário não encontrado!')
 
 
     def __format_get_response(self, lista_enderecos: list) -> HttpResponse:
@@ -64,5 +64,5 @@ class EnderecosManager:
                     "message": f"Endereço {estado} com sucesso!"
                 }
             },
-            status_code=201
+            status_code=(201 if estado=="criado" else 200)
         )
