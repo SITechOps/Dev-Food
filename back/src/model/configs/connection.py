@@ -7,7 +7,7 @@ class DBConnectionHandler:
 
 
     def __init__(self):
-        self.__connection_string = 'mysql+mysqlconnector://dev_user:dev1234@db:3306/devfood'
+        self.__connection_string = 'mysql+mysqlconnector://dev_user:dev1234@localhost:3307/devfood'
         self.__engine = self.__create_database_engine()
         self.session = None
         Base.metadata.create_all(self.__engine) 
