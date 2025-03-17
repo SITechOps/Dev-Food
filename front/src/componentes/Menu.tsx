@@ -14,7 +14,7 @@ export default function Menu() {
   };
 
   return (
-    <header className="bg-gray-100 shadow-md fixed w-full px-20 top-0 left-0 right-0 z-50 mx-0">
+    <header className="bg-gray-100 shadow-md fixed w-full h-25 px-20 top-0 left-0 right-0 z-50 mx-0">
       <div className="flex justify-between items-center p-5 mx-10">
         {/* Logo */}
         <Link to="/">

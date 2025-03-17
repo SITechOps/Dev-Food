@@ -7,13 +7,13 @@ function App() {
     <>
       <Menu />
 
-      <div className="flex flex-col items-center justify-center min-h-screen w-full m-auto mt-5">
+      <div className="flex flex-col items-center justify-center min-h-screen w-full m-auto">
         <Routes>
           <Route
             path="/"
             element={
               <>
-                <h1 className="text-3xl font-bold text-center m-2">
+                <h1 className="text-3xl font-bold text-center m-2 mt-40">
                   Falta pouco para matar sua fome!
                 </h1>
                 <Cadastro />
