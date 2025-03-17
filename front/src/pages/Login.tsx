@@ -5,44 +5,43 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 
-
 export default function Login() {
   const navigate = useNavigate();
   const [senha, setSenha] = useState("");
   const [email, setEmail] = useState("");
   const [user, setUser] = useState<TokenResponse | null>(null);
   // const [profile, setProfile] = useState<any>(null);
-  
-    const login = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
-        onError: (error) => console.log('Login Failed:', error)
-    });
-  
-    useEffect(
-        () => {
-            if (user) {
-                axios
-                    .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-                        headers: {
-                            Authorization: `Bearer ${user.access_token}`,
-                            Accept: 'application/json'
-                        }
-                    })
-                    .then((res) => {
-                      console.log('entrou')
-                      // setProfile(res.data);
-                      navigate("/account", { state: { profile: res.data } });
-                    })
-                    .catch((err) => console.log(err));
-            }
-        },
-        [ user ]
-    );
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  useEffect(() => {
+    if (user) {
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log("entrou");
+          // setProfile(res.data);
+          navigate("/account", { state: { profile: res.data } });
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
   //   const logOut = () => {
   //     googleLogout();
   //     setProfile(null);
   // };
-  
+
   const validarCampos = (): boolean => {
     const senhaTrim = senha.trim();
     const emailTrim = email.trim();

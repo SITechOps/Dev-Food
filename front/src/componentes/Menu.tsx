@@ -33,14 +33,14 @@ export default function Menu() {
           {isAuthenticated ? (
             <Button
               onClick={handleLogout}
-              className="!w-25 !py-2 cursor-pointer"
+              className="!w-25 !py-2 cursor-pointer !text-red-500 !bg-red-50"
             >
               Sair
             </Button>
           ) : (
             <Button
               onClick={() => navigate("/login")}
-              className="!w-25 !py-2 cursor-pointer"
+              className="!w-25 !py-2 cursor-pointer !text-red-500 !bg-red-50"
             >
               Entrar
             </Button>

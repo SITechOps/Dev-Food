@@ -17,7 +17,7 @@ function App() {
                   Falta pouco para matar sua fome!
                 </h1>
                 <Cadastro />
-                <button>Sign in with Google 🚀 </button>
+                <button>Sign in with Google</button>
               </>
             }
           />

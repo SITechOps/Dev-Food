@@ -12,7 +12,7 @@ export default function Input({
 }: IInputProps) {
   return (
     <div className="">
-      <label htmlFor={id} className="font-medium !m-0 py-2">
+      <label htmlFor={id} className="font-Dosis font-medium !m-0 py-2">
         {label}
       </label>
       <input

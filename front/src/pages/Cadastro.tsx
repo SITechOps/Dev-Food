@@ -105,10 +105,10 @@ export default function Cadastro() {
   return (
     <div className="space-y-4 !p-8 !mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">
       <form onSubmit={cadastrarUsuario}>
-        <legend className="text-center mb-4 text-2xl">
+        <legend className="font-Dosis text-center mb-4 text-2xl">
           Como deseja continuar?
         </legend>
-        <div className="w-full space-y-4">
+        <div className="font-Dosis w-full space-y-4">
           <Input
             label="Informe o seu nome:"
             id="nome"
@@ -117,7 +117,7 @@ export default function Cadastro() {
             placeholder={"Fulando de tal"}
             onChange={setNome}
           />
-          <div className="flex items-center justify-end space-x-2">
+          <div className="font-Dosis flex items-center justify-end space-x-2">
             <Input
               label="Informe o seu email:"
               id="email"
@@ -138,7 +138,7 @@ export default function Cadastro() {
           />
         </div>
 
-        <div className="flex justify-end">
+        <div className="font-Dosis flex justify-end">
           <span className="text-gray-medio">Já tenho conta</span>
           <Button
             variant="plain"

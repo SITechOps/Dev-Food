@@ -54,19 +54,9 @@ body::before {
   }
 }
 
-@font-face {
-  font-family: "iFood RC Textos";
-  src: url("./assets/font/iFoodRCTextos-Regular.woff2") format("woff2"),
-    url("./assets/font/iFoodRCTextos-Bold.woff2") format("woff2"),
-    url("./assets/font/iFoodRCTextos-Medium.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
-
 @theme {
   /* Variavéis de FONTE  */
   --font-Dosis: "Dosis", serif;
-  --font-sans: "iFood RC Textos", helvetica, sans-serif;
   /*--font-h1: 2.25rem;  36px */
   /*--font-h2: 1.875rem;  30px */
   /*--font-h3: 1.5rem;   24px */

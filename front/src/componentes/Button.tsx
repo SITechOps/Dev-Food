@@ -17,7 +17,7 @@ export default function Button({
   type?: "submit" | "reset" | "button";
   onClick?: (event: React.MouseEvent<HTMLButtonElement> | any) => void;
 }) {
-  const defaultButtonClasses = "font-medium p-4 rounded-sm w-full";
+  const defaultButtonClasses = "font-Dosis font-medium p-4 rounded-sm w-full";
 
   const variants = {
     filled: {
