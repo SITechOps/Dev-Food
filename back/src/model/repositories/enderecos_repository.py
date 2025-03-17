@@ -45,16 +45,15 @@ class EnderecosRepository(IEnderecosRepository):
                 .filter(Endereco.id == id_endereco)
                 .one_or_none()
             )
+            if not enderecos:
+                raise AddressNotFound()
             return enderecos
 
 
     def update_endereco(self, id_endereco: int, info: Endereco) -> None:
         with DBConnectionHandler() as db:
             try:
-                endereco = self.__get_endereco_by_id(id_endereco)
-                if not endereco:
-                    raise AddressNotFound()
-                
+                endereco = self.__get_endereco_by_id(id_endereco)              
                 endereco.logradouro = info.get("logradouro")
                 endereco.bairro = info.get("bairro")
                 endereco.cidade = info.get("cidade")
@@ -75,8 +74,6 @@ class EnderecosRepository(IEnderecosRepository):
         with DBConnectionHandler() as db:
             try:
                 endereco = self.__get_endereco_by_id(id_endereco)
-                if not endereco:
-                    raise AddressNotFound()
                 db.session.delete(endereco)
                 db.session.commit()
             except Exception as exception:
