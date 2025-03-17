@@ -1,3 +1,4 @@
+from src.main.handlers.custom_exceptions import UserNotFound
 from src.http_types.http_response import HttpResponse
 from src.model.repositories.interfaces.iusers_repository import IUsersRepository
 from src.http_types.http_request import HttpRequest
@@ -39,7 +40,7 @@ class EnderecosManager:
 
     def __check_user(self, id_usuario: int) -> None:
         response = self.__users_repo.get_user_by_id(id_usuario)
-        if not response: raise LookupError('Usuário não encontrado!')
+        if not response: raise UserNotFound()
 
 
     def __format_get_response(self, lista_enderecos: list) -> HttpResponse:

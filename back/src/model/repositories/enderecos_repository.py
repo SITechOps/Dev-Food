@@ -1,6 +1,7 @@
 from src.model.configs.connection import DBConnectionHandler
 from src.model.entities.endereco import Endereco
 from .interfaces.ienderecos_repository import IEnderecosRepository
+from src.main.handlers.custom_exceptions import AddressNotFound
 
 class EnderecosRepository(IEnderecosRepository):
 
@@ -52,7 +53,7 @@ class EnderecosRepository(IEnderecosRepository):
             try:
                 endereco = self.__get_endereco_by_id(id_endereco)
                 if not endereco:
-                    raise Exception("Endereco não encontrado!")
+                    raise AddressNotFound()
                 
                 endereco.logradouro = info.get("logradouro")
                 endereco.bairro = info.get("bairro")
@@ -75,7 +76,7 @@ class EnderecosRepository(IEnderecosRepository):
             try:
                 endereco = self.__get_endereco_by_id(id_endereco)
                 if not endereco:
-                    raise Exception("Endereco não encontrado!")
+                    raise AddressNotFound()
                 db.session.delete(endereco)
                 db.session.commit()
             except Exception as exception:
