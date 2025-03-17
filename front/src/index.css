@@ -2,12 +2,10 @@
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities";
 
-
-body{
+body {
   width: 80%;
   margin: auto;
   background-color: white;
-  
 }
 
 body::before {
@@ -18,46 +16,61 @@ body::before {
   background-color: var(--color-brown-ligth);
   left: 0;
   top: 0;
-  clip-path: ellipse(50% 100% at left center); /* Forma arredondada na borda esquerda */
+  clip-path: ellipse(
+    50% 100% at left center
+  ); /* Forma arredondada na borda esquerda */
   z-index: -1;
 }
 
-@layer utilities  {
-  .icon{
-    @apply text-brown-normal text-[1.5rem] 
-    
+@layer utilities {
+  .icon {
+    @apply text-brown-normal text-[1.5rem];
   }
-  p, h1, h2, h3, input, select, label, legend{
-    @apply !text-blue font-Dosis
-    
-  }
-
-  h1{
-     @apply text-[2.25rem];
-  }
-
-  h2{
-     @apply text-[1.875rem];
+  p,
+  h1,
+  h2,
+  h3,
+  input,
+  select,
+  label,
+  legend {
+    @apply !text-blue;
   }
 
-  h3{
-     @apply text-[1.5rem];
+  h1 {
+    @apply text-[2.25rem];
   }
 
- p{
-     @apply text-[1rem];
+  h2 {
+    @apply text-[1.875rem];
+  }
+
+  h3 {
+    @apply text-[1.5rem];
+  }
+
+  p {
+    @apply text-[1rem];
   }
 }
 
+@font-face {
+  font-family: "iFood RC Textos";
+  src: url("./assets/font/iFoodRCTextos-Regular.woff2") format("woff2"),
+    url("./assets/font/iFoodRCTextos-Bold.woff2") format("woff2"),
+    url("./assets/font/iFoodRCTextos-Medium.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
 
 @theme {
   /* Variavéis de FONTE  */
   --font-Dosis: "Dosis", serif;
+  --font-sans: "iFood RC Textos", helvetica, sans-serif;
   /*--font-h1: 2.25rem;  36px */
   /*--font-h2: 1.875rem;  30px */
   /*--font-h3: 1.5rem;   24px */
   /*--font-p: 1rem;     16px */
-
 
   /* Variaveis das CORES  */
   --color-gray-claro: #f1f1f1;
@@ -69,7 +82,3 @@ body::before {
   --color-brown-normal: #ee4c58;
   --color-brown-dark: #c0434d;
 }
-
-
-
-
