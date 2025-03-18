@@ -1,13 +1,26 @@
-export default function Home() {
+import { IoIosArrowDown } from "react-icons/io";
+import Menu from "../componentes/Menu";
 
+export default function Home() {
+	function mostrarEnderecoSalvo() {
+		console.log('exibiu todos os endereço salvos')
+	}
 
 	return (
-		<div>
-			<h1 className="text-3xl text-center text-stone-800 font-bold p-6">
-			SEJA BEM VINDO AO IFOOD
-			</h1>
-		
-		</div>
+		<>
+			<Menu />
+			<div className="pt-28">
+				<section id="sessao-endereco" className="flex flex-col items-center justify-center mt-5 w-full m-auto">
+					<div className="bg-white rounded-md shadow w-[30rem] p-2 relative">
+
+						<div className="flex gap-2 items-center justify-center m-3" onClick={mostrarEnderecoSalvo}>
+							<p>Endereço já salvo </p><IoIosArrowDown className="icon" />
+						</div>
+					</div>
+				</section>
+			</div>
+
+		</>
 	);
 }
 

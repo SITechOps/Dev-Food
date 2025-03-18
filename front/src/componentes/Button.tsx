@@ -7,6 +7,7 @@ export default function Button({
   img = false,
   className = "",
   type,
+  disabled = false,
   onClick,
 }: {
   children: React.ReactNode;
@@ -15,9 +16,10 @@ export default function Button({
   img?: boolean;
   className?: string;
   type?: "submit" | "reset" | "button";
+  disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement> | any) => void;
 }) {
-  const defaultButtonClasses = "font-Dosis font-medium p-4 rounded-sm w-full";
+  const defaultButtonClasses = "font-Dosis font-medium p-4 rounded-sm w-full cursor-pointer";
 
   const variants = {
     filled: {
@@ -33,22 +35,23 @@ export default function Button({
         "bg-gray-claro text-gray-medio border boder-transparent bg-transparent",
     },
     plain: {
-      default: "text-brown-normal hover:text-brown-dark w-6 p-2",
+      default: "text-brown-normal hover:text-brown-dark",
       secundary: "",
       disable: "",
     },
     filledIcon: {
       default: "",
       secundary:
-        "bg-brown-ligth text-brown-normal hover:bg-brown-ligth-active flex justify-center",
+        "bg-brown-ligth text-brown-normal hover:bg-brown-ligth-active flex justify-center items-center flex gap-4",
       disable: "",
     },
   };
   return (
     <button
-      className={`${defaultButtonClasses} ${variants[variant][color]} ${className}`}
-      onClick={onClick}
+      className={`${defaultButtonClasses} ${variants[variant][disabled ? "disable" : color]} ${className}`}
+      onClick={disabled ? undefined : onClick} // 🔹 Impede cliques se desabilitado
       type={type}
+      disabled={disabled} // 🔹 Aplica o atributo disabled
     >
       {img ? <img src="img/google.svg" alt="" className="size-4" /> : null}
       {children}
