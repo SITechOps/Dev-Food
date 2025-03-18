@@ -6,11 +6,11 @@ import Login from "./pages/Login/Login.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import { createRoot } from "react-dom/client";
 import Account from "./pages/Account/Account.tsx";
-import { AuthProvider } from "./connection/AuthContext"; 
-import { GoogleOAuthProvider } from "@react-oauth/google"
+import { AuthProvider } from "./connection/AuthContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CadastroEndereco from "./pages/CadastroEndereco/CadastroEndereco.tsx";
-import ComplementoEndereco from "./pages/CadastroEndereco/ComplementoEndereco.tsx";
+// import ComplementoEndereco from "./pages/CadastroEndereco/ComplementoEndereco.tsx";
 
 const router = createBrowserRouter([
   {
@@ -37,16 +37,16 @@ const router = createBrowserRouter([
     path: "/c-endereco",
     element: <CadastroEndereco />,
   },
-  {
-    path: "/compl-endereco",
-    element: <ComplementoEndereco />,
-  },
+  // {
+  //   path: "/compl-endereco",
+  //   element: <ComplementoEndereco />,
+  // },
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <GoogleOAuthProvider clientId='712065091138-0iaa0qpolcm1646nmnd91thctaqinv9v.apps.googleusercontent.com'>
+  <GoogleOAuthProvider clientId="712065091138-0iaa0qpolcm1646nmnd91thctaqinv9v.apps.googleusercontent.com">
     <StrictMode>
-      <AuthProvider> 
+      <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
     </StrictMode>

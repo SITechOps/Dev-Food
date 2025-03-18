@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useState, FormEvent, useEffect } from "react";
 import LogarGoogle from "./LogarGoogle";
+import Menu from "../../componentes/Menu";
 
 
 export default function Login() {
@@ -55,64 +56,67 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col w-full m-auto my-[3rem] items-center justify-center mt-[3rem]">
-      <h1 className="font-bold mt-4">
-        Faça o seu login
-      </h1>
+    <>
+      <Menu />
+      <div className="flex flex-col w-full m-auto my-[3rem] items-center justify-center mt-[3rem] pt-24">
+        <h1 className="font-bold mt-4">
+          Faça o seu login
+        </h1>
 
-      <div className="space-y-4 p-8 mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 gap-2">
-        <a href="/" className="self-start mb-5">
-          <FaAngleLeft className="icon" />
-        </a>
-        <legend className="text-center font-bold mx-2"> Como deseja continuar?</legend>
+        <div className="space-y-4 p-8 mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 gap-2">
+          <a href="/" className="self-start mb-5">
+            <FaAngleLeft className="icon" />
+          </a>
+          <legend className="text-center font-bold mx-2"> Como deseja continuar?</legend>
 
-        <LogarGoogle />
+          <LogarGoogle />
 
-        <span className="text-center text-gray-medio mb-4">
-          -------------- OU --------------
-        </span>
+          <span className="text-center text-gray-medio mb-4">
+            -------------- OU --------------
+          </span>
 
-        <form onSubmit={loginUser}>
-          <Input
-            label="Informe o seu email:"
-            id="email"
-            type="email"
-            value={email}
-            placeholder={"fulano@exemplo.com"}
-            onChange={setEmail}
-            className="mb-2"
-          />
+          <form onSubmit={loginUser}>
+            <Input
+              label="Informe o seu email:"
+              id="email"
+              type="email"
+              value={email}
+              placeholder={"fulano@exemplo.com"}
+              onChange={setEmail}
+              className="mb-2"
+            />
 
-          <Input
-            label="Informe uma senha:"
-            id="senha"
-            type="text"
-            value={senha}
-            placeholder={"Digite sua senha"}
-            onChange={setSenha}
-            className="mb-6"
-          />
+            <Input
+              label="Informe uma senha:"
+              id="senha"
+              type="text"
+              value={senha}
+              placeholder={"Digite sua senha"}
+              onChange={setSenha}
+              className="mb-6"
+            />
 
-          <Button 
-            variant="filled" 
-            onClick={loginUser}
-            disabled={!email || !senha}
+            <Button
+              variant="filled"
+              onClick={loginUser}
+              disabled={!email || !senha}
             >
-            Entrar
-          </Button>
-        </form>
+              Entrar
+            </Button>
+          </form>
 
-        <div className="flex justify-end mt-2">
-          <span className="text-gray-medio">Não tem conta?</span>
-          <Button
-            variant="plain"
-            onClick={botaoCadastro}
-            className="!w-[6rem] !p-0 !m-0"
-          >
-            Cadastre-se
-          </Button>
+          <div className="flex justify-end mt-2">
+            <span className="text-gray-medio">Não tem conta?</span>
+            <Button
+              variant="plain"
+              onClick={botaoCadastro}
+              className="!w-[6rem] !p-0 !m-0"
+            >
+              Cadastre-se
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
