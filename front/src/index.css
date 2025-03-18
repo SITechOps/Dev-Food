@@ -2,8 +2,7 @@
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities";
 
-
-body{
+body {
   width: 80%;
   margin: auto;
   background-color: white;
@@ -17,7 +16,7 @@ body::before {
   background-color: var(--color-brown-ligth);
   left: 0;
   top: 0;
-  clip-path: ellipse(50% 100% at left center); /* Forma arredondada na borda esquerda */
+  clip-path: ellipse(50% 100% at left center);
   z-index: -1;
 }
 
@@ -31,16 +30,16 @@ body::before {
     
   }
 
-  h1{
-     @apply text-[2.25rem];
+  h1 {
+    @apply text-[2.25rem];
   }
 
-  h2{
-     @apply text-[1.875rem];
+  h2 {
+    @apply text-[1.875rem];
   }
 
-  h3{
-     @apply text-[1.5rem];
+  h3 {
+    @apply text-[1.5rem];
   }
   h4{
      @apply text-[1.3rem];
@@ -51,7 +50,6 @@ body::before {
   }
 }
 
-
 @theme {
   /* Variavéis de FONTE  */
   --font-Dosis: "Dosis", serif;
@@ -59,7 +57,6 @@ body::before {
   /*--font-h2: 1.875rem;  30px */
   /*--font-h3: 1.5rem;   24px */
   /*--font-p: 1rem;     16px */
-
 
   /* Variaveis das CORES  */
   --color-gray-claro: #f1f1f1;
@@ -71,7 +68,3 @@ body::before {
   --color-brown-normal: #ee4c58;
   --color-brown-dark: #c0434d;
 }
-
-
-
-
