@@ -11,6 +11,7 @@ export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [codigoEnviado, setCodigoEnviado] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -36,43 +37,12 @@ export default function Cadastro() {
     setIsModalOpen(true);
 
     try {
-      const dados = new FormData(event.currentTarget);
-      const email = dados.get("email")?.toString();
-
-      // const response = await api.post("/user", {
-      //   data: { email },
-      // });
-
-      //setCodigo(response.data.properties.verificationCode);
+      const response = await api.post("/send-email", {
+        data: { email },
+      });
+      setCodigoEnviado(response.data.properties.verificationCode);
     } catch (error) {
       console.error("Erro ao enviar email:", error);
-    }
-  }
-
-  async function cadastrarUsuario(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const dados = new FormData(event.currentTarget);
-    const nome = dados.get("nome")?.toString();
-    const email = dados.get("email")?.toString();
-    const senha = dados.get("senha")?.toString();
-
-    try {
-      const response = await api.post("/user", {
-        data: { nome, email, senha },
-      });
-
-      const userId = response.data.userInfo.id;
-
-      localStorage.setItem("nomeUsuario", nome || "");
-      localStorage.setItem("emailUsuario", email || "");
-      localStorage.setItem("senhaUsuario", senha || "");
-      localStorage.setItem("userId", userId);
-
-      if (validarCampos()) {
-        navigate("/account");
-      }
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
     }
   }
 
@@ -118,7 +88,14 @@ export default function Cadastro() {
 
   return (
     <div className="m-auto my-[3rem] flex max-w-96 flex-col space-y-4 rounded-md bg-white p-8 shadow">
-      {isModalOpen && <ModalEmail />}
+      {isModalOpen && (
+        <ModalEmail
+          nome={nome}
+          email={email}
+          senha={senha}
+          codigoEnviado={codigoEnviado}
+        />
+      )}
       <form onSubmit={enviarEmail}>
         <button onClick={() => navigate(-1)} className="mb-5 self-start">
           <FaAngleLeft className="icon" />
