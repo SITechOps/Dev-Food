@@ -1,3 +1,4 @@
+from src.main.handlers.custom_exceptions import UserNotFound
 from src.model.repositories.interfaces.iusers_repository import IUsersRepository
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
@@ -14,7 +15,7 @@ class UsersFilter:
             
             user = self.__users_repo.get_user_by_id(user_id)
             if not user:
-                raise Exception("User not found!")
+                raise UserNotFound()
             
             return self.__format_response(user)
         

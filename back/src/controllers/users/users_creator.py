@@ -1,6 +1,7 @@
-from src.model.repositories.interfaces.iusers_repository import IUsersRepository
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
+from src.main.handlers.custom_exceptions import UserAlreadyExists
+from src.model.repositories.interfaces.iusers_repository import IUsersRepository
 
 
 class UsersCreator:
@@ -21,7 +22,7 @@ class UsersCreator:
 
     def __check_user(self, user_email: str) -> None:
         response = self.__users_repo.get_user_by_email(user_email)
-        if response: raise Exception('User already exists!')
+        if response: raise UserAlreadyExists()
 
 
     def __create_user(self, user_name: str, user_email: str, user_passwd: str) -> None:
@@ -35,7 +36,6 @@ class UsersCreator:
                 "userInfo": {
                     "Type": "User",
                     "id": user_id,
-                    "count": 1,
                     "attributes": {
                         "nome": user_name,
                         "email": user_email,

@@ -1,14 +1,4 @@
 services:
-  flask-app:
-    build: .
-    container_name: flask_app_container
-    ports:
-      - "5000:5000"
-    environment:
-      FLASK_ENV: production
-    depends_on:
-      - db
-    restart: always
   db:
     image: mysql:8.0
     container_name: mysql_container
@@ -17,6 +7,8 @@ services:
       MYSQL_DATABASE: devfood
       MYSQL_USER: dev_user
       MYSQL_PASSWORD: dev1234
+    ports:
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     restart: always

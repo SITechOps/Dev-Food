@@ -1,3 +1,4 @@
+from src.main.handlers.custom_exceptions import UserNotFound
 from src.model.configs.connection import DBConnectionHandler
 from src.model.entities.users import User
 from .interfaces.iusers_repository import IUsersRepository
@@ -54,7 +55,7 @@ class UsersRepository(IUsersRepository):
             try:
                 user = self.get_user_by_id(user_id)     
                 if not user:
-                    raise Exception("User not found!")      
+                    raise UserNotFound()    
                 user.nome = nome
                 user.senha = senha
                 db.session.add(user)
@@ -69,7 +70,7 @@ class UsersRepository(IUsersRepository):
             try:
                 user = self.get_user_by_id(user_id)
                 if not user:
-                    raise Exception("User not found!")      
+                    raise UserNotFound()       
                 db.session.delete(user)
                 db.session.commit()
             except Exception as exception:
