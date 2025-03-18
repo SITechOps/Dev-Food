@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
@@ -6,19 +6,14 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("userId"); // Verifique o login do usuário, por exemplo, através do localStorage
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      alert("Você precisa estar logado para acessar esta página!");  // Alerta 
-    }
-  }, [isAuthenticated]);
+  const isAuthenticated = localStorage.getItem("userId");
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />; // Redireciona para a página de login caso não esteja autenticado
+    alert("Você precisa estar logado para acessar esta página!"); // Exibe o alerta antes de redirecionar
+    return <Navigate to="/login" />;
   }
 
-  return <>{children}</>; // Caso esteja autenticado, renderiza o componente filho
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
-import { PiUserFocusThin } from "react-icons/pi";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Input from "../../componentes/Input";
@@ -29,10 +28,6 @@ export default function Account() {
         setNome(nome);
         setEmail(email);
         setSenha(senha);
-
-        localStorage.setItem("nomeUsuario", nome);
-        localStorage.setItem("emailUsuario", email);
-        localStorage.setItem("senhaUsuario", senha);
       } catch (error) {
         console.error("Erro ao buscar usuário:", error);
       }
@@ -44,16 +39,20 @@ export default function Account() {
   async function alterarUsuario(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const dados = new FormData(event.currentTarget);
-    const nome = dados.get("nome")?.toString();
-    const senha = dados.get("senha")?.toString();
+    const nome = dados.get("nome")?.toString() || "";
+    const senha = dados.get("senha")?.toString() || "";
     const idUsuario = localStorage.getItem("userId");
 
     try {
-      await api.put(`/user/${idUsuario}`, { data: { nome, senha } });
+      await api.put(`/user/${idUsuario}`, { nome, senha });
+
+      const response = await api.get(`/user/${idUsuario}`);
+      setNome(response.data.nome);
+      setSenha(response.data.senha);
       alert("Usuário alterado com sucesso!");
 
-      localStorage.setItem("nomeUsuario", nome || "");
-      localStorage.setItem("senhaUsuario", senha || "");
+      setNome(nome);
+      setSenha(senha);
       setIsEditing(false);
     } catch (error) {
       alert("Erro ao alterar usuário. Tente novamente.");
@@ -89,21 +88,17 @@ export default function Account() {
         <FaAngleLeft className="icon" />
       </a>
 
-      <div className="w-[10rem] h-[10rem] bg-[#FDEDEE] rounded-full flex flex-col items-center justify-center transition-all duration-300 hover:bg-[#FAC8CB] cursor-pointer">
-        <PiUserFocusThin className="text-[8rem] text-[#EE4C58]" />
-      </div>
-
       <form onSubmit={alterarUsuario} className="text-center !mt-5">
-        <div id="icones-de-acao" className="flex gap-4 justify-end">
+        <div id="icones-de-acao" className="flex gap-4 justify-center">
           <FiEdit2
             id="Editar"
-            className="icon cursor-pointer"
+            className="bg-[#FDEDEE] rounded-full icon cursor-pointer hover:bg-[#FAC8CB]"
             onClick={handleEditUser}
           />
           <AiOutlineDelete
             id="deletar"
             type="submit"
-            className="icon cursor-pointer"
+            className="bg-[#FDEDEE] rounded-full icon cursor-pointer hover:bg-[#FAC8CB]"
             onClick={deletarUsuario}
           />
         </div>
