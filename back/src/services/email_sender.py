@@ -33,10 +33,8 @@ class EmailSender:
     def __format_response(self, verification_code: int) -> HttpResponse:
         return HttpResponse(
             body= {
-                "data": {
-                    "attributes":{
-                        "verification_code": verification_code
-                    }
+                "properties":{
+                    "verification_code": verification_code
                 }
             },
             status_code=200
