@@ -9,7 +9,6 @@ services:
     depends_on:
       - db
     restart: always
-
   db:
     image: mysql:8.0
     container_name: mysql_container
