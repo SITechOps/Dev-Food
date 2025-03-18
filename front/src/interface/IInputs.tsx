@@ -1,10 +1,13 @@
+import { Ref } from "react";
+
 export interface IInputProps {
   label?: string;
   id?: string;
   type?: string;
-  value: string;
+  ref?: Ref<HTMLInputElement>;
+  value?: string;
   placeholder?: string;
-  className?: String;
+  className?: string;
   disabled?: boolean;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
 }
