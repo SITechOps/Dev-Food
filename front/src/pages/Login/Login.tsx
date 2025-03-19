@@ -8,7 +8,6 @@ import { useState, FormEvent, useEffect } from "react";
 import LogarGoogle from "./LogarGoogle";
 import Menu from "../../componentes/Menu";
 
-
 export default function Login() {
   const navigate = useNavigate();
   const [senha, setSenha] = useState("");
@@ -35,21 +34,23 @@ export default function Login() {
         throw new Error("Nenhum usuário encontrado na resposta.");
       }
 
-      const usuarioEncontrado = respData.find((usuario: any) => usuario.email === email);
+      const usuarioEncontrado = respData.find(
+        (usuario: any) => usuario.email === email
+      );
 
       if (usuarioEncontrado) {
         setUserLogged(usuarioEncontrado);
+        console.log(usuarioEncontrado);
+        localStorage.setItem("id_usuario", usuarioEncontrado.id);
         navigate("/account");
       } else {
         alert("E-mail não cadastrado. Por favor, faça seu cadastro.");
       }
-
     } catch (error: any) {
       console.error("Erro no login:", error);
       alert(error.response?.data?.message || "Erro ao fazer login.");
     }
   }
-
 
   function botaoCadastro() {
     navigate("/");
@@ -59,15 +60,16 @@ export default function Login() {
     <>
       <Menu />
       <div className="flex flex-col w-full m-auto my-[3rem] items-center justify-center mt-[3rem] pt-24">
-        <h1 className="font-bold mt-4">
-          Faça o seu login
-        </h1>
+        <h1 className="font-bold mt-4">Faça o seu login</h1>
 
         <div className="space-y-4 p-8 mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 gap-2">
           <a href="/" className="self-start mb-5">
             <FaAngleLeft className="icon" />
           </a>
-          <legend className="text-center font-bold mx-2"> Como deseja continuar?</legend>
+          <legend className="text-center font-bold mx-2">
+            {" "}
+            Como deseja continuar?
+          </legend>
 
           <LogarGoogle />
 

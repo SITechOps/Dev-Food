@@ -11,9 +11,14 @@ def handle_exceptions(error):
     return create_error_response(error.message, error.status_code)
 
 
+# @handlers_bp.app_errorhandler(DatabaseError)
+# def handle_database_error():
+#     error_message = "Não foi possível conectar ao banco de dados! Verifique sua conexão ou tente novamente mais tarde!"
+#     return create_error_response(error_message, 500)
+
 @handlers_bp.app_errorhandler(DatabaseError)
-def handle_database_error(_):
-    error_message = "Não foi possível conectar ao banco de dados! Verifique sua conexão ou tente novamente mais tarde!"
+def handle_database_error(error):
+    error_message = f"{error.args[0]} | Não foi possível conectar ao banco de dados! Verifique sua conexão ou tente novamente mais tarde!"
     return create_error_response(error_message, 500)
 
 

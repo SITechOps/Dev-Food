@@ -12,6 +12,9 @@ import { Address } from "../../interface/IAddress";
 import Button from "../../componentes/Button";
 import Input from "../../componentes/Input";
 
+import { api } from "../../connection/axios";
+const idUsuario = localStorage.getItem("id_usuario");
+
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const mapApiJs = "https://maps.googleapis.com/maps/api/js";
 
@@ -108,7 +111,7 @@ const CadastroEndereco = () => {
     setTipo(tipoSelecionado);
   };
 
-  const handleCadastrar = (e: React.FormEvent) => {
+  const handleCadastrar = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!address || !numero || !complemento) {
@@ -116,20 +119,42 @@ const CadastroEndereco = () => {
       return;
     }
 
+    const idUsuarioNumber = Number(idUsuario);
+    if (!idUsuarioNumber) {
+      alert("Erro ao obter ID do usuário.");
+      return;
+    }
+
     const enderecoFinal = {
-      logradouro: address.logradouro,
-      numero: numero,
-      complemento: complemento,
-      bairro: address.bairro,
-      cidade: address.cidade,
-      estado: address.estado,
-      pais: address.pais,
-      tipo,
+      id_usuario: idUsuarioNumber,
+      attributes: {
+        logradouro: address.logradouro,
+        numero: numero,
+        complemento: complemento,
+        bairro: address.bairro,
+        cidade: address.cidade,
+        estado: address.estado,
+        pais: address.pais,
+        tipo,
+      },
     };
 
-    console.log(enderecoFinal);
+    try {
+      const response = await api.post("/endereco", { data: enderecoFinal });
+      console.log("Endereço cadastrado com sucesso:", response.data);
 
-    // Requisição POST aqui
+      setAddress(null);
+      setNumero("");
+      setComplemento("");
+      setTipo("");
+
+      if (searchInput.current) {
+        searchInput.current.value = "";
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar endereço:", error);
+      alert("Erro ao cadastrar endereço. Tente novamente.");
+    }
   };
 
   useEffect(() => {
