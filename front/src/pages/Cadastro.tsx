@@ -111,7 +111,7 @@ export default function Cadastro() {
             placeholder={"Fulando de tal"}
             onChange={setNome}
           />
-          <div className="flex items-center justify-end space-x-2">
+          <div className="font-Dosis flex items-center justify-end space-x-2">
             <Input
               label="Informe o seu email:"
               id="email"

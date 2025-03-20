@@ -7,6 +7,7 @@ import Input from "../../componentes/Input";
 import Button from "../../componentes/Button";
 import { api } from "../../connection/axios";
 import { useNavigate } from "react-router-dom";
+import Menu from "../../componentes/Menu";
 
 export default function Account() {
   const [isEditing, setIsEditing] = useState(false);
@@ -62,8 +63,8 @@ export default function Account() {
     }
   }
 
-  return (
-    <section className="flex flex-col items-center justify-center !m-auto !mt-[3rem] bg-white rounded-md shadow w-[50%] !p-5">
+  return ( 
+    <section className="flex flex-col items-center justify-center m-auto bg-white rounded-md shadow w-[50%] p-5">
       <a href="/home" className="self-start ml-4 mb-5">
         <FaAngleLeft className="icon" />
       </a>
@@ -72,7 +73,7 @@ export default function Account() {
         <PiUserFocusThin className="text-[8rem] text-gray-medio" />
       </div>
 
-      <form onSubmit={alterarUsuario} className="text-center !mt-5">
+      <form onSubmit={alterarUsuario} className="text-center mt-5">
         <div id="icones-de-acao" className="flex gap-4 justify-end">
           <FiEdit2
             id="Editar"
@@ -92,11 +93,11 @@ export default function Account() {
           {isEditing ? (
             <Input type="text" id="nome" value={nome} onChange={setNome} />
           ) : (
-            <span className="!font-semibold">{nome}</span>
+            <span className="font-semibold">{nome}</span>
           )}
         </p>
 
-        <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
+        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
           Email:
           {isEditing ? (
             <Input
@@ -108,7 +109,7 @@ export default function Account() {
               className="cursor-not-allowed"
             />
           ) : (
-            <span className="!font-semibold">{email}</span>
+            <span className="font-semibold">{email}</span>
           )}
         </p>
 
@@ -117,20 +118,13 @@ export default function Account() {
           {isEditing ? (
             <Input type="text" id="senha" value={senha} onChange={setSenha} />
           ) : (
-            <span className="!font-semibold">{senha}</span>
+            <span className="font-semibold">{senha}</span>
           )}
         </p>
 
-        {/* <p className="!pt-4 text-lg">
-          Endereço:{" "}
-          <span className="!font-semibold">
-            Rua Da Saúde nº12 - 06352-663 - SP
-          </span>
-        </p> */}
 
-        {/* Botão para salvar alterações */}
         {isEditing && (
-          <Button type="submit" className="mt-[3rem] cursor-pointer">
+          <Button type="submit" className="mt-[3rem]">
             Salvar
           </Button>
         )}

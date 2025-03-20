@@ -12,8 +12,8 @@ def handle_exceptions(error):
 
 
 @handlers_bp.app_errorhandler(DatabaseError)
-def handle_database_error(_):
-    error_message = "Não foi possível conectar ao banco de dados! Verifique sua conexão ou tente novamente mais tarde!"
+def handle_database_error(error):
+    error_message = f"{error.args[0]} | Não foi possível conectar ao banco de dados! Verifique sua conexão ou tente novamente mais tarde!"
     return create_error_response(error_message, 500)
 
 
@@ -25,3 +25,4 @@ def handle_value_error(error):
 @handlers_bp.app_errorhandler(405)
 def handle_value_error(error):
     return create_error_response("Método não permitido!", error.code)
+  
