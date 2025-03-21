@@ -12,4 +12,3 @@ def send_email():
     http_response = email.send_email(http_request)
     
     return jsonify(http_response.body), http_response.status_code
-

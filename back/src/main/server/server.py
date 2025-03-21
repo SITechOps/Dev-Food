@@ -5,16 +5,19 @@ from src.main.routes.user_route import user_route_bp
 from src.main.routes.email_route import email_route_bp
 from src.main.routes.endereco_route import endereco_route_bp
 from src.main.handlers.error_handlers import handlers_bp
+from src.main.server.swagger_config import register_swagger
 
 def create_app():
-    app = Flask(__name__, template_folder='../../services/templates')
+    app = Flask(__name__, static_url_path="/")
     CORS(app)
 
-    app = configure_mail(app)
+    configure_mail(app)
     app.register_blueprint(user_route_bp)
     app.register_blueprint(email_route_bp)
     app.register_blueprint(endereco_route_bp)
     app.register_blueprint(handlers_bp)
+    
+    register_swagger(app)
     return app
 
 app = create_app()

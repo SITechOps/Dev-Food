@@ -5,4 +5,4 @@ def configure_mail(app):
     app.config['MAIL_USE_SSL'] = False
     app.config['MAIL_USERNAME'] = 'devfoodsender@gmail.com'
     app.config['MAIL_PASSWORD'] = 'hmmw mwim ofij jvnd'
-    return app
+    app.template_folder = '../../services/templates'
