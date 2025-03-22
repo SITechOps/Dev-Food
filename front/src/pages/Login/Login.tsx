@@ -1,56 +1,60 @@
 import Input from "../../componentes/Input";
 import { api } from "../../connection/axios";
-import { useAuth } from "../../connection/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent } from "react";
 import LogarGoogle from "./LogarGoogle";
 import Menu from "../../componentes/Menu";
 import Button from "../../componentes/Button";
+import { decodeToken } from "../../utils/decodeToken";
+// import { useAuth } from "../../connection/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
   const [senha, setSenha] = useState("");
   const [email, setEmail] = useState("");
-  const { setUserLogged } = useAuth();
+  // const { setUserLogged } = useAuth();
 
-  useEffect(() => {
-    setUserLogged(null);
-  }, []);
+  // useEffect(() => {
+  //   // 🔹 Certifica que ao carregar a tela, o usuário logado é limpo
+  //   setUserLogged(null);
+  // }, []);
 
   async function loginUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      const resp = await api.get("/user");
-
-      if (!resp?.data?.data?.attributes) {
-        throw new Error("Estrutura inesperada da resposta da API.");
+      const resp = await api.post("/login", {
+        data: {
+          email,
+          senha,
+        },
+      });
+  
+      const token = resp?.data?.properties?.token;
+      if (!token) {
+        throw new Error("Token não encontrado na resposta da API.");
       }
-
-      const respData = resp.data.data.attributes;
-
-      if (!Array.isArray(respData) || respData.length === 0) {
-        throw new Error("Nenhum usuário encontrado na resposta.");
+  
+      localStorage.setItem("token", token);
+  
+      const userData = decodeToken(token);
+      console.log(userData);
+      
+      if (!userData?.sub) {
+        throw new Error("ID do usuário não encontrado no token.");
       }
+      console.log("Usuário logado:", {
+        id: userData.sub, 
+        email,
+      });
 
-      const usuarioEncontrado = respData.find(
-        (usuario: any) => usuario.email === email
-      );
-
-      if (usuarioEncontrado) {
-        setUserLogged(usuarioEncontrado);
-        console.log(usuarioEncontrado);
-        localStorage.setItem("id_usuario", usuarioEncontrado.id);
-        navigate("/account");
-      } else {
-        alert("E-mail não cadastrado. Por favor, faça seu cadastro.");
-      }
+      navigate("/account");
     } catch (error: any) {
       console.error("Erro no login:", error);
       alert(error.response?.data?.message || "Erro ao fazer login.");
     }
-  }
-
+  }  
+  
   function botaoCadastro() {
     navigate("/");
   }
