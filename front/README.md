@@ -1,65 +1,26 @@
-# Padronização do Uso de Git e GitHub
-
-## Pegando a versão mais recente do `develop`
-Antes de criar uma nova branch, garanta que seu código está atualizado.
-```sh
-git checkout develop
-git pull origin develop
-```
-
-## Criando uma nova branch
-Agora você pode criar uma branch para suas mudanças.
-```sh
-git checkout -b minha-nova-branch
-```
-
-## Fazendo alterações e commitando
-Após modificar os arquivos necessários, adicione e salve suas mudanças no Git.
-```sh
-git add .
-git commit -m "Descrição das alterações"
-```
-
-## Mantendo sua branch atualizada com o `develop`
-Manter sua branch sincronizada com o `develop` evita conflitos ao fazer merge ou pull request.
-```sh
-git merge develop
-```
-Se houver conflitos, resolva-os e salve as alterações:
-```sh
-git add .
-git commit -m "Resolvendo conflitos"
-```
-Como alternativa ao merge, você pode usar `rebase`:
-```sh
-git rebase develop
-```
-
----
-
 # Estruturação Front-End
 
 Organização das pastas do `src` para manter o projeto modular e escalável:
 
-## 📂 `components`
+#### 📂 `components`
 Componentes reutilizáveis, como botões, inputs, modais e cards.
 
-## 📂 `helpers`
+#### 📂 `helpers`
 Funções auxiliares para manipulação de dados, formatação de textos, datas, etc.
 
-## 📂 `connection`
+#### 📂 `connection`
 Gerencia a comunicação com o backend, incluindo requisições à API e autenticação.
 
-## 📂 `interfaces`
+#### 📂 `interfaces`
 Define tipagens (interfaces e types) para manter o TypeScript organizado.
 
-## 📂 `pages`
+#### 📂 `pages`
 Contém as páginas principais do projeto, geralmente roteadas.
 
-## 📂 `uteis`
+#### 📂 `uteis`
 Armazena funções, constantes e configurações globais que podem ser utilizadas em diferentes partes do projeto.
 
-## 🎨 `index.css`
+#### 🎨 `index.css`
 Arquivo de estilo que combina Tailwind CSS com variáveis personalizadas. **Siga este padrão para manter a consistência.**
 
 ---
@@ -147,6 +108,47 @@ As cores utilizadas no `index.css` estão definidas como variáveis. Aqui estão
 No Figma, a cor selecionada terá um código hexadecimal (exemplo: `#ee4c58`). Compare esse código com as variáveis CSS para garantir que está usando a cor correta.
 
 ---
+# Uso dos Componentes de Botão
+
+Os botões possuem diferentes variações de estilo e funcionalidade:
+
+- **Botão Padrão (`default`)**: Exibe um botão com estilo padrão.
+  ```jsx
+  <Buttons color="default" onClick={() => alert("Botão Padrão")}>
+    Botão Padrão
+  </Buttons>
+  ```
+
+- **Botão Secundário (`secondary`)**: Apresenta um estilo alternativo.
+  ```jsx
+  <Buttons color="secondary" onClick={() => console.log("Secundário")}>
+    Botão Secundário
+  </Buttons>
+  ```
+
+- **Botão Contorno (`outlined`)**: Similar ao secundário, mas com bordas destacadas e sen a cor de fundo.
+  ```jsx
+  <Buttons color="outlined" onClick={() => console.log("Secundário")}>
+    Botão outlined
+  </Buttons>
+  ```
+
+- **Botão Simples (`plain`)**: Exibe um botão sem destaque, sem borda e sem cor de fundo.
+  ```jsx
+  <Buttons color="plain">
+    Botão Simples 
+  </Buttons>
+  ```
+
+- **Botão Desabilitado (`disabled`)**: Aparece visualmente desativado com a opcinada um pouco baixa e não responde a interações do usuário.
+  ```jsx
+  <Buttons color="plain" disabled>
+    disabled
+  </Buttons>
+  ```
+
+Cada variação é definida pelo atributo `color` dentro do componente `<Buttons>`, e eventos como `onClick, disabled, type` podem ser adicionados para personalizar a interação.
+
 
 FIGMA: https://www.figma.com/design/BQSuInzKROscBjBKKd4hak/Clone-ifood?node-id=0-1&p=f&t=UJRn2Gr58uB5HLVs-0
 
