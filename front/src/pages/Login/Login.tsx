@@ -7,18 +7,11 @@ import LogarGoogle from "./LogarGoogle";
 import Menu from "../../componentes/Menu";
 import Button from "../../componentes/Button";
 import { decodeToken } from "../../utils/decodeToken";
-// import { useAuth } from "../../connection/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
   const [senha, setSenha] = useState("");
   const [email, setEmail] = useState("");
-  // const { setUserLogged } = useAuth();
-
-  // useEffect(() => {
-  //   // 🔹 Certifica que ao carregar a tela, o usuário logado é limpo
-  //   setUserLogged(null);
-  // }, []);
 
   async function loginUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -70,7 +63,6 @@ export default function Login() {
             <FaAngleLeft className="icon" />
           </a>
           <legend className="text-center font-bold mx-2">
-            {" "}
             Como deseja continuar?
           </legend>
 
@@ -87,7 +79,7 @@ export default function Login() {
               type="email"
               value={email}
               placeholder={"fulano@exemplo.com"}
-              onChange={() => setEmail}
+              onChange={setEmail}
               className="mb-2"
             />
 
@@ -97,7 +89,7 @@ export default function Login() {
               type="text"
               value={senha}
               placeholder={"Digite sua senha"}
-              onChange={() => setSenha}
+              onChange={setSenha}
               className="mb-6"
             />
 

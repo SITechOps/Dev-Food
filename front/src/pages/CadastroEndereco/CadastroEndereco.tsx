@@ -16,8 +16,6 @@ import Button from "../../componentes/Button";
 import { decodeToken } from "../../utils/decodeToken";
 const userData = decodeToken(localStorage.getItem("token") || "");
 const idUsuario = userData?.sub
-console.log(idUsuario);
-
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const mapApiJs = "https://maps.googleapis.com/maps/api/js";
 
@@ -177,7 +175,7 @@ const CadastroEndereco = () => {
         className="bg-white rounded-md shadow w-[30] p-6"
         onSubmit={handleCadastrar}
       >
-        <legend className="text-center !mb-[2rem]">
+        <legend className="text-center mb-[2rem]">
           Entregamos tudo o que precisa na porta da sua casa, informe seu
           endereço
         </legend>

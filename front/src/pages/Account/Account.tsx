@@ -87,7 +87,7 @@ export default function Account() {
           />
         </div>
 
-        <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
+        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
           Nome:
           {isEditing ? (
             <Input type="text" id="nome" value={nome} onChange={setNome} />
@@ -112,7 +112,7 @@ export default function Account() {
           )}
         </p>
 
-        <p className="!mt-3 text-lg flex gap-2 items-center justify-center p-0">
+        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
           Senha:
           {isEditing ? (
             <Input type="text" id="senha" value={senha} onChange={setSenha} />
