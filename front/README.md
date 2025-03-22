@@ -2,27 +2,15 @@
 
 Organização das pastas do `src` para manter o projeto modular e escalável:
 
-#### 📂 `components`
-Componentes reutilizáveis, como botões, inputs, modais e cards.
-
-#### 📂 `helpers`
-Funções auxiliares para manipulação de dados, formatação de textos, datas, etc.
-
-#### 📂 `connection`
-Gerencia a comunicação com o backend, incluindo requisições à API e autenticação.
-
-#### 📂 `interfaces`
-Define tipagens (interfaces e types) para manter o TypeScript organizado.
-
-#### 📂 `pages`
-Contém as páginas principais do projeto, geralmente roteadas.
-
-#### 📂 `uteis`
-Armazena funções, constantes e configurações globais que podem ser utilizadas em diferentes partes do projeto.
-
-#### 🎨 `index.css`
-Arquivo de estilo que combina Tailwind CSS com variáveis personalizadas. **Siga este padrão para manter a consistência.**
-
+| 📂 Pasta         | Descrição |
+|----------------|------------|
+| **`components`** | Componentes reutilizáveis, como botões, inputs, modais e cards. |
+| **`helpers`** | Funções auxiliares para manipulação de dados, formatação de textos, datas, etc. |
+| **`connection`** | Gerencia a comunicação com o backend, incluindo requisições à API e autenticação. |
+| **`interfaces`** | Define tipagens (interfaces e types) para manter o TypeScript organizado. |
+| **`pages`** | Contém as páginas principais do projeto, geralmente roteadas. |
+| **`uteis`** | Armazena funções, constantes e configurações globais que podem ser utilizadas em diferentes partes do projeto. |
+| 🎨 **`index.css`** | Arquivo de estilo que combina Tailwind CSS com variáveis personalizadas. **Siga este padrão para manter a consistência.** |
 ---
 
 # Configuração do `index.css`
@@ -83,28 +71,9 @@ Criação de variáveis CSS para fontes e cores:
   --color-brown-dark: #c0434d;
 }
 ```
-# Como Identificar as Cores do CSS no Figma
+# Para Identificar as Cores do CSS no Figma
 
-Para garantir a consistência visual entre o design no Figma e o desenvolvimento front-end, siga este guia para identificar corretamente as cores definidas no `index.css` dentro do Figma.
-
-## Passo 1: Acessar o Painel de Estilos no Figma
-1. Abra o arquivo do projeto no Figma.
-2. Selecione o elemento cuja cor você deseja verificar.
-3. No painel direito, localize a seção **Fill (Preenchimento)**.
-4. Clique na cor para abrir o seletor de cores.
-
-## Passo 2: Comparar com as Variáveis CSS
-As cores utilizadas no `index.css` estão definidas como variáveis. Aqui estão algumas das principais:
-
-- `--color-gray-claro: #f1f1f1;`
-- `--color-gray-medio: #a9a9a9;`
-- `--color-green: #b5c865;`
-- `--color-blue: #374957;`
-- `--color-brown-ligth: #fdedee;`
-- `--color-brown-ligth-active: #fac8cb;`
-- `--color-brown-normal: #ee4c58;`
-- `--color-brown-dark: #c0434d;`
-
+As cores utilizadas estão `index.css` definidas como variáveis.
 No Figma, a cor selecionada terá um código hexadecimal (exemplo: `#ee4c58`). Compare esse código com as variáveis CSS para garantir que está usando a cor correta.
 
 ---
