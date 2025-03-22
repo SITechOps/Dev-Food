@@ -5,11 +5,14 @@ import { api } from "../connection/axios";
 import { useGoogleLogin } from "@react-oauth/google";
 import Button from "../componentes/Button";
 import Input from "../componentes/Input";
+import ModalEmail from "../componentes/ModalEmail";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [codigoEnviado, setCodigoEnviado] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const validarCampos = (): boolean => {
@@ -26,33 +29,20 @@ export default function Cadastro() {
 
   function fazerLogin(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
-    navigate('/login')
+    navigate("/login");
   }
 
-  async function cadastrarUsuario(event: FormEvent<HTMLFormElement>) {
+  async function enviarEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const dados = new FormData(event.currentTarget);
-    const nome = dados.get("nome")?.toString();
-    const email = dados.get("email")?.toString();
-    const senha = dados.get("senha")?.toString();
+    setIsModalOpen(true);
 
     try {
-      const response = await api.post("/user", {
-        data: { nome, email, senha },
+      const response = await api.post("/send-email", {
+        data: { email },
       });
-
-      const userId = response.data.userInfo.id;
-
-      localStorage.setItem("nomeUsuario", nome || "");
-      localStorage.setItem("emailUsuario", email || "");
-      localStorage.setItem("senhaUsuario", senha || "");
-      localStorage.setItem("userId", userId);
-
-      if (validarCampos()) {
-        navigate("/account");
-      }
+      setCodigoEnviado(response.data.properties.verificationCode);
     } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
+      console.error("Erro ao enviar email:", error);
     }
   }
 
@@ -65,7 +55,7 @@ export default function Cadastro() {
             headers: {
               Authorization: `Bearer ${tokenResponse.access_token}`,
             },
-          }
+          },
         );
         const {
           name: nome,
@@ -96,17 +86,21 @@ export default function Cadastro() {
     onError: (error) => console.log("Login Failed:", error),
   });
 
-
   return (
-    <div className="space-y-4 p-8 my-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 m-auto">
-
-      <form onSubmit={cadastrarUsuario}>
-        <button onClick={() => navigate(-1)} className="self-start mb-5">
+    <div className="m-auto my-[3rem] flex max-w-96 flex-col space-y-4 rounded-md bg-white p-8 shadow">
+      {isModalOpen && (
+        <ModalEmail
+          nome={nome}
+          email={email}
+          senha={senha}
+          codigoEnviado={codigoEnviado}
+        />
+      )}
+      <form onSubmit={enviarEmail}>
+        <button onClick={() => navigate(-1)} className="mb-5 self-start">
           <FaAngleLeft className="icon" />
         </button>
-        <legend className="text-center mb-4 font-bold">
-          Cadastra-se
-        </legend>
+        <legend className="mb-4 text-center font-bold">Cadastra-se</legend>
 
         <div className="w-full space-y-4">
           <Input
@@ -138,7 +132,12 @@ export default function Cadastro() {
           />
         </div>
 
-        <Button variant="filled" type="submit" className="!mt-5" disabled={!nome || !email || !senha}>
+        <Button
+          variant="filled"
+          type="submit"
+          className="!mt-5"
+          disabled={!nome || !email || !senha}
+        >
           Cadastrar
         </Button>
       </form>
@@ -148,12 +147,12 @@ export default function Cadastro() {
         <Button
           variant="plain"
           onClick={fazerLogin}
-          className="!w-[6rem] !p-0 !m-0"
+          className="!m-0 !w-[6rem] !p-0"
         >
           Fazer login
         </Button>
       </div>
-      <span className="text-center text-gray-medio mt-2 mb-6">
+      <span className="text-gray-medio mt-2 mb-6 text-center">
         -------------- OU --------------
       </span>
       <Button

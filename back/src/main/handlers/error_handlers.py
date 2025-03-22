@@ -25,3 +25,4 @@ def handle_value_error(error):
 @handlers_bp.app_errorhandler(405)
 def handle_value_error(error):
     return create_error_response("Método não permitido!", error.code)
+  
