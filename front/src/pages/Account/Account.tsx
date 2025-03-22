@@ -4,10 +4,9 @@ import { PiUserFocusThin } from "react-icons/pi";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Input from "../../componentes/Input";
-import Button from "../../componentes/Button";
 import { api } from "../../connection/axios";
 import { useNavigate } from "react-router-dom";
-import Menu from "../../componentes/Menu";
+import Button from "../../componentes/Button";
 
 export default function Account() {
   const [isEditing, setIsEditing] = useState(false);

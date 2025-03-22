@@ -9,10 +9,10 @@ import { loadAsyncScript } from "../../utils/loadAsyncScript";
 import { reverseGeoCode } from "../../utils/geolocation";
 import { Address } from "../../interface/IAddress";
 
-import Button from "../../componentes/Button";
 import Input from "../../componentes/Input";
 
 import { api } from "../../connection/axios";
+import Button from "../../componentes/Button";
 const idUsuario = localStorage.getItem("id_usuario");
 
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -184,7 +184,7 @@ const CadastroEndereco = () => {
             ref={searchInput}
             type="text"
             placeholder="Digite o endereço..."
-            className="!p-4 bg-black w-full pr-12"
+            className="p-4 bg-black w-full pr-12"
           />
           <button
             type="button"
@@ -217,7 +217,7 @@ const CadastroEndereco = () => {
           value={numero}
           placeholder="Número"
           onChange={(value: string) => setNumero(value)}
-          className="!p-4 mb-3"
+          className="p-4 mb-3"
         />
 
         <Input
@@ -225,7 +225,7 @@ const CadastroEndereco = () => {
           value={complemento}
           placeholder="Complemento..."
           onChange={(value: string) => setComplemento(value)}
-          className="!p-4 mb-3"
+          className="p-4 mb-3"
         />
         <label className="block text-gray-700 mb-2">Favoritar como:</label>
         <div className="flex space-x-4 mb-6">

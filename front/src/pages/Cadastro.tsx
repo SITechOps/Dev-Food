@@ -3,9 +3,9 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { api } from "../connection/axios";
 import { useGoogleLogin } from "@react-oauth/google";
-import Button from "../componentes/Button";
 import Input from "../componentes/Input";
 import ModalEmail from "../componentes/ModalEmail";
+import Button from "../componentes/Button";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -133,9 +133,8 @@ export default function Cadastro() {
         </div>
 
         <Button
-          variant="filled"
           type="submit"
-          className="!mt-5"
+          className="mt-5"
           disabled={!nome || !email || !senha}
         >
           Cadastrar
@@ -145,24 +144,19 @@ export default function Cadastro() {
       <div className="flex justify-end">
         <span className="text-gray-medio">Já tenho conta</span>
         <Button
-          variant="plain"
+          color="plain"
           onClick={fazerLogin}
-          className="!m-0 !w-[6rem] !p-0"
-        >
-          Fazer login
-        </Button>
+          className="m-0 w-[6rem] p-0">Fazer login</Button>
       </div>
       <span className="text-gray-medio mt-2 mb-6 text-center">
         -------------- OU --------------
       </span>
       <Button
-        variant="filledIcon"
-        color="secundary"
-        img
-        onClick={handleCadastroGoogle}
-      >
-        Fazer cadastro com o Google
-      </Button>
+          color="secondary"
+          className="justify-center items-center flex gap-4"
+          onClick={() => handleCadastroGoogle()}> 
+          <img src="img/google.svg" alt="" className="size-4" />
+          Fazer cadastro com o Google</Button>
     </div>
   );
 }

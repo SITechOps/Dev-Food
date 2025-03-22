@@ -17,7 +17,7 @@ export default function Menu({ children }: MenuProps) {
   };
 
   return (
-    <header className="bg-gray-claro shadow-md fixed w-full h-25 px-20 top-0 left-0 right-0 z-50 mx-0">
+    <header className="bg-white shadow-md fixed w-full h-25 px-20 top-0 left-0 right-0 z-50 mx-0">
       <div className="flex justify-between items-center p-5 mx-10">
         <Link to="/">
           <img src={iFoodLogo} alt="iFood Logo" className="h-15" />
@@ -27,27 +27,25 @@ export default function Menu({ children }: MenuProps) {
 
         <div className="flex gap-14">
           <Button
-            variant="plain"
+            color="plain"
             onClick={() => navigate("/pedido")}
-            className="!w-40 !py-2"
+            className="w-40 py-2"
           >
             Faça seu pedido
           </Button>
           {isAuthenticated ? (
             <Button
-              variant="filled"
-              color="secundary"
+              color="secondary"
               onClick={handleLogout}
-              className="!w-25 !py-2"
+              className="w-25 py-2"
             >
               Sair
             </Button>
           ) : (
             <Button
-              variant="filled"
-              color="secundary"
+              color="secondary"
               onClick={() => navigate("/login")}
-              className="!w-25 !py-2"
+              className="w-25 py-2"
             >
               Entrar
             </Button>

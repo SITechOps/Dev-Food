@@ -1,7 +1,7 @@
 import CodeInput from "react-code-input";
-import Button from "./Button";
 import { FormEvent, useState } from "react";
 import { api } from "../connection/axios";
+import Button from "./Button";
 
 interface ModalEmailPros {
   nome: string;
@@ -71,7 +71,7 @@ export default function ModalEmail({
           />
         </div>
         <p className="text-lg">Insira o código enviado por email!</p>
-        <Button onClick={validarCodigo} className="!p-2">
+        <Button onClick={() => validarCodigo} className="p-2">
           Confirmar
         </Button>
       </div>

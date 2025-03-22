@@ -1,12 +1,12 @@
 import Input from "../../componentes/Input";
 import { api } from "../../connection/axios";
 import { useAuth } from "../../connection/AuthContext";
-import Button from "../../componentes/Button";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useState, FormEvent, useEffect } from "react";
 import LogarGoogle from "./LogarGoogle";
 import Menu from "../../componentes/Menu";
+import Button from "../../componentes/Button";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,7 +15,6 @@ export default function Login() {
   const { setUserLogged } = useAuth();
 
   useEffect(() => {
-    // 🔹 Certifica que ao carregar a tela, o usuário logado é limpo
     setUserLogged(null);
   }, []);
 
@@ -84,7 +83,7 @@ export default function Login() {
               type="email"
               value={email}
               placeholder={"fulano@exemplo.com"}
-              onChange={setEmail}
+              onChange={() => setEmail}
               className="mb-2"
             />
 
@@ -94,13 +93,12 @@ export default function Login() {
               type="text"
               value={senha}
               placeholder={"Digite sua senha"}
-              onChange={setSenha}
+              onChange={() => setSenha}
               className="mb-6"
             />
 
             <Button
-              variant="filled"
-              onClick={loginUser}
+              onClick={() => loginUser}
               disabled={!email || !senha}
             >
               Entrar
@@ -110,9 +108,9 @@ export default function Login() {
           <div className="flex justify-end mt-2">
             <span className="text-gray-medio">Não tem conta?</span>
             <Button
-              variant="plain"
+              color="plain"
               onClick={botaoCadastro}
-              className="!w-[6rem] !p-0 !m-0"
+              className="w-[6rem] p-0 m-0"
             >
               Cadastre-se
             </Button>

@@ -1,4 +1,6 @@
 import { IInputProps } from "../interface/IInputs";
+import { twMerge } from 'tailwind-merge'
+
 
 export default function Input({
   label,
@@ -11,6 +13,8 @@ export default function Input({
   disabled,
   onChange,
 }: IInputProps) {
+
+  const baseCss = "bg-gray-claro border-slate-300 outline-slate-400 px-4 py-2 mt-1 rounded-sm w-full"
   return (
     <div className="">
       <label htmlFor={id} className="font-medium">
@@ -22,7 +26,7 @@ export default function Input({
         ref={ref}
         name={id}
         placeholder={placeholder}
-        className={`${"bg-gray-claro border-slate-300 outline-slate-400 px-4 py-2 mt-1 rounded-sm w-full"} ${className}`}
+        className={twMerge(baseCss, className)}
         value={value}
         disabled={disabled}
         onChange={onChange ? (e) => onChange(e.target.value) : undefined}

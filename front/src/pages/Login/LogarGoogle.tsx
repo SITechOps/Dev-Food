@@ -1,10 +1,10 @@
 import axios from "axios";
 import { api } from "../../connection/axios";
 import { useAuth } from "../../connection/AuthContext";
-import Button from "../../componentes/Button";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
+import Button from "../../componentes/Button";
 
 
 export default function LogarGoogle() {
@@ -19,7 +19,7 @@ export default function LogarGoogle() {
 
   useEffect(() => {
     if (!user) return;
-  
+
     axios
       .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
         headers: {
@@ -29,31 +29,27 @@ export default function LogarGoogle() {
       })
       .then(async (res) => {
         setUserLogged(res.data);
-  
+
         const { data } = await api.get("/user");
         const usuarios = data?.data?.attributes || [];
-  
+
         const usuarioEncontrado = usuarios.find((usuario: any) => usuario.email === res.data.email);
-  
+
         usuarioEncontrado
           ? navigate("/account", { state: { profile: res.data } })
           : alert("Você não tem e-mail cadastrado no sistema. Faça seu cadastro.");
       })
       .catch((err) => console.error("Erro ao buscar informações do Google:", err));
   }, [user]);
-  
-  //   const logOut = () => {
-  //     googleLogout();
-  //     setProfile(null);
-  // };
+
   return (
-        <Button
-          variant="filledIcon"
-          color="secundary"
-          img
-          onClick={() => loginGoogle()}
-        >
-          Fazer login com o Google
-        </Button>
+    <Button
+      color="secondary"
+      onClick={() => loginGoogle()}
+      className="justify-center items-center flex gap-4"
+    >
+      <img src="img/google.svg" alt="" className="size-4" />
+      Fazer login com o Google
+    </Button>
   );
 }
