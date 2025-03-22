@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import iFoodLogo from "../assets/ifood.png";
 import Button from "./Button";
 
-export default function Menu() {
+interface MenuProps {
+  children?: ReactNode; // Define 'children' como opcional
+}
+
+export default function Menu({ children }: MenuProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticação
 
   const navigate = useNavigate();
@@ -18,6 +22,8 @@ export default function Menu() {
         <Link to="/">
           <img src={iFoodLogo} alt="iFood Logo" className="h-15" />
         </Link>
+
+        {children}
 
         <div className="flex gap-14">
           <Button
