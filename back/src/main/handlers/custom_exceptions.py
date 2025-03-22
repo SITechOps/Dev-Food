@@ -23,3 +23,8 @@ class UserNotFound(BaseCustomException):
 class AddressNotFound(BaseCustomException):
     def __init__(self, message="Endereço não encontrado!"):
         super().__init__(message, 404)
+
+
+class WrongPassword(BaseCustomException):
+    def __init__(self, message="Senha incorreta!"):
+        super().__init__(message, 401)
