@@ -13,7 +13,10 @@ import Button from "../../componentes/Button";
 import Input from "../../componentes/Input";
 
 import { api } from "../../connection/axios";
-const idUsuario = localStorage.getItem("id_usuario");
+import { decodeToken } from "../../utils/decodeToken";
+const userData = decodeToken(localStorage.getItem("token") || "");
+const idUsuario = userData?.sub
+console.log(idUsuario);
 
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const mapApiJs = "https://maps.googleapis.com/maps/api/js";
