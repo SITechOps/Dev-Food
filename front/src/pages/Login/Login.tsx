@@ -55,10 +55,10 @@ export default function Login() {
   return (
     <>
       <Menu />
-      <div className="flex flex-col w-full m-auto my-[3rem] items-center justify-center mt-[3rem] pt-24">
+      <div className="flex flex-col w-full m-auto items-center justify-center pt-10">
         <h1 className="font-bold mt-4">Faça o seu login</h1>
 
-        <div className="space-y-4 p-8 mt-[3rem] bg-white rounded-md shadow flex flex-col max-w-96 gap-2">
+        <div className="card space-y-4 mt-[3rem] shadow flex flex-col max-w-96 gap-2">
           <a href="/" className="self-start mb-5">
             <FaAngleLeft className="icon" />
           </a>

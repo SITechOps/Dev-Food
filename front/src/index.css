@@ -2,61 +2,53 @@
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities";
 
-body {
-  width: 80%;
-  margin: auto;
-  background-color: white;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-brown-ligth);
-  left: 0;
-  top: 0;
-  clip-path: ellipse(50% 100% at left center);
-  z-index: -1;
-}
-
 @layer utilities  {
+  body {
+    @apply relative w-4/5 mx-auto bg-white;
+  }
+
+  body::before {
+    content: "";
+    @apply fixed w-full h-full bg-[#fdedee] left-0 top-0 -z-10;
+    clip-path: ellipse(50% 100% at left center);
+  }
+
   .icon{
     @apply text-brown-normal text-[1.5rem] cursor-pointer
     
   }
-  p, h1, h2, h3, h4,  input, select, label, legend{
-    @apply text-blue font-Dosis
+  p, h1, h2, h3, h4,  input, select, label, legend, span{
+    @apply text-blue
     
   }
 
   h1 {
-    @apply text-[2.25rem];
+    @apply text-4xl;
   }
 
   h2 {
-    @apply text-[1.875rem];
+    @apply text-3xl;
   }
 
   h3 {
-    @apply text-[1.5rem];
+    @apply text-2xl;
   }
   h4{
-     @apply text-[1.3rem];
+    @apply text-[1.3rem];
   }
 
  p, legend{
-     @apply text-[1rem];
+    @apply text-base;
+  }
+
+  .modal, .card{
+    @apply bg-white rounded-md shadow p-8
   }
 }
 
 @theme {
   /* Variavéis de FONTE  */
-  --font-Dosis: "Dosis", serif;
-  /*--font-h1: 2.25rem;  36px */
-  /*--font-h2: 1.875rem;  30px */
-  /*--font-h3: 1.5rem;   24px */
-  /*--font-p: 1rem;     16px */
+  --font-sans: "Dosis", serif;
 
   /* Variaveis das CORES  */
   --color-gray-claro: #f1f1f1;

@@ -87,7 +87,7 @@ export default function Cadastro() {
   });
 
   return (
-    <div className="m-auto my-[3rem] flex max-w-96 flex-col space-y-4 rounded-md bg-white p-8 shadow">
+    <div className="card m-auto my-[3rem] flex max-w-96 flex-col space-y-4">
       {isModalOpen && (
         <ModalEmail
           nome={nome}
@@ -111,7 +111,7 @@ export default function Cadastro() {
             placeholder={"Fulando de tal"}
             onChange={setNome}
           />
-          <div className="font-Dosis flex items-center justify-end space-x-2">
+          <div className="flex items-center justify-end space-x-2">
             <Input
               label="Informe o seu email:"
               id="email"

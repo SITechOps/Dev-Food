@@ -3,7 +3,7 @@ import { ComponentProps } from "react";
 import { twMerge } from 'tailwind-merge'
 
 const button = tv({
-  base: "font-Dosis font-medium p-4 rounded-sm w-full cursor-pointer transition-all duration-200",
+  base: "font-medium p-4 rounded-sm w-full cursor-pointer transition-all duration-200",
   variants: {
     color: {
       default: "bg-brown-normal text-white hover:bg-brown-dark",
