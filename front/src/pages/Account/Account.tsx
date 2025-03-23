@@ -37,8 +37,7 @@ export default function Account() {
 
       localStorage.setItem("nomeUsuario", nome || "");
       localStorage.setItem("senhaUsuario", senha || "");
-      setIsEditing(false)
-      
+      setIsEditing(false);
     } catch (error) {
       alert("Erro ao alterar usuário. Tente novamente.");
     }
@@ -62,18 +61,18 @@ export default function Account() {
     }
   }
 
-  return ( 
-    <section className="flex flex-col items-center justify-center m-auto bg-white rounded-md shadow w-[50%] p-5">
-      <a href="/home" className="self-start ml-4 mb-5">
+  return (
+    <section className="m-auto flex w-[50%] flex-col items-center justify-center rounded-md bg-white p-5 shadow">
+      <a href="/home" className="mb-5 ml-4 self-start">
         <FaAngleLeft className="icon" />
       </a>
 
-      <div className="w-[10rem] h-[10rem] bg-gray-claro rounded-full flex flex-col items-center justify-center ">
-        <PiUserFocusThin className="text-[8rem] text-gray-medio" />
+      <div className="bg-gray-claro flex h-[10rem] w-[10rem] flex-col items-center justify-center rounded-full">
+        <PiUserFocusThin className="text-gray-medio text-[8rem]" />
       </div>
 
-      <form onSubmit={alterarUsuario} className="text-center mt-5">
-        <div id="icones-de-acao" className="flex gap-4 justify-end">
+      <form onSubmit={alterarUsuario} className="mt-5 text-center">
+        <div id="icones-de-acao" className="flex justify-end gap-4">
           <FiEdit2
             id="Editar"
             className="icon cursor-pointer"
@@ -87,7 +86,7 @@ export default function Account() {
           />
         </div>
 
-        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+        <p className="mt-3 flex items-center justify-center gap-2 p-0 text-lg">
           Nome:
           {isEditing ? (
             <Input type="text" id="nome" value={nome} onChange={setNome} />
@@ -96,7 +95,7 @@ export default function Account() {
           )}
         </p>
 
-        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+        <p className="mt-3 flex items-center justify-center gap-2 p-0 text-lg">
           Email:
           {isEditing ? (
             <Input
@@ -112,7 +111,7 @@ export default function Account() {
           )}
         </p>
 
-        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+        <p className="mt-3 flex items-center justify-center gap-2 p-0 text-lg">
           Senha:
           {isEditing ? (
             <Input type="text" id="senha" value={senha} onChange={setSenha} />
@@ -120,7 +119,6 @@ export default function Account() {
             <span className="font-semibold">{senha}</span>
           )}
         </p>
-
 
         {isEditing && (
           <Button type="submit" className="mt-[3rem]">

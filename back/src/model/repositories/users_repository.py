@@ -6,10 +6,15 @@ from .interfaces.iusers_repository import IUsersRepository
 class UsersRepository(IUsersRepository):
 
     
-    def create_user(self, nome: str, email: str, senha: str, is_admin: bool = False) -> None:
+    def insert(self, user_info: dict, is_admin: bool = False) -> None:
         with DBConnectionHandler() as db:
             try:
-                new_user = User(nome=nome, email=email, senha=senha, is_admin=is_admin)  
+                new_user = User(
+                    nome=user_info.get("nome"),
+                    email=user_info.get("email"),
+                    senha=user_info.get("senha"),
+                    is_admin=is_admin
+                )  
                 db.session.add(new_user)
                 db.session.commit()
                 return new_user.id
@@ -18,7 +23,7 @@ class UsersRepository(IUsersRepository):
                 raise exception
                 
 
-    def get_user_by_id(self, user_id: int) -> User:
+    def find_by_id(self, user_id: int) -> User | None:
         with DBConnectionHandler() as db:
             user = (
                 db.session
@@ -26,20 +31,11 @@ class UsersRepository(IUsersRepository):
                 .filter(User.id == user_id)
                 .one_or_none()
             )
+            if not user: raise UserNotFound()
             return user
         
 
-    def list_users(self) -> list[User]:
-        with DBConnectionHandler() as db:
-            users = (
-                db.session
-                .query(User)
-                .all()
-            )
-            return users
-        
-
-    def get_user_by_email(self, user_email: str) -> User:
+    def find_by_email(self, user_email: str) -> User | None:
         with DBConnectionHandler() as db:
             user = (
                 db.session
@@ -48,16 +44,24 @@ class UsersRepository(IUsersRepository):
                 .one_or_none()
             )
             return user
+        
+
+    def find_all_users(self) -> list[User]:
+        with DBConnectionHandler() as db:
+            users = (
+                db.session
+                .query(User)
+                .all()
+            )
+            return users
     
 
-    def update_user(self, user_id: int, nome: str, senha: str) -> None:
+    def update(self, user_id: int, user_info: dict) -> None:
         with DBConnectionHandler() as db:
             try:
-                user = self.get_user_by_id(user_id)     
-                if not user:
-                    raise UserNotFound()    
-                user.nome = nome
-                user.senha = senha
+                user = self.find_by_id(user_id)        
+                user.nome = user_info.get("nome")
+                user.senha = user_info.get("senha")
                 db.session.add(user)
                 db.session.commit()
             except Exception as exception:
@@ -65,12 +69,10 @@ class UsersRepository(IUsersRepository):
                 raise exception
     
 
-    def delete_user(self, user_id: int) -> None:
+    def delete(self, user_id: int) -> None:
         with DBConnectionHandler() as db:
             try:
-                user = self.get_user_by_id(user_id)
-                if not user:
-                    raise UserNotFound()       
+                user = self.find_by_id(user_id)     
                 db.session.delete(user)
                 db.session.commit()
             except Exception as exception:

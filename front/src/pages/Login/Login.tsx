@@ -22,22 +22,22 @@ export default function Login() {
           senha,
         },
       });
-  
-      const token = resp?.data?.properties?.token;
+
+      const token = resp?.data?.token;
       if (!token) {
         throw new Error("Token não encontrado na resposta da API.");
       }
-  
+
       localStorage.setItem("token", token);
-  
+
       const userData = decodeToken(token);
       console.log(userData);
-      
+
       if (!userData?.sub) {
         throw new Error("ID do usuário não encontrado no token.");
       }
       console.log("Usuário logado:", {
-        id: userData.sub, 
+        id: userData.sub,
         email,
       });
 
@@ -46,8 +46,8 @@ export default function Login() {
       console.error("Erro no login:", error);
       alert(error.response?.data?.message || "Erro ao fazer login.");
     }
-  }  
-  
+  }
+
   function botaoCadastro() {
     navigate("/");
   }
@@ -55,20 +55,20 @@ export default function Login() {
   return (
     <>
       <Menu />
-      <div className="flex flex-col w-full m-auto items-center justify-center pt-10">
-        <h1 className="font-bold mt-4">Faça o seu login</h1>
+      <div className="m-auto flex w-full flex-col items-center justify-center pt-10">
+        <h1 className="mt-4 font-bold">Faça o seu login</h1>
 
-        <div className="card space-y-4 mt-[3rem] shadow flex flex-col max-w-96 gap-2">
-          <a href="/" className="self-start mb-5">
+        <div className="card mt-[3rem] flex max-w-96 flex-col gap-2 space-y-4 shadow">
+          <a href="/" className="mb-5 self-start">
             <FaAngleLeft className="icon" />
           </a>
-          <legend className="text-center font-bold mx-2">
+          <legend className="mx-2 text-center font-bold">
             Como deseja continuar?
           </legend>
 
           <LogarGoogle />
 
-          <span className="text-center text-gray-medio mb-4">
+          <span className="text-gray-medio mb-4 text-center">
             -------------- OU --------------
           </span>
 
@@ -93,20 +93,17 @@ export default function Login() {
               className="mb-6"
             />
 
-            <Button
-              onClick={() => loginUser}
-              disabled={!email || !senha}
-            >
+            <Button onClick={() => loginUser} disabled={!email || !senha}>
               Entrar
             </Button>
           </form>
 
-          <div className="flex justify-end mt-2">
+          <div className="mt-2 flex justify-end">
             <span className="text-gray-medio">Não tem conta?</span>
             <Button
               color="plain"
               onClick={botaoCadastro}
-              className="w-[6rem] p-0 m-0"
+              className="m-0 w-[6rem] p-0"
             >
               Cadastre-se
             </Button>

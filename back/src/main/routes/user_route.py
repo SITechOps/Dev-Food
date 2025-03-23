@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from src.model.repositories.users_repository import UsersRepository
-from src.controllers.usuario_manager import UsersManager
+from src.controllers.users_manager import UsersManager
 from src.http_types.http_request import HttpRequest
 
 user_route_bp = Blueprint('user_route', __name__)
@@ -13,7 +13,7 @@ def create_new_user():
     users_repo = UsersRepository()
     users_manager = UsersManager(users_repo)
 
-    http_response = users_manager.create_user(http_request)
+    http_response = users_manager.create_new_user(http_request)
     
     return jsonify(http_response.body), http_response.status_code
 
@@ -47,16 +47,18 @@ def update_user(id):
     users_repo = UsersRepository()
     users_manager = UsersManager(users_repo)
 
-    http_response = users_manager.update_user(http_request)
+    http_response = users_manager.update(http_request)
     
     return jsonify(http_response.body), http_response.status_code
 
 
 @user_route_bp.delete('/user/<int:id>')
 def delete_user(id):
+    http_request = HttpRequest(params={"id": id})
+
     users_repo = UsersRepository()
     users_manager = UsersManager(users_repo)
 
-    http_response = users_manager.delete_user(id)
+    http_response = users_manager.delete(http_request)
     
     return jsonify(http_response.body), http_response.status_code

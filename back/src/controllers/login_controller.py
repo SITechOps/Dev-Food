@@ -13,7 +13,7 @@ class LoginController:
         email = data.get("email")
         senha = data.get("senha")
 
-        user_info = self.__users_repo.get_user_by_email(email)
+        user_info = self.__users_repo.find_by_email(email)
         if not user_info:
             raise UserNotFound()
         if user_info.senha != senha:

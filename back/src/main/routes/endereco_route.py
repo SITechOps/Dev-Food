@@ -37,14 +37,16 @@ def update_endereco(id_endereco):
     endereco_repo = EnderecosRepository()
     endereco_manager = EnderecosManager(endereco_repo)
 
-    http_response = endereco_manager.update_endereco(http_request)
+    http_response = endereco_manager.update(http_request)
     return jsonify(http_response.body), http_response.status_code
 
 
 @endereco_route_bp.delete('/endereco/<int:id_endereco>')
 def delete_endereco(id_endereco):
+    http_request = HttpRequest(params={"id_endereco": id_endereco})
+
     endereco_repo = EnderecosRepository()
     endereco_manager = EnderecosManager(endereco_repo)
 
-    http_response = endereco_manager.delete_endereco(id_endereco)
+    http_response = endereco_manager.delete(http_request)
     return jsonify(http_response.body), http_response.status_code

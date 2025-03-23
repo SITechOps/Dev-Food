@@ -6,24 +6,24 @@ class IUsersRepository(ABC):
 
 
     @abstractmethod
-    def create_user(self, nome: str, email: str, senha: str, is_admin: bool = False) -> None: pass
+    def insert(self, user_info: dict, is_admin: bool = False) -> None: pass
 
 
     @abstractmethod
-    def get_user_by_id(self, user_id: int) -> User: pass
-        
-
-    @abstractmethod
-    def list_users(self) -> list[User]: pass
+    def find_by_id(self, user_id: int) -> User | None: pass
 
 
     @abstractmethod
-    def get_user_by_email(self, user_email: str) -> User: pass
+    def find_by_email(self, user_email: str) -> User | None: pass
 
 
     @abstractmethod
-    def update_user(self, user_id: int, nome: str, senha: str) -> None: pass
+    def find_all_users(self) -> list[User]: pass
 
 
     @abstractmethod
-    def delete_user(self, user_id: int) -> None: pass
+    def update(self, user_id: int, user_info: dict) -> None: pass
+
+
+    @abstractmethod
+    def delete(self, user_id: int) -> None: pass

@@ -5,7 +5,7 @@ from src.main.handlers.custom_exceptions import AddressNotFound
 
 class EnderecosRepository(IEnderecosRepository):
 
-    def create_endereco(self, id_usuario: int, endereco: dict) -> None:
+    def create(self, id_usuario: int, endereco: dict) -> None:
         with DBConnectionHandler() as db:
             try:
                 new_endereco = Endereco(
@@ -26,7 +26,7 @@ class EnderecosRepository(IEnderecosRepository):
                 raise exception
 
 
-    def get_all_enderecos_by_user(self, id_usuario: int) -> list[Endereco]:
+    def find_all_enderecos_by_user(self, id_usuario: int) -> list[Endereco]:
         with DBConnectionHandler() as db:
             enderecos = (
                 db.session
@@ -37,7 +37,7 @@ class EnderecosRepository(IEnderecosRepository):
             return enderecos
         
 
-    def __get_endereco_by_id(self, id_endereco: int) -> Endereco | None:
+    def __find_by_id(self, id_endereco: int) -> Endereco | None:
         with DBConnectionHandler() as db:
             enderecos = (
                 db.session
@@ -50,10 +50,10 @@ class EnderecosRepository(IEnderecosRepository):
             return enderecos
 
 
-    def update_endereco(self, id_endereco: int, info: Endereco) -> None:
+    def update(self, id_endereco: int, info: Endereco) -> None:
         with DBConnectionHandler() as db:
             try:
-                endereco = self.__get_endereco_by_id(id_endereco)              
+                endereco = self.__find_by_id(id_endereco)          
                 endereco.logradouro = info.get("logradouro")
                 endereco.bairro = info.get("bairro")
                 endereco.cidade = info.get("cidade")
@@ -70,10 +70,10 @@ class EnderecosRepository(IEnderecosRepository):
                 raise exception
 
 
-    def delete_endereco(self, id_endereco: int) -> None:
+    def delete(self, id_endereco: int) -> None:
         with DBConnectionHandler() as db:
             try:
-                endereco = self.__get_endereco_by_id(id_endereco)
+                endereco = self.__find_by_id(id_endereco)
                 db.session.delete(endereco)
                 db.session.commit()
             except Exception as exception:
