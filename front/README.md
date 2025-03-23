@@ -2,75 +2,85 @@
 
 Organização das pastas do `src` para manter o projeto modular e escalável:
 
-#### 📂 `components`
-Componentes reutilizáveis, como botões, inputs, modais e cards.
-
-#### 📂 `helpers`
-Funções auxiliares para manipulação de dados, formatação de textos, datas, etc.
-
-#### 📂 `connection`
-Gerencia a comunicação com o backend, incluindo requisições à API e autenticação.
-
-#### 📂 `interfaces`
-Define tipagens (interfaces e types) para manter o TypeScript organizado.
-
-#### 📂 `pages`
-Contém as páginas principais do projeto, geralmente roteadas.
-
-#### 📂 `uteis`
-Armazena funções, constantes e configurações globais que podem ser utilizadas em diferentes partes do projeto.
-
-#### 🎨 `index.css`
-Arquivo de estilo que combina Tailwind CSS com variáveis personalizadas. **Siga este padrão para manter a consistência.**
-
+| 📂 Pasta         | Descrição |
+|----------------|------------|
+| **`components`** | Componentes reutilizáveis, como botões, inputs, modais e cards. |
+| **`helpers`** | Funções auxiliares para manipulação de dados, formatação de textos, datas, etc. |
+| **`connection`** | Gerencia a comunicação com o backend, incluindo requisições à API e autenticação. |
+| **`interfaces`** | Define tipagens (interfaces e types) para manter o TypeScript organizado. |
+| **`pages`** | Contém as páginas principais do projeto, geralmente roteadas. |
+| **`uteis`** | Armazena funções, constantes e configurações globais que podem ser utilizadas em diferentes partes do projeto. |
+| 🎨 **`index.css`** | Arquivo de estilo que combina Tailwind CSS com variáveis personalizadas. **Siga este padrão para manter a consistência.** |
 ---
 
 # Configuração do `index.css`
 
-O arquivo `index.css` é responsável por definir estilos globais e personalizações para o projeto, combinando Tailwind CSS com variáveis customizadas.
+O arquivo `index.css` é responsável por definir estilos globais e personalizações para o projeto, garantindo um design consistente em toda a aplicação.
 
-### Importação do Tailwind CSS
-As configurações básicas do Tailwind CSS são importadas da seguinte forma:
-```css
-@import "tailwindcss";
-@import "tailwindcss/theme";
-@import "tailwindcss/utilities";
-```
+## Estilos Globais
 
-### Estilos Globais
 Configuração do corpo da página:
-```css
-body {
-  width: 80%;
-  margin: auto;
-  background-color: white;
-}
-```
 
-### Camada de Utilitários
-Classes utilitárias personalizadas para ícones e tipografia:
 ```css
 @layer utilities {
+  body {
+    @apply relative w-4/5 mx-auto bg-white;
+  }
+
+  body::before {
+    content: "";
+    @apply fixed w-full h-full bg-[#fdedee] left-0 top-0 -z-10;
+    clip-path: ellipse(50% 100% at left center);
+  }
+```
+
+## Camada de Utilitários
+
+Estilos padrões aplicados automaticamente às tags especificadas. Não é necessário adicionar classes extras, apenas usar as tags corretamente para que elas recebam os valores já definidos.
+
+```css
   .icon {
     @apply text-brown-normal text-[1.5rem] cursor-pointer;
   }
-  p, h1, h2, h3, h4, input, select, label, legend {
-    @apply text-blue font-Dosis;
+
+  p, h1, h2, h3, h4, input, select, label, legend, span {
+    @apply text-blue;
   }
-  h1 {@apply text-[2.25rem];}
-  h2 {@apply text-[1.875rem];}
-  h3 {@apply text-[1.5rem];}
-  h4 {@apply text-[1.3rem];}
-  p, legend {@apply text-[1rem];}
+
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-[1.3rem];
+  }
+
+  p, legend {
+    @apply text-base;
+  }
+
+  .modal, .card {
+    @apply bg-white rounded-md shadow p-8;
+  }
 }
 ```
 
-### Definição de Tema
-Criação de variáveis CSS para fontes e cores:
+## Definição de Tema
+
+Abaixo estão as paletas de cores utilizadas na aplicação. Essas cores são aplicadas globalmente e garantem a harmonia visual do projeto.
+
 ```css
 @theme {
   /* Variáveis de Fonte */
-  --font-Dosis: "Dosis", serif;
+  --font-sans: "Dosis", serif;
 
   /* Variáveis de Cores */
   --color-gray-claro: #f1f1f1;
@@ -83,29 +93,13 @@ Criação de variáveis CSS para fontes e cores:
   --color-brown-dark: #c0434d;
 }
 ```
-# Como Identificar as Cores do CSS no Figma
 
-Para garantir a consistência visual entre o design no Figma e o desenvolvimento front-end, siga este guia para identificar corretamente as cores definidas no `index.css` dentro do Figma.
 
-## Passo 1: Acessar o Painel de Estilos no Figma
-1. Abra o arquivo do projeto no Figma.
-2. Selecione o elemento cuja cor você deseja verificar.
-3. No painel direito, localize a seção **Fill (Preenchimento)**.
-4. Clique na cor para abrir o seletor de cores.
+# Para Identificar as Cores do CSS no Figma ou uso de imagem 
 
-## Passo 2: Comparar com as Variáveis CSS
-As cores utilizadas no `index.css` estão definidas como variáveis. Aqui estão algumas das principais:
-
-- `--color-gray-claro: #f1f1f1;`
-- `--color-gray-medio: #a9a9a9;`
-- `--color-green: #b5c865;`
-- `--color-blue: #374957;`
-- `--color-brown-ligth: #fdedee;`
-- `--color-brown-ligth-active: #fac8cb;`
-- `--color-brown-normal: #ee4c58;`
-- `--color-brown-dark: #c0434d;`
-
-No Figma, a cor selecionada terá um código hexadecimal (exemplo: `#ee4c58`). Compare esse código com as variáveis CSS para garantir que está usando a cor correta.
+- As cores utilizadas estão `index.css` definidas como variáveis.
+- No Figma, a cor selecionada terá um código hexadecimal (exemplo: `#ee4c58`). Compare esse código com as variáveis CSS para garantir que está usando a cor correta.
+- As imagem deve ser retira do React Icons
 
 ---
 # Uso dos Componentes de Botão
