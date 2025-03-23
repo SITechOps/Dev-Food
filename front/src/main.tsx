@@ -5,11 +5,12 @@ import Home from "./pages/Home.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import { createRoot } from "react-dom/client";
-import Account from "./pages/Account/Account.tsx";
+import Account from "./pages/Account.tsx";
 import { AuthProvider } from "./connection/AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CadastroEndereco from "./componentes/CadastroEndereco.tsx";
+import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/account",
-    element: <Account />,
+    element: (
+      <ProtectedRoute>
+        <Account />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/c-endereco",
