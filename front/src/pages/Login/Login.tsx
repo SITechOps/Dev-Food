@@ -27,11 +27,9 @@ export default function Login() {
       if (!token) {
         throw new Error("Token não encontrado na resposta da API.");
       }
-
       localStorage.setItem("token", token);
 
       const userData = decodeToken(token);
-      console.log(userData);
 
       if (!userData?.sub) {
         throw new Error("ID do usuário não encontrado no token.");

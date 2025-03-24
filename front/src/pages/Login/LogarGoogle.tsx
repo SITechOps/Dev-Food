@@ -34,7 +34,7 @@ export default function LogarGoogle() {
 
         if (usuarioEncontrado){
           localStorage.setItem('userLogado', JSON.stringify(usuarioEncontrado));
-          navigate(`/account/${usuarioEncontrado.id}`)
+          navigate("/account");
         }
       })
       .catch((err) => console.error("Erro ao buscar informações do Google:", err));

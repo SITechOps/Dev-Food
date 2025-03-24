@@ -17,13 +17,32 @@ export default function Account() {
   const [senha, setSenha] = useState("");
   const [isGoogleLogin] = useState(false);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('userLogado') || 'null');
-  const idUsuario = user.id
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("userLogado") || "null");
+  const idUsuario = getUserId();
+
+  function getUserId() {  
+    if (user && user.id) {
+      return user.id;
+    }
+  
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1])); 
+        return payload.sub;
+      } catch (error) {
+        console.error("Erro ao acessar a conta:", error);
+        return null;
+      }
+    }
+    return null;
+  }
+  
 
   useEffect(() => {
     fetchUserData();
   }, []);
-  
+
   async function fetchUserData() {
     try {
       const response = await api.get(`/user/${idUsuario}`);
@@ -35,23 +54,57 @@ export default function Account() {
       console.error("Erro ao buscar usuário:", error);
     }
   }
-  
-  async function alterarUsuario(event: FormEvent<HTMLFormElement>) {
+
+  // async function alterarDados(event: FormEvent<HTMLFormElement>) {
+  //   event.preventDefault();
+  //   const dados = new FormData(event.currentTarget);
+  //   const nome = dados.get("nome")?.toString() || "";
+  //   const senha = dados.get("senha")?.toString() || "";
+  //   try {
+  //     console.log('entrou ')
+  //     await api.put(`/user/${idUsuario}`, { nome, senha });
+
+  //     useEffect(() => {
+  //       fetchUserData();
+  //     }, []);
+
+  //     alert("Usuário alterado com sucesso!");
+  //     setIsEditing(false);
+  //   } catch (error) {
+  //     alert("Erro ao alterar usuário. Tente novamente.");
+  //   }
+  // }
+
+  async function alterarDados(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const dados = new FormData(event.currentTarget);
     const nome = dados.get("nome")?.toString() || "";
     const senha = dados.get("senha")?.toString() || "";
+      
+    if (!idUsuario) {
+      alert("Erro: ID do usuário não encontrado.");
+      return;
+    }
+  
     try {
-      console.log('entrou ')
-      await api.put(`/user/${idUsuario}`, { nome, senha });
-
-      useEffect(() => {
-        fetchUserData();
-      }, []);
-
+      console.log("Enviando requisição para alterar dados...");
+  
+      await api.put(
+        `/user/${idUsuario}`,
+        { nome, senha },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            "X-CSRF-Token": token, 
+          },
+        }
+      );
+  
       alert("Usuário alterado com sucesso!");
       setIsEditing(false);
+      fetchUserData(); 
     } catch (error) {
+      console.error("Erro ao alterar usuário:", error);
       alert("Erro ao alterar usuário. Tente novamente.");
     }
   }
@@ -60,7 +113,7 @@ export default function Account() {
     setIsEditing(!isEditing);
   }
 
-  async function deletarUsuario() {
+  async function deletarDados() {
     const idUsuario = localStorage.getItem("userId");
     try {
       await api.delete(`/user/${idUsuario}`);
@@ -102,14 +155,14 @@ export default function Account() {
             <div
               id="deletar"
               className="w-10 h-10 flex items-center justify-center bg-[#FDEDEE] rounded-full cursor-pointer hover:bg-[#FAC8CB]"
-              onClick={deletarUsuario}
+              onClick={deletarDados}
             >
               <AiOutlineDelete className="icon" />
             </div>
           </div>
         </div>
 
-        <form onSubmit={alterarUsuario} className="text-center !mt-5">
+        <form onSubmit={alterarDados} className="text-center !mt-5">
 
           <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
             Nome:
@@ -126,7 +179,7 @@ export default function Account() {
           </p>
 
           {isEditing ? (
-            <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+            <div className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
               Digite uma nova senha:
               <Input
                 type="text"
@@ -135,9 +188,8 @@ export default function Account() {
                 onChange={setSenha}
                 disabled={isGoogleLogin}
               />
-            </p>
-          ) : (
-            null )}
+            </div>
+          ) : null}
 
           {isEditing && (
             <Button type="submit" className="mt-[3rem]">

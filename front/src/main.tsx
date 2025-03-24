@@ -28,8 +28,8 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/account/:id",
-    element: <Account />
+    path: "/account",
+    element: <Account/>
   },
   {
     path: "/c-endereco",
