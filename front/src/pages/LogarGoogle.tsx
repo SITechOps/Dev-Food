@@ -32,7 +32,6 @@ export default function LogarGoogle() {
         const { email, name: nome, id: senha } = respGoogle;
 
         try {
-          // Buscar usuários cadastrados
           const { data } = await api.get("/user");
           const usuarios = data?.data?.attributes || [];
           const usuarioEncontrado = usuarios.find(
@@ -40,14 +39,12 @@ export default function LogarGoogle() {
           );
 
           if (usuarioEncontrado) {
-            // Usuário já existe → Fazer login
             localStorage.setItem(
               "userLogado",
               JSON.stringify(usuarioEncontrado),
             );
             navigate("/account");
           } else {
-            // Usuário não encontrado → Cadastrar novo usuário
             const response = await api.post("/user", {
               data: { nome, email, senha: senha.substring(0, 12) },
             });
