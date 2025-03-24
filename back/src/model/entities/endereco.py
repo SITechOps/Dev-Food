@@ -10,7 +10,7 @@ class Endereco(Base):
     estado = Column(String(50))
     pais = Column(String(30))
     numero = Column(Integer)
-    complemento = Column(String(10), nullable=True)
+    complemento = Column(String(20), nullable=True)
     tipo = Column(String(20))
     id_usuario = Column(Integer, ForeignKey("Usuario.id", ondelete="CASCADE"))
 

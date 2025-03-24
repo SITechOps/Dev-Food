@@ -73,7 +73,7 @@ export default function Cadastro() {
             />
           </div>
 
-          <div className="relative flex items-center">
+          <div className="relative flex items-center z-10">
             <Input
               label="Informe uma senha:"
               id="senha"
