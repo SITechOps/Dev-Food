@@ -1,7 +1,8 @@
 import CodeInput from "react-code-input";
-import { FormEvent, useState } from "react";
-import { api } from "../connection/axios";
 import Button from "./Button";
+import { useState } from "react";
+import { api } from "../connection/axios";
+import { useNavigate } from "react-router-dom";
 
 interface ModalEmailPros {
   nome: string;
@@ -17,17 +18,19 @@ export default function ModalEmail({
   codigoEnviado,
 }: ModalEmailPros) {
   const [codigoDigitado, setCodigoDigitado] = useState("");
+  // const navigate = useNavigate();
 
-  function validarCodigo(event: FormEvent<HTMLFormElement>) {
+  function validarCodigo() {
     if (codigoDigitado != codigoEnviado) {
       alert("Código inválido!");
+    } else {
+      cadastrarUsuario();
+      alert("Usuário cadastrado com sucesso!");
+      // navigate("/account");
     }
-    cadastrarUsuario(event);
-    alert("Usuário cadastrado com sucesso!");
   }
-  async function cadastrarUsuario(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
 
+  async function cadastrarUsuario() {
     try {
       const response = await api.post("/user", {
         data: { nome, email, senha },
@@ -39,17 +42,13 @@ export default function ModalEmail({
       localStorage.setItem("emailUsuario", email || "");
       localStorage.setItem("senhaUsuario", senha || "");
       localStorage.setItem("userId", userId);
-
-      // if (validarCampos()) {
-      //   navigate("/account");
-      // }
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
     }
   }
   return (
     <div className="fixed inset-0 flex h-screen items-center justify-center bg-black/50">
-      <form onSubmit={validarCodigo} className="modal border-blue flex flex-col items-center gap-6 border-2">
+      <div className="border-blue flex flex-col items-center gap-6 rounded-lg border-2 bg-white p-10">
         <div className="flex gap-2">
           <CodeInput
             className="selection:bg-transparent [&_input::-webkit-inner-spin-button]:hidden"
@@ -71,10 +70,10 @@ export default function ModalEmail({
           />
         </div>
         <p className="text-lg">Insira o código enviado por email!</p>
-        <Button className="p-2">
+        <Button onClick={() => validarCodigo()} className="!p-2">
           Confirmar
         </Button>
-      </form>
+      </div>
     </div>
   );
 }
