@@ -16,21 +16,18 @@ export default function Account() {
   const [senha, setSenha] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  console.log(token);
-  const user = localStorage.getItem("userLogado");
-  console.log(user);
+  const user = JSON.parse(localStorage.getItem("userLogado") || "null");
   const idUsuario = getUserId();
-  const [payloadSub, setPayload] = useState(0);
 
   function getUserId() {
-    if (user) {
-      return user;
+    if (user && user.id) {
+      return user.id;
     }
 
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
-        return setPayload(payload.sub);
+        return payload.sub;
       } catch (error) {
         console.error("Erro ao acessar a conta:", error);
         return null;
@@ -40,13 +37,13 @@ export default function Account() {
   }
 
   useEffect(() => {
-    if (!payloadSub) return; // Não busca dados se não houver usuário autenticado
+    if (!idUsuario) return; // Não busca dados se não houver usuário autenticado
     fetchUserData();
-  }, [payloadSub]);
+  }, [idUsuario]);
 
   async function fetchUserData() {
     try {
-      const response = await api.get(`/user/${payloadSub}`);
+      const response = await api.get(`/user/${idUsuario}`);
       const respUser = response.data?.data?.attributes || [];
       setNome(respUser.nome || "");
       setEmail(respUser.email || "");
@@ -62,7 +59,7 @@ export default function Account() {
     const nome = dados.get("nome")?.toString() || "";
     const senha = dados.get("senha")?.toString() || "";
     try {
-      await api.put(`/user/${payloadSub}`, { data: { nome, senha } });
+      await api.put(`/user/${idUsuario}`, { data: { nome, senha } });
       fetchUserData();
 
       alert("Usuário alterado com sucesso!");
@@ -78,7 +75,7 @@ export default function Account() {
 
   async function deletarDados() {
     try {
-      await api.delete(`/user/${payloadSub}`);
+      await api.delete(`/user/${idUsuario}`);
       alert("Usuário removido com sucesso!");
 
       localStorage.clear();
