@@ -18,12 +18,15 @@ export default function LogarGoogle() {
     if (!user) return;
 
     axios
-      .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-          Accept: "application/json",
+      .get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            Accept: "application/json",
+          },
         },
-      })
+      )
       .then(async (res) => {
         const respGoogle = res.data;
         const { email, name: nome, id: senha } = respGoogle;
@@ -32,19 +35,25 @@ export default function LogarGoogle() {
           // Buscar usuários cadastrados
           const { data } = await api.get("/user");
           const usuarios = data?.data?.attributes || [];
-          const usuarioEncontrado = usuarios.find((usuario: any) => usuario.email === email);
+          const usuarioEncontrado = usuarios.find(
+            (usuario: any) => usuario.email === email,
+          );
 
           if (usuarioEncontrado) {
             // Usuário já existe → Fazer login
-            localStorage.setItem("userLogado", JSON.stringify(usuarioEncontrado));
+            localStorage.setItem(
+              "userLogado",
+              JSON.stringify(usuarioEncontrado),
+            );
             navigate("/account");
           } else {
             // Usuário não encontrado → Cadastrar novo usuário
             const response = await api.post("/user", {
               data: { nome, email, senha: senha.substring(0, 12) },
             });
-
-            const novoUsuario = response.data.userInfo;
+            const novoUsuario = response.data.properties.token;
+            console.log(novoUsuario);
+            console.log(response);
 
             localStorage.setItem("token", user.access_token);
             localStorage.setItem("userLogado", JSON.stringify(novoUsuario));
@@ -55,14 +64,16 @@ export default function LogarGoogle() {
           alert("Erro ao fazer login/cadastro com o Google.");
         }
       })
-      .catch((err) => console.error("Erro ao buscar informações do Google:", err));
+      .catch((err) =>
+        console.error("Erro ao buscar informações do Google:", err),
+      );
   }, [user]);
 
   return (
     <Button
       color="secondary"
       onClick={() => loginGoogle()}
-      className="justify-center items-center flex gap-4"
+      className="flex items-center justify-center gap-4"
     >
       <img src="img/google.svg" alt="" className="size-4" />
       Fazer login com o Google

@@ -16,18 +16,21 @@ export default function Account() {
   const [senha, setSenha] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("userLogado") || "null");
+  console.log(token);
+  const user = localStorage.getItem("userLogado");
+  console.log(user);
   const idUsuario = getUserId();
+  const [payloadSub, setPayload] = useState(0);
 
   function getUserId() {
-    if (user && user.id) {
-      return user.id;
+    if (user) {
+      return user;
     }
 
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
-        return payload.sub;
+        return setPayload(payload.sub);
       } catch (error) {
         console.error("Erro ao acessar a conta:", error);
         return null;
@@ -36,15 +39,14 @@ export default function Account() {
     return null;
   }
 
-
   useEffect(() => {
-    if (!idUsuario) return; // Não busca dados se não houver usuário autenticado
+    if (!payloadSub) return; // Não busca dados se não houver usuário autenticado
     fetchUserData();
-  }, [idUsuario]);
+  }, [payloadSub]);
 
   async function fetchUserData() {
     try {
-      const response = await api.get(`/user/${idUsuario}`);
+      const response = await api.get(`/user/${payloadSub}`);
       const respUser = response.data?.data?.attributes || [];
       setNome(respUser.nome || "");
       setEmail(respUser.email || "");
@@ -60,7 +62,7 @@ export default function Account() {
     const nome = dados.get("nome")?.toString() || "";
     const senha = dados.get("senha")?.toString() || "";
     try {
-      await api.put(`/user/${idUsuario}`, { data: { nome, senha } });
+      await api.put(`/user/${payloadSub}`, { data: { nome, senha } });
       fetchUserData();
 
       alert("Usuário alterado com sucesso!");
@@ -76,7 +78,7 @@ export default function Account() {
 
   async function deletarDados() {
     try {
-      await api.delete(`/user/${idUsuario}`);
+      await api.delete(`/user/${payloadSub}`);
       alert("Usuário removido com sucesso!");
 
       localStorage.clear();
@@ -94,12 +96,16 @@ export default function Account() {
 
   if (!idUsuario) {
     return (
-      <section className="flex flex-col items-center justify-center h-screen">
+      <section className="flex h-screen flex-col items-center justify-center">
         <h2 className="font-bold">Acesso negado</h2>
-        <p className="mt-2">Faça login ou cadastre-se para acessar sua conta.</p>
-        <div className="mt-5 flex gap-4 w-[40rem]">
+        <p className="mt-2">
+          Faça login ou cadastre-se para acessar sua conta.
+        </p>
+        <div className="mt-5 flex w-[40rem] gap-4">
           <Button onClick={() => navigate("/Login")}>Fazer Login</Button>
-          <Button color="secondary" onClick={() => navigate("/")}>Cadastrar-se</Button>
+          <Button color="secondary" onClick={() => navigate("/")}>
+            Cadastrar-se
+          </Button>
         </div>
       </section>
     );
@@ -107,27 +113,28 @@ export default function Account() {
 
   return (
     <>
-      <Menu><ListagemEndereco /></Menu>
-      <section className="flex flex-col items-center justify-center !m-auto !mt-[3rem] bg-white rounded-md shadow w-[50%] !p-5">
-
-        <div className="flex items-center justify-between w-full">
+      <Menu>
+        <ListagemEndereco />
+      </Menu>
+      <section className="!m-auto !mt-[3rem] flex w-[50%] flex-col items-center justify-center rounded-md bg-white !p-5 shadow">
+        <div className="flex w-full items-center justify-between">
           <button onClick={() => navigate(-1)} className="self-start">
-            <FaAngleLeft className="icon w-10 h-10" />
+            <FaAngleLeft className="icon h-10 w-10" />
           </button>
 
           <h3 className="text-center font-bold">Minha Conta</h3>
 
-          <div id="icones-de-acao" className="flex gap-4 justify-end">
+          <div id="icones-de-acao" className="flex justify-end gap-4">
             <div
               id="Editar"
-              className="w-10 h-10 flex items-center justify-center bg-[#FDEDEE] rounded-full cursor-pointer hover:bg-[#FAC8CB]"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#FDEDEE] hover:bg-[#FAC8CB]"
               onClick={handleEditUser}
             >
               <FiEdit2 className="icon" />
             </div>
             <div
               id="deletar"
-              className="w-10 h-10 flex items-center justify-center bg-[#FDEDEE] rounded-full cursor-pointer hover:bg-[#FAC8CB]"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#FDEDEE] hover:bg-[#FAC8CB]"
               onClick={deletarDados}
             >
               <AiOutlineDelete className="icon" />
@@ -135,9 +142,8 @@ export default function Account() {
           </div>
         </div>
 
-        <form onSubmit={alterarDados} className="text-center !mt-5">
-
-          <div className="mt-3 text-lg flex gap-2 items-center justify-center p-0 text-blue">
+        <form onSubmit={alterarDados} className="!mt-5 text-center">
+          <div className="text-blue mt-3 flex items-center justify-center gap-2 p-0 text-lg">
             Nome:
             {isEditing ? (
               <Input type="text" id="nome" value={nome} onChange={setNome} />
@@ -146,20 +152,15 @@ export default function Account() {
             )}
           </div>
 
-          <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+          <p className="mt-3 flex items-center justify-center gap-2 p-0 text-lg">
             Email:
             <span className="font-semibold">{email}</span>
           </p>
 
-          {isEditing && !user? (
-            <div className="mt-3 text-lg flex gap-2 items-center justify-center p-0 text-blue">
+          {isEditing && !user ? (
+            <div className="text-blue mt-3 flex items-center justify-center gap-2 p-0 text-lg">
               Digite uma nova senha:
-              <Input
-                type="text"
-                id="senha"
-                value={senha}
-                onChange={setSenha}
-              />
+              <Input type="text" id="senha" value={senha} onChange={setSenha} />
             </div>
           ) : null}
 
@@ -168,11 +169,10 @@ export default function Account() {
               Salvar
             </Button>
           )}
-
         </form>
         <Button
           color="outlined"
-          className="mt-5 p-2 w-90"
+          className="mt-5 w-90 p-2"
           onClick={handleLogout}
         >
           Sair
