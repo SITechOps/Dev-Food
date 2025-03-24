@@ -37,7 +37,7 @@ export default function Account() {
   }
 
   useEffect(() => {
-    if (!idUsuario) return; // Não busca dados se não houver usuário autenticado
+    if (!idUsuario) return;
     fetchUserData();
   }, [idUsuario]);
 
