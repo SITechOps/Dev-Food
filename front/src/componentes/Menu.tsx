@@ -36,8 +36,8 @@ export default function Menu({ children }: MenuProps) {
               Faça seu pedido
             </Button>
             {user || token ? (
-              <Button color="secondary" onClick={() => navigate("/account")} className="w-25 py-2 flex justify-center items-center">
-                <CiUser size={24} />
+              <Button color="secondary" onClick={() => navigate("/account")} className="w-50 py-2 flex justify-center items-center">
+                <CiUser size={24} /> Minha Conta
               </Button>
             ) : (
               <Button color="secondary" onClick={() => navigate("/login")} className="w-25 py-2">
