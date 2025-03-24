@@ -14,12 +14,10 @@ export default function Account() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [isGoogleLogin] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("userLogado") || "null");
   const idUsuario = getUserId();
-  console.log(user)
 
   function getUserId() {
     if (user && user.id) {
@@ -40,7 +38,7 @@ export default function Account() {
 
 
   useEffect(() => {
-    if (!idUsuario) return; 
+    if (!idUsuario) return; // Não busca dados se não houver usuário autenticado
     fetchUserData();
   }, [idUsuario]);
 
@@ -153,7 +151,7 @@ export default function Account() {
             <span className="font-semibold">{email}</span>
           </p>
 
-          {isEditing ? (
+          {isEditing && !user? (
             <div className="mt-3 text-lg flex gap-2 items-center justify-center p-0 text-blue">
               Digite uma nova senha:
               <Input
@@ -161,7 +159,6 @@ export default function Account() {
                 id="senha"
                 value={senha}
                 onChange={setSenha}
-                disabled={isGoogleLogin}
               />
             </div>
           ) : null}

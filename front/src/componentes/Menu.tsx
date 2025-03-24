@@ -13,17 +13,9 @@ export default function Menu({ children }: MenuProps) {
   const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const user = JSON.parse(localStorage.getItem("userLogado") || "null");
 
-  function checkAuth() {
-    console.log(user)
-    // console.log(token)
-    return setIsAuthenticated(token && user);
-  }
-
   useEffect(() => {
-    checkAuth();
     if (menuRef.current) {
       setMenuHeight(menuRef.current.offsetHeight);
     }
@@ -43,7 +35,7 @@ export default function Menu({ children }: MenuProps) {
             <Button color="plain" onClick={() => navigate("/pedido")} className="w-40 py-2">
               Faça seu pedido
             </Button>
-            {isAuthenticated ? (
+            {user || token ? (
               <Button color="secondary" onClick={() => navigate("/account")} className="w-25 py-2 flex justify-center items-center">
                 <CiUser size={24} />
               </Button>
