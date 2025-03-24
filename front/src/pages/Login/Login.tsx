@@ -23,7 +23,7 @@ export default function Login() {
         },
       });
 
-      const token = resp?.data?.token;
+      const token = resp?.data?.properties?.token;
       if (!token) {
         throw new Error("Token não encontrado na resposta da API.");
       }

@@ -1,6 +1,6 @@
 from src.main.handlers.custom_exceptions import UserNotFound
 from src.model.configs.connection import DBConnectionHandler
-from src.model.entities.users import User
+from src.model.entities.user import User
 from .interfaces.iusers_repository import IUsersRepository
 
 class UsersRepository(IUsersRepository):

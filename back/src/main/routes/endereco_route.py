@@ -22,11 +22,12 @@ def create_new_endereco():
 
 @endereco_route_bp.get('/endereco/<int:id_usuario>')
 def get_all_enderecos(id_usuario):
+    http_request = HttpRequest(params={"id_usuario": id_usuario})
     endereco_repo = EnderecosRepository()
     users_repo = UsersRepository()
     endereco_manager = EnderecosManager(endereco_repo, users_repo)
 
-    http_response = endereco_manager.get_all_enderecos_by_user(id_usuario)
+    http_response = endereco_manager.get_all_enderecos_by_user(http_request)
     return jsonify(http_response.body), http_response.status_code
 
 

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.model.entities.users import User
+from src.model.entities.user import User
 
 
 class IUsersRepository(ABC):
