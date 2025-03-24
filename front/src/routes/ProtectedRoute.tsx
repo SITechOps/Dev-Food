@@ -6,10 +6,10 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("userId"); 
+  const isAuthenticated = localStorage.getItem("token");
   useEffect(() => {
     if (!isAuthenticated) {
-      alert("Você precisa estar logado para acessar esta página!");  
+      alert("Você precisa estar logado para acessar esta página!");
     }
   }, [isAuthenticated]);
 

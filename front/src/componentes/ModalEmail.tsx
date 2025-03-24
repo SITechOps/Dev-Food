@@ -3,6 +3,7 @@ import Button from "./Button";
 import { useState } from "react";
 import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
+import { decodeToken } from "../utils/decodeToken";
 
 interface ModalEmailPros {
   nome: string;
@@ -18,7 +19,7 @@ export default function ModalEmail({
   codigoEnviado,
 }: ModalEmailPros) {
   const [codigoDigitado, setCodigoDigitado] = useState("");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function validarCodigo() {
     if (codigoDigitado != codigoEnviado) {
@@ -26,7 +27,7 @@ export default function ModalEmail({
     } else {
       cadastrarUsuario();
       alert("Usuário cadastrado com sucesso!");
-      // navigate("/account");
+      navigate("/account");
     }
   }
 
@@ -36,12 +37,19 @@ export default function ModalEmail({
         data: { nome, email, senha },
       });
 
-      const userId = response.data.userInfo.id;
-
-      localStorage.setItem("nomeUsuario", nome || "");
-      localStorage.setItem("emailUsuario", email || "");
-      localStorage.setItem("senhaUsuario", senha || "");
-      localStorage.setItem("userId", userId);
+      const token = response.data?.properties?.token;
+      if (!token) {
+        throw new Error("Token não encontrado na resposta da API.");
+      }
+      localStorage.setItem("token", token);
+      const userData = decodeToken(token);
+      if (!userData?.sub) {
+        throw new Error("ID do usuário não encontrado no token.");
+      }
+      console.log("Usuário logado:", {
+        id: userData.sub,
+        email,
+      });
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
     }
