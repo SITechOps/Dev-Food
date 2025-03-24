@@ -2,7 +2,7 @@ import { tv } from "tailwind-variants";
 import { ComponentProps } from "react";
 
 const button = tv({
-  base: "font-medium p-4 rounded-sm w-full cursor-pointer transition-all duration-200",
+  base: "font-medium text-lg p-4 rounded-sm w-full cursor-pointer transition-all duration-200",
   variants: {
     color: {
       default: "bg-brown-normal text-white hover:bg-brown-dark",

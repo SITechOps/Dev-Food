@@ -8,7 +8,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { extractAddress } from "../utils/extractAddress";
 import { loadAsyncScript } from "../utils/loadAsyncScript";
 import { reverseGeoCode } from "../utils/geolocation";
-import { Address } from "../interface/IAddress";
+import { IAddress } from "../interface/IAddress";
 
 import Input from "../componentes/Input";
 
@@ -22,7 +22,7 @@ const mapApiJs = "https://maps.googleapis.com/maps/api/js";
 
 const CadastroEndereco = () => {
   const searchInput = useRef<HTMLInputElement | null>(null);
-  const [address, setAddress] = useState<Address | null>(null);
+  const [address, setAddress] = useState<IAddress | null>(null);
   const [numero, setNumero] = useState<string>("");
   const [complemento, setComplemento] = useState<string>("");
   const [tipo, setTipo] = useState<string>("");

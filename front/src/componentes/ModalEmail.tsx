@@ -55,7 +55,7 @@ export default function ModalEmail({
     }
   }
   return (
-    <div className="fixed inset-0 flex h-screen items-center justify-center bg-black/50">
+    <div className="fixed inset-0 flex h-screen items-center justify-center bg-black/50 z-20">
       <div className="border-blue flex flex-col items-center gap-6 rounded-lg border-2 bg-white p-10">
         <div className="flex gap-2">
           <CodeInput

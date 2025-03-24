@@ -1,6 +1,7 @@
 import { ReactNode, useRef, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import iFoodLogo from "../assets/ifood.png";
+import { CiUser } from "react-icons/ci";
 import Button from "./Button";
 
 interface MenuProps {
@@ -8,15 +9,11 @@ interface MenuProps {
 }
 
 export default function Menu({ children }: MenuProps) {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
-
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-  };
+  const user = JSON.parse(localStorage.getItem("userLogado") || "null");
 
   useEffect(() => {
     if (menuRef.current) {
@@ -38,9 +35,9 @@ export default function Menu({ children }: MenuProps) {
             <Button color="plain" onClick={() => navigate("/pedido")} className="w-40 py-2">
               Faça seu pedido
             </Button>
-            {isAuthenticated ? (
-              <Button color="secondary" onClick={handleLogout} className="w-25 py-2">
-                Sair
+            {user || token ? (
+              <Button color="secondary" onClick={() => navigate("/account")} className="w-50 py-2 flex justify-center items-center">
+                <CiUser size={24} /> Minha Conta
               </Button>
             ) : (
               <Button color="secondary" onClick={() => navigate("/login")} className="w-25 py-2">

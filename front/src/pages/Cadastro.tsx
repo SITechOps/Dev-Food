@@ -1,11 +1,12 @@
 import { FormEvent, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { api } from "../connection/axios";
-import { useGoogleLogin } from "@react-oauth/google";
 import Input from "../componentes/Input";
 import ModalEmail from "../componentes/ModalEmail";
 import Button from "../componentes/Button";
+import LogarGoogle from "./LogarGoogle";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -13,19 +14,8 @@ export default function Cadastro() {
   const [senha, setSenha] = useState("");
   const [codigoEnviado, setCodigoEnviado] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
   const navigate = useNavigate();
-
-  const validarCampos = (): boolean => {
-    const nomeTrim = nome.trim();
-    const emailTrim = email.trim();
-
-    if (nomeTrim === "" || emailTrim === "") {
-      alert("Preencha todos os campos!");
-      return false;
-    }
-
-    return true;
-  };
 
   function fazerLogin(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
@@ -45,46 +35,6 @@ export default function Cadastro() {
       console.error("Erro ao enviar email:", error);
     }
   }
-
-  const handleCadastroGoogle = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const userInfoResponse = await api.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: {
-              Authorization: `Bearer ${tokenResponse.access_token}`,
-            },
-          },
-        );
-        const {
-          name: nome,
-          email,
-          sub: senha,
-          email_verified,
-        } = userInfoResponse.data;
-
-        if (email_verified) {
-          const response = await api.post("/user", {
-            data: { nome, email, senha: senha.substring(0, 12) },
-          });
-
-          const userId = response.data.userInfo.id;
-
-          localStorage.setItem("nomeUsuario", nome || "");
-          localStorage.setItem("emailUsuario", email || "");
-          localStorage.setItem("userId", userId);
-
-          navigate("/account");
-        } else {
-          alert("Email não verificado!");
-        }
-      } catch (error) {
-        console.error("Usuário já existe!");
-      }
-    },
-    onError: (error) => console.log("Login Failed:", error),
-  });
 
   return (
     <div className="card m-auto my-[3rem] flex max-w-96 flex-col space-y-4">
@@ -122,14 +72,25 @@ export default function Cadastro() {
               className="flex-grow"
             />
           </div>
-          <Input
-            label="Informe uma senha:"
-            id="senha"
-            type="text"
-            placeholder={"Digite sua senha"}
-            value={senha}
-            onChange={setSenha}
-          />
+
+          <div className="relative flex items-center z-10">
+            <Input
+              label="Informe uma senha:"
+              id="senha"
+              type={mostrarSenha ? "text" : "password"}
+              placeholder={"Digite sua senha"}
+              value={senha}
+              onChange={setSenha}
+            />
+            <button
+              type="button"
+              className="absolute right-3 icon pt-7"
+              onClick={() => setMostrarSenha(!mostrarSenha)}
+            >
+              {mostrarSenha ? <AiFillEyeInvisible/> : <AiFillEye />}
+            </button>
+          </div>
+
         </div>
 
         <Button
@@ -151,12 +112,7 @@ export default function Cadastro() {
       <span className="text-gray-medio mt-2 mb-6 text-center">
         -------------- OU --------------
       </span>
-      <Button
-          color="secondary"
-          className="justify-center items-center flex gap-4"
-          onClick={() => handleCadastroGoogle()}> 
-          <img src="img/google.svg" alt="" className="size-4" />
-          Fazer cadastro com o Google</Button>
+      <LogarGoogle />
     </div>
   );
 }
