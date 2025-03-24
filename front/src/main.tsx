@@ -2,7 +2,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { StrictMode } from "react";
 import Home from "./pages/Home.tsx";
-import Login from "./pages/Login/Login.tsx";
+import Login from "./pages/Login.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import { createRoot } from "react-dom/client";
 import Account from "./pages/Account.tsx";

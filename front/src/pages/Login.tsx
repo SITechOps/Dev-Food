@@ -1,17 +1,19 @@
-import Input from "../../componentes/Input";
-import { api } from "../../connection/axios";
+import Input from "../componentes/Input";
+import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useState, FormEvent } from "react";
 import LogarGoogle from "./LogarGoogle";
-import Menu from "../../componentes/Menu";
-import Button from "../../componentes/Button";
-import { decodeToken } from "../../utils/decodeToken";
+import Menu from "../componentes/Menu";
+import Button from "../componentes/Button";
+import { decodeToken } from "../utils/decodeToken";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
 export default function Login() {
   const navigate = useNavigate();
   const [senha, setSenha] = useState("");
   const [email, setEmail] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   async function loginUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -81,22 +83,30 @@ export default function Login() {
               className="mb-2"
             />
 
-            <Input
-              label="Informe uma senha:"
-              id="senha"
-              type="text"
-              value={senha}
-              placeholder={"Digite sua senha"}
-              onChange={setSenha}
-              className="mb-6"
-            />
+            <div className="relative flex items-center mb-6">
+              <Input
+                label="Informe uma senha:"
+                id="senha"
+                type={mostrarSenha ? "text" : "password"}
+                placeholder={"Digite sua senha"}
+                value={senha}
+                onChange={setSenha}
+              />
+              <button
+                type="button"
+                className="absolute right-3 icon pt-7"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+              >
+                {mostrarSenha ? <AiFillEyeInvisible /> : <AiFillEye />}
+              </button>
+            </div>
 
             <Button onClick={() => loginUser} disabled={!email || !senha}>
               Entrar
             </Button>
           </form>
 
-          <div className="mt-2 flex justify-end">
+          <div className="flex justify-end">
             <span className="text-gray-medio">Não tem conta?</span>
             <Button
               color="plain"

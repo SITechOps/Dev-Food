@@ -8,7 +8,6 @@ import Input from "../componentes/Input";
 import Button from "../componentes/Button";
 import Menu from "../componentes/Menu";
 import ListagemEndereco from "../componentes/ListagemEndereco";
-// import { useAuth } from "../connection/AuthProvider";
 
 export default function Account() {
   const [isEditing, setIsEditing] = useState(false);
@@ -20,15 +19,16 @@ export default function Account() {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("userLogado") || "null");
   const idUsuario = getUserId();
+  console.log(user)
 
-  function getUserId() {  
+  function getUserId() {
     if (user && user.id) {
       return user.id;
     }
-  
+
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split(".")[1])); 
+        const payload = JSON.parse(atob(token.split(".")[1]));
         return payload.sub;
       } catch (error) {
         console.error("Erro ao acessar a conta:", error);
@@ -37,11 +37,12 @@ export default function Account() {
     }
     return null;
   }
-  
+
 
   useEffect(() => {
+    if (!idUsuario) return; 
     fetchUserData();
-  }, []);
+  }, [idUsuario]);
 
   async function fetchUserData() {
     try {
@@ -55,56 +56,18 @@ export default function Account() {
     }
   }
 
-  // async function alterarDados(event: FormEvent<HTMLFormElement>) {
-  //   event.preventDefault();
-  //   const dados = new FormData(event.currentTarget);
-  //   const nome = dados.get("nome")?.toString() || "";
-  //   const senha = dados.get("senha")?.toString() || "";
-  //   try {
-  //     console.log('entrou ')
-  //     await api.put(`/user/${idUsuario}`, { nome, senha });
-
-  //     useEffect(() => {
-  //       fetchUserData();
-  //     }, []);
-
-  //     alert("Usuário alterado com sucesso!");
-  //     setIsEditing(false);
-  //   } catch (error) {
-  //     alert("Erro ao alterar usuário. Tente novamente.");
-  //   }
-  // }
-
   async function alterarDados(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const dados = new FormData(event.currentTarget);
     const nome = dados.get("nome")?.toString() || "";
     const senha = dados.get("senha")?.toString() || "";
-      
-    if (!idUsuario) {
-      alert("Erro: ID do usuário não encontrado.");
-      return;
-    }
-  
     try {
-      console.log("Enviando requisição para alterar dados...");
-  
-      await api.put(
-        `/user/${idUsuario}`,
-        { nome, senha },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-            "X-CSRF-Token": token, 
-          },
-        }
-      );
-  
+      await api.put(`/user/${idUsuario}`, { data: { nome, senha } });
+      fetchUserData();
+
       alert("Usuário alterado com sucesso!");
       setIsEditing(false);
-      fetchUserData(); 
     } catch (error) {
-      console.error("Erro ao alterar usuário:", error);
       alert("Erro ao alterar usuário. Tente novamente.");
     }
   }
@@ -114,7 +77,6 @@ export default function Account() {
   }
 
   async function deletarDados() {
-    const idUsuario = localStorage.getItem("userId");
     try {
       await api.delete(`/user/${idUsuario}`);
       alert("Usuário removido com sucesso!");
@@ -130,6 +92,19 @@ export default function Account() {
   function handleLogout() {
     localStorage.clear();
     navigate("/Login");
+  }
+
+  if (!idUsuario) {
+    return (
+      <section className="flex flex-col items-center justify-center h-screen">
+        <h2 className="font-bold">Acesso negado</h2>
+        <p className="mt-2">Faça login ou cadastre-se para acessar sua conta.</p>
+        <div className="mt-5 flex gap-4 w-[40rem]">
+          <Button onClick={() => navigate("/Login")}>Fazer Login</Button>
+          <Button color="secondary" onClick={() => navigate("/")}>Cadastrar-se</Button>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -164,14 +139,14 @@ export default function Account() {
 
         <form onSubmit={alterarDados} className="text-center !mt-5">
 
-          <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+          <div className="mt-3 text-lg flex gap-2 items-center justify-center p-0 text-blue">
             Nome:
             {isEditing ? (
               <Input type="text" id="nome" value={nome} onChange={setNome} />
             ) : (
               <span className="font-semibold">{nome}</span>
             )}
-          </p>
+          </div>
 
           <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
             Email:
@@ -179,7 +154,7 @@ export default function Account() {
           </p>
 
           {isEditing ? (
-            <div className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+            <div className="mt-3 text-lg flex gap-2 items-center justify-center p-0 text-blue">
               Digite uma nova senha:
               <Input
                 type="text"
@@ -197,14 +172,14 @@ export default function Account() {
             </Button>
           )}
 
-          <Button
-            color="outlined"
-            className="mt-5 p-2"
-            onClick={handleLogout}
-          >
-            Sair
-          </Button>
         </form>
+        <Button
+          color="outlined"
+          className="mt-5 p-2 w-90"
+          onClick={handleLogout}
+        >
+          Sair
+        </Button>
       </section>
     </>
   );
