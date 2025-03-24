@@ -18,7 +18,13 @@ class UsersManager:
             raise UserAlreadyExists()
         
         id_user = self.__users_repo.insert(user_info)
-        token = create_access_token(identity=id_user)
+        token = create_access_token(
+            identity=id_user,
+            additional_claims={
+                "nome": user_info.get("nome"),
+                "email": user_info.get("email")
+            }
+        )
         return ResponseFormatter.display_operation(self.class_name, "criado", token)
     
 

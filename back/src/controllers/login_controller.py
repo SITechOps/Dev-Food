@@ -20,5 +20,11 @@ class LoginController:
         if user_info.senha != senha:
             raise WrongPassword()
     
-        token = create_access_token(identity=user_info.id)
+        token = create_access_token(
+            identity=user_info.id,
+            additional_claims={
+                "nome": user_info.nome,
+                "email": user_info.email
+            }
+        )
         return ResponseFormatter.display_operation("Usuário", "logado", token)
