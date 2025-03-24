@@ -1,22 +1,12 @@
 import { jwtDecode } from "jwt-decode";
+import { ITokenData } from "../interface/ITokenData";
 
-interface TokenData {
-  sub: string; 
-  iat: number;  
-  exp: number;  
-  jti: string;  
-  csrf: string; 
-  type: string; 
-  nbf: number; 
-  fresh: boolean; 
-
-}
-
-export const decodeToken = (token: string): TokenData | null => {
+export const decodeToken = (token: string): ITokenData | null => {
   if (!token) return null;
 
   try {
-    return jwtDecode<TokenData>(token);
+    console.log(jwtDecode<ITokenData>(token))
+    return jwtDecode<ITokenData>(token);
   } catch (error) {
     console.error("Invalid token", error);
     return null;

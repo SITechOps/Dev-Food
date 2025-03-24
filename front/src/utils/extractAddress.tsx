@@ -1,9 +1,9 @@
-import { Address } from "../interface/IAddress";
+import { IAddress } from "../interface/IAddress";
 
 export const extractAddress = (
   place: google.maps.places.PlaceResult
-): Address => {
-  const address: Address = {
+): IAddress => {
+  const address: IAddress = {
     logradouro: "",
     numero: "",
     bairro: "",

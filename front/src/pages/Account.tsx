@@ -6,57 +6,50 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../connection/axios";
 import Input from "../componentes/Input";
 import Button from "../componentes/Button";
+import Menu from "../componentes/Menu";
+import ListagemEndereco from "../componentes/ListagemEndereco";
+// import { useAuth } from "../connection/AuthProvider";
 
 export default function Account() {
   const [isEditing, setIsEditing] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+  const [isGoogleLogin] = useState(false);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('userLogado') || 'null');
+  const idUsuario = user.id
 
   useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const idUsuario = localStorage.getItem("userId");
-        const response = await api.get(`/user/${idUsuario}`);
-        const { nome, email, senha } = response.data;
-        const loginGoogle = localStorage.getItem("loginGoogle");
-
-        setIsGoogleLogin(loginGoogle === "true");
-
-        setNome(nome);
-        setEmail(email);
-        setSenha(senha);
-
-        localStorage.setItem("nomeUsuario", nome);
-        localStorage.setItem("emailUsuario", email);
-        localStorage.setItem("senhaUsuario", senha);
-      } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
-      }
-    }
-
     fetchUserData();
   }, []);
-
+  
+  async function fetchUserData() {
+    try {
+      const response = await api.get(`/user/${idUsuario}`);
+      const respUser = response.data?.data?.attributes || [];
+      setNome(respUser.nome || "");
+      setEmail(respUser.email || "");
+      setSenha(respUser.senha || "");
+    } catch (error) {
+      console.error("Erro ao buscar usuário:", error);
+    }
+  }
+  
   async function alterarUsuario(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const dados = new FormData(event.currentTarget);
     const nome = dados.get("nome")?.toString() || "";
     const senha = dados.get("senha")?.toString() || "";
-    const idUsuario = localStorage.getItem("userId");
-
     try {
+      console.log('entrou ')
       await api.put(`/user/${idUsuario}`, { nome, senha });
 
-      const response = await api.get(`/user/${idUsuario}`);
-      setNome(response.data.nome);
-      setSenha(response.data.senha);
-      alert("Usuário alterado com sucesso!");
+      useEffect(() => {
+        fetchUserData();
+      }, []);
 
-      localStorage.setItem("nomeUsuario", nome || "");
-      localStorage.setItem("senhaUsuario", senha || "");
+      alert("Usuário alterado com sucesso!");
       setIsEditing(false);
     } catch (error) {
       alert("Erro ao alterar usuário. Tente novamente.");
@@ -87,85 +80,80 @@ export default function Account() {
   }
 
   return (
-    <section className="flex flex-col items-center justify-center !m-auto !mt-[3rem] bg-white rounded-md shadow w-[50%] !p-5">
-      <a href="/home" className="self-start ml-4 mb-5">
-        <FaAngleLeft className="icon" />
-      </a>
+    <>
+      <Menu><ListagemEndereco /></Menu>
+      <section className="flex flex-col items-center justify-center !m-auto !mt-[3rem] bg-white rounded-md shadow w-[50%] !p-5">
 
-      <form onSubmit={alterarUsuario} className="text-center !mt-5">
-        <div id="icones-de-acao" className="flex gap-4 justify-end">
-          <div
-            id="Editar"
-            className="w-10 h-10 flex items-center justify-center bg-[#FDEDEE] rounded-full cursor-pointer hover:bg-[#FAC8CB]"
-            onClick={handleEditUser}
-          >
-            <FiEdit2 className="text-brown-normal text-[1.5rem]" />
-          </div>
-          <div
-            id="deletar"
-            className="w-10 h-10 flex items-center justify-center bg-[#FDEDEE] rounded-full cursor-pointer hover:bg-[#FAC8CB]"
-            onClick={deletarUsuario}
-          >
-            <AiOutlineDelete className="text-brown-normal text-[1.5rem]" />
+        <div className="flex items-center justify-between w-full">
+          <button onClick={() => navigate(-1)} className="self-start">
+            <FaAngleLeft className="icon w-10 h-10" />
+          </button>
+
+          <h3 className="text-center font-bold">Minha Conta</h3>
+
+          <div id="icones-de-acao" className="flex gap-4 justify-end">
+            <div
+              id="Editar"
+              className="w-10 h-10 flex items-center justify-center bg-[#FDEDEE] rounded-full cursor-pointer hover:bg-[#FAC8CB]"
+              onClick={handleEditUser}
+            >
+              <FiEdit2 className="icon" />
+            </div>
+            <div
+              id="deletar"
+              className="w-10 h-10 flex items-center justify-center bg-[#FDEDEE] rounded-full cursor-pointer hover:bg-[#FAC8CB]"
+              onClick={deletarUsuario}
+            >
+              <AiOutlineDelete className="icon" />
+            </div>
           </div>
         </div>
 
+        <form onSubmit={alterarUsuario} className="text-center !mt-5">
 
-        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
-          Nome:
-          {isEditing ? (
-            <Input type="text" id="nome" value={nome} onChange={setNome} />
-          ) : (
-            <span className="font-semibold">{nome}</span>
-          )}
-        </p>
+          <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+            Nome:
+            {isEditing ? (
+              <Input type="text" id="nome" value={nome} onChange={setNome} />
+            ) : (
+              <span className="font-semibold">{nome}</span>
+            )}
+          </p>
 
-        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
-          Email:
-          {isEditing ? (
-            <Input
-              type="text"
-              id="email"
-              value={email}
-              onChange={setEmail}
-              disabled={true}
-              className="cursor-not-allowed"
-            />
-          ) : (
+          <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+            Email:
             <span className="font-semibold">{email}</span>
-          )}
-        </p>
+          </p>
 
-        <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
-          Senha:
           {isEditing ? (
-            <Input
-              type="text"
-              id="senha"
-              value={senha}
-              onChange={setSenha}
-              disabled={isGoogleLogin}
-            />
+            <p className="mt-3 text-lg flex gap-2 items-center justify-center p-0">
+              Digite uma nova senha:
+              <Input
+                type="text"
+                id="senha"
+                value={senha}
+                onChange={setSenha}
+                disabled={isGoogleLogin}
+              />
+            </p>
           ) : (
-            <span className="font-semibold">{senha}</span>
+            null )}
+
+          {isEditing && (
+            <Button type="submit" className="mt-[3rem]">
+              Salvar
+            </Button>
           )}
-        </p>
 
-
-        {isEditing && (
-          <Button type="submit" className="mt-[3rem]">
-            Salvar
+          <Button
+            color="outlined"
+            className="mt-5 p-2"
+            onClick={handleLogout}
+          >
+            Sair
           </Button>
-        )}
-
-        <Button
-          type="button"
-          className="mt-5 bg-red-500 text-white px-10 py-2 rounded"
-          onClick={handleLogout}
-        >
-          Sair
-        </Button>
-      </form>
-    </section>
+        </form>
+      </section>
+    </>
   );
 }

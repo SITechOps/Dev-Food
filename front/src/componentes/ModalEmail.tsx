@@ -49,7 +49,7 @@ export default function ModalEmail({
   }
   return (
     <div className="fixed inset-0 flex h-screen items-center justify-center bg-black/50">
-      <div className="modal border-blue flex flex-col items-center gap-6 border-2">
+      <form onSubmit={validarCodigo} className="modal border-blue flex flex-col items-center gap-6 border-2">
         <div className="flex gap-2">
           <CodeInput
             className="selection:bg-transparent [&_input::-webkit-inner-spin-button]:hidden"
@@ -71,10 +71,10 @@ export default function ModalEmail({
           />
         </div>
         <p className="text-lg">Insira o código enviado por email!</p>
-        <Button onClick={() => validarCodigo} className="p-2">
+        <Button className="p-2">
           Confirmar
         </Button>
-      </div>
+      </form>
     </div>
   );
 }

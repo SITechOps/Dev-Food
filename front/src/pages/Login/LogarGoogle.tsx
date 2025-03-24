@@ -1,15 +1,12 @@
 import axios from "axios";
 import { api } from "../../connection/axios";
-import { useAuth } from "../../connection/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import Button from "../../componentes/Button";
 
-
 export default function LogarGoogle() {
   const navigate = useNavigate();
-  const { setUserLogged } = useAuth();
   const [user, setUser] = useState<TokenResponse | null>(null);
 
   const loginGoogle = useGoogleLogin({
@@ -28,16 +25,17 @@ export default function LogarGoogle() {
         },
       })
       .then(async (res) => {
-        setUserLogged(res.data);
+        const respGoogle = res.data;
 
         const { data } = await api.get("/user");
         const usuarios = data?.data?.attributes || [];
 
-        const usuarioEncontrado = usuarios.find((usuario: any) => usuario.email === res.data.email);
+        const usuarioEncontrado = usuarios.find((usuario: any) => usuario.email === respGoogle.email);
 
-        usuarioEncontrado
-          ? navigate("/account", { state: { profile: res.data } })
-          : alert("Você não tem e-mail cadastrado no sistema. Faça seu cadastro.");
+        if (usuarioEncontrado){
+          localStorage.setItem('userLogado', JSON.stringify(usuarioEncontrado));
+          navigate(`/account/${usuarioEncontrado.id}`)
+        }
       })
       .catch((err) => console.error("Erro ao buscar informações do Google:", err));
   }, [user]);
