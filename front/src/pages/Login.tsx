@@ -78,12 +78,12 @@ export default function Login() {
               id="email"
               type="email"
               value={email}
-              placeholder={"fulano@exemplo.com"}
+              placeholder={"Digite o seu e-mail"}
               onChange={setEmail}
               className="mb-2"
             />
 
-            <div className="relative flex items-center mb-6">
+            <div className="relative mb-6 flex items-center">
               <Input
                 label="Informe uma senha:"
                 id="senha"
@@ -94,7 +94,7 @@ export default function Login() {
               />
               <button
                 type="button"
-                className="absolute right-3 icon pt-7"
+                className="icon absolute right-3 pt-7"
                 onClick={() => setMostrarSenha(!mostrarSenha)}
               >
                 {mostrarSenha ? <AiFillEyeInvisible /> : <AiFillEye />}

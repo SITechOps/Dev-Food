@@ -58,7 +58,7 @@ export default function Cadastro() {
             id="nome"
             type="text"
             value={nome}
-            placeholder={"Fulando de tal"}
+            placeholder={"Digite seu nome"}
             onChange={setNome}
           />
           <div className="flex items-center justify-end space-x-2">
@@ -67,13 +67,13 @@ export default function Cadastro() {
               id="email"
               type="email"
               value={email}
-              placeholder={"fulando@exemplo.com"}
+              placeholder={"Digite seu e-mail"}
               onChange={setEmail}
               className="flex-grow"
             />
           </div>
 
-          <div className="relative flex items-center z-10">
+          <div className="relative z-10 flex items-center">
             <Input
               label="Informe uma senha:"
               id="senha"
@@ -84,13 +84,12 @@ export default function Cadastro() {
             />
             <button
               type="button"
-              className="absolute right-3 icon pt-7"
+              className="icon absolute right-3 pt-7"
               onClick={() => setMostrarSenha(!mostrarSenha)}
             >
-              {mostrarSenha ? <AiFillEyeInvisible/> : <AiFillEye />}
+              {mostrarSenha ? <AiFillEyeInvisible /> : <AiFillEye />}
             </button>
           </div>
-
         </div>
 
         <Button
@@ -104,10 +103,9 @@ export default function Cadastro() {
 
       <div className="flex justify-end">
         <span className="text-gray-medio">Já tenho conta</span>
-        <Button
-          color="plain"
-          onClick={fazerLogin}
-          className="m-0 w-[6rem] p-0">Fazer login</Button>
+        <Button color="plain" onClick={fazerLogin} className="m-0 w-[6rem] p-0">
+          Fazer login
+        </Button>
       </div>
       <span className="text-gray-medio mt-2 mb-6 text-center">
         -------------- OU --------------
