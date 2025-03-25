@@ -27,7 +27,7 @@ export default function ModalEmail({
     } else {
       cadastrarUsuario();
       alert("Usuário cadastrado com sucesso!");
-      navigate("/account");
+      navigate("/");
     }
   }
 

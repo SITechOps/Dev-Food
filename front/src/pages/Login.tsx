@@ -41,7 +41,7 @@ export default function Login() {
         email,
       });
 
-      navigate("/account");
+      navigate("/");
     } catch (error: any) {
       console.error("Erro no login:", error);
       alert(error.response?.data?.message || "Erro ao fazer login.");

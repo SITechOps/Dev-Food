@@ -43,7 +43,7 @@ export default function LogarGoogle() {
               "userLogado",
               JSON.stringify(usuarioEncontrado),
             );
-            navigate("/account");
+            navigate("/");
           } else {
             const response = await api.post("/user", {
               data: { nome, email, senha: senha.substring(0, 12) },
@@ -54,7 +54,7 @@ export default function LogarGoogle() {
 
             localStorage.setItem("token", user.access_token);
             localStorage.setItem("userLogado", JSON.stringify(novoUsuario));
-            navigate("/account");
+            navigate("/");
           }
         } catch (error) {
           console.error("Erro ao processar login/cadastro:", error);
