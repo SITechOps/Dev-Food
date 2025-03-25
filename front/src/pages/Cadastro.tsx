@@ -67,7 +67,7 @@ export default function Cadastro() {
               id="email"
               type="email"
               value={email}
-              placeholder={"Digite seu e-mail"}
+              placeholder={"exemplo@email.com"}
               onChange={setEmail}
               className="flex-grow"
             />
