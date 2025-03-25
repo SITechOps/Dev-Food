@@ -78,7 +78,7 @@ export default function Login() {
               id="email"
               type="email"
               value={email}
-              placeholder={"Digite o seu e-mail"}
+              placeholder={"exemplo@email.com"}
               onChange={setEmail}
               className="mb-2"
             />
