@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "tailwindcss/theme";
-@import "tailwindcss/utilities";
 
 @layer utilities  {
   body {

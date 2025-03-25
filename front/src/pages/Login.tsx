@@ -70,7 +70,7 @@ export default function Login() {
 
           <form onSubmit={loginUser}>
             <Input
-              label="Informe o seu email:"
+              textLabel="Informe o seu email:"
               id="email"
               type="email"
               value={email}
@@ -81,7 +81,7 @@ export default function Login() {
 
             <div className="relative mb-6 flex items-center">
               <Input
-                label="Informe uma senha:"
+                textLabel="Informe uma senha:"
                 id="senha"
                 type={mostrarSenha ? "text" : "password"}
                 placeholder={"Digite sua senha"}
@@ -106,7 +106,9 @@ export default function Login() {
             <span className="text-gray-medio">Não tem conta?</span>
             <Button
               color="plain"
-              onClick={() => {navigate("/cadastro")}}
+              onClick={() => {
+                navigate("/cadastro");
+              }}
               className="m-0 w-[6rem] p-0"
             >
               Cadastre-se

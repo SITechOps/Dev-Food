@@ -16,7 +16,7 @@ import { api } from "../connection/axios";
 import Button from "../componentes/Button";
 import { decodeToken } from "../utils/decodeToken";
 const userData = decodeToken(localStorage.getItem("token") || "");
-const idUsuario = userData?.sub
+const idUsuario = userData?.sub;
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const mapApiJs = "https://maps.googleapis.com/maps/api/js";
 
@@ -30,7 +30,7 @@ const CadastroEndereco = () => {
   const initMapScript = async () => {
     if (!window.google) {
       await loadAsyncScript(
-        `${mapApiJs}?key=${googleApiKey}&libraries=places&v=weekly`
+        `${mapApiJs}?key=${googleApiKey}&libraries=places&v=weekly`,
       );
     }
   };
@@ -42,7 +42,7 @@ const CadastroEndereco = () => {
   };
 
   const onChangeAddress = async (
-    autocomplete: google.maps.places.Autocomplete
+    autocomplete: google.maps.places.Autocomplete,
   ) => {
     const place = autocomplete.getPlace();
     const extractedAddress = extractAddress(place);
@@ -87,11 +87,11 @@ const CadastroEndereco = () => {
     if (!searchInput.current) return;
 
     const autocomplete = new window.google.maps.places.Autocomplete(
-      searchInput.current
+      searchInput.current,
     );
     autocomplete.setFields(["address_component", "geometry"]);
     autocomplete.addListener("place_changed", () =>
-      onChangeAddress(autocomplete)
+      onChangeAddress(autocomplete),
     );
   };
 
@@ -100,7 +100,7 @@ const CadastroEndereco = () => {
       navigator.geolocation.getCurrentPosition(async ({ coords }) => {
         const _address = await reverseGeoCode(
           coords.latitude,
-          coords.longitude
+          coords.longitude,
         );
         setAddress(_address);
         if (searchInput.current) searchInput.current.value = _address.plain();
@@ -170,14 +170,24 @@ const CadastroEndereco = () => {
   return (
     <section className="fixed inset-0 flex h-screen items-center justify-center bg-black/50">
       <div className="mt-5 w-[23rem]">
-        <form className="bg-white rounded-md p-6 mt-5" onSubmit={handleCadastrar}>
-          <legend className="text-center font-bold mx-2">Informe seu endereço</legend>
-          <div className="my-2 relative w-full">
-            <Input ref={searchInput} type="text" placeholder="Digite o endereço..." className="w-full" />
+        <form
+          className="mt-5 rounded-md bg-white p-6"
+          onSubmit={handleCadastrar}
+        >
+          <legend className="mx-2 text-center font-bold">
+            Informe seu endereço
+          </legend>
+          <div className="relative my-2 w-full">
+            <Input
+              ref={searchInput}
+              type="text"
+              placeholder="Digite o endereço..."
+              className="w-full"
+            />
             <button
               type="button"
               onClick={findMyLocation}
-              className="icon absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-claro pl-2"
+              className="icon bg-gray-claro absolute top-1/2 right-3 -translate-y-1/2 transform pl-2"
             >
               <PiGpsFixDuotone />
             </button>
@@ -185,29 +195,29 @@ const CadastroEndereco = () => {
 
           {address && (
             <>
-              <hr className="my-5 text-gray-medio rounded-lg" />
-              <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-3 mb-2 w-full">
+              <hr className="text-gray-medio my-5 rounded-lg" />
+              <div className="mb-2 flex w-full items-center space-x-2 rounded-lg bg-gray-100 p-3">
                 <FaMapMarkerAlt className="!text-brown-dark icon" />
                 <p>
                   <span className="font-semibold">
-                  {address.logradouro || address.pais}
+                    {address.logradouro || address.pais}
                   </span>
                   {address.logradouro || address.pais
                     ? `, ${address.cidade || address.bairro} - ${address.estado}`
                     : address.logradouro || address.pais
-                    ? `, ${address.cidade || address.bairro}`
-                    : ""}
+                      ? `, ${address.cidade || address.bairro}`
+                      : ""}
                 </p>
               </div>
 
               {/* Campos complementares */}
               <div id="dados-complementares">
-                <div className="flex gap-4 mb-3">
+                <div className="mb-3 flex gap-4">
                   <Input
                     type="text"
                     value={numero}
                     placeholder="Número"
-                    onChange={(value: string) => setNumero(value)}
+                    onChange={setNumero}
                     className="w-[6rem]"
                   />
 
@@ -215,46 +225,58 @@ const CadastroEndereco = () => {
                     type="text"
                     value={complemento}
                     placeholder="Complemento"
-                    onChange={(value: string) => setComplemento(value)}
+                    onChange={setComplemento}
                     className="w-[13rem]"
                   />
                 </div>
 
                 <div className="mt-5">
                   <label>Favoritar como:</label>
-                  <div className="flex space-x-4 my-5">
+                  <div className="my-5 flex space-x-4">
                     <button
                       type="button"
                       onClick={() => handleFavoritar("Casa")}
-                      className={`px-2 py-1 rounded flex items-center space-x-2 bg-gray-claro text-gray-medio transition-all duration-300 ease-in-out ${tipo === "Casa"
-                        ? "border-2 border-brown-normal"
-                        : "border-2 border-transparent hover:border-gray-medio"
-                        }`}
+                      className={`bg-gray-claro text-gray-medio flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
+                        tipo === "Casa"
+                          ? "border-brown-normal border-2"
+                          : "hover:border-gray-medio border-2 border-transparent"
+                      }`}
                     >
                       <TbHomeFilled
-                        className={`transition-colors duration-300 ${tipo === "Casa" ? "text-brown-normal" : "text-gray-medio hover:text-gray-medio"
-                          }`}
+                        className={`transition-colors duration-300 ${
+                          tipo === "Casa"
+                            ? "text-brown-normal"
+                            : "text-gray-medio hover:text-gray-medio"
+                        }`}
                       />
                       <span>Casa</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleFavoritar("Trabalho")}
-                      className={`px-2 py-1 rounded flex items-center space-x-2 bg-gray-claro text-gray-medio transition-all duration-300 ease-in-out ${tipo === "Trabalho"
-                        ? "border-2 border-brown-normal"
-                        : "border-2 border-transparent hover:border-gray-medio"
-                        }`}
+                      className={`bg-gray-claro text-gray-medio flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
+                        tipo === "Trabalho"
+                          ? "border-brown-normal border-2"
+                          : "hover:border-gray-medio border-2 border-transparent"
+                      }`}
                     >
                       <IoBusiness
-                        className={`transition-colors duration-300 ${tipo === "Trabalho" ? "text-brown-normal" : "text-gray-medio hover:text-gray-medio"
-                          }`}
+                        className={`transition-colors duration-300 ${
+                          tipo === "Trabalho"
+                            ? "text-brown-normal"
+                            : "text-gray-medio hover:text-gray-medio"
+                        }`}
                       />
                       <span>Trabalho</span>
                     </button>
                   </div>
                 </div>
 
-                <Button type="submit" disabled={!address || !numero} className="mt-4">
+                <Button
+                  type="submit"
+                  disabled={!address || !numero}
+                  className="mt-4"
+                >
                   Salvar endereço
                 </Button>
               </div>

@@ -1,35 +1,23 @@
-import { IInputProps } from "../interface/IInputs";
-import { twMerge } from 'tailwind-merge'
+import { ComponentProps } from "react";
+import { twMerge } from "tailwind-merge";
 
+export interface IInputProps extends Omit<ComponentProps<"input">, "onChange"> {
+  textLabel?: string;
+  onChange?: (value: string) => void;
+}
 
-export default function Input({
-  label,
-  id,
-  type = "text",
-  ref,
-  value,
-  placeholder,
-  className,
-  disabled,
-  onChange,
-}: IInputProps) {
-
-  const baseCss = "bg-gray-claro border-slate-300 outline-slate-400 px-4 py-3 mt-1 rounded-sm w-full"
+export default function Input({ textLabel, onChange, ...props }: IInputProps) {
+  const baseCss =
+    "bg-gray-claro mt-1 w-full rounded-sm border-slate-300 px-4 py-3 outline-slate-400 [&::-ms-reveal]:hidden";
   return (
-    <div className="">
-      <label htmlFor={id} className="font-medium">
-        {label}
+    <div>
+      <label htmlFor={props.id} className="font-medium">
+        {textLabel}
       </label>
       <input
-        type={type}
-        id={id}
-        ref={ref}
-        name={id}
-        placeholder={placeholder}
-        className={twMerge(baseCss, className)}
-        value={value}
-        disabled={disabled}
-        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+        {...props}
+        className={twMerge(baseCss, props.className)}
+        onChange={(e) => onChange?.(e.target.value)}
       ></input>
     </div>
   );
