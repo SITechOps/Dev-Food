@@ -39,6 +39,8 @@ export default function Cadastro() {
           email={email}
           senha={senha}
           codigoEnviado={codigoEnviado}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
         />
       )}
       <form onSubmit={enviarEmail}>
