@@ -23,7 +23,7 @@ class UsersRepository(IUsersRepository):
                 raise exception
                 
 
-    def find_by_id(self, user_id: int) -> User | None:
+    def find_by_id(self, user_id: str) -> User | None:
         with DBConnectionHandler() as db:
             user = (
                 db.session
@@ -56,7 +56,7 @@ class UsersRepository(IUsersRepository):
             return users
     
 
-    def update(self, user_id: int, user_info: dict) -> None:
+    def update(self, user_id: str, user_info: dict) -> None:
         with DBConnectionHandler() as db:
             try:
                 user = self.find_by_id(user_id)        
@@ -69,7 +69,7 @@ class UsersRepository(IUsersRepository):
                 raise exception
     
 
-    def delete(self, user_id: int) -> None:
+    def delete(self, user_id: str) -> None:
         with DBConnectionHandler() as db:
             try:
                 user = self.find_by_id(user_id)     

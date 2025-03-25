@@ -12,7 +12,7 @@ class Endereco(Base):
     numero = Column(Integer)
     complemento = Column(String(20), nullable=True)
     tipo = Column(String(20))
-    id_usuario = Column(Integer, ForeignKey("Usuario.id", ondelete="CASCADE"))
+    id_usuario = Column(String(36), ForeignKey("Usuario.id", ondelete="CASCADE"))
 
     __table_args__ = (UniqueConstraint('tipo', 'id_usuario'),)
 
