@@ -139,8 +139,8 @@ export default function Account() {
           </div>
         </div>
 
-        <form onSubmit={alterarDados} className="!mt-5 text-center">
-          <div className="text-blue mt-3 flex items-center justify-center gap-2 p-0 text-lg">
+        <form onSubmit={alterarDados} className="!mt-5">
+          <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
             Nome:
             {isEditing ? (
               <Input type="text" id="nome" value={nome} onChange={setNome} />
@@ -149,13 +149,13 @@ export default function Account() {
             )}
           </div>
 
-          <p className="mt-3 flex items-center justify-center gap-2 p-0 text-lg">
+          <p className="mt-3 flex items-center justify-start gap-2 p-0 text-lg">
             Email:
             <span className="font-semibold">{email}</span>
           </p>
 
           {isEditing && !user ? (
-            <div className="text-blue mt-3 flex items-center justify-center gap-2 p-0 text-lg">
+            <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
               Digite uma nova senha:
               <Input type="text" id="senha" value={senha} onChange={setSenha} />
             </div>
