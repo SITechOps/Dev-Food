@@ -73,7 +73,7 @@ export default function LogarGoogle() {
       className="flex items-center justify-center gap-4"
     >
       <img src="img/google.svg" alt="" className="size-4" />
-      Fazer login com o Google
+      Entrar com Google
     </Button>
   );
 }

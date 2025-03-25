@@ -12,17 +12,17 @@ import CadastroEndereco from "./componentes/CadastroEndereco.tsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/cadastro",
     element: <App />,
   },
   {
-    path: "/home",
+    path: "/",
     element: <Home />,
   },
-  {
-    path: "/cadastro",
-    element: <Cadastro />,
-  },
+  // {
+  //   path: "/cadastro",
+  //   element: <Cadastro />,
+  // },
   {
     path: "/login",
     element: <Login />,

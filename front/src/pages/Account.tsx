@@ -124,14 +124,14 @@ export default function Account() {
           <div id="icones-de-acao" className="flex justify-end gap-4">
             <div
               id="Editar"
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#FDEDEE] hover:bg-[#FAC8CB]"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg--brown-ligth hover:bg-brown-ligth-active"
               onClick={handleEditUser}
             >
               <FiEdit2 className="icon" />
             </div>
             <div
               id="deletar"
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#FDEDEE] hover:bg-[#FAC8CB]"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-brown-ligth hover:bg-brown-ligth-active"
               onClick={deletarDados}
             >
               <AiOutlineDelete className="icon" />

@@ -3,7 +3,7 @@ import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useState, FormEvent } from "react";
-import LogarGoogle from "./LogarGoogle";
+import AuthGoogle from "./AuthGoogle";
 import Menu from "../componentes/Menu";
 import Button from "../componentes/Button";
 import { decodeToken } from "../utils/decodeToken";
@@ -48,10 +48,6 @@ export default function Login() {
     }
   }
 
-  function botaoCadastro() {
-    navigate("/");
-  }
-
   return (
     <>
       <Menu />
@@ -66,7 +62,7 @@ export default function Login() {
             Como deseja continuar?
           </legend>
 
-          <LogarGoogle />
+          <AuthGoogle />
 
           <span className="text-gray-medio mb-4 text-center">
             -------------- OU --------------
@@ -110,7 +106,7 @@ export default function Login() {
             <span className="text-gray-medio">Não tem conta?</span>
             <Button
               color="plain"
-              onClick={botaoCadastro}
+              onClick={() => {navigate("/cadastro")}}
               className="m-0 w-[6rem] p-0"
             >
               Cadastre-se

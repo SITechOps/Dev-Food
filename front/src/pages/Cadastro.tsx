@@ -6,7 +6,7 @@ import { api } from "../connection/axios";
 import Input from "../componentes/Input";
 import ModalEmail from "../componentes/ModalEmail";
 import Button from "../componentes/Button";
-import LogarGoogle from "./LogarGoogle";
+import AuthGoogle from "./AuthGoogle";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -16,11 +16,6 @@ export default function Cadastro() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const navigate = useNavigate();
-
-  function fazerLogin(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    event.preventDefault();
-    navigate("/login");
-  }
 
   async function enviarEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,9 +42,9 @@ export default function Cadastro() {
         />
       )}
       <form onSubmit={enviarEmail}>
-        <button onClick={() => navigate(-1)} className="mb-5 self-start">
-          <FaAngleLeft className="icon" />
-        </button>
+        <a href="/" className="mb-5 self-start">
+            <FaAngleLeft className="icon" />
+          </a>
         <legend className="mb-4 text-center font-bold">Cadastra-se</legend>
 
         <div className="w-full space-y-4">
@@ -103,14 +98,14 @@ export default function Cadastro() {
 
       <div className="flex justify-end">
         <span className="text-gray-medio">Já tenho conta</span>
-        <Button color="plain" onClick={fazerLogin} className="m-0 w-[6rem] p-0">
+        <Button color="plain" onClick={() => {navigate("/login");}} className="m-0 w-[6rem] p-0">
           Fazer login
         </Button>
       </div>
       <span className="text-gray-medio mt-2 mb-6 text-center">
         -------------- OU --------------
       </span>
-      <LogarGoogle />
+      <AuthGoogle />
     </div>
   );
 }
