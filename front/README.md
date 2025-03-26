@@ -2,15 +2,16 @@
 
 Organização das pastas do `src` para manter o projeto modular e escalável:
 
-| 📂 Pasta         | Descrição |
-|----------------|------------|
-| **`components`** | Componentes reutilizáveis, como botões, inputs, modais e cards. |
-| **`helpers`** | Funções auxiliares para manipulação de dados, formatação de textos, datas, etc. |
-| **`connection`** | Gerencia a comunicação com o backend, incluindo requisições à API e autenticação. |
-| **`interfaces`** | Define tipagens (interfaces e types) para manter o TypeScript organizado. |
-| **`pages`** | Contém as páginas principais do projeto, geralmente roteadas. |
-| **`uteis`** | Armazena funções, constantes e configurações globais que podem ser utilizadas em diferentes partes do projeto. |
+| 📂 Pasta           | Descrição                                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| **`components`**   | Componentes reutilizáveis, como botões, inputs, modais e cards.                                                           |
+| **`helpers`**      | Funções auxiliares para manipulação de dados, formatação de textos, datas, etc.                                           |
+| **`connection`**   | Gerencia a comunicação com o backend, incluindo requisições à API e autenticação.                                         |
+| **`interfaces`**   | Define tipagens (interfaces e types) para manter o TypeScript organizado.                                                 |
+| **`pages`**        | Contém as páginas principais do projeto, geralmente roteadas.                                                             |
+| **`uteis`**        | Armazena funções, constantes e configurações globais que podem ser utilizadas em diferentes partes do projeto.            |
 | 🎨 **`index.css`** | Arquivo de estilo que combina Tailwind CSS com variáveis personalizadas. **Siga este padrão para manter a consistência.** |
+
 ---
 
 # Configuração do `index.css`
@@ -29,7 +30,7 @@ Configuração do corpo da página:
 
   body::before {
     content: "";
-    @apply fixed w-full h-full bg-[#fdedee] left-0 top-0 -z-10;
+    @apply fixed w-full h-full bg-brown-light left-0 top-0 -z-10;
     clip-path: ellipse(50% 100% at left center);
   }
 ```
@@ -40,7 +41,7 @@ Estilos padrões aplicados automaticamente às tags especificadas. Não é neces
 
 ```css
   .icon {
-    @apply text-brown-normal text-[1.5rem] cursor-pointer;
+    @apply text-brown-normal text-2xl cursor-pointer;
   }
 
   p, h1, h2, h3, h4, input, select, label, legend, span {
@@ -60,7 +61,7 @@ Estilos padrões aplicados automaticamente às tags especificadas. Não é neces
   }
 
   h4 {
-    @apply text-[1.3rem];
+    @apply text-xl;
   }
 
   p, legend {
@@ -83,30 +84,31 @@ Abaixo estão as paletas de cores utilizadas na aplicação. Essas cores são ap
   --font-sans: "Dosis", serif;
 
   /* Variáveis de Cores */
-  --color-gray-claro: #f1f1f1;
-  --color-gray-medio: #a9a9a9;
+  --color-gray-light: #f1f1f1;
+  --color-gray-medium: #a9a9a9;
   --color-green: #b5c865;
   --color-blue: #374957;
-  --color-brown-ligth: #fdedee;
-  --color-brown-ligth-active: #fac8cb;
+  --color-brown-light: #fdedee;
+  --color-brown-light-active: #fac8cb;
   --color-brown-normal: #ee4c58;
   --color-brown-dark: #c0434d;
 }
 ```
 
-
-# Para Identificar as Cores do CSS no Figma ou uso de imagem 
+# Para Identificar as Cores do CSS no Figma ou uso de imagem
 
 - As cores utilizadas estão `index.css` definidas como variáveis.
 - No Figma, a cor selecionada terá um código hexadecimal (exemplo: `#ee4c58`). Compare esse código com as variáveis CSS para garantir que está usando a cor correta.
 - As imagem deve ser retira do React Icons
 
 ---
+
 # Uso dos Componentes de Botão
 
 Os botões possuem diferentes variações de estilo e funcionalidade:
 
 - **Botão Padrão (`default`)**: Exibe um botão com estilo padrão.
+
   ```jsx
   <Buttons color="default" onClick={() => alert("Botão Padrão")}>
     Botão Padrão
@@ -114,6 +116,7 @@ Os botões possuem diferentes variações de estilo e funcionalidade:
   ```
 
 - **Botão Secundário (`secondary`)**: Apresenta um estilo alternativo.
+
   ```jsx
   <Buttons color="secondary" onClick={() => console.log("Secundário")}>
     Botão Secundário
@@ -121,6 +124,7 @@ Os botões possuem diferentes variações de estilo e funcionalidade:
   ```
 
 - **Botão Contorno (`outlined`)**: Similar ao secundário, mas com bordas destacadas e sen a cor de fundo.
+
   ```jsx
   <Buttons color="outlined" onClick={() => console.log("Secundário")}>
     Botão outlined
@@ -128,10 +132,9 @@ Os botões possuem diferentes variações de estilo e funcionalidade:
   ```
 
 - **Botão Simples (`plain`)**: Exibe um botão sem destaque, sem borda e sem cor de fundo.
+
   ```jsx
-  <Buttons color="plain">
-    Botão Simples 
-  </Buttons>
+  <Buttons color="plain">Botão Simples</Buttons>
   ```
 
 - **Botão Desabilitado (`disabled`)**: Aparece visualmente desativado com a opcinada um pouco baixa e não responde a interações do usuário.
@@ -143,7 +146,4 @@ Os botões possuem diferentes variações de estilo e funcionalidade:
 
 Cada variação é definida pelo atributo `color` dentro do componente `<Buttons>`, e eventos como `onClick, disabled, type` podem ser adicionados para personalizar a interação.
 
-
 FIGMA: https://www.figma.com/design/BQSuInzKROscBjBKKd4hak/Clone-ifood?node-id=0-1&p=f&t=UJRn2Gr58uB5HLVs-0
-
-

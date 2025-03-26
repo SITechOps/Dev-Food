@@ -113,7 +113,7 @@ export default function Account() {
       <Menu>
         <ListagemEndereco />
       </Menu>
-      <section className="m-auto mt-[3rem] flex w-[50%] flex-col items-center justify-center rounded-md bg-white p-5 shadow">
+      <section className="m-auto mt-12 flex w-1/2 flex-col items-center justify-center rounded-md bg-white p-5 shadow">
         <div className="flex w-full items-center justify-between">
           <button onClick={() => navigate(-1)} className="self-start">
             <FaAngleLeft className="icon h-10 w-10" />
@@ -124,14 +124,14 @@ export default function Account() {
           <div id="icones-de-acao" className="flex justify-end gap-4">
             <div
               id="Editar"
-              className="bg--brown-ligth hover:bg-brown-ligth-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
+              className="bg--brown-light hover:bg-brown-light-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
               onClick={handleEditUser}
             >
               <FiEdit2 className="icon" />
             </div>
             <div
               id="deletar"
-              className="bg-brown-ligth hover:bg-brown-ligth-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
+              className="bg-brown-light hover:bg-brown-light-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
               onClick={deletarDados}
             >
               <AiOutlineDelete className="icon" />
@@ -162,7 +162,7 @@ export default function Account() {
           ) : null}
 
           {isEditing && (
-            <Button type="submit" className="mt-[3rem]">
+            <Button type="submit" className="mt-12">
               Salvar
             </Button>
           )}

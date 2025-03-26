@@ -169,7 +169,7 @@ const CadastroEndereco = () => {
 
   return (
     <section className="fixed inset-0 flex h-screen items-center justify-center bg-black/50">
-      <div className="mt-5 w-[23rem]">
+      <div className="mt-5 w-96">
         <form
           className="mt-5 rounded-md bg-white p-6"
           onSubmit={handleCadastrar}
@@ -187,7 +187,7 @@ const CadastroEndereco = () => {
             <button
               type="button"
               onClick={findMyLocation}
-              className="icon bg-gray-claro absolute top-1/2 right-3 -translate-y-1/2 transform pl-2"
+              className="icon bg-gray-light absolute top-1/2 right-3 -translate-y-1/2 transform pl-2"
             >
               <PiGpsFixDuotone />
             </button>
@@ -195,7 +195,7 @@ const CadastroEndereco = () => {
 
           {address && (
             <>
-              <hr className="text-gray-medio my-5 rounded-lg" />
+              <hr className="text-gray-medium my-5 rounded-lg" />
               <div className="mb-2 flex w-full items-center space-x-2 rounded-lg bg-gray-100 p-3">
                 <FaMapMarkerAlt className="!text-brown-dark icon" />
                 <p>
@@ -218,7 +218,7 @@ const CadastroEndereco = () => {
                     value={numero}
                     placeholder="Número"
                     onChange={setNumero}
-                    className="w-[6rem]"
+                    className="w-24"
                   />
 
                   <Input
@@ -226,7 +226,7 @@ const CadastroEndereco = () => {
                     value={complemento}
                     placeholder="Complemento"
                     onChange={setComplemento}
-                    className="w-[13rem]"
+                    className="w-52"
                   />
                 </div>
 
@@ -236,17 +236,17 @@ const CadastroEndereco = () => {
                     <button
                       type="button"
                       onClick={() => handleFavoritar("Casa")}
-                      className={`bg-gray-claro text-gray-medio flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
+                      className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
                         tipo === "Casa"
                           ? "border-brown-normal border-2"
-                          : "hover:border-gray-medio border-2 border-transparent"
+                          : "hover:border-gray-medium border-2 border-transparent"
                       }`}
                     >
                       <TbHomeFilled
                         className={`transition-colors duration-300 ${
                           tipo === "Casa"
                             ? "text-brown-normal"
-                            : "text-gray-medio hover:text-gray-medio"
+                            : "text-gray-medium hover:text-gray-medium"
                         }`}
                       />
                       <span>Casa</span>
@@ -254,17 +254,17 @@ const CadastroEndereco = () => {
                     <button
                       type="button"
                       onClick={() => handleFavoritar("Trabalho")}
-                      className={`bg-gray-claro text-gray-medio flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
+                      className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
                         tipo === "Trabalho"
                           ? "border-brown-normal border-2"
-                          : "hover:border-gray-medio border-2 border-transparent"
+                          : "hover:border-gray-medium border-2 border-transparent"
                       }`}
                     >
                       <IoBusiness
                         className={`transition-colors duration-300 ${
                           tipo === "Trabalho"
                             ? "text-brown-normal"
-                            : "text-gray-medio hover:text-gray-medio"
+                            : "text-gray-medium hover:text-gray-medium"
                         }`}
                       />
                       <span>Trabalho</span>

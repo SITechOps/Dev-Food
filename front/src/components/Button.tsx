@@ -6,12 +6,12 @@ const button = tv({
   variants: {
     color: {
       default: "bg-brown-normal text-white hover:bg-brown-dark",
-      secondary: "bg-brown-ligth text-brown-normal hover:bg-brown-ligth-active",
+      secondary: "bg-brown-light text-brown-normal hover:bg-brown-light-active",
       outlined:
         "border border-brown-normal text-brown-normal hover:bg-brown-light-active bg-transparent",
       plain: "text-brown-normal hover:text-brown-dark",
       defaultImg:
-        "bg-brown-ligth text-brown-normal hover:bg-brown-ligth-active ",
+        "bg-brown-light text-brown-normal hover:bg-brown-light-active ",
     },
     disabled: {
       true: "opacity-50 cursor-not-allowed pointer-events-none",
