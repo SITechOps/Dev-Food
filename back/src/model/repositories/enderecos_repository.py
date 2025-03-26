@@ -5,7 +5,7 @@ from src.main.handlers.custom_exceptions import AddressNotFound
 
 class EnderecosRepository(IEnderecosRepository):
 
-    def create(self, id_usuario: int, endereco: dict) -> None:
+    def create(self, id_usuario: str, endereco: dict) -> None:
         with DBConnectionHandler() as db:
             try:
                 new_endereco = Endereco(
@@ -26,7 +26,7 @@ class EnderecosRepository(IEnderecosRepository):
                 raise exception
 
 
-    def find_all_enderecos_by_user(self, id_usuario: int) -> list[Endereco]:
+    def find_all_enderecos_by_user(self, id_usuario: str) -> list[Endereco]:
         with DBConnectionHandler() as db:
             enderecos = (
                 db.session

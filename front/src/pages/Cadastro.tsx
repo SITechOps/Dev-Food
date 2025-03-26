@@ -3,10 +3,10 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { api } from "../connection/axios";
-import Input from "../componentes/Input";
-import ModalEmail from "../componentes/ModalEmail";
-import Button from "../componentes/Button";
-import AuthGoogle from "./AuthGoogle";
+import Input from "../components/Input";
+import ModalEmail from "../components/ModalEmail";
+import Button from "../components/Button";
+import AuthGoogle from "../components/AuthGoogle";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -39,17 +39,19 @@ export default function Cadastro() {
           email={email}
           senha={senha}
           codigoEnviado={codigoEnviado}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
         />
       )}
       <form onSubmit={enviarEmail}>
         <a href="/" className="mb-5 self-start">
-            <FaAngleLeft className="icon" />
-          </a>
+          <FaAngleLeft className="icon" />
+        </a>
         <legend className="mb-4 text-center font-bold">Cadastra-se</legend>
 
         <div className="w-full space-y-4">
           <Input
-            label="Informe o seu nome:"
+            textLabel="Informe o seu nome:"
             id="nome"
             type="text"
             value={nome}
@@ -58,7 +60,7 @@ export default function Cadastro() {
           />
           <div className="flex items-center justify-end space-x-2">
             <Input
-              label="Informe o seu email:"
+              textLabel="Informe o seu email:"
               id="email"
               type="email"
               value={email}
@@ -70,7 +72,7 @@ export default function Cadastro() {
 
           <div className="relative z-10 flex items-center">
             <Input
-              label="Informe uma senha:"
+              textLabel="Informe uma senha:"
               id="senha"
               type={mostrarSenha ? "text" : "password"}
               placeholder={"Digite sua senha"}
@@ -98,7 +100,13 @@ export default function Cadastro() {
 
       <div className="flex justify-end">
         <span className="text-gray-medio">Já tenho conta</span>
-        <Button color="plain" onClick={() => {navigate("/login");}} className="m-0 w-[6rem] p-0">
+        <Button
+          color="plain"
+          onClick={() => {
+            navigate("/login");
+          }}
+          className="m-0 w-[6rem] p-0"
+        >
           Fazer login
         </Button>
       </div>

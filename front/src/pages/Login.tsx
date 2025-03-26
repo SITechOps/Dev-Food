@@ -1,11 +1,11 @@
-import Input from "../componentes/Input";
+import Input from "../components/Input";
 import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useState, FormEvent } from "react";
-import AuthGoogle from "./AuthGoogle";
-import Menu from "../componentes/Menu";
-import Button from "../componentes/Button";
+import AuthGoogle from "../components/AuthGoogle";
+import Menu from "../components/Menu";
+import Button from "../components/Button";
 import { decodeToken } from "../utils/decodeToken";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
@@ -70,7 +70,7 @@ export default function Login() {
 
           <form onSubmit={loginUser}>
             <Input
-              label="Informe o seu email:"
+              textLabel="Informe o seu email:"
               id="email"
               type="email"
               value={email}
@@ -81,7 +81,7 @@ export default function Login() {
 
             <div className="relative mb-6 flex items-center">
               <Input
-                label="Informe uma senha:"
+                textLabel="Informe uma senha:"
                 id="senha"
                 type={mostrarSenha ? "text" : "password"}
                 placeholder={"Digite sua senha"}
@@ -106,7 +106,9 @@ export default function Login() {
             <span className="text-gray-medio">Não tem conta?</span>
             <Button
               color="plain"
-              onClick={() => {navigate("/cadastro")}}
+              onClick={() => {
+                navigate("/cadastro");
+              }}
               className="m-0 w-[6rem] p-0"
             >
               Cadastre-se

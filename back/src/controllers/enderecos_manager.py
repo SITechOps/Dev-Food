@@ -45,6 +45,6 @@ class EnderecosManager:
         return ResponseFormatter.display_operation(self.class_name, "deletado")
         
 
-    def __check_user(self, id_usuario: int) -> None:
+    def __check_user(self, id_usuario: str) -> None:
         response = self.__users_repo.find_by_id(id_usuario)
         if not response: raise UserNotFound()

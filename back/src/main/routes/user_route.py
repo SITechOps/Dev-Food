@@ -28,7 +28,7 @@ def get_all_users():
     return jsonify(http_response.body), http_response.status_code
 
 
-@user_route_bp.get('/user/<int:id>')
+@user_route_bp.get('/user/<id>')
 def get_user_by_id(id):
     http_request = HttpRequest(params={"id": id})
     
@@ -40,7 +40,7 @@ def get_user_by_id(id):
     return jsonify(http_response.body), http_response.status_code
 
 
-@user_route_bp.put('/user/<int:id>')
+@user_route_bp.put('/user/<id>')
 def update_user(id):
     http_request = HttpRequest(params={"id": id}, body=request.json)
     
@@ -52,7 +52,7 @@ def update_user(id):
     return jsonify(http_response.body), http_response.status_code
 
 
-@user_route_bp.delete('/user/<int:id>')
+@user_route_bp.delete('/user/<id>')
 def delete_user(id):
     http_request = HttpRequest(params={"id": id})
 

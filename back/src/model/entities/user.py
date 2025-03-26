@@ -1,9 +1,10 @@
 from src.model.configs.base import Base
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, CHAR, String, Boolean
+from uuid import uuid4
 
 class User(Base):
     __tablename__ = "Usuario"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
     nome = Column(String(50))
     email = Column(String(50), unique=True)
     senha = Column(String(12))

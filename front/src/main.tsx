@@ -7,7 +7,7 @@ import { createRoot } from "react-dom/client";
 import Account from "./pages/Account.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import CadastroEndereco from "./componentes/CadastroEndereco.tsx";
+import CadastroEndereco from "./components/CadastroEndereco.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,19 +24,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/account",
-    element: <Account/>
+    element: <Account />,
   },
   {
     path: "/c-endereco",
     element: <CadastroEndereco />,
   },
-
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId="712065091138-0iaa0qpolcm1646nmnd91thctaqinv9v.apps.googleusercontent.com">
     <StrictMode>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </StrictMode>
-  </GoogleOAuthProvider>
+  </GoogleOAuthProvider>,
 );

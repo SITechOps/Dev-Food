@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "tailwindcss/theme";
-@import "tailwindcss/utilities";
 
 @layer utilities  {
   body {
@@ -14,7 +12,7 @@
   }
 
   .icon{
-    @apply text-brown-normal text-[1.5rem] cursor-pointer
+    @apply text-brown-normal hover:text-brown-dark cursor-pointer text-[1.5rem];
     
   }
   p, h1, h2, h3, h4,  input, select, label, legend, span{
