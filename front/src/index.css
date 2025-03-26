@@ -58,7 +58,7 @@
   --font-sans: "Dosis", serif;
 
   /* Variaveis das CORES  */
-  /* --color-*: initial; */
+  --color-*: initial;
   --color-gray-light: #f1f1f1;
   --color-gray-medium: #a9a9a9;
   --color-green: #b5c865;
@@ -67,4 +67,6 @@
   --color-brown-light-active: #fac8cb;
   --color-brown-normal: #ee4c58;
   --color-brown-dark: #c0434d;
+  --color-white: #fff;
+  --color-black: #000;
 }
