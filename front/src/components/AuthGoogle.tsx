@@ -3,7 +3,7 @@ import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
-import Button from "../componentes/Button";
+import Button from "./Button";
 
 export default function LogarGoogle() {
   const navigate = useNavigate();

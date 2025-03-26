@@ -3,10 +3,10 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { api } from "../connection/axios";
-import Input from "../componentes/Input";
-import ModalEmail from "../componentes/ModalEmail";
-import Button from "../componentes/Button";
-import AuthGoogle from "./AuthGoogle";
+import Input from "../components/Input";
+import ModalEmail from "../components/ModalEmail";
+import Button from "../components/Button";
+import AuthGoogle from "../components/AuthGoogle";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");

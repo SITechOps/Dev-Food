@@ -4,10 +4,10 @@ import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { api } from "../connection/axios";
-import Input from "../componentes/Input";
-import Button from "../componentes/Button";
-import Menu from "../componentes/Menu";
-import ListagemEndereco from "../componentes/ListagemEndereco";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import Menu from "../components/Menu";
+import ListagemEndereco from "../components/ListagemEndereco";
 
 export default function Account() {
   const [isEditing, setIsEditing] = useState(false);

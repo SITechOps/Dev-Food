@@ -1,12 +1,12 @@
-import Menu from "./componentes/Menu";
+import Menu from "./components/Menu";
 import Cadastro from "./pages/Cadastro";
 
 function App() {
   return (
     <>
       <Menu />
-      <div className="flex flex-col items-center justify-center min-h-screen w-full m-auto pt-10">
-        <h1 className="font-bold text-center m-2">
+      <div className="m-auto flex min-h-screen w-full flex-col items-center justify-center pt-10">
+        <h1 className="m-2 text-center font-bold">
           Falta pouco para matar sua fome! <br />
         </h1>
         <Cadastro />

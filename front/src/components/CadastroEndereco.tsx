@@ -10,10 +10,10 @@ import { loadAsyncScript } from "../utils/loadAsyncScript";
 import { reverseGeoCode } from "../utils/geolocation";
 import { IAddress } from "../interface/IAddress";
 
-import Input from "../componentes/Input";
+import Input from "./Input";
 
 import { api } from "../connection/axios";
-import Button from "../componentes/Button";
+import Button from "./Button";
 import { decodeToken } from "../utils/decodeToken";
 const userData = decodeToken(localStorage.getItem("token") || "");
 const idUsuario = userData?.sub;

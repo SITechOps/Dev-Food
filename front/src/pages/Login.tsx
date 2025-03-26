@@ -1,11 +1,11 @@
-import Input from "../componentes/Input";
+import Input from "../components/Input";
 import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useState, FormEvent } from "react";
-import AuthGoogle from "./AuthGoogle";
-import Menu from "../componentes/Menu";
-import Button from "../componentes/Button";
+import AuthGoogle from "../components/AuthGoogle";
+import Menu from "../components/Menu";
+import Button from "../components/Button";
 import { decodeToken } from "../utils/decodeToken";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
