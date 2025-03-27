@@ -110,40 +110,40 @@ Os botões possuem diferentes variações de estilo e funcionalidade:
 - **Botão Padrão (`default`)**: Exibe um botão com estilo padrão.
 
   ```jsx
-  <Buttons color="default" onClick={() => alert("Botão Padrão")}>
+  <Button color="default" onClick={() => alert("Botão Padrão")}>
     Botão Padrão
-  </Buttons>
+  </Button>
   ```
 
 - **Botão Secundário (`secondary`)**: Apresenta um estilo alternativo.
 
   ```jsx
-  <Buttons color="secondary" onClick={() => console.log("Secundário")}>
+  <Button color="secondary" onClick={() => console.log("Secundário")}>
     Botão Secundário
-  </Buttons>
+  </Button>
   ```
 
 - **Botão Contorno (`outlined`)**: Similar ao secundário, mas com bordas destacadas e sen a cor de fundo.
 
   ```jsx
-  <Buttons color="outlined" onClick={() => console.log("Secundário")}>
+  <Button color="outlined" onClick={() => console.log("Secundário")}>
     Botão outlined
-  </Buttons>
+  </Button>
   ```
 
 - **Botão Simples (`plain`)**: Exibe um botão sem destaque, sem borda e sem cor de fundo.
 
   ```jsx
-  <Buttons color="plain">Botão Simples</Buttons>
+  <Button color="plain">Botão Simples</Button>
   ```
 
 - **Botão Desabilitado (`disabled`)**: Aparece visualmente desativado com a opcinada um pouco baixa e não responde a interações do usuário.
   ```jsx
-  <Buttons color="plain" disabled>
+  <Button color="plain" disabled>
     disabled
-  </Buttons>
+  </Button>
   ```
 
-Cada variação é definida pelo atributo `color` dentro do componente `<Buttons>`, e eventos como `onClick, disabled, type` podem ser adicionados para personalizar a interação.
+Cada variação é definida pelo atributo `color` dentro do componente `<Button>`, e eventos como `onClick, disabled, type` podem ser adicionados para personalizar a interação.
 
 FIGMA: https://www.figma.com/design/BQSuInzKROscBjBKKd4hak/Clone-ifood?node-id=0-1&p=f&t=UJRn2Gr58uB5HLVs-0

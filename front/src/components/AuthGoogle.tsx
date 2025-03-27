@@ -72,7 +72,7 @@ export default function LogarGoogle() {
       onClick={() => loginGoogle()}
       className="flex items-center justify-center gap-4"
     >
-      <img src="img/google.svg" alt="" className="size-4" />
+      <img src="img/google.svg" alt="Logo do Google" className="size-4" />
       Entrar com Google
     </Button>
   );
