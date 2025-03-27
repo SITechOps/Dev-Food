@@ -23,6 +23,7 @@
     "react-icons": "^5.5.0",
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^7.3.0",
+    "react-spinners": "^0.15.0",
     "tailwind-merge": "^3.0.2",
     "tailwind-variants": "^1.0.0"
   },
