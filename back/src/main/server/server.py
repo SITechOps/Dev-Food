@@ -5,12 +5,13 @@ from src.main.routes.email_route import email_route_bp
 from src.main.routes.endereco_route import endereco_route_bp
 from src.main.routes.login_route import login_bp
 from src.main.handlers.error_handlers import handlers_bp
-from src.main.server.configs import configure_jwt, configure_mail, configure_swagger
+from src.main.server.configs import configure_bcrypt, configure_jwt, configure_mail, configure_swagger
 
 def create_app():
     app = Flask(__name__, static_url_path="/")
     CORS(app)
 
+    configure_bcrypt(app)
     configure_jwt(app)
     configure_mail(app)
     configure_swagger(app)

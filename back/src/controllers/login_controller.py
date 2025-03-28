@@ -3,6 +3,7 @@ from src.http_types.http_response import HttpResponse
 from src.model.repositories.interfaces.iusers_repository import IUsersRepository
 from src.main.handlers.custom_exceptions import UserNotFound, WrongPassword
 from src.main.utils.response_formatter import ResponseFormatter
+from src.main.server.configs import bcrypt
 from flask_jwt_extended import create_access_token
 
 class LoginController:
@@ -12,12 +13,13 @@ class LoginController:
     def authenticate_user(self, http_request: HttpRequest) -> HttpResponse:
         data = http_request.body.get("data")
         email = data.get("email")
-        senha = data.get("senha")
 
         user_info = self.__users_repo.find_by_email(email)
         if not user_info:
             raise UserNotFound()
-        if user_info.senha != senha:
+        
+        senha_digitada = data.get("senha")        
+        if not bcrypt.check_password_hash(user_info.senha, senha_digitada):
             raise WrongPassword()
     
         token = create_access_token(

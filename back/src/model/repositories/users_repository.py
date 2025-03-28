@@ -1,6 +1,7 @@
 from src.main.handlers.custom_exceptions import EmailChangeNotAllowed, UserNotFound
 from src.model.configs.connection import DBConnectionHandler
 from .interfaces.iusers_repository import IUsersRepository
+from src.main.server.configs import bcrypt
 from src.model.entities.user import User
 
 class UsersRepository(IUsersRepository):
@@ -9,10 +10,11 @@ class UsersRepository(IUsersRepository):
     def insert(self, user_info: dict, is_admin: bool = False) -> None:
         with DBConnectionHandler() as db:
             try:
+                hashed_password = bcrypt.generate_password_hash(user_info.get("senha")).decode('utf-8')
                 new_user = User(
                     nome=user_info.get("nome"),
                     email=user_info.get("email"),
-                    senha=user_info.get("senha"),
+                    senha=hashed_password,
                     is_admin=is_admin
                 )  
                 db.session.add(new_user)
