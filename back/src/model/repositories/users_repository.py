@@ -1,7 +1,7 @@
-from src.main.handlers.custom_exceptions import UserNotFound
+from src.main.handlers.custom_exceptions import EmailChangeNotAllowed, UserNotFound
 from src.model.configs.connection import DBConnectionHandler
-from src.model.entities.user import User
 from .interfaces.iusers_repository import IUsersRepository
+from src.model.entities.user import User
 
 class UsersRepository(IUsersRepository):
 
@@ -59,7 +59,9 @@ class UsersRepository(IUsersRepository):
     def update(self, user_id: str, user_info: dict) -> None:
         with DBConnectionHandler() as db:
             try:
-                user = self.find_by_id(user_id)        
+                user = self.find_by_id(user_id)  
+                if user.email != user_info.get("email"):
+                    raise EmailChangeNotAllowed()     
                 user.nome = user_info.get("nome")
                 user.senha = user_info.get("senha")
                 db.session.add(user)

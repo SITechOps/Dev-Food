@@ -28,3 +28,8 @@ class AddressNotFound(BaseCustomException):
 class WrongPassword(BaseCustomException):
     def __init__(self, message="Senha incorreta!"):
         super().__init__(message, 401)
+
+
+class EmailChangeNotAllowed(BaseCustomException):
+    def __init__(self, message="Este e-mail não pode ser alterado!"):
+        super().__init__(message, 403)
