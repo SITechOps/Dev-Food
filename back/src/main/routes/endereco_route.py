@@ -31,7 +31,7 @@ def get_all_enderecos(id_usuario):
     return jsonify(http_response.body), http_response.status_code
 
 
-@endereco_route_bp.put('/endereco/<int:id_endereco>')
+@endereco_route_bp.put('/endereco/<id_endereco>')
 def update_endereco(id_endereco):
     http_request = HttpRequest(params={"id_endereco": id_endereco}, body=request.json)
 
@@ -42,7 +42,7 @@ def update_endereco(id_endereco):
     return jsonify(http_response.body), http_response.status_code
 
 
-@endereco_route_bp.delete('/endereco/<int:id_endereco>')
+@endereco_route_bp.delete('/endereco/<id_endereco>')
 def delete_endereco(id_endereco):
     http_request = HttpRequest(params={"id_endereco": id_endereco})
 

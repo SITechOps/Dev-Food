@@ -30,7 +30,7 @@ class EnderecosRepository(IEnderecosRepository):
             return enderecos
         
 
-    def __find_by_id(self, id_endereco: int) -> Endereco:
+    def __find_by_id(self, id_endereco: str) -> Endereco:
         with DBConnectionHandler() as db:
             enderecos = (
                 db.session
@@ -43,7 +43,7 @@ class EnderecosRepository(IEnderecosRepository):
             return enderecos
 
 
-    def update(self, id_endereco: int, info: Endereco) -> None:
+    def update(self, id_endereco: str, info: Endereco) -> None:
         with DBConnectionHandler() as db:
             try:
                 endereco = self.__find_by_id(id_endereco)
@@ -57,7 +57,7 @@ class EnderecosRepository(IEnderecosRepository):
                 raise exception
 
 
-    def delete(self, id_endereco: int) -> None:
+    def delete(self, id_endereco: str) -> None:
         with DBConnectionHandler() as db:
             try:
                 endereco = self.__find_by_id(id_endereco)

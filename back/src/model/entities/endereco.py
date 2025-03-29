@@ -2,10 +2,11 @@ from src.model.configs.base import Base
 from sqlalchemy import Column, CHAR, Integer, String, ForeignKey, UniqueConstraint
 from src.main.handlers.custom_exceptions import InvalidAddressType
 from sqlalchemy.orm import validates
+from uuid import uuid4
 
 class Endereco(Base):
     __tablename__ = "Endereco"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
     logradouro = Column(String(100))
     bairro = Column(String(100))
     cidade = Column(String(50))

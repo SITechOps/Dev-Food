@@ -10,7 +10,7 @@ class IEnderecosRepository(ABC):
     def find_all_enderecos_by_user(self, id_usuario: str) -> list[Endereco]: pass
 
     @abstractmethod
-    def update(self, id_endereco: int, info: Endereco) -> None: pass
+    def update(self, id_endereco: str, info: Endereco) -> None: pass
 
     @abstractmethod
-    def delete(self, id_endereco: int) -> None: pass
+    def delete(self, id_endereco: str) -> None: pass
