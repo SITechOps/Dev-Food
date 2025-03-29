@@ -8,17 +8,10 @@ class EnderecosRepository(IEnderecosRepository):
     def create(self, id_usuario: str, endereco: dict) -> None:
         with DBConnectionHandler() as db:
             try:
-                new_endereco = Endereco(
-                    id_usuario=id_usuario,
-                    logradouro=endereco.get("logradouro"),
-                    bairro=endereco.get("bairro"),
-                    cidade=endereco.get("cidade"),
-                    estado=endereco.get("estado"),
-                    pais=endereco.get("pais"),
-                    numero=endereco.get("numero"),
-                    complemento=endereco.get("complemento"),
-                    tipo=endereco.get("tipo")
-                )
+                new_endereco = Endereco(id_usuario=id_usuario)
+                for key, value in endereco.items():
+                    setattr(new_endereco, key, value)
+                    
                 db.session.add(new_endereco)
                 db.session.commit()
             except Exception as exception:
@@ -53,15 +46,9 @@ class EnderecosRepository(IEnderecosRepository):
     def update(self, id_endereco: int, info: Endereco) -> None:
         with DBConnectionHandler() as db:
             try:
-                endereco = self.__find_by_id(id_endereco)          
-                endereco.logradouro = info.get("logradouro")
-                endereco.bairro = info.get("bairro")
-                endereco.cidade = info.get("cidade")
-                endereco.estado = info.get("estado")
-                endereco.pais = info.get("pais")
-                endereco.numero = info.get("numero")
-                endereco.complemento = info.get("complemento")
-                endereco.tipo = info.get("tipo")
+                endereco = self.__find_by_id(id_endereco)
+                for key, value in info.items():
+                    setattr(endereco, key, value)
 
                 db.session.add(endereco)
                 db.session.commit()
