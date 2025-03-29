@@ -33,3 +33,8 @@ class WrongPassword(BaseCustomException):
 class EmailChangeNotAllowed(BaseCustomException):
     def __init__(self, message="Este e-mail não pode ser alterado!"):
         super().__init__(message, 403)
+
+
+class InvalidAddressType(BaseCustomException):
+    def __init__(self, message="Tipo de endereço inválido! Escolha entre 'casa' ou 'trabalho'"):
+        super().__init__(message, 400)

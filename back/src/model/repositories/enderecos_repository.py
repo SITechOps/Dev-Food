@@ -30,7 +30,7 @@ class EnderecosRepository(IEnderecosRepository):
             return enderecos
         
 
-    def __find_by_id(self, id_endereco: int) -> Endereco | None:
+    def __find_by_id(self, id_endereco: int) -> Endereco:
         with DBConnectionHandler() as db:
             enderecos = (
                 db.session

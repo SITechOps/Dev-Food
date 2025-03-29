@@ -1,5 +1,7 @@
 from src.model.configs.base import Base
 from sqlalchemy import Column, CHAR, Integer, String, ForeignKey, UniqueConstraint
+from src.main.handlers.custom_exceptions import InvalidAddressType
+from sqlalchemy.orm import validates
 
 class Endereco(Base):
     __tablename__ = "Endereco"
@@ -28,3 +30,9 @@ class Endereco(Base):
             "complemento": self.complemento,
             "tipo": self.tipo,
         }
+    
+    @validates('tipo')
+    def check_address_type(self, _, value):
+        if value.lower() not in ["casa", "trabalho"]:
+            raise InvalidAddressType()
+        return value.lower()
