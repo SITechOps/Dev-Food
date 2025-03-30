@@ -10,7 +10,7 @@ class UserAlreadyExists(BaseCustomException):
         super().__init__(message, 409)
 
 
-class AddressAlreadyExists(BaseCustomException):
+class AddressTypeAlreadyExists(BaseCustomException):
     def __init__(self, message="Esse tipo de endereço já existe!"):
         super().__init__(message, 409)
 
@@ -36,5 +36,5 @@ class EmailChangeNotAllowed(BaseCustomException):
 
 
 class InvalidAddressType(BaseCustomException):
-    def __init__(self, message="Tipo de endereço inválido! Escolha entre 'casa' ou 'trabalho'"):
+    def __init__(self, message="Tipo de endereço inválido! Escolha entre casa ou trabalho"):
         super().__init__(message, 400)
