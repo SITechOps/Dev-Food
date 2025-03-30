@@ -1,8 +1,8 @@
-import { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { api } from "../connection/axios";
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -14,10 +14,12 @@ export default function Account() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [enderecos, setEnderecos] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("userLogado") || "null");
   const idUsuario = getUserId();
+  const location = useLocation();
 
   function getUserId() {
     if (user && user.id) {
@@ -39,6 +41,7 @@ export default function Account() {
   useEffect(() => {
     if (!idUsuario) return;
     fetchUserData();
+    fetchEnderecos();
   }, [idUsuario]);
 
   async function fetchUserData() {
@@ -50,6 +53,19 @@ export default function Account() {
       setSenha(respUser.senha || "");
     } catch (error) {
       console.error("Erro ao buscar usuário:", error);
+    }
+  }
+
+  async function fetchEnderecos() {
+    try {
+      const response = await api.get(`/endereco/${idUsuario}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setEnderecos(response.data?.data?.attributes || []);
+    } catch (error) {
+      console.error("Erro ao buscar endereços:", error);
     }
   }
 
@@ -111,7 +127,9 @@ export default function Account() {
   return (
     <>
       <Menu>
-        <ListagemEndereco />
+        {location.pathname !== "/account" && (
+          <ListagemEndereco idUsuario={idUsuario} enderecos={enderecos} />
+        )}
       </Menu>
       <section className="m-auto mt-12 flex w-1/2 flex-col items-center justify-center rounded-md bg-white p-5 shadow">
         <div className="flex w-full items-center justify-between">
@@ -175,6 +193,24 @@ export default function Account() {
           Sair
         </Button>
       </section>
+      {user && (
+        <div className="mt-4">
+          {user.is_admin ? (
+            <div>
+              <h3 className="text-blue mb-2 text-lg font-semibold">
+                Estabelecimentos
+              </h3>
+            </div>
+          ) : (
+            <div>
+              <h3 className="text-blue mb-2 text-lg font-semibold">
+                Meus Endereços
+              </h3>
+              <ListagemEndereco idUsuario={idUsuario} enderecos={enderecos} />
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 }

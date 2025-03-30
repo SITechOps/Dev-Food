@@ -8,6 +8,17 @@ import Menu from "../components/Menu";
 import Button from "../components/Button";
 import { decodeToken } from "../utils/decodeToken";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import Card from "../components/Card";
+
+import restaurant from "../assets/ifood.png";
+
+const data = {
+  id: 1,
+  img: { restaurant },
+  name: "restaurante do zé",
+  rate: 4.22,
+  category: "Lanches",
+};
 
 export default function Login() {
   const navigate = useNavigate();
@@ -116,6 +127,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <Card content={data} />
     </>
   );
 }
