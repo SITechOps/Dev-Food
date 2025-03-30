@@ -25,7 +25,7 @@ class UsersRepository(IUsersRepository):
                 raise exception
                 
 
-    def find_by_id(self, user_id: str) -> User | None:
+    def find_by_id(self, user_id: str) -> User:
         with DBConnectionHandler() as db:
             user = (
                 db.session
@@ -61,11 +61,11 @@ class UsersRepository(IUsersRepository):
     def update(self, user_id: str, user_info: dict) -> None:
         with DBConnectionHandler() as db:
             try:
-                user = self.find_by_id(user_id)  
+                user = self.find_by_id(user_id)
                 if user.email != user_info.get("email"):
                     raise EmailChangeNotAllowed()     
                 user.nome = user_info.get("nome")
-                user.senha = user_info.get("senha")
+                user.senha = bcrypt.generate_password_hash(user_info.get("senha")).decode('utf-8')
                 db.session.add(user)
                 db.session.commit()
             except Exception as exception:
