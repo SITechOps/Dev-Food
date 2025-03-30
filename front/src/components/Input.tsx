@@ -7,16 +7,16 @@ export interface IInputProps extends Omit<ComponentProps<"input">, "onChange"> {
 }
 
 export default function Input({ textLabel, onChange, ...props }: IInputProps) {
-  const baseCss =
-    "bg-gray-claro mt-1 w-full rounded-sm border-slate-300 px-4 py-3 outline-slate-400 [&::-ms-reveal]:hidden";
   return (
     <div>
-      <label htmlFor={props.id} className="font-medium">
-        {textLabel}
-      </label>
+      {textLabel && (
+        <label htmlFor={props.id} className="font-medium">
+          {textLabel}
+        </label>
+      )}
       <input
         {...props}
-        className={twMerge(baseCss, props.className)}
+        className={twMerge("input", props.className)}
         onChange={(e) => onChange?.(e.target.value)}
       ></input>
     </div>

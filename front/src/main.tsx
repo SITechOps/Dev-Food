@@ -1,13 +1,21 @@
 import "./index.css";
-import App from "./App.tsx";
-import { StrictMode } from "react";
-import Home from "./pages/Home.tsx";
-import Login from "./pages/Login.tsx";
+import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
-import Account from "./pages/Account.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import CadastroEndereco from "./components/CadastroEndereco.tsx";
+import { Loading } from "./components/Loading.tsx";
+
+const pages = {
+  App: "./App.tsx",
+  Home: "./pages/Home.tsx",
+  Login: "./pages/Login.tsx",
+  Account: "./pages/Account.tsx",
+  CadastroEndereco: "./components/CadastroEndereco.tsx",
+};
+
+const { App, Home, Login, Account, CadastroEndereco } = Object.fromEntries(
+  Object.entries(pages).map(([key, path]) => [key, lazy(() => import(path))]),
+);
 
 const router = createBrowserRouter([
   {
@@ -35,7 +43,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId="712065091138-0iaa0qpolcm1646nmnd91thctaqinv9v.apps.googleusercontent.com">
     <StrictMode>
-      <RouterProvider router={router} />
+      <Suspense fallback={<Loading />}>
+        <RouterProvider router={router} />
+      </Suspense>
     </StrictMode>
   </GoogleOAuthProvider>,
 );

@@ -27,7 +27,7 @@ class EnderecosManager:
 
         self.__check_user(id_usuario)
         lista_enderecos = self.__enderecos_repo.find_all_enderecos_by_user(id_usuario)
-        return ResponseFormatter.display_obj_list(lista_enderecos)
+        return ResponseFormatter.display_obj_list("Endereco", lista_enderecos)
     
     
     def update(self, http_request: HttpRequest) -> HttpResponse:

@@ -32,7 +32,7 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="card m-auto my-[3rem] flex max-w-96 flex-col space-y-4">
+    <div className="card m-auto my-12 flex max-w-96 flex-col space-y-4">
       {isModalOpen && (
         <ModalEmail
           nome={nome}
@@ -99,18 +99,18 @@ export default function Cadastro() {
       </form>
 
       <div className="flex justify-end">
-        <span className="text-gray-medio">Já tenho conta</span>
+        <span className="text-gray-medium">Já tenho conta</span>
         <Button
           color="plain"
           onClick={() => {
             navigate("/login");
           }}
-          className="m-0 w-[6rem] p-0"
+          className="m-0 w-24 p-0"
         >
           Fazer login
         </Button>
       </div>
-      <span className="text-gray-medio mt-2 mb-6 text-center">
+      <span className="text-gray-medium mt-2 mb-6 text-center">
         -------------- OU --------------
       </span>
       <AuthGoogle />

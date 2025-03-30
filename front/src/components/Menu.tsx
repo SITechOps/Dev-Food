@@ -23,8 +23,11 @@ export default function Menu({ children }: MenuProps) {
 
   return (
     <>
-      <header ref={menuRef} className="bg-white shadow-md fixed w-full top-0 left-0 z-50 py-2">
-        <div className="max-w-[80%] mx-auto flex justify-between items-center">
+      <header
+        ref={menuRef}
+        className="fixed top-0 left-0 z-50 w-full bg-white py-2 shadow-md"
+      >
+        <div className="mx-auto flex max-w-4/5 items-center justify-between">
           <Link to="/">
             <img src={iFoodLogo} alt="iFood Logo" className="h-15" />
           </Link>
@@ -32,11 +35,19 @@ export default function Menu({ children }: MenuProps) {
           {children}
 
           <div className="flex gap-3">
-            <Button color="plain" onClick={() => navigate("/pedido")} className="w-40 py-2">
+            <Button
+              color="plain"
+              onClick={() => navigate("/pedido")}
+              className="w-40 py-2"
+            >
               Faça seu pedido
             </Button>
             {user || token ? (
-              <Button color="secondary" onClick={() => navigate("/account")} className="w-50 py-2 flex justify-center items-center">
+              <Button
+                color="secondary"
+                onClick={() => navigate("/account")}
+                className="flex w-50 items-center justify-center py-2"
+              >
                 <CiUser size={24} /> Minha Conta
               </Button>
             ) : (

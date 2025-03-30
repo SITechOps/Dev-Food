@@ -1,23 +1,31 @@
 @import "tailwindcss";
 
-@layer utilities  {
+@theme {
+  --font-sans: "Dosis", serif;
+
+  --color-*: initial;
+  --color-blue: #374957;
+  --color-brown-dark: #c0434d;
+  --color-brown-light: #fdedee;
+  --color-brown-light-active: #fac8cb;
+  --color-brown-normal: #ee4c58;
+  --color-gray-light: #f1f1f1;
+  --color-gray-medium: #a9a9a9;
+  --color-green: #b5c865;
+
+  --color-white: #fff;
+  --color-black: #000;
+}
+
+@layer base {
   body {
-    @apply relative w-4/5 mx-auto bg-white;
+    @apply text-blue relative mx-auto w-4/5 bg-white;
   }
 
   body::before {
     content: "";
-    @apply fixed w-full h-full bg-[#fdedee] left-0 top-0 -z-10;
+    @apply bg-brown-light fixed top-0 left-0 -z-10 h-full w-full;
     clip-path: ellipse(50% 100% at left center);
-  }
-
-  .icon{
-    @apply text-brown-normal hover:text-brown-dark cursor-pointer text-[1.5rem];
-    
-  }
-  p, h1, h2, h3, h4,  input, select, label, legend, span{
-    @apply text-blue
-    
   }
 
   h1 {
@@ -31,31 +39,23 @@
   h3 {
     @apply text-2xl;
   }
-  h4{
-    @apply text-[1.3rem];
-  }
 
- p, legend{
-    @apply text-base;
-  }
-
-  .modal, .card{
-    @apply bg-white rounded-md shadow p-8
+  h4 {
+    @apply text-xl;
   }
 }
 
-@theme {
-  /* Variavéis de FONTE  */
-  --font-sans: "Dosis", serif;
+@layer utilities {
+  .icon {
+    @apply text-brown-normal hover:text-brown-dark cursor-pointer text-2xl transition-colors;
+  }
 
-  /* Variaveis das CORES  */
-  /* --color-*: initial; */
-  --color-gray-claro: #f1f1f1;
-  --color-gray-medio: #a9a9a9;
-  --color-green: #b5c865;
-  --color-blue: #374957;
-  --color-brown-ligth: #fdedee;
-  --color-brown-ligth-active: #fac8cb;
-  --color-brown-normal: #ee4c58;
-  --color-brown-dark: #c0434d;
+  .card,
+  .modal {
+    @apply rounded-md bg-white p-8 shadow;
+  }
+
+  .input {
+    @apply bg-gray-light outline-gray-medium mt-1 w-full rounded-sm px-4 py-3 [&::-ms-reveal]:hidden;
+  }
 }

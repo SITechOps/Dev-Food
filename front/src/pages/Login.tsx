@@ -54,7 +54,7 @@ export default function Login() {
       <div className="m-auto flex w-full flex-col items-center justify-center pt-10">
         <h1 className="mt-4 font-bold">Faça o seu login</h1>
 
-        <div className="card mt-[3rem] flex max-w-96 flex-col gap-2 space-y-4 shadow">
+        <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
           <a href="/" className="mb-5 self-start">
             <FaAngleLeft className="icon" />
           </a>
@@ -64,7 +64,7 @@ export default function Login() {
 
           <AuthGoogle />
 
-          <span className="text-gray-medio mb-4 text-center">
+          <span className="text-gray-medium mb-4 text-center">
             -------------- OU --------------
           </span>
 
@@ -103,13 +103,13 @@ export default function Login() {
           </form>
 
           <div className="flex justify-end">
-            <span className="text-gray-medio">Não tem conta?</span>
+            <span className="text-gray-medium">Não tem conta?</span>
             <Button
               color="plain"
               onClick={() => {
                 navigate("/cadastro");
               }}
-              className="m-0 w-[6rem] p-0"
+              className="m-0 w-24 p-0"
             >
               Cadastre-se
             </Button>

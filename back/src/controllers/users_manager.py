@@ -36,7 +36,7 @@ class UsersManager:
 
     def get_all_users(self) -> HttpResponse:
         users_list = self.__users_repo.find_all_users()
-        return ResponseFormatter.display_obj_list(users_list)
+        return ResponseFormatter.display_obj_list("User", users_list)
     
 
     def update(self, http_request: HttpRequest) -> HttpResponse:
