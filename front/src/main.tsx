@@ -4,6 +4,9 @@ import { createRoot } from "react-dom/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Loading } from "./components/Loading.tsx";
+import Intermediaria from "./pages/Intermediaria.tsx";
+import CadastroRestaurante from "./pages/CadastroRestaurante.tsx";
+import DadosRestaurante from "./pages/DadosRestaurante.tsx";
 
 const pages = {
   App: "./App.tsx",
@@ -11,6 +14,7 @@ const pages = {
   Login: "./pages/Login.tsx",
   Account: "./pages/Account.tsx",
   CadastroEndereco: "./components/CadastroEndereco.tsx",
+  Intermediaria: "./pages/Intermediaria.tsx",
 };
 
 const { App, Home, Login, Account, CadastroEndereco } = Object.fromEntries(
@@ -37,6 +41,18 @@ const router = createBrowserRouter([
   {
     path: "/c-endereco",
     element: <CadastroEndereco />,
+  },
+  {
+    path: "/intermediaria",
+    element: <Intermediaria />,
+  },
+  {
+    path: "/cadastro-restaurante",
+    element: <CadastroRestaurante />,
+  },
+  {
+    path: "/dados-restaurante",
+    element: <DadosRestaurante />,
   },
 ]);
 
