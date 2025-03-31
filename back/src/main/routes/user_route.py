@@ -18,7 +18,7 @@ def create_new_user():
     return jsonify(http_response.body), http_response.status_code
 
 
-@user_route_bp.get('/user')
+@user_route_bp.get('/users')
 def get_all_users():
     users_repo = UsersRepository()
     users_manager = UsersManager(users_repo)

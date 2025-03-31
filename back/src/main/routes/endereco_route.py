@@ -20,7 +20,7 @@ def create_new_endereco():
     return jsonify(http_response.body), http_response.status_code
 
 
-@endereco_route_bp.get('/endereco/<id_usuario>')
+@endereco_route_bp.get('/user/<id_usuario>/enderecos')
 def get_all_enderecos(id_usuario):
     http_request = HttpRequest(params={"id_usuario": id_usuario})
     endereco_repo = EnderecosRepository()
