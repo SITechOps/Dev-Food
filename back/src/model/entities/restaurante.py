@@ -1,5 +1,5 @@
 from src.model.configs.base import Base
-from sqlalchemy import Column, CHAR, Integer, String, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, CHAR, DateTime, Integer, String, ForeignKey, UniqueConstraint, func
 from src.main.handlers.custom_exceptions import InvalidAddressType
 from sqlalchemy.orm import validates
 from uuid import uuid4
@@ -14,10 +14,7 @@ class Restaurante(Base):
     endereco = Column(String(100))
     horario_funcionamento = Column(String(100))
     id_usuario = Column(CHAR(36), ForeignKey("Usuario.id", ondelete="CASCADE"))
-    ## Tem que ter em todas as entidades
-    created_at = Base.Column(Base.DateTime, default=Base.func.current_timestamp())
-    updated_at = Base.Column(Base.DateTime, default=Base.func.current_timestamp(), onupdate=Base.func.current_timestamp())
-
+    tipo = Column(String(100))
 
     __table_args__ = (UniqueConstraint('tipo', 'id_usuario'),)
 

@@ -4,26 +4,16 @@ from src.model.entities.restaurante import Restaurante
 class IRestaurantesRepository(ABC):
     
     @abstractmethod
-    def create(self, restaurante: dict) -> None:
-        """Cria um novo restaurante"""
-        raise NotImplementedError
+    def create(self, restaurante: dict) -> None: pass
     
     @abstractmethod
-    def find_all(self, page: int = 1, limit: int = 10, category: str = None) -> list[Restaurante]:
-        """Busca todos os restaurantespaginado e por categoria"""
-        raise NotImplementedError
+    def find_all(self, page: int = 1, limit: int = 10, category: str = None) -> list[Restaurante]: pass
     
     @abstractmethod
-    def find_by_id(self, id_restaurante: str) -> Restaurante:
-        """Busca por id"""
-        raise NotImplementedError
+    def find_by_id(self, id_restaurante: str) -> Restaurante: pass
     
     @abstractmethod
-    def update(self, id_restaurante: str, info: dict) -> None:
-        """update restaurante"""
-        raise NotImplementedError
+    def update(self, id_restaurante: str, info: dict) -> None: pass
     
     @abstractmethod
-    def delete(self, id_restaurante: str) -> None:
-        """manda o restaurante de arrasta"""
-        raise NotImplementedError
+    def delete(self, id_restaurante: str) -> None: pass

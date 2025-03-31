@@ -568,6 +568,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      tags:
+        - Restaurantes
+    post:
+      summary: Adicionar um novo restaurante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantRequest'
+      responses:
+        '201':
+          description: Restaurante criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      tags:
+        - Restaurantes
+      parameters:
+      - name: name
+        in: path
+        description: Nome do restaurante
+        required: true
+        schema:
+          type: string
+          example: Restaurante do seu zé
+      - name: rating
+        in: path
+        description: Nota do restaurante
+        required: true
+        schema:
+          type: string
+          example: 4.2
+      - name: category
+        in: path
+        description: Categoria do restaurante
+        required: true
+        schema:
+          type: string
+          example: Lanches
+      - name: imageUrl
+        in: path
+        description: Link para imagem de capa do restaurante
+        required: true
+        schema:
+          type: string
+          example: https://images.unsplash.com/photo-1619860860774-1e2e17343432?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+      - name: bannerUrl
+        in: path
+        description: Link para imagem de capa do restaurante
+        required: true
+        schema:
+          type: string
+          example: https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+      - name: description
+        in: path
+        description: Descrição do restaurante
+        required: true
+        schema:
+          type: string
+          example: Comida caseira, com gosto da comida da vovó. Feito com muito carinho, pelo seu Zé. (OBS não vendemos Pepsi)
+      - name: address
+        in: path
+        description: Endereço do restaurante
+        required: true
+        schema:
+          type: string
+          example: Rua Carvalho de Morais, 285
+      - name: hours
+        in: path
+        description: Horário de funcionamento
+        required: true
+        schema:
+          type: string
+          example: 9 às 18
   /restaurants/{id}:
     get:
       summary: Obtém detalhes de um restaurante específico
@@ -599,6 +684,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      tags:
+        - Restaurantes
 
   schemas:
     RestaurantBasic:

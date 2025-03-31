@@ -1,9 +1,11 @@
-from back.src.model.repositories.interfaces.irestaurantes_repository import IRestaurantesRepository
-from src.model.configs.connection import DBConnectionHandler
-from src.model.entities.endereco import Endereco
-from src.main.handlers.custom_exceptions import AddressNotFound
 
-class RestaurantesRepository(IRestaurantesRepository):
+from src.model.entities.endereco import Endereco
+from src.model.configs.connection import DBConnectionHandler
+from src.model.entities.restaurante import Restaurante
+from src.main.handlers.custom_exceptions import AddressNotFound
+from abc import ABC
+
+class RestaurantesRepository(ABC):
 
     def create(self, restaurante: dict) -> None:
         with DBConnectionHandler() as db:
@@ -15,10 +17,8 @@ class RestaurantesRepository(IRestaurantesRepository):
                         setattr(new_restaurante, "image_url", value)
                     elif key == "bannerUrl":
                         setattr(new_restaurante, "banner_url", value)
-                    elif key == "isSuperRestaurant":
-                        setattr(new_restaurante, "is_super_restaurant", value)
                     elif key == "hours":
-                        setattr(new_restaurante, "opening_hours", value)
+                        setattr(new_restaurante, "hours", value)
                     else:
                         setattr(new_restaurante, key, value)
                     
