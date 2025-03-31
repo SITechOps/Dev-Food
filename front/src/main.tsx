@@ -5,8 +5,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Loading } from "./components/Loading.tsx";
 import Intermediaria from "./pages/Intermediaria.tsx";
-import CadastroRestaurante from "./pages/CadastroRestaurante.tsx";
-import DadosRestaurante from "./pages/DadosRestaurante.tsx";
+import CadastroRestaurante from "./pages/Restaurante/CadastroRestaurante.tsx";
+import DadosRestaurante from "./pages/Restaurante/DadosRestaurante.tsx";
 
 const pages = {
   App: "./App.tsx",

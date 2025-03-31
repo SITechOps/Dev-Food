@@ -1,6 +1,6 @@
-import Input from "../components/Input";
 import { useState } from "react";
-import Button from "../components/Button";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
 
 export default function DadosRestaurante() {
   const [cep, setCep] = useState("");
