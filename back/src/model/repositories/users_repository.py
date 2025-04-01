@@ -7,7 +7,7 @@ from src.model.entities.user import User
 class UsersRepository(IUsersRepository):
 
     
-    def insert(self, user_info: dict, is_admin: bool = False) -> None:
+    def insert(self, user_info: dict) -> None:
         with DBConnectionHandler() as db:
             try:
                 hashed_password = bcrypt.generate_password_hash(user_info.get("senha")).decode('utf-8')
@@ -15,7 +15,6 @@ class UsersRepository(IUsersRepository):
                     nome=user_info.get("nome"),
                     email=user_info.get("email"),
                     senha=hashed_password,
-                    is_admin=is_admin
                 )  
                 db.session.add(new_user)
                 db.session.commit()
