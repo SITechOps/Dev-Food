@@ -13,7 +13,6 @@ export default function Menu({ children }: MenuProps) {
   const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const user = JSON.parse(localStorage.getItem("userLogado") || "null");
 
   useEffect(() => {
     if (menuRef.current) {
@@ -42,7 +41,7 @@ export default function Menu({ children }: MenuProps) {
             >
               Faça seu pedido
             </Button>
-            {user || token ? (
+            {token ? (
               <Button
                 color="secondary"
                 onClick={() => navigate("/account")}
