@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { api } from "../connection/axios";
 import Modal from "./Modal";
@@ -8,7 +8,7 @@ import ifoodLogo from "../assets/ifood.png"; // Importe a imagem do logo do iFoo
 import { FaHome, FaBriefcase } from "react-icons/fa"; // Importe os ícones
 
 interface ListagemEnderecoProps {
-  idUsuario: number | null;
+  idUsuario: string | undefined;
 }
 
 export default function ListagemEndereco({ idUsuario }: ListagemEnderecoProps) {
@@ -32,7 +32,7 @@ export default function ListagemEndereco({ idUsuario }: ListagemEnderecoProps) {
     }
 
     try {
-      const response = await api.get(`/endereco/${idUsuario}`, {
+      const response = await api.get(`/user/${idUsuario}/enderecos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
