@@ -1,19 +1,24 @@
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, CHAR, DateTime, String, Boolean, func
 from src.model.configs.base import Base
-from sqlalchemy import Column, CHAR, String, Boolean
 from uuid import uuid4
 
 class User(Base):
     __tablename__ = "Usuario"
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
-    nome = Column(String(50), nullable=False)
-    email = Column(String(50), unique=True, nullable=False)
-    senha = Column(String(60), nullable= False)
-    is_admin = Column(Boolean)
+    nome = Column(String(50))
+    email = Column(String(50), unique=True)
+    senha = Column(String(60))
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
+    enderecos_associados = relationship("UserEndereco", back_populates="usuario")
+    
     def to_dict(self) -> dict:
         return {
             "id": self.id,
             "nome": self.nome,
             "email": self.email,
-            "is_admin": bool(self.is_admin),
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
