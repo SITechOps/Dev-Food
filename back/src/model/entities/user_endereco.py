@@ -1,6 +1,6 @@
 from uuid import uuid4
 from src.model.configs.base import Base
-from sqlalchemy import Column, CHAR, String, ForeignKey, UniqueConstraint, PrimaryKeyConstraint
+from sqlalchemy import Column, CHAR, DateTime, String, ForeignKey, UniqueConstraint, PrimaryKeyConstraint, func
 from sqlalchemy.orm import relationship
 
 class UserEndereco(Base):
@@ -9,6 +9,8 @@ class UserEndereco(Base):
     id_usuario = Column(CHAR(36), ForeignKey("Usuario.id", ondelete="CASCADE"), nullable=False)
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id", ondelete="CASCADE"), nullable=False)
     tipo = Column(String(10), nullable=False)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     usuario = relationship("User", back_populates="enderecos_associados")
     endereco = relationship("Endereco", back_populates="usuarios_associados")

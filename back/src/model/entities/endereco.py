@@ -1,6 +1,6 @@
 from src.model.configs.base import Base
 from src.model.entities.user_endereco import UserEndereco
-from sqlalchemy import Column, CHAR, Integer, String
+from sqlalchemy import Column, CHAR, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 from uuid import uuid4
 
@@ -14,6 +14,8 @@ class Endereco(Base):
     pais = Column(String(30))
     numero = Column(Integer)
     complemento = Column(String(20), nullable=True)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     tipo = None
 
     usuarios_associados = relationship("UserEndereco", back_populates="endereco")

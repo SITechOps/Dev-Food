@@ -1,5 +1,5 @@
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, CHAR, String
+from sqlalchemy import Column, CHAR, DateTime, String, Boolean, func
 from src.model.configs.base import Base
 from uuid import uuid4
 
@@ -9,6 +9,8 @@ class User(Base):
     nome = Column(String(50))
     email = Column(String(50), unique=True)
     senha = Column(String(60))
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     enderecos_associados = relationship("UserEndereco", back_populates="usuario")
     
@@ -17,4 +19,6 @@ class User(Base):
             "id": self.id,
             "nome": self.nome,
             "email": self.email,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
