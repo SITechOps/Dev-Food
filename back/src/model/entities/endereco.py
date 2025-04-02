@@ -6,6 +6,7 @@ from uuid import uuid4
 
 class Endereco(Base):
     __tablename__ = "Endereco"
+    
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
     logradouro = Column(String(100))
     bairro = Column(String(100))
@@ -19,6 +20,7 @@ class Endereco(Base):
     tipo = None
 
     usuarios_associados = relationship("UserEndereco", back_populates="endereco")
+    restaurante = relationship("Restaurante", back_populates="enderecos_associados")
 
     def to_dict(self) -> dict:
         return {
