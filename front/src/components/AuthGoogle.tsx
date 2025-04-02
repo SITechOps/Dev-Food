@@ -33,26 +33,31 @@ export default function LogarGoogle() {
         localStorage.setItem("isGoogle", "true");
 
         try {
-          const { data } = await api.post("/login", {
-            data: { email, senha: senha.substring(0, 12) },
-          });
-          const token = data?.properties.token || [];
+          const response = await api.post(
+            "/login",
+            {
+              data: { email, senha: senha.substring(0, 12) },
+            },
+            { validateStatus: (status) => status < 500 },
+          );
 
-          if (token) {
+          if (response.status != 404) {
+            const token = response.data?.properties.token || [];
             localStorage.setItem("token", JSON.stringify(token));
             navigate("/");
           } else {
-            const response = await api.post("/user", {
+            // Usuário não encontrado, criar novo usuário
+            const createResponse = await api.post("/user", {
               data: { nome, email, senha: senha.substring(0, 12) },
             });
-            const token = response.data.properties.token;
+            const token = createResponse.data.properties.token;
 
             localStorage.setItem("token", JSON.stringify(token));
             navigate("/");
           }
         } catch (error) {
-          console.error("Erro ao processar login/cadastro:", error);
-          alert("Erro ao fazer login/cadastro com o Google.");
+          console.error("Erro ao processar a requisição:", error);
+          alert("Erro ao processar a requisição.");
         }
       })
       .catch((err) =>

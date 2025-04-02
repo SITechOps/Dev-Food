@@ -121,14 +121,13 @@ const CadastroEndereco = () => {
       return;
     }
 
-    const idUsuarioNumber = Number(idUsuario);
-    if (!idUsuarioNumber) {
+    if (!idUsuario) {
       alert("Erro ao obter ID do usuário.");
       return;
     }
 
     const enderecoFinal = {
-      id_usuario: idUsuarioNumber,
+      id_usuario: idUsuario,
       attributes: {
         logradouro: address.logradouro,
         numero: numero,
