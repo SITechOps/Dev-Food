@@ -29,5 +29,10 @@ class IRestaurantesRepository(ABC):
 
 
     @abstractmethod
+    def update_endereco(self, id_restaurante: str, endereco_data: dict) -> None:
+        raise NotImplementedError("Subclasses devem implementar este método")
+
+
+    @abstractmethod
     def delete(self, id_restaurante: str) -> None:
         raise NotImplementedError("Subclasses devem implementar este método")

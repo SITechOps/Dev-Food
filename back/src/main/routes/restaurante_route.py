@@ -24,6 +24,7 @@ def get_all_restaurants():
     http_response = restaurante_manager.get_all_restaurants()
     return jsonify(http_response.body), http_response.status_code
 
+
 @restaurante_route_bp.get('/restaurante/<id>')
 def get_restaurant_by_id(id):
     http_request = HttpRequest(params={"id": id})
@@ -44,6 +45,18 @@ def update_restaurant(id):
     restaurante_manager = RestaurantesManager(restaurante_repo)
 
     http_response = restaurante_manager.update(http_request)
+
+    return jsonify(http_response.body), http_response.status_code
+
+
+@restaurante_route_bp.put('/restaurante/endereco/<id>')
+def update_endereco(id):
+    http_request = HttpRequest(params={"id": id}, body=request.json)
+
+    restaurante_repo = RestaurantesRepository()
+    restaurante_manager = RestaurantesManager(restaurante_repo)
+
+    http_response = restaurante_manager.update_endereco(http_request)
 
     return jsonify(http_response.body), http_response.status_code
 

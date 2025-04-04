@@ -25,7 +25,8 @@ class Restaurante(Base):
     logo = Column(String(200), nullable=True)
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id", ondelete="CASCADE"), nullable=False)
 
-    enderecos_associados = relationship("Endereco", back_populates="restaurante")
+    endereco = relationship("Endereco", back_populates="restaurante", uselist=False)
+
 
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp), onupdate=lambda: datetime.now(tz_sp))
@@ -47,6 +48,7 @@ class Restaurante(Base):
             "tipo_conta": self.tipo_conta,
             "logo": self.logo,
             "id_endereco": self.id_endereco,
+            "endereco": self.endereco.to_dict() if self.endereco else None,
             "created_at": self.created_at.astimezone(tz_sp).isoformat() if self.created_at else None,
             "updated_at": self.updated_at.astimezone(tz_sp).isoformat() if self.updated_at else None
         }
