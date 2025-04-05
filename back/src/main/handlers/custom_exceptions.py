@@ -38,3 +38,8 @@ class EmailChangeNotAllowed(BaseCustomException):
 class InvalidAddressType(BaseCustomException):
     def __init__(self, message="Tipo de endereço inválido! Escolha entre casa ou trabalho"):
         super().__init__(message, 400)
+
+
+class InvalidEmailFormat(BaseCustomException):
+    def __init__(self, message="Formato de email inválido!"):
+        super().__init__(message, 400)
