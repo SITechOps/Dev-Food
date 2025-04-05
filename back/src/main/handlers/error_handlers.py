@@ -2,6 +2,7 @@ from flask import Blueprint
 from src.main.utils.response_formatter import ResponseFormatter
 from src.main.handlers.custom_exceptions import *
 from sqlalchemy.exc import DatabaseError, DataError, IntegrityError
+from twilio.base.exceptions import TwilioRestException
 
 handlers_bp = Blueprint("handlers", __name__)
 
@@ -23,6 +24,13 @@ def handle_database_error(error):
 def handle_database_error(error):
     error_message = f"Ocorreu um erro ao processar seus dados!"
     error_details = error.args[0]
+    return ResponseFormatter.format_error(error_message, 400, error_details)
+
+
+@handlers_bp.app_errorhandler(TwilioRestException)
+def handle_twilio_error(error):
+    error_message = f"Ocorreu um erro ao enviar o seu SMS!"
+    error_details = error.args[2]
     return ResponseFormatter.format_error(error_message, 400, error_details)
 
 
