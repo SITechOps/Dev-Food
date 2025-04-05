@@ -1,13 +1,16 @@
 from flask import jsonify
 from src.model.entities.user import User
 from src.model.entities.endereco import Endereco
+from src.model.entities.restaurante import Restaurante
 from src.http_types.http_response import HttpResponse
 from typing import Literal
+from typing import Union
 
 class ResponseFormatter:
     
+    
     @staticmethod
-    def display_obj_list(class_name: str, obj_list: list[User | Endereco]) -> HttpResponse:
+    def display_obj_list(class_name: str, obj_list: list[Union[User, Endereco, Restaurante]]) -> HttpResponse:
         return HttpResponse(
             body={
                 "data": {
@@ -19,8 +22,9 @@ class ResponseFormatter:
             status_code=200
         )
 
+
     @staticmethod
-    def display_single_obj(obj: User | Endereco) -> HttpResponse:
+    def display_single_obj(obj: Union[User, Endereco, Restaurante]) -> HttpResponse:
         return HttpResponse(
             body={
                 "data": {
@@ -34,15 +38,15 @@ class ResponseFormatter:
 
     @staticmethod
     def display_operation(
-        class_name: Literal["Usuário", "Endereço"],
+        class_name: Literal["Usuário", "Endereço", "Restaurante"],
         operation: Literal["criado", "logado", "alterado", "removido"],
-        token: str = None
+        token: str = None,
     ) -> HttpResponse:
-        
         return HttpResponse(
             body={
                 "message": f"{class_name} {operation} com sucesso!",
-                **({"properties": {"token": token}} if token else {})
+                **({"properties": {"token": token}} if token else {}),
+                **({"data": data} if data else {})
             },
             status_code=201 if operation=="criado" else 200
         )
