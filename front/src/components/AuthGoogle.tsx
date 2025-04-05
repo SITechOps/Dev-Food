@@ -65,7 +65,7 @@ export default function AuthGoogle() {
     <Button
       color="secondary"
       onClick={() => loginGoogle()}
-      className="flex items-center justify-center gap-2"
+      className="flex items-center justify-center gap-2 p-2"
     >
       <AiFillGoogleCircle className="size-7"/>
       Google
