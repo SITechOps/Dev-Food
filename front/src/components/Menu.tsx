@@ -50,7 +50,7 @@ export default function Menu({ children }: MenuProps) {
                 <CiUser size={24} /> Minha Conta
               </Button>
             ) : (
-              <Button color="secondary" onClick={() => navigate("/cadastro")} className="w-25 py-2">
+              <Button color="secondary" onClick={() => navigate("/Auth")} className="w-25 py-2">
                 Entrar
               </Button>
             )}

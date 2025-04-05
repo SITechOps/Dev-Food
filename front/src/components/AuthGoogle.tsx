@@ -3,9 +3,10 @@ import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
+import { AiFillGoogleCircle } from "react-icons/ai";
 import Button from "./Button";
 
-export default function LogarGoogle() {
+export default function AuthGoogle() {
   const navigate = useNavigate();
   const [user, setUser] = useState<TokenResponse | null>(null);
 
@@ -64,10 +65,10 @@ export default function LogarGoogle() {
     <Button
       color="secondary"
       onClick={() => loginGoogle()}
-      className="flex items-center justify-center gap-4"
+      className="flex items-center justify-center gap-2"
     >
-      <img src="img/google.svg" alt="Logo do Google" className="size-4" />
-      Entrar com Google
+      <AiFillGoogleCircle className="size-7"/>
+      Google
     </Button>
   );
 }
