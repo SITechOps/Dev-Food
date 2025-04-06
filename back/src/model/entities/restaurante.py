@@ -47,7 +47,6 @@ class Restaurante(Base):
             "nro_conta": self.nro_conta,
             "tipo_conta": self.tipo_conta,
             "logo": self.logo,
-            "id_endereco": self.id_endereco,
             "endereco": self.endereco.to_dict() if self.endereco else None,
             "created_at": self.created_at.astimezone(tz_sp).isoformat() if self.created_at else None,
             "updated_at": self.updated_at.astimezone(tz_sp).isoformat() if self.updated_at else None

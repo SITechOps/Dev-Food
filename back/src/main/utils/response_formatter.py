@@ -46,7 +46,6 @@ class ResponseFormatter:
             body={
                 "message": f"{class_name} {operation} com sucesso!",
                 **({"properties": {"token": token}} if token else {}),
-                **({"data": data} if data else {})
             },
             status_code=201 if operation=="criado" else 200
         )

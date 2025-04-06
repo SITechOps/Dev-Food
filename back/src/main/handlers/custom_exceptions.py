@@ -38,3 +38,23 @@ class EmailChangeNotAllowed(BaseCustomException):
 class InvalidAddressType(BaseCustomException):
     def __init__(self, message="Tipo de endereço inválido! Escolha entre casa ou trabalho"):
         super().__init__(message, 400)
+
+
+class RestaurantAlreadyExists(BaseCustomException):
+    def __init__(self, message="Restaurante já existe!"):
+        super().__init__(message, 409)
+
+
+class AddressRequired(BaseCustomException):
+    def __init__(self, message="Endereço é obrigatório para cadastrar restaurante!"):
+        super().__init__(message, 400)
+
+
+class RestaurantAddressAlreadyExists(BaseCustomException):
+    def __init__(self, message="Já existe um restaurante cadastrado com esse endereço."):
+        super().__init__(message, 409)
+
+
+class RestaurantNotFound(BaseCustomException):
+    def __init__(self, message="Restaurante não encontrado!"):
+        super().__init__(message, 409)

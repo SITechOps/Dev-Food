@@ -1,5 +1,6 @@
 from src.model.configs.connection import DBConnectionHandler
 from .interfaces.irestaurantes_repository import IRestaurantesRepository
+from src.main.handlers.custom_exceptions import RestaurantNotFound, RestaurantAddressAlreadyExists, AddressRequired
 from src.model.entities.restaurante import Restaurante
 from src.model.entities.endereco import Endereco
 from src.model.entities.user_endereco import UserEndereco
@@ -13,26 +14,32 @@ class RestaurantesRepository(IRestaurantesRepository):
             try:
                 endereco_data = info_restaurante.pop("endereco", None)
                 if not endereco_data:
-                    raise ValueError("Endereço é obrigatório para cadastrar um restaurante.")
-                
-                endereco_existente = db.session.query(Endereco).filter_by(**endereco_data).first()
-                
-                if endereco_existente:
-                    id_endereco = endereco_existente.id
-                else:
-                    novo_endereco = Endereco(**endereco_data)
-                    db.session.add(novo_endereco)
-                    db.session.commit()
-                    id_endereco = novo_endereco.id
-                
-                new_restaurante = Restaurante(id_endereco=id_endereco, **info_restaurante)
+                    raise AddressRequired()
+
+                restaurante_mesmo_endereco = (
+                    db.session.query(Restaurante)
+                    .join(Endereco)
+                    .filter_by(**endereco_data)
+                    .first()
+                )
+
+                if restaurante_mesmo_endereco:
+                    raise RestaurantAddressAlreadyExists()
+
+                novo_endereco = Endereco(**endereco_data)
+                db.session.add(novo_endereco)
+                db.session.commit()
+
+                new_restaurante = Restaurante(id_endereco=novo_endereco.id, **info_restaurante)
                 db.session.add(new_restaurante)
                 db.session.commit()
 
-                restaurante_completo = db.session.query(Restaurante
-                            ).options(joinedload(Restaurante.endereco)
-                            ).filter_by(id=new_restaurante.id
-                            ).first()
+                restaurante_completo = (
+                    db.session.query(Restaurante)
+                    .options(joinedload(Restaurante.endereco))
+                    .filter_by(id=new_restaurante.id)
+                    .first()
+                )
 
                 return restaurante_completo
 
@@ -55,7 +62,7 @@ class RestaurantesRepository(IRestaurantesRepository):
                 joinedload(Restaurante.endereco)
                 ).filter(Restaurante.id == id_restaurante).one_or_none()
             if not restaurante:
-                raise ValueError("Restaurante não encontrado")
+                raise RestaurantNotFound()
             return restaurante
 
 
@@ -69,7 +76,7 @@ class RestaurantesRepository(IRestaurantesRepository):
             try:
                 restaurante = self.find_by_id(id_restaurante)
                 if not restaurante:
-                    raise ValueError("Restaurante não encontrado.")
+                    raise RestaurantNotFound()
                 
                 for key, value in info_restaurante.items():
                     setattr(restaurante, key, value)
@@ -84,32 +91,27 @@ class RestaurantesRepository(IRestaurantesRepository):
     def update_endereco(self, id_restaurante: str, endereco_data: dict) -> None:
         with DBConnectionHandler() as db:
             try:
-                restaurante = db.session.query(Restaurante).filter_by(id=id_restaurante).first()
+                restaurante = self.find_by_id(id_restaurante)
                 if not restaurante:
-                    raise ValueError("Restaurante não encontrado.")
+                    raise RestaurantNotFound()
 
                 id_endereco_atual = restaurante.id_endereco
-                endereco_existente = db.session.query(Endereco).filter_by(**endereco_data).first()
+                campos_para_comparar = {key: endereco_data[key] for key in ['logradouro', 'numero', 'bairro', 'cidade', 'estado', 'pais','complemento']}
+
+                endereco_existente = (
+                    db.session.query(Endereco)
+                    .filter_by(**campos_para_comparar)
+                    .filter(Endereco.id != id_endereco_atual)
+                    .first()
+                )
 
                 if endereco_existente:
-                    novo_id_endereco = endereco_existente.id
+                    raise RestaurantAddressAlreadyExists()
 
-                else:
-                    endereco_em_uso = db.session.query(UserEndereco).filter_by(id_endereco=id_endereco_atual).first()
+                endereco_atual = db.session.query(Endereco).get(id_endereco_atual)
+                for key, value in endereco_data.items():
+                    setattr(endereco_atual, key, value)
 
-                    if endereco_em_uso:
-                        novo_endereco = Endereco(**endereco_data)
-                        db.session.add(novo_endereco)
-                        db.session.commit()
-                        novo_id_endereco = novo_endereco.id
-                    else:
-                        endereco_atual = db.session.query(Endereco).get(id_endereco_atual)
-                        for key, value in endereco_data.items():
-                            setattr(endereco_atual, key, value)
-                        db.session.commit()
-                        return 
-
-                restaurante.id_endereco = novo_id_endereco
                 db.session.commit()
 
             except Exception as exception:
@@ -122,7 +124,7 @@ class RestaurantesRepository(IRestaurantesRepository):
             try:
                 restaurante = self.find_by_id(id_restaurante)
                 if not restaurante:
-                    raise ValueError("Restaurante não encontrado.")
+                    raise RestaurantNotFound()
                 
                 id_endereco = restaurante.id_endereco
                 db.session.delete(restaurante)
