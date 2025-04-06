@@ -1,18 +1,13 @@
+import os
 import secrets
-from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
 BASE_URL = "/docs"
 FILE_URL = "/swagger.yaml"
-bcrypt = Bcrypt()
-
-def configure_bcrypt(app):
-    bcrypt.init_app(app)
 
 
 def configure_jwt(app):
