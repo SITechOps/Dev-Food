@@ -1,8 +1,9 @@
-import Input from "../components/Input";
 import { useState } from "react";
-import Button from "../components/Button";
-import ModalEmail from "../components/ModalEmail";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
+import ModalEmail from "../../components/ModalEmail";
 import { useNavigate } from "react-router-dom";
+
 
 export default function CadastroRestaurante() {
   const [nome, setNome] = useState("");

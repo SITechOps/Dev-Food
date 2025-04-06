@@ -1,7 +1,9 @@
-import Input from "../components/Input";
+
+import Input from "../../components/Input";
 import { useState, useEffect } from "react";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import axios from "axios";
+
 
 export default function DadosRestaurante() {
   const [cep, setCep] = useState("");
