@@ -1,6 +1,7 @@
 import Input from "../components/Input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../components/Button";
+import axios from "axios";
 
 export default function DadosRestaurante() {
   const [cep, setCep] = useState("");
@@ -13,12 +14,34 @@ export default function DadosRestaurante() {
   const [cnpj, setCnpj] = useState("");
   const [especialidade, setEspecialidade] = useState("");
 
+  // Faz a busca no ViaCEP quando o CEP tiver 8 dígitos
+  useEffect(() => {
+    const cepLimpo = cep.replace(/\D/g, "");
+
+    if (cepLimpo.length === 8) {
+      axios
+        .get(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+        .then((res) => {
+          if (!res.data.erro) {
+            setEstado(res.data.uf);
+            setCidade(res.data.localidade);
+            setBairro(res.data.bairro);
+            setEndereço(res.data.logradouro);
+          } else {
+            console.warn("CEP não encontrado.");
+          }
+        })
+        .catch((err) => {
+          console.error("Erro ao buscar o CEP:", err);
+        });
+    }
+  }, [cep]);
+
   return (
     <div>
-      <div>
-        <p className="mt-2">INFORMAÇÕES DA LOJA</p>
-        <h1 className="mt-2">Onde fica sua loja?</h1>
-      </div>
+      <p className="mt-15">INFORMAÇÕES DA LOJA</p>
+      <h1 className="mt-5">Onde fica sua loja?</h1>
+
       <div className="mt-8 max-w-md">
         <p className="mt-2">Digite o CEP e complete as informações</p>
         <label className="mt-2 block font-medium text-gray-700">CEP*</label>
@@ -29,9 +52,9 @@ export default function DadosRestaurante() {
           placeholder="00000-000"
           value={cep}
           onChange={setCep}
-          type="number"
+          type="text"
         />
-        <br></br>
+        <br />
         <div className="flex gap-4">
           <label className="mt-2 block font-medium text-gray-700">Estado</label>
           <Input
@@ -72,7 +95,7 @@ export default function DadosRestaurante() {
           onChange={setEndereço}
           type="text"
         />
-        <br></br>
+        <br />
         <div className="flex gap-4">
           <label className="mt-2 block font-medium text-gray-700">Número</label>
           <Input
@@ -83,7 +106,6 @@ export default function DadosRestaurante() {
             onChange={setNumero}
             type="number"
           />
-
           <label className="mt-2 block font-medium text-gray-700">
             Complemento
           </label>
@@ -100,7 +122,7 @@ export default function DadosRestaurante() {
 
       <div className="absolute top-0 right-0 max-w-md">
         <p>NEGÓCIO E RESPONSÁVEL</p>
-        <h1>Agora, nos fale mais sobre seu negócio</h1>
+        <h1 className="mt-5">Agora, nos fale mais sobre seu negócio</h1>
 
         <label className="mt-8 block font-medium text-gray-700">CNPJ</label>
         <Input
@@ -114,14 +136,21 @@ export default function DadosRestaurante() {
         <label className="mt-8 block font-medium text-gray-700">
           Especialidade
         </label>
-        <Input
-          className="border"
+        <select
+          className="mt-2 w-full rounded border p-2"
           id="especialidade"
           name="especialidade"
-          placeholder="Selecione"
           value={especialidade}
-          onChange={setEspecialidade}
-        />
+          onChange={(e) => setEspecialidade(e.target.value)}
+        >
+          <option value="">Selecione</option>
+          <option value="Brasileira">Brasileira</option>
+          <option value="Japonesa">Japonesa</option>
+          <option value="Italiana">Italiana</option>
+          <option value="Mexicana">Mexicana</option>
+          <option value="Outros">Outros</option>
+        </select>
+
         <p>Esse item poderá ser alterado posteriormente</p>
         <div className="mt-6 flex justify-center">
           <Button className="w-48">Finalizar</Button>
