@@ -1,4 +1,4 @@
-from src.model.entities.user import User
+from src.model.entities.restaurante import Restaurante
 from src.model.entities.user_endereco import UserEndereco
 from src.model.configs.connection import DBConnectionHandler
 from src.model.entities.endereco import Endereco
@@ -89,15 +89,23 @@ class EnderecosRepository(IEnderecosRepository):
                 existing_endereco = self.__find_existing_address(db, info_endereco)
                 if existing_endereco:
                     # Atualizar a referência do id_endereco na tabela UserEndereco
-                    user_endereco = db.session.query(UserEndereco).filter_by(
-                    id_usuario=id_usuario, id_endereco=id_endereco
-                    ).first()
+                    user_endereco = (
+                        db.session
+                        .query(UserEndereco)
+                        .filter_by(id_usuario=id_usuario, id_endereco=id_endereco)
+                        .first()
+                    )
 
                     if not user_endereco:
                         raise AddressNotFound("A referência para o ID do endereço não foi encontrada para esse usuário.")
                     
                     user_endereco.id_endereco = existing_endereco.id
                     user_endereco.tipo = info_endereco.get("tipo")
+
+                    if self.__is_empty(db, id_endereco):
+                        endereco = self.__find_by_id(id_endereco)
+                        db.session.delete(endereco)
+                        
                     db.session.flush()
                 else:
                     user_endereco = db.session.query(UserEndereco).filter(  
@@ -108,15 +116,12 @@ class EnderecosRepository(IEnderecosRepository):
                     if not user_endereco:
                         raise AddressNotFound("A referência para o ID do endereço não foi encontrada para esse usuário.")
                     
-                    new_endereco = Endereco()
+                    endereco = db.session.query(Endereco).filter_by(id=id_endereco).first()
+
                     for key, value in info_endereco.items():
-                        setattr(new_endereco, key, value)
+                        setattr(endereco, key, value)
 
-                    db.session.add(new_endereco)
-                    db.session.flush()  # Garante que o ID do novo endereço seja gerado
-
-                    # Atualizar tabela associativa
-                    user_endereco.id_endereco = new_endereco.id
+                    db.session.flush()  # Garante que o endereço seja alterado primeiro
                     user_endereco.tipo = info_endereco.get("tipo")
                     db.session.flush()
 
@@ -176,6 +181,7 @@ class EnderecosRepository(IEnderecosRepository):
             )
             .one_or_none()
         )
+    
     
     def __is_empty(self, db, id_endereco: str) -> bool:
         """
