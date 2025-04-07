@@ -20,7 +20,7 @@ type Content = {
 
 function Card({ content }: Content) {
   return (
-    <Link to={`/restaurant/${content.id}`}>
+    <Link to={`/restaurants/${content.id}`}>
       <div className="card m-4 h-fit w-fit bg-white p-4">
         <img src="../assets/ifood.png" className="h-10" alt="iFood Logo"></img>
         <div className="p-2">
