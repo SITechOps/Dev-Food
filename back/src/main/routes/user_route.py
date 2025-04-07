@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request
-
 from src.model.repositories.users_repository import UsersRepository
 from src.controllers.users_manager import UsersManager
 from src.http_types.http_request import HttpRequest

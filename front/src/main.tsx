@@ -9,13 +9,13 @@ import Restaurant from "./pages/Restaurant.tsx";
 const pages = {
   App: "./App.tsx",
   Home: "./pages/Home.tsx",
-  Login: "./pages/Login.tsx",
+  Auth: "./pages/Auth.tsx",
   Account: "./pages/Account.tsx",
   CadastroEndereco: "./components/CadastroEndereco.tsx",
   Restaurant: "pages/Restaurant.tsx",
 };
 
-const { App, Home, Login, Account, CadastroEndereco } = Object.fromEntries(
+const { App, Home, Auth, Account, CadastroEndereco } = Object.fromEntries(
   Object.entries(pages).map(([key, path]) => [key, lazy(() => import(path))]),
 );
 
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/login",
-    element: <Login />,
+    path: "/auth",
+    element: <Auth />,
   },
   {
     path: "/account",

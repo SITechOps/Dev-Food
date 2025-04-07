@@ -20,7 +20,7 @@ export default function Account() {
   const token = localStorage.getItem("token");
   const idUsuario = token ? decodeToken(token)?.sub : undefined;
   const isGoogle = localStorage.getItem("isGoogle") || "";
-  const location = useLocation();
+  // const location = useLocation();
 
   useEffect(() => {
     if (!idUsuario) return;
@@ -88,7 +88,7 @@ export default function Account() {
 
   function handleLogout() {
     localStorage.clear();
-    navigate("/Login");
+    navigate("/Auth");
   }
 
   if (!idUsuario) {
@@ -99,7 +99,7 @@ export default function Account() {
           Faça login ou cadastre-se para acessar sua conta.
         </p>
         <div className="mt-5 flex w-[40rem] gap-4">
-          <Button onClick={() => navigate("/Login")}>Fazer Login</Button>
+          <Button onClick={() => navigate("/Auth")}>Fazer Login</Button>
           <Button color="secondary" onClick={() => navigate("/")}>
             Cadastrar-se
           </Button>
@@ -117,7 +117,7 @@ export default function Account() {
       </Menu>
       <section className="m-auto mt-12 flex w-1/2 flex-col items-center justify-center rounded-md bg-white p-5 shadow">
         <div className="flex w-full items-center justify-between">
-          <button onClick={() => navigate(-1)} className="self-start">
+          <button onClick={() => navigate("/")} className="self-start">
             <FaAngleLeft className="icon h-10 w-10" />
           </button>
 
