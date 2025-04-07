@@ -13,7 +13,6 @@ export default function Menu({ children }: MenuProps) {
   const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const user = JSON.parse(localStorage.getItem("userLogado") || "null");
 
   useEffect(() => {
     if (menuRef.current) {
@@ -42,7 +41,7 @@ export default function Menu({ children }: MenuProps) {
             >
               Faça seu pedido
             </Button>
-            {user || token ? (
+            {token ? (
               <Button
                 color="secondary"
                 onClick={() => navigate("/account")}
@@ -51,7 +50,7 @@ export default function Menu({ children }: MenuProps) {
                 <CiUser size={24} /> Minha Conta
               </Button>
             ) : (
-              <Button color="secondary" onClick={() => navigate("/cadastro")} className="w-25 py-2">
+              <Button color="secondary" onClick={() => navigate("/Auth")} className="w-25 py-2">
                 Entrar
               </Button>
             )}

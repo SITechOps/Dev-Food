@@ -3,9 +3,10 @@ import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
+import { AiFillGoogleCircle } from "react-icons/ai";
 import Button from "./Button";
 
-export default function LogarGoogle() {
+export default function AuthGoogle() {
   const navigate = useNavigate();
   const [user, setUser] = useState<TokenResponse | null>(null);
 
@@ -30,30 +31,24 @@ export default function LogarGoogle() {
       .then(async (res) => {
         const respGoogle = res.data;
         const { email, name: nome, id: senha } = respGoogle;
+        localStorage.setItem("isGoogle", "true");
 
         try {
-          const { data } = await api.get("/user");
-          const usuarios = data?.data?.attributes || [];
-          const usuarioEncontrado = usuarios.find(
-            (usuario: any) => usuario.email === email,
-          );
+          const { data } = await api.post("/login", {
+            data: { email, senha: senha.substring(0, 12) },
+          });
+          const token = data?.properties.token || [];
 
-          if (usuarioEncontrado) {
-            localStorage.setItem(
-              "userLogado",
-              JSON.stringify(usuarioEncontrado),
-            );
+          if (token) {
+            localStorage.setItem("token", JSON.stringify(token));
             navigate("/");
           } else {
             const response = await api.post("/user", {
               data: { nome, email, senha: senha.substring(0, 12) },
             });
-            const novoUsuario = response.data.properties.token;
-            console.log(novoUsuario);
-            console.log(response);
+            const token = response.data.properties.token;
 
-            localStorage.setItem("token", user.access_token);
-            localStorage.setItem("userLogado", JSON.stringify(novoUsuario));
+            localStorage.setItem("token", JSON.stringify(token));
             navigate("/");
           }
         } catch (error) {
@@ -70,10 +65,10 @@ export default function LogarGoogle() {
     <Button
       color="secondary"
       onClick={() => loginGoogle()}
-      className="flex items-center justify-center gap-4"
+      className="flex items-center justify-center gap-2 p-2"
     >
-      <img src="img/google.svg" alt="Logo do Google" className="size-4" />
-      Entrar com Google
+      <AiFillGoogleCircle className="size-7"/>
+      Google
     </Button>
   );
 }

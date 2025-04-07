@@ -8,6 +8,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import Menu from "../components/Menu";
 import ListagemEndereco from "../components/ListagemEndereco";
+import { decodeToken } from "../utils/decodeToken";
 
 export default function Account() {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,25 +17,9 @@ export default function Account() {
   const [senha, setSenha] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("userLogado") || "null");
-  const idUsuario = getUserId();
-
-  function getUserId() {
-    if (user && user.id) {
-      return user.id;
-    }
-
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        return payload.sub;
-      } catch (error) {
-        console.error("Erro ao acessar a conta:", error);
-        return null;
-      }
-    }
-    return null;
-  }
+  const idUsuario = token ? decodeToken(token)?.sub : undefined;
+  const isGoogle = localStorage.getItem("isGoogle") || "";
+  // const location = useLocation();
 
   useEffect(() => {
     if (!idUsuario) return;
@@ -88,7 +73,7 @@ export default function Account() {
 
   function handleLogout() {
     localStorage.clear();
-    navigate("/Login");
+    navigate("/Auth");
   }
 
   if (!idUsuario) {
@@ -99,7 +84,7 @@ export default function Account() {
           Faça login ou cadastre-se para acessar sua conta.
         </p>
         <div className="mt-5 flex w-[40rem] gap-4">
-          <Button onClick={() => navigate("/Login")}>Fazer Login</Button>
+          <Button onClick={() => navigate("/Auth")}>Fazer Login</Button>
           <Button color="secondary" onClick={() => navigate("/")}>
             Cadastrar-se
           </Button>
@@ -115,7 +100,7 @@ export default function Account() {
       </Menu>
       <section className="m-auto mt-12 flex w-1/2 flex-col items-center justify-center rounded-md bg-white p-5 shadow">
         <div className="flex w-full items-center justify-between">
-          <button onClick={() => navigate(-1)} className="self-start">
+          <button onClick={() => navigate("/")} className="self-start">
             <FaAngleLeft className="icon h-10 w-10" />
           </button>
 
@@ -154,18 +139,18 @@ export default function Account() {
             <span className="font-semibold">{email}</span>
           </p>
 
-          {isEditing && !user ? (
+          {isEditing && !isGoogle ? (
             <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
               Digite uma nova senha:
               <Input type="text" id="senha" value={senha} onChange={setSenha} />
             </div>
           ) : null}
 
-          {isEditing && (
+          {isEditing ? (
             <Button type="submit" className="mt-12">
               Salvar
             </Button>
-          )}
+          ) : null}
         </form>
         <Button
           color="outlined"

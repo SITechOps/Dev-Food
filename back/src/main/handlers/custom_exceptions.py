@@ -58,3 +58,18 @@ class RestaurantAddressAlreadyExists(BaseCustomException):
 class RestaurantNotFound(BaseCustomException):
     def __init__(self, message="Restaurante não encontrado!"):
         super().__init__(message, 409)
+
+        
+class InvalidEmailFormat(BaseCustomException):
+    def __init__(self, message="Formato de email inválido!"):
+        super().__init__(message, 400)
+
+
+class UnverifiedNumber(BaseCustomException):
+    def __init__(self, message="Este número ainda não está autorizado! Configure-o no Twilio para continuar."):
+        super().__init__(message, 400)
+
+
+class SmsNotSent(BaseCustomException):
+    def __init__(self, message="Número inválido!"):
+        super().__init__(message, 400)

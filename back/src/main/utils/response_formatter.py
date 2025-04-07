@@ -49,6 +49,18 @@ class ResponseFormatter:
             },
             status_code=201 if operation=="criado" else 200
         )
+    
+
+    @staticmethod
+    def display_verification_code(verification_code: int) -> HttpResponse:
+        return HttpResponse(
+            body= {
+                "properties": {
+                    "verificationCode": verification_code
+                }
+            },
+            status_code=200
+        )
 
 
     @staticmethod
