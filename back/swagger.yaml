@@ -756,3 +756,210 @@ paths:
                   error_message:
                     type: string
                     example: "Senha incorreta!"
+  /restaurantes:
+    get:
+      tags:
+        - Restaurantes
+      summary: Listar todos os restaurantes
+      responses:
+        "200":
+          description: Lista de restaurantes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Restaurante"
+    post:
+      tags:
+        - Restaurantes
+      summary: Criar um novo restaurante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    email:
+                      type: string
+                      format: email
+                    cnpj:
+                      type: string
+                    razao_social:
+                      type: string
+                    especialidade:
+                      type: string
+                    telefone:
+                      type: string
+                    horario_funcionamento:
+                      type: string
+                    banco:
+                      type: string
+                    agencia:
+                      type: string
+                    nro_conta:
+                      type: string
+                    tipo_conta:
+                      type: string
+                    endereco:
+                      type: object
+                      properties:
+                        logradouro:
+                          type: string
+                        bairro:
+                          type: string
+                        cidade:
+                          type: string
+                        estado:
+                          type: string
+                        pais:
+                          type: string
+                        numero:
+                          type: integer
+                        complemento:
+                          type: string
+      responses:
+        "201":
+          description: Restaurante criado com sucesso
+        "400":
+          description: Requisição inválida
+
+  /restaurante/{id}:
+    get:
+      tags:
+        - Restaurantes
+      summary: Obter restaurante por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do restaurante
+      responses:
+        "200":
+          description: Dados do restaurante
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Restaurante"
+        "404":
+          description: Restaurante não encontrado
+
+    delete:
+      tags:
+        - Restaurantes
+      summary: Deletar restaurante por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Restaurante deletado com sucesso
+        "404":
+          description: Restaurante não encontrado
+
+    put:
+      tags:
+        - Restaurantes
+      summary: Atualizar dados do restaurante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    agencia:
+                      type: string
+                    banco:
+                      type: string
+                    cnpj:
+                      type: string
+                    email:
+                      type: string
+                    especialidade:
+                      type: string
+                    horario_funcionamento:
+                      type: string
+                    nome:
+                      type: string
+                    nro_conta:
+                      type: string
+                    razao_social:
+                      type: string
+                    telefone:
+                      type: string
+                    tipo_conta:
+                      type: string
+      responses:
+        "200":
+          description: Restaurante atualizado com sucesso
+        "404":
+          description: Restaurante não encontrado
+  /restaurante/endereco/{id}:
+    put:
+      tags:
+        - Restaurantes
+      summary: Atualizar endereço do restaurante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    attributes:
+                      type: object
+                      properties:
+                        logradouro:
+                          type: string
+                        bairro:
+                          type: string
+                        cidade:
+                          type: string
+                        estado:
+                          type: string
+                        pais:
+                          type: string
+                        numero:
+                          type: integer
+                        complemento:
+                          type: string
+                        tipo:
+                          type: string
+      responses:
+        "200":
+          description: Endereço atualizado com sucesso
+        "404":
+          description: Restaurante não encontrado

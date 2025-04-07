@@ -51,7 +51,7 @@ class AddressRequired(BaseCustomException):
 
 
 class RestaurantAddressAlreadyExists(BaseCustomException):
-    def __init__(self, message="Esse ebdereço já foi cadastrado!"):
+    def __init__(self, message="Esse endereço já foi cadastrado!"):
         super().__init__(message, 409)
 
 
