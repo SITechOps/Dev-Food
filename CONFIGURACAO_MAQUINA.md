@@ -214,4 +214,4 @@ Você também pode acessar o banco de dados MySQL usando uma interface gráfica 
 
 Com o backend em execução, acesse o Swagger através do navegador:
 
-    localhost:5000/doc
+    localhost:5000/docs
