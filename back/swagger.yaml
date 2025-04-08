@@ -789,6 +789,8 @@ paths:
                   properties:
                     nome:
                       type: string
+                    descricao:
+                      type: string
                     email:
                       type: string
                       format: email
@@ -904,6 +906,8 @@ paths:
                     horario_funcionamento:
                       type: string
                     nome:
+                      type: string
+                    descricao:
                       type: string
                     nro_conta:
                       type: string

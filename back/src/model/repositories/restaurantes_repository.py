@@ -1,10 +1,11 @@
 from src.model.configs.connection import DBConnectionHandler
 from .interfaces.irestaurantes_repository import IRestaurantesRepository
-from src.main.handlers.custom_exceptions import RestaurantNotFound, RestaurantAddressAlreadyExists, AddressRequired
+from src.main.handlers.custom_exceptions import RestaurantAlreadyExists, RestaurantNotFound, RestaurantAddressAlreadyExists, AddressRequired
 from src.model.entities.restaurante import Restaurante
 from src.model.entities.endereco import Endereco
 from src.model.entities.user_endereco import UserEndereco
 from sqlalchemy.orm import joinedload
+from sqlalchemy import or_
 
 class RestaurantesRepository(IRestaurantesRepository):
 
@@ -25,14 +26,25 @@ class RestaurantesRepository(IRestaurantesRepository):
 
                 if restaurante_mesmo_endereco:
                     raise RestaurantAddressAlreadyExists()
+                
+                usuario_mesmo_endereco = (
+                    db.session.query(UserEndereco)
+                    .join(Endereco)
+                    .filter_by(**endereco_data)
+                    .first()
+                )
 
-                novo_endereco = Endereco(**endereco_data)
-                db.session.add(novo_endereco)
-                db.session.commit()
+                if usuario_mesmo_endereco:
+                    id_endereco_existente = usuario_mesmo_endereco.id_endereco
+                    new_restaurante = Restaurante(id_endereco=id_endereco_existente **info_restaurante)
+                else:
+                    novo_endereco = Endereco(**endereco_data)
+                    db.session.add(novo_endereco)
+                    db.session.commit()
 
-                new_restaurante = Restaurante(id_endereco=novo_endereco.id, **info_restaurante)
-                db.session.add(new_restaurante)
-                db.session.commit()
+                    new_restaurante = Restaurante(id_endereco=novo_endereco.id, **info_restaurante)
+                    db.session.add(new_restaurante)
+                    db.session.commit()
 
                 restaurante_completo = (
                     db.session.query(Restaurante)
@@ -78,9 +90,47 @@ class RestaurantesRepository(IRestaurantesRepository):
                 if not restaurante:
                     raise RestaurantNotFound()
                 
-                for key, value in info_restaurante.items():
-                    setattr(restaurante, key, value)
-                
+                email = info_restaurante.get("email")
+                cnpj = info_restaurante.get("cnpj")
+                razao_social = info_restaurante.get("razao_social")
+
+                if email:
+                    existente = (
+                        db.session.query(Restaurante)
+                        .filter(Restaurante.id != id_restaurante, Restaurante.email == email)
+                        .first()
+                    )
+                    if existente:
+                        raise RestaurantAlreadyExists(f"Já existe um restaurante com o e-mail '{email}'.")
+
+                if cnpj:
+                    existente = (
+                        db.session.query(Restaurante)
+                        .filter(Restaurante.id != id_restaurante, Restaurante.cnpj == cnpj)
+                        .first()
+                    )
+                    if existente:
+                        raise RestaurantAlreadyExists(f"Já existe um restaurante com o CNPJ '{cnpj}'.")
+
+                if razao_social:
+                    existente = (
+                        db.session.query(Restaurante)
+                        .filter(Restaurante.id != id_restaurante, Restaurante.razao_social == razao_social)
+                        .first()
+                    )
+                    if existente:
+                        raise RestaurantAlreadyExists(f"Já existe um restaurante com a razão social '{razao_social}'.")
+
+                campos_permitidos = [
+                    'nome', 'descricao', 'email', 'telefone', 'especialidade',
+                    'horario_funcionamento', 'logo', 'banco', 'agencia', 'nro_conta', 'tipo_conta',
+                    'razao_social', 'cnpj'
+                ]
+
+                for key in campos_permitidos:
+                    if key in info_restaurante:
+                        setattr(restaurante, key, info_restaurante[key])
+
                 db.session.add(restaurante)
                 db.session.commit()
             except Exception as exception:
@@ -96,21 +146,60 @@ class RestaurantesRepository(IRestaurantesRepository):
                     raise RestaurantNotFound()
 
                 id_endereco_atual = restaurante.id_endereco
-                campos_para_comparar = {key: endereco_data[key] for key in ['logradouro', 'numero', 'bairro', 'cidade', 'estado', 'pais','complemento']}
 
-                endereco_existente = (
-                    db.session.query(Endereco)
-                    .filter_by(**campos_para_comparar)
-                    .filter(Endereco.id != id_endereco_atual)
+                # Verifica se o endereço atual está sendo usado por algum usuário
+                endereco_em_uso_por_usuario = (
+                    db.session.query(UserEndereco)
+                    .filter_by(id_endereco=id_endereco_atual)
                     .first()
                 )
 
-                if endereco_existente:
-                    raise RestaurantAddressAlreadyExists()
+                if endereco_em_uso_por_usuario:
+                    # Existe algum usuário com o novo endereço?
+                    usuario_com_novo_endereco = (
+                        db.session.query(UserEndereco)
+                        .join(Endereco, Endereco.id == UserEndereco.id_endereco)
+                        .filter_by(**endereco_data)
+                        .first()
+                    )
 
-                endereco_atual = db.session.query(Endereco).get(id_endereco_atual)
-                for key, value in endereco_data.items():
-                    setattr(endereco_atual, key, value)
+                    if usuario_com_novo_endereco:
+                        # Reutiliza endereço já existente de usuário
+                        restaurante.id_endereco = usuario_com_novo_endereco.id_endereco
+
+                    else:
+                        # Verifica se já existe restaurante com esse novo endereço
+                        restaurante_existente = (
+                            db.session.query(Restaurante)
+                            .join(Endereco, Endereco.id == Restaurante.id_endereco)
+                            .filter_by(**endereco_data)
+                            .first()
+                        )
+                        if restaurante_existente:
+                            raise RestaurantAddressAlreadyExists()
+
+                        # Cria novo endereço e associa ao restaurante
+                        novo_endereco = Endereco(**endereco_data)
+                        db.session.add(novo_endereco)
+                        db.session.flush()  # para obter ID antes do commit
+                        restaurante.id_endereco = novo_endereco.id
+
+                else:
+                    # Endereço atual NÃO está em uso por usuários
+                    # Verifica se já existe restaurante com novo endereço
+                    restaurante_existente = (
+                        db.session.query(Restaurante)
+                        .join(Endereco, Endereco.id == Restaurante.id_endereco)
+                        .filter_by(**endereco_data)
+                        .first()
+                    )
+                    if restaurante_existente:
+                        raise RestaurantAddressAlreadyExists()
+
+                    # Atualiza endereço atual com os dados novos
+                    endereco_atual = db.session.query(Endereco).get(id_endereco_atual)
+                    for key, value in endereco_data.items():
+                        setattr(endereco_atual, key, value)
 
                 db.session.commit()
 
