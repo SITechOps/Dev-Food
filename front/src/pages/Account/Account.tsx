@@ -3,8 +3,6 @@ import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
-// import Menu from "../../components/Menu";
-// import ListagemEndereco from "../../components/ListagemEndereco";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
 import { useAccountComponent } from "./useAccount-component";
 
@@ -39,9 +37,6 @@ export default function Account() {
 
   return (
     <>
-      {/* <Menu>
-        <ListagemEndereco />
-      </Menu> */}
       <section className="m-auto mt-12 flex w-1/2 flex-col justify-center rounded-md bg-white p-5 shadow">
         <div className="flex w-full items-center justify-between">
           <button onClick={() => navigate("/")} className="self-start">
