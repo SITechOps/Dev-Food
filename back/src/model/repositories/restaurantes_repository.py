@@ -17,47 +17,49 @@ class RestaurantesRepository(IRestaurantesRepository):
                 if not endereco_data:
                     raise AddressRequired()
 
-                restaurante_mesmo_endereco = (
+                restaurante_existente = (
                     db.session.query(Restaurante)
                     .join(Endereco)
                     .filter_by(**endereco_data)
                     .first()
                 )
-
-                if restaurante_mesmo_endereco:
+                if restaurante_existente:
                     raise RestaurantAddressAlreadyExists()
                 
-                usuario_mesmo_endereco = (
+                email = info_restaurante.get("email")
+                cnpj = info_restaurante.get("cnpj")
+                razao_social = info_restaurante.get("razao_social")
+                self.__verificar_duplicidade(email, cnpj, razao_social)
+
+                user_endereco = (
                     db.session.query(UserEndereco)
                     .join(Endereco)
                     .filter_by(**endereco_data)
                     .first()
                 )
 
-                if usuario_mesmo_endereco:
-                    id_endereco_existente = usuario_mesmo_endereco.id_endereco
-                    new_restaurante = Restaurante(id_endereco=id_endereco_existente **info_restaurante)
+                if user_endereco:
+                    id_endereco = user_endereco.id_endereco
                 else:
                     novo_endereco = Endereco(**endereco_data)
                     db.session.add(novo_endereco)
-                    db.session.commit()
+                    db.session.flush()
+                    id_endereco = novo_endereco.id
 
-                    new_restaurante = Restaurante(id_endereco=novo_endereco.id, **info_restaurante)
-                    db.session.add(new_restaurante)
-                    db.session.commit()
+                restaurante = Restaurante(id_endereco=id_endereco, **info_restaurante)
+                db.session.add(restaurante)
+                db.session.commit()
 
-                restaurante_completo = (
+                return (
                     db.session.query(Restaurante)
                     .options(joinedload(Restaurante.endereco))
-                    .filter_by(id=new_restaurante.id)
+                    .filter_by(id=restaurante.id)
                     .first()
                 )
 
-                return restaurante_completo
-
-            except Exception as exception:
+            except Exception:
                 db.session.rollback()
-                raise exception
+                raise
 
 
     def list_all(self) -> list[Restaurante]:
@@ -93,33 +95,7 @@ class RestaurantesRepository(IRestaurantesRepository):
                 email = info_restaurante.get("email")
                 cnpj = info_restaurante.get("cnpj")
                 razao_social = info_restaurante.get("razao_social")
-
-                if email:
-                    existente = (
-                        db.session.query(Restaurante)
-                        .filter(Restaurante.id != id_restaurante, Restaurante.email == email)
-                        .first()
-                    )
-                    if existente:
-                        raise RestaurantAlreadyExists(f"Já existe um restaurante com o e-mail '{email}'.")
-
-                if cnpj:
-                    existente = (
-                        db.session.query(Restaurante)
-                        .filter(Restaurante.id != id_restaurante, Restaurante.cnpj == cnpj)
-                        .first()
-                    )
-                    if existente:
-                        raise RestaurantAlreadyExists(f"Já existe um restaurante com o CNPJ '{cnpj}'.")
-
-                if razao_social:
-                    existente = (
-                        db.session.query(Restaurante)
-                        .filter(Restaurante.id != id_restaurante, Restaurante.razao_social == razao_social)
-                        .first()
-                    )
-                    if existente:
-                        raise RestaurantAlreadyExists(f"Já existe um restaurante com a razão social '{razao_social}'.")
+                self.__verificar_duplicidade(email, cnpj, razao_social, ignorar_id=id_restaurante)
 
                 campos_permitidos = [
                     'nome', 'descricao', 'email', 'telefone', 'especialidade',
@@ -228,3 +204,27 @@ class RestaurantesRepository(IRestaurantesRepository):
             except Exception as exception:
                 db.session.rollback()
                 raise exception
+
+
+    def __verificar_duplicidade(self, email=None, cnpj=None, razao_social=None, ignorar_id=None):
+        with DBConnectionHandler() as db:
+            if email:
+                query = db.session.query(Restaurante).filter(Restaurante.email == email)
+                if ignorar_id:
+                    query = query.filter(Restaurante.id != ignorar_id)
+                if query.first():
+                    raise RestaurantAlreadyExists(f"Já existe um restaurante com este e-mail!")
+
+            if cnpj:
+                query = db.session.query(Restaurante).filter(Restaurante.cnpj == cnpj)
+                if ignorar_id:
+                    query = query.filter(Restaurante.id != ignorar_id)
+                if query.first():
+                    raise RestaurantAlreadyExists(f"Já existe um restaurante com este CNPJ!")
+
+            if razao_social:
+                query = db.session.query(Restaurante).filter(Restaurante.razao_social == razao_social)
+                if ignorar_id:
+                    query = query.filter(Restaurante.id != ignorar_id)
+                if query.first():
+                    raise RestaurantAlreadyExists(f"Já existe um restaurante com esta razão social!")
