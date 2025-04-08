@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Star, Clock, MapPin, ChevronRight } from "lucide-react";
-import { api } from "../connection/axios";
+import { api } from "../../connection/axios";
 
-export default function RestaurantPage() {
+export default function DetalhesRestaurante() {
   const { id } = useParams();
-  const [restaurant, setRestaurant] = useState(null);
+
+  const [restaurant, setRestaurant] = useState({
+    nome: "",
+    especialidade: "",
+    endereco: {
+      logradouro: "",
+      bairro: "",
+      cidade: "",
+      estado: "",
+      pais: "",
+    },
+    horario_funcionamento: "",
+  });
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 

@@ -7,6 +7,9 @@ const Home = lazy(() => import("./pages/Home"));
 const AuthUser = lazy(() => import("./pages/Auth/AuthUser"));
 const Account = lazy(() => import("./pages/Account/Account"));
 const CadastroEndereco = lazy(() => import("./components/CadastroEndereco"));
+const DetalhesRestaurante = lazy(
+  () => import("./components/InfoRestaurante/Detalhes"),
+);
 
 function App() {
   return (
@@ -17,6 +20,7 @@ function App() {
         <Route path="/auth" element={<AuthUser />} />
         <Route path="/account" element={<Account />} />
         <Route path="/c-endereco" element={<CadastroEndereco />} />
+        <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
       </Routes>
     </Suspense>
   );

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { api } from "../connection/axios";
-import CardRestaurante from "../components/CardRestaurante";
+import CardRestaurante from "../components/InfoRestaurante/Card";
 
 export default function Home() {
-  const [restaurants, setRestaurants] = useState([{
-    id: "",
-    especialidade: "",
-  }]);
+  const [restaurants, setRestaurants] = useState([
+    {
+      id: "",
+      especialidade: "",
+    },
+  ]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,7 +46,6 @@ export default function Home() {
         </h1>
         <div className="mt-[5rem]">
           <div className="mx-auto max-w-7xl space-y-8 px-4 py-6">
-
             {loading ? (
               <div className="space-y-8">
                 {[...Array(3)].map((_, idx) => (
@@ -52,7 +53,10 @@ export default function Home() {
                     <div className="mb-2 h-6 w-32 rounded bg-gray-200" />
                     <div className="flex gap-4">
                       {[...Array(5)].map((__, i) => (
-                        <div className="h-48 w-60 animate-pulse rounded-2xl bg-gray-200" key={i} />
+                        <div
+                          className="h-48 w-60 animate-pulse rounded-2xl bg-gray-200"
+                          key={i}
+                        />
                       ))}
                     </div>
                   </div>
@@ -77,7 +81,6 @@ export default function Home() {
               ))
             )}
           </div>
-
         </div>
       </div>
     </>

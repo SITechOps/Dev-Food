@@ -1,5 +1,5 @@
+import { Star } from "lucide-react";
 import { useMemo } from "react";
-import { PiStarThin } from "react-icons/pi";
 import { Link } from "react-router-dom";
 
 type CardProps = {
@@ -15,7 +15,7 @@ type Content = {
 };
 
 export default function CardRestaurante({ content }: Content) {
-  const randomRate = useMemo(() => {
+  const notaRestaurante = useMemo(() => {
     const min = 3.5;
     const max = 5.0;
     return (Math.random() * (max - min) + min).toFixed(1);
@@ -33,13 +33,11 @@ export default function CardRestaurante({ content }: Content) {
           />
         </div>
         <div className="p-3">
-          <h3 className="truncate font-semibold text-black text-gray-900">
-            {content.nome}
-          </h3>
+          <h3 className="truncate font-semibold">{content.nome}</h3>
           <div className="mt-1 flex items-center text-sm text-gray-600">
             <div className="flex items-center">
-              <PiStarThin className="mr-1 h-4 w-4 bg-brown-normal" />
-              <span className="font-medium">{randomRate}</span>
+              <Star className="fill-brown-normal icon mr-1 size-4" />
+              <span className="font-medium">{notaRestaurante}</span>
             </div>
             <span className="mx-2">•</span>
             <span>{content.categoria}</span>
