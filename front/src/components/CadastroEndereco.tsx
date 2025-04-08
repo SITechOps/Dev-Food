@@ -211,7 +211,6 @@ const CadastroEndereco = () => {
                 </p>
               </div>
 
-              {/* Campos complementares */}
               <div id="dados-complementares">
                 <div className="mb-3 flex gap-4">
                   <Input

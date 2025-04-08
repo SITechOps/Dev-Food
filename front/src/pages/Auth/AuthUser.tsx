@@ -1,6 +1,5 @@
 import Input from "../../components/Input";
 import { FaAngleLeft } from "react-icons/fa6";
-// import Menu from "../../components/Menu";
 import Button from "../../components/Button";
 import AuthGoogle from "../../components/AuthGoogle";
 import AuthFacebook from "../../components/AuthFacebook";
@@ -23,7 +22,6 @@ export default function AuthUser() {
 
   return (
     <>
-      {/* <Menu /> */}
       <div className="m-auto flex w-full flex-col items-center justify-center pt-10">
         <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
           {isModalOpen && (
@@ -103,6 +101,7 @@ export default function AuthUser() {
                   type="tel"
                   id="telefone"
                 />
+                <p className="my-5">Preencha o telefone apenas se preferir esse meio de contato (não obrigatório).</p>
                 <Button type="submit">Entrar</Button>
               </>
             )}
