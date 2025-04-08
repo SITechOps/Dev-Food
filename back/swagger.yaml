@@ -37,7 +37,7 @@ paths:
                   required:
                     - nome
                     - email
-                    - senha
+                    - telefone
                   properties:
                     nome:
                       type: string
@@ -46,9 +46,9 @@ paths:
                       type: string
                       format: email
                       example: "exemplo@email.com"
-                    senha:
+                    telefone:
                       type: string
-                      example: "senha123"
+                      example: "11948307497"
       responses:
         "201":
           description: Usuário criado com sucesso
@@ -71,6 +71,10 @@ paths:
                         type: string
                         format: email
                         example: "exemplo@email.com"
+                      telefone:
+                        type: string
+                        format: phone
+                        example: "11948307497"
         "400":
           description: Dados inválidos
           content:
@@ -122,6 +126,10 @@ paths:
                           type: string
                           format: email
                           example: "exemplo@email.com"
+                        telefone:
+                          type: string
+                          format: phone
+                          example: "11948307497"
         "500":
           description: Erro no servidor
           content:
@@ -167,6 +175,10 @@ paths:
                     senha:
                       type: string
                       example: "nova_senha"
+                    telefone:
+                      type: string
+                      format: phone
+                      example: "11948307497"
       responses:
         "200":
           description: Usuário atualizado com sucesso
@@ -189,6 +201,10 @@ paths:
                         type: string
                         format: email
                         example: "novo@email.com"
+                      telefone:
+                        type: string
+                        format: phone
+                        example: "11948307497"
         "400":
           description: Dados inválidos
           content:
