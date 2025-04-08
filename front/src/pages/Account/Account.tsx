@@ -11,32 +11,26 @@ import { useAccountComponent } from "./useAccount-component";
 export default function Account() {
   const {
     navigate,
-    nome,
-    setNome,
-    email,
-    telefone,
-    setTelefone,
+    formList, 
+		setFormList,
     isEditing,
     setIsEditing,
     idUsuario,
     handleLogout,
     deletarDados,
-    alterarDados } = useAccountComponent();
+    alterarDados
+  } = useAccountComponent();
   const baseText = "text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg";
+  const iconStyle = "bg-brown-light hover:bg-brown-light-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full";
 
   if (!idUsuario) {
     return (
       <section className="flex h-screen flex-col items-center justify-center">
         <h2 className="font-bold">Acesso negado</h2>
         <p className="mt-2">
-          Faça login ou cadastre-se para acessar sua conta.
+          Faça login para acessar sua conta!
         </p>
-        <div className="mt-5 flex w-[40rem] gap-4">
-          <Button onClick={() => navigate("/Auth")}>Fazer Login</Button>
-          <Button color="secondary" onClick={() => navigate("/")}>
-            Cadastrar-se
-          </Button>
-        </div>
+          <Button onClick={() => navigate("/auth")} className="mt-5 w-100">Fazer Login</Button>
       </section>
     );
   }
@@ -55,14 +49,14 @@ export default function Account() {
           <div id="icones-de-acao" className="flex justify-end gap-4">
             <div
               id="Editar"
-              className="bg--brown-light hover:bg-brown-light-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
+              className={iconStyle}
               onClick={() => setIsEditing(!isEditing)}
             >
               <FiEdit2 className="icon" />
             </div>
             <div
               id="deletar"
-              className="bg-brown-light hover:bg-brown-light-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
+              className={iconStyle}
               onClick={deletarDados}
             >
               <AiOutlineDelete className="icon" />
@@ -76,9 +70,10 @@ export default function Account() {
           <div className={baseText}>
             Nome:
             {isEditing ? (
-              <Input type="text" id="nome" name="nome" value={nome} onChange={setNome} />
+              <Input type="text" id="nome" name="nome" value={formList.nome} 
+              onChange={(value) => setFormList({ ...formList, nome: value })} />
             ) : (
-              <span className="font-semibold">{nome}</span>
+              <span className="font-semibold">{formList.nome}</span>
             )}
           </div>
 
@@ -89,8 +84,9 @@ export default function Account() {
                 format="(##) #####-####"
                 mask="_"
                 allowEmptyFormatting
-                value={telefone}
-                onValueChange={(values: NumberFormatValues) => setTelefone(values.value)}
+                value={formList.telefone}
+                onValueChange={(values: NumberFormatValues) =>
+                  setFormList((prev) => ({ ...prev, telefone: values.value }))}
                 placeholder="(XX) 99999-9999"
                 className="input !w-45"
                 type="tel"
@@ -99,7 +95,7 @@ export default function Account() {
             ) : (
               <>
                 <PatternFormat
-                  value={telefone}
+                  value={formList.telefone}
                   displayType="text"
                   format="(##) #####-####"
                   className="font-semibold"
@@ -111,7 +107,7 @@ export default function Account() {
 
           <p className="mt-3 flex items-center justify-start gap-2 p-0 text-lg">
             Email:
-            <span className="font-semibold">{email}</span>
+            <span className="font-semibold">{formList.email}</span>
           </p>
 
           {isEditing ? (

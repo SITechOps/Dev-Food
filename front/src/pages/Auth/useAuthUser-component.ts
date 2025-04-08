@@ -5,8 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 export const useAuthUserComponent = () => {
 	const navigate = useNavigate();
-	const [telefone, setTelefone] = useState("");
-	const [email, setEmail] = useState("");
+	const [formList, setFormList] = useState({
+		telefone: "",
+		email: "",
+	})
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [codigoEnviado, setCodigoEnviado] = useState("");
 	const [etapa, setEtapa] = useState<"email" | "telefone">("email");
@@ -16,21 +19,24 @@ export const useAuthUserComponent = () => {
   
 	  try {
 		const response = await api.post("/send-email", {
-		  data: { email },
+			data: {
+				email: formList.email,
+			  }
 		});
 		setCodigoEnviado(response.data.properties.verificationCode);
+		setEtapa("telefone");
   
 	  } catch (error) {
-		console.error("Erro ao enviar email:", error);
-		alert("Erro ao enviar email.");
+		console.error("Erro na tentativa do envio do codigo:", error);
+		alert("Erro na tentativa do envio do codigo");
 	  }
-	  setEtapa("telefone");
 	}
   
 	async function loginUser(event: FormEvent<HTMLFormElement>) {
 	  event.preventDefault();
 	  try {
-		const token = await postUser(email, telefone);
+		  console.log(formList)
+		const token = await postUser( formList.email, formList.telefone );
 	   
 		if (!token) {
 		  throw new Error("Token não encontrado na resposta da API.");
@@ -45,10 +51,8 @@ export const useAuthUserComponent = () => {
   
 	return {
 		handleContinuar,
-		telefone,
-		setTelefone,
-		email, 
-		setEmail,
+		formList, 
+		setFormList,
 		isModalOpen, 
 		setIsModalOpen,
 		codigoEnviado,
