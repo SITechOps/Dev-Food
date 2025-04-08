@@ -10,6 +10,7 @@ class Restaurante(Base):
 
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
     nome = Column(String(50), nullable=False)
+    descricao = Column(String(200), nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     cnpj = Column(String(14), unique=True, nullable=False)
     razao_social = Column(String(30), unique=True, nullable=False)
@@ -34,6 +35,7 @@ class Restaurante(Base):
         return {
             "id": self.id,
             "nome": self.nome,
+            "descricao": self.descricao,
             "email": self.email,
             "cnpj": self.cnpj,
             "razao_social": self.razao_social,

@@ -17,27 +17,6 @@ class RestaurantesManager:
         if not restaurante_info:
             return ResponseFormatter.display_error("Requisição inválida: 'data' é obrigatório.", 400)
 
-        email = restaurante_info.get("email")
-        cnpj = restaurante_info.get("cnpj")
-        razao_social = restaurante_info.get("razao_social")
-
-        all_restaurants = self.__restaurante_repo.list_all()
-        duplicated = next(
-            (
-                r for r in all_restaurants
-                if r.email == email or r.cnpj == cnpj or r.razao_social == razao_social
-            ),
-            None
-        )
-
-        if duplicated:
-            if duplicated.email == email:
-                raise RestaurantAlreadyExists("Já existe um restaurante com este e-mail.")
-            elif duplicated.cnpj == cnpj:
-                raise RestaurantAlreadyExists("Já existe um restaurante com este CNPJ.")
-            elif duplicated.razao_social == razao_social:
-                raise RestaurantAlreadyExists("Já existe um restaurante com esta razão social.")
-
         restaurante_obj = self.__restaurante_repo.create(restaurante_info)
         token = create_access_token(
             identity=restaurante_obj.id,
