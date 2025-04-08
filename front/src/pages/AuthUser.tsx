@@ -8,20 +8,41 @@ import Button from "../components/Button";
 import { decodeToken } from "../utils/decodeToken";
 import AuthGoogle from "../components/AuthGoogle";
 import AuthFacebook from "../components/AuthFacebook";
+import ModalEmail from "../components/ModalEmail";
+import { PatternFormat, NumberFormatValues } from 'react-number-format';
 
-export default function Auth() {
+
+export default function AuthUser() {
   const navigate = useNavigate();
-  const [celular, setCelular] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
-  const [etapa, setEtapa] = useState<"email" | "celular">("email");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [codigoEnviado, setCodigoEnviado] = useState("");
+  const [etapa, setEtapa] = useState<"email" | "telefone">("email");
+
+  async function handleContinuar() {
+    setIsModalOpen(true);
+
+    try {
+      const response = await api.post("/send-email", {
+        data: { email },
+      });
+      setCodigoEnviado(response.data.properties.verificationCode);
+
+    } catch (error) {
+      console.error("Erro ao enviar email:", error);
+      alert("Erro ao enviar email.");
+    }
+    setEtapa("telefone");
+  }
 
   async function loginUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      const resp = await api.post("/login", {
+      const resp = await api.post("/user", {
         data: {
           email,
-          celular,
+          telefone,
         },
       });
 
@@ -54,7 +75,17 @@ export default function Auth() {
       <div className="m-auto flex w-full flex-col items-center justify-center pt-10">
 
         <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
-          {etapa === "celular" && (
+          {isModalOpen && (
+            <ModalEmail
+              email={email}
+              telefone={telefone}
+              codigoEnviado={codigoEnviado}
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+            />
+          )}
+
+          {etapa === "telefone" && (
             <button onClick={() => setEtapa("email")} className="mb-5 self-start">
               <FaAngleLeft className="icon" />
             </button>
@@ -79,8 +110,8 @@ export default function Auth() {
               </span>
             </div>
           )}
-          
-          <form onSubmit={loginUser}>
+
+          <form onSubmit={etapa === "telefone" ? loginUser : undefined}>
             {etapa === "email" && (
               <>
                 <Input
@@ -92,31 +123,34 @@ export default function Auth() {
                   onChange={setEmail}
                   className="mb-6"
                 />
-                <Button onClick={() => setEtapa("celular")} disabled={!email}>
+                <Button type="button" onClick={handleContinuar} disabled={!email}>
                   Continuar
                 </Button>
               </>
             )}
 
-            {etapa === "celular" && (
+            {etapa === "telefone" && (
               <>
-                <Input
-                  textLabel="Informe o seu celular:"
-                  id="celular"
-                  type="tel"
-                  value={celular}
-                  placeholder="(XX)99999-9999"
-                  onChange={setCelular}
+                <PatternFormat
+                  customInput={Input}
+                  format="(##) #####-####"
+                  mask="_"
+                  allowEmptyFormatting
+                  value={telefone}
+                  onValueChange={(values: NumberFormatValues) => setTelefone(values.value)}
+                  placeholder="(XX) 99999-9999"
+                  textLabel="Informe o seu telefone:"
+                  id="telefone"
                   className="mb-6"
                 />
-                <Button type="submit" disabled={!celular}>
+
+                <Button type="submit" disabled={!telefone}>
                   Entrar
                 </Button>
               </>
             )}
+
           </form>
-
-
         </div>
       </div>
     </>

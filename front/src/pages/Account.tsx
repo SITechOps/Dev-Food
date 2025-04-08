@@ -11,15 +11,14 @@ import ListagemEndereco from "../components/ListagemEndereco";
 import { decodeToken } from "../utils/decodeToken";
 
 export default function Account() {
-  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const navigate = useNavigate();
+  const [telefone, setTelefone] = useState("");
   const token = localStorage.getItem("token");
+  const [isEditing, setIsEditing] = useState(false);
   const idUsuario = token ? decodeToken(token)?.sub : undefined;
   const isGoogle = localStorage.getItem("isGoogle") || "";
-  // const location = useLocation();
 
   useEffect(() => {
     if (!idUsuario) return;
@@ -32,30 +31,29 @@ export default function Account() {
       const respUser = response.data?.data?.attributes || [];
       setNome(respUser.nome || "");
       setEmail(respUser.email || "");
-      setSenha(respUser.senha || "");
+      setTelefone(respUser.telefone || "");
     } catch (error) {
       console.error("Erro ao buscar usuário:", error);
     }
   }
 
   async function alterarDados(event: FormEvent<HTMLFormElement>) {
+    console.log(event)
     event.preventDefault();
     const dados = new FormData(event.currentTarget);
-    const nome = dados.get("nome")?.toString() || "";
-    const senha = dados.get("senha")?.toString() || "";
+    console.log("dados", dados)
+    const nome = dados.get("nome")?.toString();
+    const telefone = dados.get("telefone")?.toString();
+    console.log(telefone)
+    console.log(nome)
     try {
-      await api.put(`/user/${idUsuario}`, { data: { nome, senha } });
-      fetchUserData();
-
+      await api.put(`/user/${idUsuario}`, { data: { nome, telefone, email } });
       alert("Usuário alterado com sucesso!");
       setIsEditing(false);
     } catch (error) {
       alert("Erro ao alterar usuário. Tente novamente.");
     }
-  }
-
-  function handleEditUser() {
-    setIsEditing(!isEditing);
+    fetchUserData();
   }
 
   async function deletarDados() {
@@ -98,19 +96,17 @@ export default function Account() {
       <Menu>
         <ListagemEndereco />
       </Menu>
-      <section className="m-auto mt-12 flex w-1/2 flex-col items-center justify-center rounded-md bg-white p-5 shadow">
+      <section className="m-auto mt-12 flex w-1/2 flex-col justify-center rounded-md bg-white p-5 shadow">
         <div className="flex w-full items-center justify-between">
           <button onClick={() => navigate("/")} className="self-start">
             <FaAngleLeft className="icon h-10 w-10" />
           </button>
 
-          <h3 className="text-center font-bold">Minha Conta</h3>
-
           <div id="icones-de-acao" className="flex justify-end gap-4">
             <div
               id="Editar"
               className="bg--brown-light hover:bg-brown-light-active flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
-              onClick={handleEditUser}
+              onClick={() => setIsEditing(!isEditing)}
             >
               <FiEdit2 className="icon" />
             </div>
@@ -124,41 +120,51 @@ export default function Account() {
           </div>
         </div>
 
-        <form onSubmit={alterarDados} className="mt-5">
+        <h3 className="text-center font-bold">Minha Conta</h3>
+
+        <form onSubmit={alterarDados} className="mt-5 ml-4">
           <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
             Nome:
             {isEditing ? (
-              <Input type="text" id="nome" value={nome} onChange={setNome} />
+              <Input type="text" id="nome" name="nome" value={nome} onChange={setNome} />
             ) : (
               <span className="font-semibold">{nome}</span>
             )}
           </div>
+
+          {!isGoogle ? (
+            <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
+              Telefone:
+              {isEditing ? (
+                <Input type="text" id="senha" name="telefone" value={telefone} onChange={setTelefone} />
+              ) : (
+                <span className="font-semibold">{telefone}</span>
+              )}
+            </div>
+          ) : null}
 
           <p className="mt-3 flex items-center justify-start gap-2 p-0 text-lg">
             Email:
             <span className="font-semibold">{email}</span>
           </p>
 
-          {isEditing && !isGoogle ? (
-            <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
-              Digite uma nova senha:
-              <Input type="text" id="senha" value={senha} onChange={setSenha} />
-            </div>
-          ) : null}
-
           {isEditing ? (
-            <Button type="submit" className="mt-12">
+            <Button type="submit" className="mt-5">
               Salvar
             </Button>
           ) : null}
         </form>
-        <Button
-          color="outlined"
-          className="mt-5 w-90 p-2"
-          onClick={handleLogout}
-        >
-          Sair
-        </Button>
+        <hr className="my-4 text-gray-light border-2 rounded-xl" />
+
+        <div className="text-right">
+          <Button
+            color="outlined"
+            className="mt-3 w-55 p-2"
+            onClick={handleLogout}
+          >
+            Sair
+          </Button>
+        </div>
       </section>
     </>
   );

@@ -30,27 +30,23 @@ export default function AuthGoogle() {
       )
       .then(async (res) => {
         const respGoogle = res.data;
-        const { email, name: nome, id: senha } = respGoogle;
+        const { email, telefone } = respGoogle;
         localStorage.setItem("isGoogle", "true");
 
         try {
-          const { data } = await api.post("/login", {
-            data: { email, senha: senha.substring(0, 12) },
+          const response = await api.post("/user", {
+            data: {
+              email,
+              telefone,
+            },
           });
-          const token = data?.properties.token || [];
 
-          if (token) {
-            localStorage.setItem("token", JSON.stringify(token));
-            navigate("/");
-          } else {
-            const response = await api.post("/user", {
-              data: { nome, email, senha: senha.substring(0, 12) },
-            });
-            const token = response.data.properties.token;
-
-            localStorage.setItem("token", JSON.stringify(token));
-            navigate("/");
+          const token = response?.data?.properties?.token;
+          if (!token) {
+            throw new Error("Token não encontrado na resposta da API.");
           }
+          localStorage.setItem("token", token);
+          navigate("/");
         } catch (error) {
           console.error("Erro ao processar login/cadastro:", error);
           alert("Erro ao fazer login/cadastro com o Google.");
@@ -67,7 +63,7 @@ export default function AuthGoogle() {
       onClick={() => loginGoogle()}
       className="flex items-center justify-center gap-2 p-2"
     >
-      <AiFillGoogleCircle className="size-7"/>
+      <AiFillGoogleCircle className="size-7" />
       Google
     </Button>
   );

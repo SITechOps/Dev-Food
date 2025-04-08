@@ -1,32 +1,24 @@
 import CodeInput from "react-code-input";
 import Button from "./Button";
 import { useEffect, useRef, useState } from "react";
-import { api } from "../connection/axios";
-import { useNavigate } from "react-router-dom";
-import { decodeToken } from "../utils/decodeToken";
 import { IoClose } from "react-icons/io5";
 
 interface ModalEmailPros {
-  nome: string;
   email: string;
-  senha: string;
+  telefone: string;
   codigoEnviado: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ModalEmail({
-  nome,
-  email,
-  senha,
   codigoEnviado,
   isModalOpen,
-  setIsModalOpen,
+  setIsModalOpen
 }: ModalEmailPros) {
   const [codigoDigitado, setCodigoDigitado] = useState("");
   const buttonRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   // Fechar o modal ao clicar fora dele
   useEffect(() => {
@@ -34,7 +26,7 @@ export default function ModalEmail({
 
     const handleClickOutside = (event: MouseEvent) => {
       if (!modalRef.current?.contains(event.target as Node)) {
-        setIsModalOpen(false);
+        // setIsModalOpen(false);
       }
     };
 
@@ -46,33 +38,8 @@ export default function ModalEmail({
     if (codigoDigitado != codigoEnviado) {
       alert("Código inválido!");
     } else {
-      cadastrarUsuario();
       alert("Usuário cadastrado com sucesso!");
-      navigate("/");
-    }
-  }
-
-  async function cadastrarUsuario() {
-    try {
-      const response = await api.post("/user", {
-        data: { nome, email, senha },
-      });
-
-      const token = response.data?.properties?.token;
-      if (!token) {
-        throw new Error("Token não encontrado na resposta da API.");
-      }
-      localStorage.setItem("token", token);
-      const userData = decodeToken(token);
-      if (!userData?.sub) {
-        throw new Error("ID do usuário não encontrado no token.");
-      }
-      console.log("Usuário logado:", {
-        id: userData.sub,
-        email,
-      });
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
+      setIsModalOpen(false)
     }
   }
 
@@ -81,7 +48,7 @@ export default function ModalEmail({
   }
 
   return (
-    <div className="fixed inset-0 z-20 flex h-screen items-center justify-center bg-black/50">
+    <div className="fixed inset-0 flex h-screen items-center justify-center bg-black/50 z-[9999]">
       <div
         ref={modalRef}
         className="border-blue relative flex flex-col items-center gap-6 rounded-lg border-2 bg-white p-10 pt-12"

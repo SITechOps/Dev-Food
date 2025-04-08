@@ -8,12 +8,12 @@ import { Loading } from "./components/Loading.tsx";
 const pages = {
   App: "./App.tsx",
   Home: "./pages/Home.tsx",
-  Auth: "./pages/Auth.tsx",
+  AuthUser: "./pages/AuthUser.tsx",
   Account: "./pages/Account.tsx",
   CadastroEndereco: "./components/CadastroEndereco.tsx",
 };
 
-const { App, Home, Auth, Account, CadastroEndereco } = Object.fromEntries(
+const { App, Home, AuthUser, Account, CadastroEndereco } = Object.fromEntries(
   Object.entries(pages).map(([key, path]) => [key, lazy(() => import(path))]),
 );
 
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/auth",
-    element: <Auth />,
+    element: <AuthUser />,
   },
   {
     path: "/account",
