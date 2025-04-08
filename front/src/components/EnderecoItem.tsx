@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../connection/axios";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -25,6 +25,7 @@ export default function EnderecoItem({
   return (
     <div className="relative rounded-md border p-4">
       <div className="flex items-center justify-between">
+        <p>{endereco.logradouro}</p>
         <div className="flex items-center">
           {endereco.tipo === "casa" ? (
             <FaHome className="text-blue mr-2" />

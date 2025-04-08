@@ -3,9 +3,10 @@ import { IoIosArrowDown } from "react-icons/io";
 import { api } from "../connection/axios";
 import Modal from "./Modal";
 import EnderecoItem from "./EnderecoItem";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ifoodLogo from "../assets/ifood.png"; // Importe a imagem do logo do iFood
 import { decodeToken } from "../utils/decodeToken";
+import Button from "./Button";
 
 export default function ListagemEndereco() {
   const [enderecos, setEnderecos] = useState([]);
@@ -15,6 +16,7 @@ export default function ListagemEndereco() {
   const token = localStorage.getItem("token");
   const idUsuario = token ? decodeToken(token)?.sub : undefined;
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname === "/account" && showModal) {
@@ -23,7 +25,6 @@ export default function ListagemEndereco() {
   }, [location.pathname, showModal]);
 
   async function mostrarEnderecoSalvo() {
-
     try {
       const response = await api.get(`/user/${idUsuario}/enderecos`, {
         headers: {
@@ -84,16 +85,27 @@ export default function ListagemEndereco() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-4 w-full rounded-md border p-2"
         />
-
         <div className="space-y-2">
           {filteredEnderecos.map((endereco) => (
-            <EnderecoItem
-              key={endereco.id}
-              endereco={endereco}
-              onDelete={handleDeleteEndereco}
-            />
+            <>
+              <EnderecoItem
+                key={endereco.id}
+                endereco={endereco}
+                onDelete={handleDeleteEndereco}
+              />
+              <button onClick={() => console.log(endereco)}>Oi</button>
+            </>
           ))}
         </div>
+        <Button
+          className="mt-6"
+          onClick={() => {
+            setShowModal(false);
+            navigate("/c-endereco");
+          }}
+        >
+          Adicionar novo endereço
+        </Button>
       </Modal>
     </>
   );

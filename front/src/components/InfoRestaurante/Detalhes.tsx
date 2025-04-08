@@ -86,7 +86,7 @@ export default function DetalhesRestaurante() {
           </div>
 
           <button
-            className="bg-brown-normal flex items-center rounded-md px-4 py-2 text-white hover:bg-[#D01021]"
+            className="bg-brown-normal hover:bg-brown-dark flex items-center rounded-md px-4 py-2 text-white"
             onClick={() => setIsModalOpen(true)}
           >
             Ver mais

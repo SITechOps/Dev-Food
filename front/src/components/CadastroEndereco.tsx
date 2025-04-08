@@ -116,7 +116,7 @@ const CadastroEndereco = () => {
   const handleCadastrar = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!address || !numero || !complemento) {
+    if (!address || !numero) {
       alert("Por favor, preencha todos os campos do endereço.");
       return;
     }
@@ -141,9 +141,11 @@ const CadastroEndereco = () => {
     };
 
     try {
-      const response = await api.post("/endereco", { data: enderecoFinal });
-      console.log("Endereço cadastrado com sucesso:", response.data);
+      console.log("Dados enviados:", enderecoFinal); // Adicione este log para depuração
+      await api.post("/endereco", { data: enderecoFinal });
+      alert("Endereço cadastrado com sucesso!");
 
+      // Limpar os campos após o cadastro
       setAddress(null);
       setNumero("");
       setComplemento("");

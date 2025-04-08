@@ -3,7 +3,7 @@ import { api } from "../connection/axios";
 import Card from "../components/InfoRestaurante/Card";
 
 export default function Home() {
-  const [restaurantees, setrestaurantees] = useState([
+  const [restaurantes, setrestaurantes] = useState([
     {
       id: "",
       especialidade: "",
@@ -12,37 +12,37 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function listarrestaurantees() {
+    async function listarrestaurantes() {
       try {
-        const response = await api.get("/restaurantees");
+        const response = await api.get("/restaurantes");
         const data = response?.data?.data?.attributes || [];
 
-        setrestaurantees(data);
+        setrestaurantes(data);
         setLoading(false);
       } catch (error) {
-        console.error("Erro ao buscar restaurantees:", error);
+        console.error("Erro ao buscar restaurantes:", error);
         setLoading(false);
       }
     }
 
-    listarrestaurantees();
+    listarrestaurantes();
   }, []);
 
-  const grupoCategoria = restaurantees.reduce(
+  const grupoCategoria = restaurantes.reduce(
     (acc: any, item: any) => {
       const categoria = item.especialidade || "Outros";
       if (!acc[categoria]) acc[categoria] = [];
       acc[categoria].push(item);
       return acc;
     },
-    {} as Record<string, typeof restaurantees>,
+    {} as Record<string, typeof restaurantes>,
   );
 
   return (
     <>
       <div className="mt-[5rem]">
         <h1 className="my-8 text-center font-medium">
-          Conheça os restaurantees disponíveis
+          Conheça os restaurantes disponíveis
         </h1>
         <div className="mt-[5rem]">
           <div className="mx-auto max-w-7xl space-y-8 px-4 py-6">
