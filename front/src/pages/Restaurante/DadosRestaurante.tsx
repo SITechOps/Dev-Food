@@ -1,9 +1,8 @@
-
 import Input from "../../components/Input";
 import { useState, useEffect } from "react";
 import Button from "../../components/Button";
 import axios from "axios";
-
+import { api } from "../../connection/axios";
 
 export default function DadosRestaurante() {
   const [cep, setCep] = useState("");
@@ -39,13 +38,41 @@ export default function DadosRestaurante() {
     }
   }, [cep]);
 
+  const handleSubmit = () => {
+    const dados = {
+      cnpj: cnpj,
+      especialidade: especialidade,
+      endereco: {
+        logradouro: endereço,
+        bairro: bairro,
+        cidade: cidade,
+        estado: estado,
+        pais: "Brasil",
+        numero: parseInt(numero),
+        complemento: complemento,
+      },
+    };
+
+    api
+      .post("/restaurantes", {
+        data: dados,
+      })
+      .then((response) => {
+        console.log("Restaurante cadastrado com sucesso!", response.data);
+        // você pode redirecionar, exibir alerta ou limpar os campos aqui
+      })
+      .catch((error) => {
+        console.error("Erro ao cadastrar restaurante:", error);
+      });
+  };
+
   return (
     <div>
-      <p className="mt-15">INFORMAÇÕES DA LOJA</p>
-      <h1 className="mt-5">Onde fica sua loja?</h1>
+      <p className="mt-15 font-bold">INFORMAÇÕES DA LOJA</p>
+      <h1 className="mt-5 font-bold">Onde fica sua loja?</h1>
 
       <div className="mt-8 max-w-md">
-        <p className="mt-2">Digite o CEP e complete as informações</p>
+        <p className="mt-2 font-bold">Digite o CEP e complete as informações</p>
         <label className="mt-2 block font-medium text-gray-700">CEP*</label>
         <Input
           className="border"
@@ -123,8 +150,10 @@ export default function DadosRestaurante() {
       </div>
 
       <div className="absolute top-0 right-0 max-w-md">
-        <p>NEGÓCIO E RESPONSÁVEL</p>
-        <h1 className="mt-5">Agora, nos fale mais sobre seu negócio</h1>
+        <p className="font-bold">NEGÓCIO E RESPONSÁVEL</p>
+        <h1 className="mt-5 font-bold">
+          Agora, nos fale mais sobre seu negócio
+        </h1>
 
         <label className="mt-8 block font-medium text-gray-700">CNPJ</label>
         <Input
@@ -155,7 +184,9 @@ export default function DadosRestaurante() {
 
         <p>Esse item poderá ser alterado posteriormente</p>
         <div className="mt-6 flex justify-center">
-          <Button className="w-48">Finalizar</Button>
+          <Button className="w-48" onClick={handleSubmit}>
+            Finalizar
+          </Button>
         </div>
       </div>
     </div>

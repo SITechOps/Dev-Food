@@ -4,13 +4,12 @@ import Button from "../../components/Button";
 import ModalEmail from "../../components/ModalEmail";
 import { useNavigate } from "react-router-dom";
 
-
 export default function CadastroRestaurante() {
   const [nome, setNome] = useState("");
   const [celular, setCelular] = useState("");
   const [email, setEmail] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [codigoEnviado,setcodigoEnviado] = useState("123456"); // código simulado enviado por e-mail
+  const [codigoEnviado, setcodigoEnviado] = useState("123456"); // código simulado enviado por e-mail
 
   const navigate = useNavigate();
 
