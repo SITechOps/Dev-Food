@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 type CardProps = {
   id: string;
   img: string;
-  name: string;
-  rate: number;
-  category: string;
+  nome: string;
+  avaliacao: number;
+  categoria: string;
 };
 
 type Content = {
@@ -38,11 +38,11 @@ export default function CardRestaurante({ content }: Content) {
           </h3>
           <div className="mt-1 flex items-center text-sm text-gray-600">
             <div className="flex items-center">
-              <PiStarThin className="mr-1 h-4 w-4 fill-[#EA1D2C]" />
+              <PiStarThin className="mr-1 h-4 w-4 bg-brown-normal" />
               <span className="font-medium">{randomRate}</span>
             </div>
             <span className="mx-2">•</span>
-            <span>{content.category}</span>
+            <span>{content.categoria}</span>
           </div>
         </div>
       </div>
