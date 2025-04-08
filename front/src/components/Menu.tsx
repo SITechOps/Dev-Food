@@ -55,7 +55,7 @@ export default function Menu() {
             ) : (
               <Button
                 color="secondary"
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/intermediaria")}
                 className="w-25 py-2"
               >
                 Entrar
