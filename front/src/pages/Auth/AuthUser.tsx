@@ -10,10 +10,8 @@ import { useAuthUserComponent } from "./useAuthUser-component";
 
 export default function AuthUser() {
   const {handleContinuar,
-		telefone,
-		setTelefone,
-		email, 
-		setEmail,
+    formList, 
+		setFormList,
 		isModalOpen, 
 		setIsModalOpen,
 		codigoEnviado,
@@ -29,8 +27,8 @@ export default function AuthUser() {
         <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
           {isModalOpen && (
             <ModalEmail
-              email={email}
-              telefone={telefone}
+              email={formList.email}
+              telefone={formList.telefone}
               codigoEnviado={codigoEnviado}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
@@ -70,13 +68,13 @@ export default function AuthUser() {
                   textLabel="Informe o seu email:"
                   id="email"
                   type="email"
-                  value={email}
+                  value={formList.email}
                   placeholder="exemplo@email.com"
-                  onChange={setEmail}
+                  onChange={(value) => setFormList({ ...formList, email: value })}
                   className="mb-6"
                 />
 
-                <Button type="button" onClick={handleContinuar} disabled={!email}>
+                <Button type="button" onClick={handleContinuar} disabled={!formList.email}>
                   Continuar
                 </Button>
               </>
@@ -88,8 +86,9 @@ export default function AuthUser() {
                   format="(##) #####-####"
                   mask="_"
                   allowEmptyFormatting
-                  value={telefone}
-                  onValueChange={(values: NumberFormatValues) => setTelefone(values.value)}
+                  value={formList.telefone}
+                  onValueChange={(values: NumberFormatValues) =>
+                    setFormList((prev) => ({ ...prev, telefone: values.value }))}
                   placeholder="(XX) 99999-9999"
                   className="input mb-6"
                   type="tel"

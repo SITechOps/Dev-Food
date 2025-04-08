@@ -21,7 +21,7 @@ export async function postUser(email: string, telefone: string): Promise<string 
 
 		return token ?? null;
 	} catch (error) {
-		console.error("Não foi possivél te cadastrar, tente novamente", error);
+		console.error("Ocorreu um erro ao tentar cadastrar. Tente novamente.", error);
 		return null;
 	}
 }
