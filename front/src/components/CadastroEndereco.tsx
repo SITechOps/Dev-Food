@@ -27,12 +27,39 @@ const CadastroEndereco = () => {
   const [complemento, setComplemento] = useState<string>("");
   const [tipo, setTipo] = useState<string>("");
 
-  const initMapScript = async () => {
-    if (!window.google) {
-      await loadAsyncScript(
-        `${mapApiJs}?key=${googleApiKey}&libraries=places&v=weekly`,
+  const initMapScript = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      if (typeof window === "undefined") return;
+
+      if (window.google && window.google.maps) {
+        resolve();
+        return;
+      }
+
+      const scriptExists = document.querySelector(
+        `script[src^="${mapApiJs}?key=${googleApiKey}"]`,
       );
-    }
+
+      if (!scriptExists) {
+        const script = document.createElement("script");
+        script.src = `${mapApiJs}?key=${googleApiKey}&libraries=places&v=weekly`;
+        script.async = true;
+        script.defer = true;
+
+        script.onload = () => {
+          resolve();
+        };
+
+        script.onerror = (err) => {
+          reject(err);
+        };
+
+        document.body.appendChild(script);
+      } else {
+        // se já existe o script, espera carregar
+        scriptExists.addEventListener("load", () => resolve());
+      }
+    });
   };
 
   const fetchViaCep = async (cep: string) => {
@@ -84,10 +111,10 @@ const CadastroEndereco = () => {
   };
 
   const initAutocomplete = () => {
-    if (!searchInput.current) return;
+    if (typeof window !== "undefined" && !searchInput.current) return;
 
     const autocomplete = new window.google.maps.places.Autocomplete(
-      searchInput.current,
+      searchInput.current!,
     );
     autocomplete.setFields(["address_component", "geometry"]);
     autocomplete.addListener("place_changed", () =>
@@ -161,11 +188,16 @@ const CadastroEndereco = () => {
   };
 
   useEffect(() => {
-    initMapScript().then(() => {
-      if (searchInput.current) {
-        initAutocomplete();
+    const load = async () => {
+      try {
+        await initMapScript();
+        initAutocomplete(); // só chama aqui depois de garantir que está pronto
+      } catch (error) {
+        console.error("Erro ao carregar o Google Maps", error);
       }
-    });
+    };
+
+    load();
   }, []);
 
   return (
