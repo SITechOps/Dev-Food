@@ -7,6 +7,7 @@ def inicializar_restaurantes_exemplo():
         restaurantes_exemplo = [
             {
                 "nome": "Sabor Brasileiro",
+                "descricao": "Deliciosos pratos brasileiros",
                 "email": "contato@saborbrasileiro.com.br",
                 "cnpj": "12345678901234",
                 "razao_social": "Sabor Brasileiro LTDA",
@@ -30,6 +31,7 @@ def inicializar_restaurantes_exemplo():
             },
             {
                 "nome": "Cantina Italiana",
+                "descricao": "Deliciosos pratos italianos",
                 "email": "reservas@cantinaitaliana.com.br",
                 "cnpj": "98765432109876",
                 "razao_social": "Cantina Bella Italia",
@@ -53,6 +55,7 @@ def inicializar_restaurantes_exemplo():
             },
             {
                 "nome": "Sushi Express",
+                "descricao": "Pratos de sushi frescos",
                 "email": "atendimento@sushiexpress.com.br",
                 "cnpj": "45678912345678",
                 "razao_social": "Sushi Express LTDA",

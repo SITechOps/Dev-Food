@@ -1,17 +1,24 @@
+import { Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { Loading } from "./components/Loading";
 import Menu from "./components/Menu";
-import Cadastro from "./pages/Cadastro";
+
+const Home = lazy(() => import("./pages/Home"));
+const AuthUser = lazy(() => import("./pages/Auth/AuthUser"));
+const Account = lazy(() => import("./pages/Account/Account"));
+const CadastroEndereco = lazy(() => import("./components/CadastroEndereco"));
 
 function App() {
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <Menu />
-      <div className="m-auto flex min-h-screen w-full flex-col items-center justify-center pt-10">
-        <h1 className="m-2 text-center font-bold">
-          Falta pouco para matar sua fome! <br />
-        </h1>
-        <Cadastro />
-      </div>
-    </>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<AuthUser />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/c-endereco" element={<CadastroEndereco />} />
+      </Routes>
+    </Suspense>
   );
 }
 

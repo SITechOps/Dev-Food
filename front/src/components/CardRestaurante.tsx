@@ -1,5 +1,4 @@
-import { randomInt } from "crypto";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { PiStarThin } from "react-icons/pi";
 import { Link } from "react-router-dom";
 
@@ -15,7 +14,7 @@ type Content = {
   content: CardProps;
 };
 
-function Card({ content }: Content) {
+export default function CardRestaurante({ content }: Content) {
   const randomRate = useMemo(() => {
     const min = 3.5;
     const max = 5.0;
@@ -50,5 +49,3 @@ function Card({ content }: Content) {
     </Link>
   );
 }
-
-export default Card;

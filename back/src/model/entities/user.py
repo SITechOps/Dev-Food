@@ -14,7 +14,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp), onupdate=lambda: datetime.now(tz_sp))
 
-    enderecos_associados = relationship("UserEndereco", back_populates="usuario")
+    enderecos_associados = relationship("UserEndereco", back_populates="usuario", cascade="all, delete-orphan")
     
     def to_dict(self) -> dict:
         return {

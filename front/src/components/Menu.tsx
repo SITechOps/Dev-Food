@@ -29,12 +29,12 @@ export default function Menu() {
           <Link to="/">
             <img src={iFoodLogo} alt="iFood Logo" className="h-15" />
           </Link>
-          
+
           {idUsuario ? (
             <>
               <ListagemEndereco />
             </>
-          ) : (null)}
+          ) : null}
 
           <div className="flex gap-3">
             <Button
@@ -55,7 +55,7 @@ export default function Menu() {
             ) : (
               <Button
                 color="secondary"
-                onClick={() => navigate("/Auth")}
+                onClick={() => navigate("/auth")}
                 className="w-25 py-2"
               >
                 Entrar

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from src.model.repositories.restaurantes_repository import RestaurantesRepository
 from src.model.repositories.users_repository import UsersRepository
 from src.controllers.users_manager import UsersManager
 from src.http_types.http_request import HttpRequest
@@ -10,9 +11,10 @@ def create_new_user():
     http_request = HttpRequest(body=request.json)
     
     users_repo = UsersRepository()
-    users_manager = UsersManager(users_repo)
+    restaurantes_repo = RestaurantesRepository()
+    users_manager = UsersManager(users_repo, restaurantes_repo)
 
-    http_response = users_manager.create_new_user(http_request)
+    http_response = users_manager.authenticate_user(http_request)
     
     return jsonify(http_response.body), http_response.status_code
 

@@ -13,31 +13,33 @@ class EnderecosRepository(IEnderecosRepository):
             try:
                 tipo = endereco.pop("tipo").lower()
                 self.__check_existing_type(db, id_usuario, tipo)
+
                 existing_endereco = self.__find_existing_address(db, endereco)
                 endereco_id = ""
+
                 if existing_endereco:
-                    existing_user_endereco = (
-                        db.session
-                        .query(UserEndereco)
-                        .filter(
-                            UserEndereco.id_usuario == id_usuario,
-                            UserEndereco.id_endereco == existing_endereco.id,
+                    already_linked_to_user = (
+                        db.session.query(UserEndereco)
+                        .filter_by(
+                            id_usuario=id_usuario,
+                            id_endereco=existing_endereco.id
                         )
-                        .one_or_none()
+                        .first()
                     )
-                    if existing_user_endereco:
+
+                    if already_linked_to_user:
                         raise AddressTypeAlreadyExists("Este endereço já está associado a este tipo.")
+
                     endereco_id = existing_endereco.id
-                
                 else:
                     new_endereco = Endereco()
                     for key, value in endereco.items():
                         setattr(new_endereco, key, value)
 
                     db.session.add(new_endereco)
-                    db.session.flush()  # Garante que o ID do novo endereço seja gerado
+                    db.session.flush() 
                     endereco_id = new_endereco.id
-                    
+
                 user_endereco = UserEndereco(
                     id_usuario=id_usuario,
                     id_endereco=endereco_id,
@@ -45,6 +47,7 @@ class EnderecosRepository(IEnderecosRepository):
                 )
                 db.session.add(user_endereco)
                 db.session.commit()
+
             except Exception as exception:
                 db.session.rollback()
                 raise exception
@@ -86,46 +89,46 @@ class EnderecosRepository(IEnderecosRepository):
         with DBConnectionHandler() as db:
             try:
                 self.__check_existing_type(db, id_usuario, info_endereco.get("tipo"))
-                existing_endereco = self.__find_existing_address(db, info_endereco)
-                if existing_endereco:
-                    # Atualizar a referência do id_endereco na tabela UserEndereco
-                    user_endereco = (
-                        db.session
-                        .query(UserEndereco)
-                        .filter_by(id_usuario=id_usuario, id_endereco=id_endereco)
-                        .first()
-                    )
 
-                    if not user_endereco:
-                        raise AddressNotFound("A referência para o ID do endereço não foi encontrada para esse usuário.")
-                    
-                    user_endereco.id_endereco = existing_endereco.id
-                    user_endereco.tipo = info_endereco.get("tipo")
+                novo_endereco_existente = self.__find_existing_address(db, info_endereco)
 
+                user_endereco = (
+                    db.session
+                    .query(UserEndereco)
+                    .filter_by(id_usuario=id_usuario, id_endereco=id_endereco)
+                    .first()
+                )
+
+                if not user_endereco:
+                    raise AddressNotFound("A referência para o ID do endereço não foi encontrada para esse usuário.")
+
+                if novo_endereco_existente:
+                    # Se o novo endereço já existe, apenas atualiza a referência
+                    user_endereco.id_endereco = novo_endereco_existente.id
+                    user_endereco.tipo = info_endereco.get("tipo", "").lower()
+
+                    # Se ninguém mais estiver usando o antigo endereço, podemos deletar
                     if self.__is_empty(db, id_endereco):
-                        endereco = self.__find_by_id(id_endereco)
-                        db.session.delete(endereco)
-                        
-                    db.session.flush()
+                        endereco_antigo = self.__find_by_id(id_endereco)
+                        db.session.delete(endereco_antigo)
+
                 else:
-                    user_endereco = db.session.query(UserEndereco).filter(  
-                        (UserEndereco.id_usuario == id_usuario) &
-                        (UserEndereco.id_endereco == id_endereco)
-                    ).first()
-                    
-                    if not user_endereco:
-                        raise AddressNotFound("A referência para o ID do endereço não foi encontrada para esse usuário.")
-                    
-                    endereco = db.session.query(Endereco).filter_by(id=id_endereco).first()
+                    # Se o novo endereço ainda não existe, criamos um novo
+                    novo_endereco = Endereco(**info_endereco)
+                    db.session.add(novo_endereco)
+                    db.session.flush()  # Para obter novo ID
 
-                    for key, value in info_endereco.items():
-                        setattr(endereco, key, value)
+                    # Atualizamos o UserEndereco
+                    user_endereco.id_endereco = novo_endereco.id
+                    user_endereco.tipo = info_endereco.get("tipo", "").lower()
 
-                    db.session.flush()  # Garante que o endereço seja alterado primeiro
-                    user_endereco.tipo = info_endereco.get("tipo")
-                    db.session.flush()
+                    # Deletamos o antigo endereço, se não estiver mais sendo usado
+                    if self.__is_empty(db, id_endereco):
+                        endereco_antigo = self.__find_by_id(id_endereco)
+                        db.session.delete(endereco_antigo)
 
                 db.session.commit()
+
             except Exception as exception:
                 db.session.rollback()
                 raise exception
@@ -134,6 +137,7 @@ class EnderecosRepository(IEnderecosRepository):
     def delete(self, id_endereco: str, id_usuario: str) -> None:
         with DBConnectionHandler() as db:
             try:
+                # 1. Buscar a relação UserEndereco
                 user_endereco = (
                     db.session.query(UserEndereco)
                     .filter(
@@ -142,20 +146,27 @@ class EnderecosRepository(IEnderecosRepository):
                     )
                     .one_or_none()
                 )
+
                 if not user_endereco:
                     raise AddressNotFound()
-                db.session.delete(user_endereco)               
 
-                if self.__is_empty(db, id_endereco):
+                # 2. Deleta a associação com o usuário
+                db.session.delete(user_endereco)
+                db.session.flush()
+
+                # 3. Verifica se o endereço ainda está associado a outro usuário ou restaurante
+                endereco_usado_por_mais_alguem = self.__is_address_used(db, id_endereco)
+
+                if not endereco_usado_por_mais_alguem:
                     endereco = self.__find_by_id(id_endereco)
-                    db.session.delete(endereco)               
-                
+                    db.session.delete(endereco)
+
                 db.session.commit()
-                    
+
             except Exception as exception:
                 db.session.rollback()
                 raise exception
-            
+
     
     def __check_existing_type(self, db, id_usuario: str, tipo: str) -> None:
         existing_type = (
@@ -193,3 +204,22 @@ class EnderecosRepository(IEnderecosRepository):
             .count()
         )
         return remaining_associations == 0
+    
+
+    def __is_address_used(self, db, id_endereco: str) -> bool:
+        # Verifica se há alguma associação com usuários
+        user_links = (
+            db.session.query(UserEndereco)
+            .filter(UserEndereco.id_endereco == id_endereco)
+            .count()
+        )
+
+        # Verifica se há alguma associação com restaurantes
+        restaurant_links = (
+            db.session.query(Restaurante)
+            .filter(Restaurante.id_endereco == id_endereco)
+            .count()
+        )
+
+        return user_links > 0 or restaurant_links > 0
+
