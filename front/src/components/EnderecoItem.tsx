@@ -49,7 +49,7 @@ export default function EnderecoItem({
       {showMenu && (
         <div className="absolute top-10 right-0 rounded-md border bg-white p-2 shadow-md">
           <button
-            onClick={() => navigate(`/account`)}
+            onClick={() => navigate(`/account`)} // redirecionei para account pois é lá a responsabilidade do objeto endereço, que está atrelado a usuário
             className="block w-full p-1 text-left hover:bg-gray-100"
           >
             Editar

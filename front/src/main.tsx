@@ -5,6 +5,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Loading } from "./components/Loading.tsx";
 import Restaurant from "./pages/Restaurant.tsx";
+import Restaurants from "./pages/Restaurants.tsx";
 
 const pages = {
   App: "./App.tsx",
@@ -12,7 +13,8 @@ const pages = {
   Auth: "./pages/Auth.tsx",
   Account: "./pages/Account.tsx",
   CadastroEndereco: "./components/CadastroEndereco.tsx",
-  Restaurant: "pages/Restaurant.tsx",
+  Restaurant: "./pages/Restaurant.tsx",
+  Restaurants: "./pages/Restaurants.tsx",
 };
 
 const { App, Home, Auth, Account, CadastroEndereco } = Object.fromEntries(
@@ -41,8 +43,12 @@ const router = createBrowserRouter([
     element: <CadastroEndereco />,
   },
   {
-    path: "/restaurant/:id",
+    path: "/restaurante/:id",
     element: <Restaurant />,
+  },
+  {
+    path: "/restaurantes",
+    element: <Restaurants />,
   },
 ]);
 

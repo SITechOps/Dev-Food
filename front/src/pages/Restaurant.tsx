@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Star, Clock, MapPin, ChevronRight } from "lucide-react";
+import { api } from "../connection/axios";
 
 export default function RestaurantPage() {
   const { id } = useParams();
@@ -11,25 +12,15 @@ export default function RestaurantPage() {
   useEffect(() => {
     async function fetchRestaurantDetails() {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/restaurants/${id}`);
-        const data = await response.json();
-        setRestaurant(data);
+        const response = await api.get(
+          `http://127.0.0.1:5000/restaurante/${id}`,
+        );
+        // Ajustando para acessar os dados corretamente
+        setRestaurant(response.data.data.attributes);
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar detalhes do restaurante:", error);
         // Fallback para dados de exemplo caso a API não esteja disponível
-        setRestaurant({
-          id,
-          name: "Burger Express",
-          rating: 4.7,
-          category: "Lanches",
-          imageUrl: "/placeholder.svg?height=200&width=600",
-          description:
-            "Os melhores lanches da cidade com ingredientes frescos e de qualidade. Entrega rápida e atendimento excepcional.",
-          address: "Av. Paulista, 1234 - Bela Vista, São Paulo - SP",
-          hours: "Segunda a Domingo: 11h às 23h",
-          isSuperRestaurant: true,
-        });
         setLoading(false);
       }
     }
@@ -45,12 +36,22 @@ export default function RestaurantPage() {
     );
   }
 
+  if (!restaurant) {
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-8">
+        <p>Não foi possível carregar os detalhes do restaurante.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-4xl pb-10">
       <div className="relative h-48 w-full md:h-64">
         <img
-          src={restaurant.imageUrl || "/placeholder.svg?height=200&width=600"}
-          alt={restaurant.name}
+          src={
+            "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
+          alt={"restairamt"}
           className="h-full w-full object-cover"
         />
       </div>
@@ -58,21 +59,21 @@ export default function RestaurantPage() {
       <div className="px-4 py-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold">{restaurant.name}</h1>
+            <h1 className="text-2xl font-bold text-black">{restaurant.nome}</h1>
             <div className="mt-1 flex items-center">
-              <div className="flex items-center text-[#EA1D2C]">
-                <Star className="mr-1 h-5 w-5 fill-[#EA1D2C]" />
-                <span className="font-medium">{restaurant.rating}</span>
+              <div className="text-brown-normal flex items-center">
+                <Star className="fill-brown-normal mr-1 h-5 w-5" />
+                <span className="font-medium">4.2</span>
               </div>
               <span className="text-muted-foreground mx-2">•</span>
               <span className="text-muted-foreground">
-                {restaurant.category}
+                {restaurant.especialidade}
               </span>
             </div>
           </div>
 
           <button
-            className="flex items-center rounded-md bg-[#EA1D2C] px-4 py-2 text-white hover:bg-[#D01021]"
+            className="bg-brown-normal flex items-center rounded-md px-4 py-2 text-white hover:bg-[#D01021]"
             onClick={() => setIsModalOpen(true)}
           >
             Ver mais
@@ -83,7 +84,7 @@ export default function RestaurantPage() {
 
       {/* Modal lateral */}
       {isModalOpen && (
-        <div className="bg-opacity-50 fixed inset-0 z-50 flex justify-end bg-black">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/70">
           <div className="h-full w-full max-w-md overflow-y-auto bg-white">
             <div className="p-6">
               <div className="mb-6 flex items-center justify-between">
@@ -99,37 +100,39 @@ export default function RestaurantPage() {
               </div>
 
               <div className="space-y-6">
-                {restaurant.isSuperRestaurant && (
-                  <div className="flex items-center">
-                    <span className="rounded-full bg-[#EA1D2C] px-2 py-1 text-sm font-medium text-white">
-                      Super-Restaurante
-                    </span>
-                  </div>
-                )}
-
                 <div>
                   <h3 className="mb-2 font-semibold">Descrição</h3>
-                  <p className="text-gray-600">{restaurant.description}</p>
+                  <p className="text-gray-600">
+                    Restaunte especializado em {restaurant.especialidade},
+                    localizado em {restaurant.endereco.logradouro} no bairro{" "}
+                    {restaurant.endereco.bairro}
+                  </p>
                 </div>
 
                 <hr className="border-gray-200" />
 
                 <div>
                   <h3 className="mb-2 flex items-center font-semibold">
-                    <MapPin className="mr-2 h-4 w-4 text-[#EA1D2C]" />
+                    <MapPin className="text-brown-normal mr-2 h-4 w-4" />
                     Endereço
                   </h3>
-                  <p className="text-gray-600">{restaurant.address}</p>
+                  <p className="text-gray-600">
+                    {restaurant.endereco.logradouro},{" "}
+                    {restaurant.endereco.bairro}, {restaurant.endereco.cidade},{" "}
+                    {restaurant.endereco.estado}, {restaurant.endereco.pais}
+                  </p>
                 </div>
 
                 <hr className="border-gray-200" />
 
                 <div>
                   <h3 className="mb-2 flex items-center font-semibold">
-                    <Clock className="mr-2 h-4 w-4 text-[#EA1D2C]" />
+                    <Clock className="text-brown-normal mr-2 h-4 w-4" />
                     Horário de Funcionamento
                   </h3>
-                  <p className="text-gray-600">{restaurant.hours}</p>
+                  <p className="text-gray-600">
+                    {restaurant.horario_funcionamento}
+                  </p>
                 </div>
               </div>
             </div>
