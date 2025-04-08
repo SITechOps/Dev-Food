@@ -7,7 +7,7 @@ from src.main.utils.response_formatter import ResponseFormatter
 from flask_jwt_extended import create_access_token
 
 class UsersManager:
-    def __init__(self, users_repo: IUsersRepository, restaurantes_repo: IRestaurantesRepository) -> None:
+    def __init__(self, users_repo: IUsersRepository, restaurantes_repo: IRestaurantesRepository = None) -> None:
         self.__users_repo = users_repo
         self.__restaurantes_repo = restaurantes_repo
         self.class_name = "Usuário"

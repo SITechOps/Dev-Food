@@ -1,5 +1,5 @@
-import Menu from "../components/Menu";
-import ListagemEndereco from "../components/ListagemEndereco";
+// import Menu from "../components/Menu";
+// import ListagemEndereco from "../components/ListagemEndereco";
 import { decodeToken } from "../utils/decodeToken";
 
 export default function Home() {
@@ -8,11 +8,9 @@ export default function Home() {
 
   return (
     <>
-      <Menu>
-        {idUsuario ? (
-          <ListagemEndereco />
-        ) : (null)}
-      </Menu>
+      {/* <Menu> */}
+      {/* {idUsuario ? <ListagemEndereco /> : null} */}
+      {/* </Menu> */}
     </>
   );
 }
