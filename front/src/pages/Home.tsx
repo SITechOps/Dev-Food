@@ -1,16 +1,88 @@
-// import Menu from "../components/Menu";
-// import ListagemEndereco from "../components/ListagemEndereco";
-import { decodeToken } from "../utils/decodeToken";
+import { useEffect, useState } from "react";
+import { api } from "../connection/axios";
+import Card from "../components/InfoRestaurante/Card";
 
 export default function Home() {
-  const token = localStorage.getItem("token");
-  const idUsuario = token ? decodeToken(token)?.sub : undefined;
+  const [restaurantes, setrestaurantes] = useState([
+    {
+      id: "",
+      especialidade: "",
+    },
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function listarrestaurantes() {
+      try {
+        const response = await api.get("/restaurantes");
+        const data = response?.data?.data?.attributes || [];
+
+        setrestaurantes(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Erro ao buscar restaurantes:", error);
+        setLoading(false);
+      }
+    }
+
+    listarrestaurantes();
+  }, []);
+
+  const grupoCategoria = restaurantes.reduce(
+    (acc: any, item: any) => {
+      const categoria = item.especialidade || "Outros";
+      if (!acc[categoria]) acc[categoria] = [];
+      acc[categoria].push(item);
+      return acc;
+    },
+    {} as Record<string, typeof restaurantes>,
+  );
 
   return (
     <>
-      {/* <Menu> */}
-      {/* {idUsuario ? <ListagemEndereco /> : null} */}
-      {/* </Menu> */}
+      <div className="mt-[5rem]">
+        <h1 className="my-8 text-center font-medium">
+          Conheça os restaurantes disponíveis
+        </h1>
+        <div className="mt-[5rem]">
+          <div className="mx-auto max-w-7xl space-y-8 px-4 py-6">
+            {loading ? (
+              <div className="space-y-8">
+                {[...Array(3)].map((_, idx) => (
+                  <div key={idx}>
+                    <div className="mb-2 h-6 w-32 rounded bg-gray-200" />
+                    <div className="flex gap-4">
+                      {[...Array(5)].map((__, i) => (
+                        <div
+                          className="h-48 w-60 animate-pulse rounded-2xl bg-gray-200"
+                          key={i}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              Object.entries(grupoCategoria).map(([categoria, items]) => (
+                <section key={categoria}>
+                  <h2 className="mb-3 text-lg font-semibold text-gray-800">
+                    {categoria}
+                  </h2>
+                  <div className="flex flex-wrap gap-6">
+                    {Array.isArray(items) &&
+                      items.map((restaurante, index) => (
+                        <Card
+                          key={restaurante.id || `restaurante-${index}`}
+                          content={restaurante}
+                        />
+                      ))}
+                  </div>
+                </section>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

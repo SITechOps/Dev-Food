@@ -789,6 +789,8 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Restaurante"
+    
+  /restaurante:
     post:
       tags:
         - Restaurantes
@@ -850,7 +852,6 @@ paths:
           description: Restaurante criado com sucesso
         "400":
           description: Requisição inválida
-
   /restaurante/{id}:
     get:
       tags:

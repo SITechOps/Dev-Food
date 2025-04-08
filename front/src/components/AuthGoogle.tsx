@@ -31,7 +31,6 @@ export default function AuthGoogle() {
       .then(async (res) => {
         const respGoogle = res.data;
         const { email, telefone } = respGoogle;
-        localStorage.setItem("isGoogle", "true");
 
         try {
           const token = await postUser(email, telefone);

@@ -76,6 +76,30 @@ def inicializar_restaurantes_exemplo():
                     "complemento": "Loja 45",
                     "pais": "Brasil"
                 }
+            },
+             {
+                "nome": "Lig Lig Japão",
+                "descricao": "Pratos de sushi frescos",
+                "email": "atendimento12@sushiexpress.com.br",
+                "cnpj": "45678912345638",
+                "razao_social": "Sushi Express",
+                "especialidade": "Japonesa",
+                "telefone": "(11) 3333-4444",
+                "horario_funcionamento": "11:00 - 22:00",
+                "banco": "Bradesco",
+                "agencia": "0123",
+                "nro_conta": "987654-3",
+                "tipo_conta": "Corrente",
+                "logo": "",
+                "endereco": {
+                    "logradouro": "Rua Japão Liberdade",
+                    "numero": "123",
+                    "bairro": "Liberdade",
+                    "cidade": "São Paulo",
+                    "estado": "SP",
+                    "complemento": "Loja 45",
+                    "pais": "Brasil"
+                }
             }
         ]
 
