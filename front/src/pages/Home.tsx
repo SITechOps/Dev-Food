@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { api } from "../connection/axios";
-import CardRestaurante from "../components/InfoRestaurante/Card";
+import Card from "../components/InfoRestaurante/Card";
 
 export default function Home() {
-  const [restaurants, setRestaurants] = useState([
+  const [restaurantees, setrestaurantees] = useState([
     {
       id: "",
       especialidade: "",
@@ -12,37 +12,37 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function listarRestaurantes() {
+    async function listarrestaurantees() {
       try {
-        const response = await api.get("/restaurantes");
+        const response = await api.get("/restaurantees");
         const data = response?.data?.data?.attributes || [];
 
-        setRestaurants(data);
+        setrestaurantees(data);
         setLoading(false);
       } catch (error) {
-        console.error("Erro ao buscar restaurantes:", error);
+        console.error("Erro ao buscar restaurantees:", error);
         setLoading(false);
       }
     }
 
-    listarRestaurantes();
+    listarrestaurantees();
   }, []);
 
-  const groupedByCategory = restaurants.reduce(
+  const grupoCategoria = restaurantees.reduce(
     (acc: any, item: any) => {
-      const category = item.especialidade || "Outros";
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(item);
+      const categoria = item.especialidade || "Outros";
+      if (!acc[categoria]) acc[categoria] = [];
+      acc[categoria].push(item);
       return acc;
     },
-    {} as Record<string, typeof restaurants>,
+    {} as Record<string, typeof restaurantees>,
   );
 
   return (
     <>
       <div className="mt-[5rem]">
         <h1 className="my-8 text-center font-medium">
-          Conheça os restaurantes disponíveis
+          Conheça os restaurantees disponíveis
         </h1>
         <div className="mt-[5rem]">
           <div className="mx-auto max-w-7xl space-y-8 px-4 py-6">
@@ -63,17 +63,17 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              Object.entries(groupedByCategory).map(([category, items]) => (
-                <section key={category}>
+              Object.entries(grupoCategoria).map(([categoria, items]) => (
+                <section key={categoria}>
                   <h2 className="mb-3 text-lg font-semibold text-gray-800">
-                    {category}
+                    {categoria}
                   </h2>
                   <div className="flex flex-wrap gap-4">
                     {Array.isArray(items) &&
-                      items.map((restaurant, index) => (
-                        <CardRestaurante
-                          key={restaurant.id || `restaurant-${index}`}
-                          content={restaurant}
+                      items.map((restaurante, index) => (
+                        <Card
+                          key={restaurante.id || `restaurante-${index}`}
+                          content={restaurante}
                         />
                       ))}
                   </div>
