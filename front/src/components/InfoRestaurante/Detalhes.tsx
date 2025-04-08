@@ -8,6 +8,7 @@ export default function DetalhesRestaurante() {
 
   const [restaurante, setRestaurante] = useState({
     nome: "",
+    descricao: "",
     especialidade: "",
     endereco: {
       logradouro: "",
@@ -55,7 +56,7 @@ export default function DetalhesRestaurante() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl pb-10">
+    <div className="mx-auto mt-[5rem] max-w-4xl pb-10">
       <div className="relative h-48 w-full md:h-64">
         <img
           src={
@@ -114,11 +115,7 @@ export default function DetalhesRestaurante() {
               <div className="space-y-6">
                 <div>
                   <h3 className="mb-2 font-semibold">Descrição</h3>
-                  <p className="text-gray-600">
-                    Restaunte especializado em {restaurante.especialidade},
-                    localizado em {restaurante.endereco.logradouro} no bairro{" "}
-                    {restaurante.endereco.bairro}
-                  </p>
+                  <p className="text-gray-600">{restaurante.descricao}</p>
                 </div>
 
                 <hr className="border-gray-200" />
