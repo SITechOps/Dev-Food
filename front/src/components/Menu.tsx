@@ -1,18 +1,17 @@
-import { ReactNode, useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import iFoodLogo from "../assets/ifood.png";
 import { CiUser } from "react-icons/ci";
 import Button from "./Button";
+import ListagemEndereco from "./ListagemEndereco";
+import { decodeToken } from "../utils/decodeToken";
 
-interface MenuProps {
-  children?: ReactNode;
-}
-
-export default function Menu({ children }: MenuProps) {
+export default function Menu() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const idUsuario = token ? decodeToken(token)?.sub : undefined;
 
   useEffect(() => {
     if (menuRef.current) {
@@ -30,8 +29,12 @@ export default function Menu({ children }: MenuProps) {
           <Link to="/">
             <img src={iFoodLogo} alt="iFood Logo" className="h-15" />
           </Link>
-
-          {children}
+          
+          {idUsuario ? (
+            <>
+              <ListagemEndereco />
+            </>
+          ) : (null)}
 
           <div className="flex gap-3">
             <Button
