@@ -1,10 +1,10 @@
 import axios from "axios";
-import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import Button from "./Button";
+import { postUser } from "../connection/AuthUserController";
 
 export default function AuthGoogle() {
   const navigate = useNavigate();
@@ -34,22 +34,16 @@ export default function AuthGoogle() {
         localStorage.setItem("isGoogle", "true");
 
         try {
-          const response = await api.post("/user", {
-            data: {
-              email,
-              telefone,
-            },
-          });
+          const token = await postUser(email, telefone);
 
-          const token = response?.data?.properties?.token;
           if (!token) {
             throw new Error("Token não encontrado na resposta da API.");
           }
-          localStorage.setItem("token", token);
           navigate("/");
-        } catch (error) {
-          console.error("Erro ao processar login/cadastro:", error);
-          alert("Erro ao fazer login/cadastro com o Google.");
+          alert("Login realizado com sucesso!");
+        } catch (error: any) {
+          console.error("Erro no login:", error);
+          alert(error.response?.data?.message || "Erro ao fazer login.");
         }
       })
       .catch((err) =>

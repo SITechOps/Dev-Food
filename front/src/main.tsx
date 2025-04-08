@@ -8,8 +8,8 @@ import { Loading } from "./components/Loading.tsx";
 const pages = {
   App: "./App.tsx",
   Home: "./pages/Home.tsx",
-  AuthUser: "./pages/AuthUser.tsx",
-  Account: "./pages/Account.tsx",
+  AuthUser: "./pages/Auth/AuthUser.tsx",
+  Account: "./pages/Account/Account.tsx",
   CadastroEndereco: "./components/CadastroEndereco.tsx",
 };
 

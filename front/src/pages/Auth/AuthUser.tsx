@@ -1,73 +1,25 @@
-import Input from "../components/Input";
-import { api } from "../connection/axios";
-import { useNavigate } from "react-router-dom";
+import Input from "../../components/Input";
 import { FaAngleLeft } from "react-icons/fa6";
-import { useState, FormEvent } from "react";
-import Menu from "../components/Menu";
-import Button from "../components/Button";
-import { decodeToken } from "../utils/decodeToken";
-import AuthGoogle from "../components/AuthGoogle";
-import AuthFacebook from "../components/AuthFacebook";
-import ModalEmail from "../components/ModalEmail";
+import Menu from "../../components/Menu";
+import Button from "../../components/Button";
+import AuthGoogle from "../../components/AuthGoogle";
+import AuthFacebook from "../../components/AuthFacebook";
+import ModalEmail from "../../components/ModalEmail";
 import { PatternFormat, NumberFormatValues } from 'react-number-format';
-
+import { useAuthUserComponent } from "./useAuthUser-component";
 
 export default function AuthUser() {
-  const navigate = useNavigate();
-  const [telefone, setTelefone] = useState("");
-  const [email, setEmail] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [codigoEnviado, setCodigoEnviado] = useState("");
-  const [etapa, setEtapa] = useState<"email" | "telefone">("email");
-
-  async function handleContinuar() {
-    setIsModalOpen(true);
-
-    try {
-      const response = await api.post("/send-email", {
-        data: { email },
-      });
-      setCodigoEnviado(response.data.properties.verificationCode);
-
-    } catch (error) {
-      console.error("Erro ao enviar email:", error);
-      alert("Erro ao enviar email.");
-    }
-    setEtapa("telefone");
-  }
-
-  async function loginUser(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    try {
-      const resp = await api.post("/user", {
-        data: {
-          email,
-          telefone,
-        },
-      });
-
-      const token = resp?.data?.properties?.token;
-      if (!token) {
-        throw new Error("Token não encontrado na resposta da API.");
-      }
-      localStorage.setItem("token", token);
-
-      const userData = decodeToken(token);
-
-      if (!userData?.sub) {
-        throw new Error("ID do usuário não encontrado no token.");
-      }
-      console.log("Usuário logado:", {
-        id: userData.sub,
-        email,
-      });
-
-      navigate("/");
-    } catch (error: any) {
-      console.error("Erro no login:", error);
-      alert(error.response?.data?.message || "Erro ao fazer login.");
-    }
-  }
+  const {handleContinuar,
+		telefone,
+		setTelefone,
+		email, 
+		setEmail,
+		isModalOpen, 
+		setIsModalOpen,
+		codigoEnviado,
+		etapa, 
+		setEtapa,
+		loginUser} = useAuthUserComponent();
 
   return (
     <>
@@ -98,7 +50,7 @@ export default function AuthUser() {
               Como deseja continuar?
             </legend>
           </div>
-
+          
           {etapa === "email" && (
             <div className="text-center">
               <div className="flex gap-4 mb-4">
@@ -123,6 +75,7 @@ export default function AuthUser() {
                   onChange={setEmail}
                   className="mb-6"
                 />
+
                 <Button type="button" onClick={handleContinuar} disabled={!email}>
                   Continuar
                 </Button>
@@ -132,19 +85,17 @@ export default function AuthUser() {
             {etapa === "telefone" && (
               <>
                 <PatternFormat
-                  customInput={Input}
                   format="(##) #####-####"
                   mask="_"
                   allowEmptyFormatting
                   value={telefone}
                   onValueChange={(values: NumberFormatValues) => setTelefone(values.value)}
                   placeholder="(XX) 99999-9999"
-                  textLabel="Informe o seu telefone:"
+                  className="input mb-6"
+                  type="tel"
                   id="telefone"
-                  className="mb-6"
                 />
-
-                <Button type="submit" disabled={!telefone}>
+                <Button type="submit">
                   Entrar
                 </Button>
               </>

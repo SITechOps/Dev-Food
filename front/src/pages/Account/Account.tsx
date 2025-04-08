@@ -1,78 +1,28 @@
-import { FormEvent, useEffect, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import { api } from "../connection/axios";
-import Input from "../components/Input";
-import Button from "../components/Button";
-import Menu from "../components/Menu";
-import ListagemEndereco from "../components/ListagemEndereco";
-import { decodeToken } from "../utils/decodeToken";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
+import Menu from "../../components/Menu";
+import ListagemEndereco from "../../components/ListagemEndereco";
+import { NumberFormatValues, PatternFormat } from "react-number-format";
+import { useAccountComponent } from "./useAccount-component";
 
 export default function Account() {
-  const navigate = useNavigate();
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const token = localStorage.getItem("token");
-  const [isEditing, setIsEditing] = useState(false);
-  const idUsuario = token ? decodeToken(token)?.sub : undefined;
-  const isGoogle = localStorage.getItem("isGoogle") || "";
-
-  useEffect(() => {
-    if (!idUsuario) return;
-    fetchUserData();
-  }, [idUsuario]);
-
-  async function fetchUserData() {
-    try {
-      const response = await api.get(`/user/${idUsuario}`);
-      const respUser = response.data?.data?.attributes || [];
-      setNome(respUser.nome || "");
-      setEmail(respUser.email || "");
-      setTelefone(respUser.telefone || "");
-    } catch (error) {
-      console.error("Erro ao buscar usuário:", error);
-    }
-  }
-
-  async function alterarDados(event: FormEvent<HTMLFormElement>) {
-    console.log(event)
-    event.preventDefault();
-    const dados = new FormData(event.currentTarget);
-    console.log("dados", dados)
-    const nome = dados.get("nome")?.toString();
-    const telefone = dados.get("telefone")?.toString();
-    console.log(telefone)
-    console.log(nome)
-    try {
-      await api.put(`/user/${idUsuario}`, { data: { nome, telefone, email } });
-      alert("Usuário alterado com sucesso!");
-      setIsEditing(false);
-    } catch (error) {
-      alert("Erro ao alterar usuário. Tente novamente.");
-    }
-    fetchUserData();
-  }
-
-  async function deletarDados() {
-    try {
-      await api.delete(`/user/${idUsuario}`);
-      alert("Usuário removido com sucesso!");
-
-      localStorage.clear();
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao deletar usuário. Tente novamente.");
-    }
-  }
-
-  function handleLogout() {
-    localStorage.clear();
-    navigate("/Auth");
-  }
+  const {
+    navigate,
+    nome,
+    setNome,
+    email,
+    telefone,
+    setTelefone,
+    isEditing,
+    setIsEditing,
+    idUsuario,
+    handleLogout,
+    deletarDados,
+    alterarDados } = useAccountComponent();
+  const baseText = "text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg";
 
   if (!idUsuario) {
     return (
@@ -123,7 +73,7 @@ export default function Account() {
         <h3 className="text-center font-bold">Minha Conta</h3>
 
         <form onSubmit={alterarDados} className="mt-5 ml-4">
-          <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
+          <div className={baseText}>
             Nome:
             {isEditing ? (
               <Input type="text" id="nome" name="nome" value={nome} onChange={setNome} />
@@ -132,16 +82,32 @@ export default function Account() {
             )}
           </div>
 
-          {!isGoogle ? (
-            <div className="text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg">
-              Telefone:
-              {isEditing ? (
-                <Input type="text" id="senha" name="telefone" value={telefone} onChange={setTelefone} />
-              ) : (
-                <span className="font-semibold">{telefone}</span>
-              )}
-            </div>
-          ) : null}
+          <div className={baseText}>
+            Telefone:
+            {isEditing ? (
+              <PatternFormat
+                format="(##) #####-####"
+                mask="_"
+                allowEmptyFormatting
+                value={telefone}
+                onValueChange={(values: NumberFormatValues) => setTelefone(values.value)}
+                placeholder="(XX) 99999-9999"
+                className="input !w-45"
+                type="tel"
+                id="telefone"
+              />
+            ) : (
+              <>
+                <PatternFormat
+                  value={telefone}
+                  displayType="text"
+                  format="(##) #####-####"
+                  className="font-semibold"
+                />
+              </>
+
+            )}
+          </div>
 
           <p className="mt-3 flex items-center justify-start gap-2 p-0 text-lg">
             Email:

@@ -26,7 +26,6 @@ export default function ModalEmail({
 
     const handleClickOutside = (event: MouseEvent) => {
       if (!modalRef.current?.contains(event.target as Node)) {
-        // setIsModalOpen(false);
       }
     };
 
@@ -38,7 +37,7 @@ export default function ModalEmail({
     if (codigoDigitado != codigoEnviado) {
       alert("Código inválido!");
     } else {
-      alert("Usuário cadastrado com sucesso!");
+      alert("Código confirmado!");
       setIsModalOpen(false)
     }
   }
