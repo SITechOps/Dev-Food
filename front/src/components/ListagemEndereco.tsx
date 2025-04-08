@@ -93,7 +93,6 @@ export default function ListagemEndereco() {
                 endereco={endereco}
                 onDelete={handleDeleteEndereco}
               />
-              <button onClick={() => console.log(endereco)}>Oi</button>
             </>
           ))}
         </div>

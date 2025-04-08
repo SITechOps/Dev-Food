@@ -25,7 +25,6 @@ export default function EnderecoItem({
   return (
     <div className="relative rounded-md border p-4">
       <div className="flex items-center justify-between">
-        <p>{endereco.logradouro}</p>
         <div className="flex items-center">
           {endereco.tipo === "casa" ? (
             <FaHome className="text-blue mr-2" />
