@@ -1,10 +1,10 @@
 import axios from "axios";
-import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import Button from "./Button";
+import { postUser } from "../connection/AuthUserController";
 
 export default function AuthGoogle() {
   const navigate = useNavigate();
@@ -30,30 +30,20 @@ export default function AuthGoogle() {
       )
       .then(async (res) => {
         const respGoogle = res.data;
-        const { email, name: nome, id: senha } = respGoogle;
+        const { email, telefone } = respGoogle;
         localStorage.setItem("isGoogle", "true");
 
         try {
-          const { data } = await api.post("/login", {
-            data: { email, senha: senha.substring(0, 12) },
-          });
-          const token = data?.properties.token || [];
+          const token = await postUser(email, telefone);
 
-          if (token) {
-            localStorage.setItem("token", JSON.stringify(token));
-            navigate("/");
-          } else {
-            const response = await api.post("/user", {
-              data: { nome, email, senha: senha.substring(0, 12) },
-            });
-            const token = response.data.properties.token;
-
-            localStorage.setItem("token", JSON.stringify(token));
-            navigate("/");
+          if (!token) {
+            throw new Error("Token não encontrado na resposta da API.");
           }
-        } catch (error) {
-          console.error("Erro ao processar login/cadastro:", error);
-          alert("Erro ao fazer login/cadastro com o Google.");
+          navigate("/");
+          alert("Login realizado com sucesso!");
+        } catch (error: any) {
+          console.error("Erro no login:", error);
+          alert(error.response?.data?.message || "Erro ao fazer login.");
         }
       })
       .catch((err) =>
@@ -67,7 +57,7 @@ export default function AuthGoogle() {
       onClick={() => loginGoogle()}
       className="flex items-center justify-center gap-2 p-2"
     >
-      <AiFillGoogleCircle className="size-7"/>
+      <AiFillGoogleCircle className="size-7" />
       Google
     </Button>
   );

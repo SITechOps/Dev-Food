@@ -9,7 +9,9 @@ export default function Home() {
   return (
     <>
       <Menu>
-        <ListagemEndereco />
+        {idUsuario ? (
+          <ListagemEndereco />
+        ) : (null)}
       </Menu>
     </>
   );
