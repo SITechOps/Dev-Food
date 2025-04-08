@@ -1,35 +1,34 @@
 import { useState, useEffect } from "react";
 import { api } from "../connection/axios";
-import Card from "../components/Card";
-import Skeleton from "../components/Skeleton";
 import Input from "../components/Input";
+import CardRestaurante from "../components/CardRestaurante";
 
-export default function RestaurantsPage() {
-  const [restaurants, setRestaurants] = useState([]);
+export default function Restaurants() {
+  const [restaurants, setRestaurants] = useState([{
+    id: "",
+    especialidade: "",
+  }]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchRestaurants() {
+    async function listarRestaurantes() {
       try {
-        const response = await api.get("http://127.0.0.1:5000/restaurantes");
+        const response = await api.get("/restaurantes");
         const data = response?.data?.data?.attributes || [];
 
-        // delay de 3s para mostrar skeleton
-        setTimeout(() => {
-          setRestaurants(data);
-          setLoading(false);
-        }, 3000);
+        setRestaurants(data);
+        setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar restaurantes:", error);
         setLoading(false);
       }
     }
 
-    fetchRestaurants();
+    listarRestaurantes();
   }, []);
 
   const groupedByCategory = restaurants.reduce(
-    (acc, item) => {
+    (acc: any, item: any) => {
       const category = item.especialidade || "Outros";
       if (!acc[category]) acc[category] = [];
       acc[category].push(item);
@@ -55,7 +54,7 @@ export default function RestaurantsPage() {
               <div className="mb-2 h-6 w-32 rounded bg-gray-200" />
               <div className="flex gap-4">
                 {[...Array(5)].map((__, i) => (
-                  <Skeleton key={i} />
+                  <div className="h-48 w-60 animate-pulse rounded-2xl bg-gray-200" key={i} />
                 ))}
               </div>
             </div>
@@ -68,9 +67,13 @@ export default function RestaurantsPage() {
               {category}
             </h2>
             <div className="flex flex-wrap gap-4">
-              {items.slice(0, 5).map((restaurant) => (
-                <Card key={restaurant.id} content={restaurant} />
-              ))}
+              {Array.isArray(items) &&
+                items.map((restaurant, index) => (
+                  <CardRestaurante
+                    key={restaurant.id || `restaurant-${index}`}
+                    content={restaurant}
+                  />
+                ))}
             </div>
           </section>
         ))
