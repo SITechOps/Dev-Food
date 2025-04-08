@@ -5,18 +5,15 @@ import Modal from "./Modal";
 import EnderecoItem from "./EnderecoItem";
 import { useLocation } from "react-router-dom";
 import ifoodLogo from "../assets/ifood.png"; // Importe a imagem do logo do iFood
-import { FaHome, FaBriefcase } from "react-icons/fa"; // Importe os ícones
+import { decodeToken } from "../utils/decodeToken";
 
-interface ListagemEnderecoProps {
-  idUsuario: string | undefined;
-}
-
-export default function ListagemEndereco({ idUsuario }: ListagemEnderecoProps) {
+export default function ListagemEndereco() {
   const [enderecos, setEnderecos] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const token = localStorage.getItem("token");
+  const idUsuario = token ? decodeToken(token)?.sub : undefined;
   const location = useLocation();
 
   useEffect(() => {
@@ -26,10 +23,6 @@ export default function ListagemEndereco({ idUsuario }: ListagemEnderecoProps) {
   }, [location.pathname, showModal]);
 
   async function mostrarEnderecoSalvo() {
-    if (!idUsuario) {
-      console.error("ID do usuário não fornecido");
-      return;
-    }
 
     try {
       const response = await api.get(`/user/${idUsuario}/enderecos`, {
