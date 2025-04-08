@@ -6,7 +6,7 @@ import { api } from "../../connection/axios";
 export default function DetalhesRestaurante() {
   const { id } = useParams();
 
-  const [restaurant, setRestaurant] = useState({
+  const [restaurante, setRestaurante] = useState({
     nome: "",
     especialidade: "",
     endereco: {
@@ -22,13 +22,11 @@ export default function DetalhesRestaurante() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    async function fetchRestaurantDetails() {
+    async function getDetalhesRestaurante() {
       try {
-        const response = await api.get(
-          `http://127.0.0.1:5000/restaurante/${id}`,
-        );
+        const response = await api.get(`/restaurante/${id}`);
         // Ajustando para acessar os dados corretamente
-        setRestaurant(response.data.data.attributes);
+        setRestaurante(response.data.data.attributes);
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar detalhes do restaurante:", error);
@@ -37,7 +35,7 @@ export default function DetalhesRestaurante() {
       }
     }
 
-    fetchRestaurantDetails();
+    getDetalhesRestaurante();
   }, [id]);
 
   if (loading) {
@@ -48,7 +46,7 @@ export default function DetalhesRestaurante() {
     );
   }
 
-  if (!restaurant) {
+  if (!restaurante) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-8">
         <p>Não foi possível carregar os detalhes do restaurante.</p>
@@ -63,7 +61,7 @@ export default function DetalhesRestaurante() {
           src={
             "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           }
-          alt={"restairamt"}
+          alt={"restaurant"}
           className="h-full w-full object-cover"
         />
       </div>
@@ -71,7 +69,9 @@ export default function DetalhesRestaurante() {
       <div className="px-4 py-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-black">{restaurant.nome}</h1>
+            <h1 className="text-2xl font-bold text-black">
+              {restaurante.nome}
+            </h1>
             <div className="mt-1 flex items-center">
               <div className="text-brown-normal flex items-center">
                 <Star className="fill-brown-normal mr-1 h-5 w-5" />
@@ -79,7 +79,7 @@ export default function DetalhesRestaurante() {
               </div>
               <span className="text-muted-foreground mx-2">•</span>
               <span className="text-muted-foreground">
-                {restaurant.especialidade}
+                {restaurante.especialidade}
               </span>
             </div>
           </div>
@@ -115,9 +115,9 @@ export default function DetalhesRestaurante() {
                 <div>
                   <h3 className="mb-2 font-semibold">Descrição</h3>
                   <p className="text-gray-600">
-                    Restaunte especializado em {restaurant.especialidade},
-                    localizado em {restaurant.endereco.logradouro} no bairro{" "}
-                    {restaurant.endereco.bairro}
+                    Restaunte especializado em {restaurante.especialidade},
+                    localizado em {restaurante.endereco.logradouro} no bairro{" "}
+                    {restaurante.endereco.bairro}
                   </p>
                 </div>
 
@@ -129,9 +129,9 @@ export default function DetalhesRestaurante() {
                     Endereço
                   </h3>
                   <p className="text-gray-600">
-                    {restaurant.endereco.logradouro},{" "}
-                    {restaurant.endereco.bairro}, {restaurant.endereco.cidade},{" "}
-                    {restaurant.endereco.estado}, {restaurant.endereco.pais}
+                    {restaurante.endereco.logradouro},{" "}
+                    {restaurante.endereco.bairro}, {restaurante.endereco.cidade}
+                    , {restaurante.endereco.estado}, {restaurante.endereco.pais}
                   </p>
                 </div>
 
@@ -143,7 +143,7 @@ export default function DetalhesRestaurante() {
                     Horário de Funcionamento
                   </h3>
                   <p className="text-gray-600">
-                    {restaurant.horario_funcionamento}
+                    {restaurante.horario_funcionamento}
                   </p>
                 </div>
               </div>

@@ -78,7 +78,7 @@ def inicializar_restaurantes_exemplo():
                 }
             },
              {
-                "nome": "Sushi Express",
+                "nome": "Lig Lig Japão",
                 "descricao": "Pratos de sushi frescos",
                 "email": "atendimento12@sushiexpress.com.br",
                 "cnpj": "45678912345638",

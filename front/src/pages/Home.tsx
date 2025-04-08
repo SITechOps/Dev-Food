@@ -68,7 +68,7 @@ export default function Home() {
                   <h2 className="mb-3 text-lg font-semibold text-gray-800">
                     {category}
                   </h2>
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-6">
                     {Array.isArray(items) &&
                       items.map((restaurant, index) => (
                         <CardRestaurante
