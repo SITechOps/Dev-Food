@@ -67,11 +67,10 @@ export default function DadosRestaurante() {
   };
 
   return (
-    <div>
-      <p className="mt-15 font-bold">INFORMAÇÕES DA LOJA</p>
-      <h1 className="mt-5 font-bold">Onde fica sua loja?</h1>
-
-      <div className="mt-8 max-w-md">
+    <div className="mt-12 flex justify-center gap-30">
+      <div>
+        <p className="font-bold">INFORMAÇÕES DA LOJA</p>
+        <h1 className="mt-5 font-bold">Onde fica sua loja?</h1>
         <p className="mt-2 font-bold">Digite o CEP e complete as informações</p>
         <label className="mt-2 block font-medium text-gray-700">CEP*</label>
         <Input
@@ -149,7 +148,7 @@ export default function DadosRestaurante() {
         </div>
       </div>
 
-      <div className="absolute top-0 right-0 max-w-md">
+      <div className="">
         <p className="font-bold">NEGÓCIO E RESPONSÁVEL</p>
         <h1 className="mt-5 font-bold">
           Agora, nos fale mais sobre seu negócio

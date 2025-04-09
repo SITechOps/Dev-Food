@@ -31,6 +31,7 @@ export default function AuthUser() {
               codigoEnviado={codigoEnviado}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
+              onSuccess={() => setEtapa("telefone")}
             />
           )}
 
@@ -101,7 +102,10 @@ export default function AuthUser() {
                   type="tel"
                   id="telefone"
                 />
-                <p className="my-5">Preencha o telefone apenas se preferir esse meio de contato (não obrigatório).</p>
+                <p className="my-5">
+                  Preencha o telefone apenas se preferir esse meio de contato
+                  (não obrigatório).
+                </p>
                 <Button type="submit">Entrar</Button>
               </>
             )}
