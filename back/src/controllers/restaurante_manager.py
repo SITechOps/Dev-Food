@@ -2,7 +2,6 @@ from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
 from src.model.repositories.interfaces.irestaurantes_repository import IRestaurantesRepository
 from src.main.utils.response_formatter import ResponseFormatter
-from src.main.handlers.custom_exceptions import RestaurantAlreadyExists
 from flask_jwt_extended import create_access_token
 
 class RestaurantesManager:

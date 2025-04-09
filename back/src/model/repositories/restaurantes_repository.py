@@ -163,7 +163,6 @@ class RestaurantesRepository(IRestaurantesRepository):
                         restaurante.id_endereco = novo_endereco.id
                         db.session.add(restaurante)  
 
-
                 else:
                     # Endereço atual NÃO está em uso por usuários
                     # Verifica se já existe restaurante com novo endereço
