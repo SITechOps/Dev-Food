@@ -19,6 +19,9 @@ class UserNotFound(BaseCustomException):
     def __init__(self, message="Usuário não encontrado!"):
         super().__init__(message, 404)
 
+class MinimumOneAddressRequired(BaseCustomException):
+    def __init__(self, message="Você não pode excluir o endereço que está usando no momento!"):
+        super().__init__(message, 400)
 
 class AddressNotFound(BaseCustomException):
     def __init__(self, message="Endereço não encontrado!"):
@@ -46,7 +49,7 @@ class AddressRequired(BaseCustomException):
 
 
 class RestaurantAddressAlreadyExists(BaseCustomException):
-    def __init__(self, message="Esse endereço já foi cadastrado!"):
+    def __init__(self, message="Esse endereço já foi cadastrado por outro restaurante!"):
         super().__init__(message, 409)
 
 

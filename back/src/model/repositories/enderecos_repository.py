@@ -2,7 +2,7 @@ from src.model.entities.restaurante import Restaurante
 from src.model.entities.user_endereco import UserEndereco
 from src.model.configs.connection import DBConnectionHandler
 from src.model.entities.endereco import Endereco
-from src.main.handlers.custom_exceptions import AddressTypeAlreadyExists, AddressNotFound, InvalidAddressType, UserNotFound
+from src.main.handlers.custom_exceptions import AddressTypeAlreadyExists, AddressNotFound, MinimumOneAddressRequired
 from .interfaces.ienderecos_repository import IEnderecosRepository
 
 class EnderecosRepository(IEnderecosRepository):
@@ -149,6 +149,15 @@ class EnderecosRepository(IEnderecosRepository):
 
                 if not user_endereco:
                     raise AddressNotFound()
+                # Verifica quantos endereços o usuário tem
+                qtd_enderecos_usuario = (
+                    db.session.query(UserEndereco)
+                    .filter(UserEndereco.id_usuario == id_usuario)
+                    .count()
+                )
+
+                if qtd_enderecos_usuario <= 1:
+                    raise MinimumOneAddressRequired()
 
                 # 2. Deleta a associação com o usuário
                 db.session.delete(user_endereco)

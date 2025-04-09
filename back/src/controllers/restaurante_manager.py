@@ -69,7 +69,7 @@ class RestaurantesManager:
         endereco_info = restaurante_info.get("attributes")
 
         self.__restaurante_repo.update_endereco(id_restaurante, endereco_info)
-        return ResponseFormatter.display_operation(self.class_name, "alterado")
+        return ResponseFormatter.display_operation(self.class_name, "atualizado com novo endereço")
 
 
     def delete(self, http_request: HttpRequest) -> HttpResponse:

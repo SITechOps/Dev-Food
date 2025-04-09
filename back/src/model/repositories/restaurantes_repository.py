@@ -157,8 +157,12 @@ class RestaurantesRepository(IRestaurantesRepository):
                         # Cria novo endereço e associa ao restaurante
                         novo_endereco = Endereco(**endereco_data)
                         db.session.add(novo_endereco)
-                        db.session.flush()  # para obter ID antes do commit
+                        db.session.flush()
+                        db.session.refresh(novo_endereco)
+
                         restaurante.id_endereco = novo_endereco.id
+                        db.session.add(restaurante)  
+
 
                 else:
                     # Endereço atual NÃO está em uso por usuários
