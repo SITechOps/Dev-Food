@@ -6,7 +6,7 @@ class IUsersRepository(ABC):
 
 
     @abstractmethod
-    def insert(self, user_info: dict, is_admin: bool = False) -> None: pass
+    def insert(self, user_info: dict) -> None: pass
 
 
     @abstractmethod

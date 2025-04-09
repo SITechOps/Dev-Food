@@ -5,7 +5,7 @@ export default function Intermediaria() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/cadastro");
+    navigate("/auth");
   };
   const formRestauranteClick = () => {
     navigate("/cadastro-restaurante");

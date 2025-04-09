@@ -1,11 +1,12 @@
 import axios from "axios";
-import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
+import { AiFillGoogleCircle } from "react-icons/ai";
 import Button from "./Button";
+import { postUser } from "../connection/AuthUserController";
 
-export default function LogarGoogle() {
+export default function AuthGoogle() {
   const navigate = useNavigate();
   const [user, setUser] = useState<TokenResponse | null>(null);
 
@@ -29,36 +30,19 @@ export default function LogarGoogle() {
       )
       .then(async (res) => {
         const respGoogle = res.data;
-        const { email, name: nome, id: senha } = respGoogle;
+        const { email, telefone } = respGoogle;
 
         try {
-          const { data } = await api.get("/user");
-          const usuarios = data?.data?.attributes || [];
-          const usuarioEncontrado = usuarios.find(
-            (usuario: any) => usuario.email === email,
-          );
+          const token = await postUser(email, telefone);
 
-          if (usuarioEncontrado) {
-            localStorage.setItem(
-              "userLogado",
-              JSON.stringify(usuarioEncontrado),
-            );
-            navigate("/");
-          } else {
-            const response = await api.post("/user", {
-              data: { nome, email, senha: senha.substring(0, 12) },
-            });
-            const novoUsuario = response.data.properties.token;
-            console.log(novoUsuario);
-            console.log(response);
-
-            localStorage.setItem("token", user.access_token);
-            localStorage.setItem("userLogado", JSON.stringify(novoUsuario));
-            navigate("/");
+          if (!token) {
+            throw new Error("Token não encontrado na resposta da API.");
           }
-        } catch (error) {
-          console.error("Erro ao processar login/cadastro:", error);
-          alert("Erro ao fazer login/cadastro com o Google.");
+          navigate("/");
+          alert("Login realizado com sucesso!");
+        } catch (error: any) {
+          console.error("Erro no login:", error);
+          alert(error.response?.data?.message || "Erro ao fazer login.");
         }
       })
       .catch((err) =>
@@ -70,10 +54,10 @@ export default function LogarGoogle() {
     <Button
       color="secondary"
       onClick={() => loginGoogle()}
-      className="flex items-center justify-center gap-4"
+      className="flex items-center justify-center gap-2 p-2"
     >
-      <img src="img/google.svg" alt="Logo do Google" className="size-4" />
-      Entrar com Google
+      <AiFillGoogleCircle className="size-7" />
+      Google
     </Button>
   );
 }

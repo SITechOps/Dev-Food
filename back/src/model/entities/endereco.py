@@ -1,11 +1,13 @@
-from src.model.configs.base import Base
-from sqlalchemy import Column, CHAR, Integer, String, ForeignKey, UniqueConstraint
-from src.main.handlers.custom_exceptions import InvalidAddressType
-from sqlalchemy.orm import validates
 from uuid import uuid4
+from datetime import datetime
+from sqlalchemy import Column, CHAR, DateTime, Integer, String
+from sqlalchemy.orm import relationship
+from src.model.configs.base import Base
+from src.main.utils.timezone_sp import tz_sp
 
 class Endereco(Base):
     __tablename__ = "Endereco"
+    
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
     logradouro = Column(String(100))
     bairro = Column(String(100))
@@ -14,10 +16,12 @@ class Endereco(Base):
     pais = Column(String(30))
     numero = Column(Integer)
     complemento = Column(String(20), nullable=True)
-    tipo = Column(String(20))
-    id_usuario = Column(CHAR(36), ForeignKey("Usuario.id", ondelete="CASCADE"))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp), onupdate=lambda: datetime.now(tz_sp))
+    tipo = None
 
-    __table_args__ = (UniqueConstraint('tipo', 'id_usuario'),)
+    usuarios_associados = relationship("UserEndereco", back_populates="endereco")
+    restaurante = relationship("Restaurante", back_populates="endereco", uselist=False)
 
     def to_dict(self) -> dict:
         return {
@@ -29,11 +33,5 @@ class Endereco(Base):
             "pais": self.pais,
             "numero": self.numero,
             "complemento": self.complemento,
-            "tipo": self.tipo,
+            **({"tipo": self.tipo} if self.tipo else {})
         }
-    
-    @validates('tipo')
-    def check_address_type(self, _, value):
-        if value.lower() not in ["casa", "trabalho"]:
-            raise InvalidAddressType()
-        return value.lower()

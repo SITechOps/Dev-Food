@@ -11,61 +11,20 @@ tags:
     description: Operações relacionadas a usuários
   - name: Endereços
     description: Operações relacionadas a endereços
+  - name: Login
+    description: Operações relacionadas ao login
   - name: Email
     description: Operações relacionadas a envio de emails
+  - name: Restaurantes
+    description: Operações relacionadas a restaurantes
+
 paths:
   /user:
-    get:
-      tags:
-        - Usuários
-      summary: Listar Usuários
-      description: Retorna uma lista de todos os usuários
-      operationId: listarUsuarios
-      responses:
-        "200":
-          description: Operação realizada com sucesso
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      format: int64
-                      example: 1
-                    nome:
-                      type: string
-                      example: "João Silva"
-                    email:
-                      type: string
-                      format: email
-                      example: "joao.silva@email.com"
-              example:
-                [
-                  {
-                    "id": 1,
-                    "nome": "João Silva",
-                    "email": "joao.silva@email.com",
-                  },
-                  {
-                    "id": 2,
-                    "nome": "Maria Oliveira",
-                    "email": "maria.oliveira@email.com",
-                  },
-                  {
-                    "id": 3,
-                    "nome": "Carlos Pereira",
-                    "email": "carlos.pereira@email.com",
-                  },
-                ]
     post:
       tags:
         - Usuários
-      summary: Cadastrar Usuário
-      description: Cria um novo usuário
-      operationId: cadastrarUsuario
+      summary: Cadastrar novo usuário
+      description: Cria um novo usuário no sistema
       requestBody:
         required: true
         content:
@@ -75,80 +34,127 @@ paths:
               properties:
                 data:
                   type: object
+                  required:
+                    - nome
+                    - email
+                    - telefone
                   properties:
                     nome:
                       type: string
-                      example: "Maria Oliveira"
+                      example: "Nome Exemplo"
                     email:
                       type: string
                       format: email
-                      example: "maria.oliveira@email.com"
-                    senha:
+                      example: "exemplo@email.com"
+                    telefone:
                       type: string
-                      format: password
-                      example: "senha123"
-            example:
-              data:
-                nome: "Maria Oliveira"
-                email: "maria.oliveira@email.com"
-                senha: "senha123"
+                      example: "11948307497"
       responses:
         "201":
           description: Usuário criado com sucesso
-        "400":
-          description: Entrada inválida
-  /user/{id}:
-    get:
-      tags:
-        - Usuários
-      summary: Obter Usuário
-      description: Retorna um usuário específico pelo ID
-      operationId: obterUsuarioPorId
-      parameters:
-        - name: id
-          in: path
-          description: ID do usuário a ser obtido
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 1
-      responses:
-        "200":
-          description: Operação realizada com sucesso
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                    format: int64
-                    example: 1
-                  nome:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      nome:
+                        type: string
+                        example: "Nome Exemplo"
+                      email:
+                        type: string
+                        format: email
+                        example: "exemplo@email.com"
+                      telefone:
+                        type: string
+                        format: phone
+                        example: "11948307497"
+        "400":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
                     type: string
-                    example: "João Silva"
-                  email:
+                    example: "Ocorreu um erro ao processar seus dados!"
+        "409":
+          description: Usuário já existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
                     type: string
-                    format: email
-                    example: "joao.silva@email.com"
-        "404":
-          description: Usuário não encontrado
+                    example: "Usuário já existe!"
+
+  /users:
+    get:
+      tags:
+        - Usuários
+      summary: Listar todos os usuários
+      description: Retorna uma lista de todos os usuários cadastrados
+      responses:
+        "200":
+          description: Lista de usuários
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: "550e8400-e29b-41d4-a716-446655440000"
+                        nome:
+                          type: string
+                          example: "Nome Exemplo"
+                        email:
+                          type: string
+                          format: email
+                          example: "exemplo@email.com"
+                        telefone:
+                          type: string
+                          format: phone
+                          example: "11948307497"
+        "500":
+          description: Erro no servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Não foi possível conectar com o banco de dados!"
+
+  /user/{id}:
     put:
       tags:
         - Usuários
-      summary: Alterar Usuário
-      description: Atualiza um usuário existente
-      operationId: alterarUsuario
+      summary: Alterar dados de um usuário
+      description: Atualiza os dados de um usuário específico
       parameters:
         - name: id
           in: path
-          description: ID do usuário a ser atualizado
           required: true
+          description: ID do usuário
           schema:
-            type: integer
-            format: int64
-            example: 1
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -161,271 +167,119 @@ paths:
                   properties:
                     nome:
                       type: string
-                      example: "João Silva Santos"
+                      example: "Novo Nome"
                     email:
                       type: string
                       format: email
-                      example: "joao.silva@email.com"
+                      example: "novo@email.com"
                     senha:
                       type: string
-                      format: password
-                      example: "novaSenha456"
-            example:
-              data:
-                nome: "João Silva Santos"
-                email: "joao.silva@email.com"
-                senha: "novaSenha456"
+                      example: "nova_senha"
+                    telefone:
+                      type: string
+                      format: phone
+                      example: "11948307497"
       responses:
         "200":
           description: Usuário atualizado com sucesso
-        "400":
-          description: Entrada inválida
-        "404":
-          description: Usuário não encontrado
-    delete:
-      tags:
-        - Usuários
-      summary: Deletar Usuário
-      description: Remove um usuário
-      operationId: deletarUsuario
-      parameters:
-        - name: id
-          in: path
-          description: ID do usuário a ser removido
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 1
-      responses:
-        "204":
-          description: Usuário removido com sucesso
-        "404":
-          description: Usuário não encontrado
-  /endereco:
-    get:
-      tags:
-        - Endereços
-      summary: Listar Endereços
-      description: Retorna todos os endereços
-      operationId: listarEnderecos
-      responses:
-        "200":
-          description: Operação realizada com sucesso
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      format: int64
-                      example: 1
-                    id_usuario:
-                      type: integer
-                      format: int64
-                      example: 1
-                    logradouro:
-                      type: string
-                      example: "Avenida Paulista"
-                    bairro:
-                      type: string
-                      example: "Bela Vista"
-                    cidade:
-                      type: string
-                      example: "São Paulo"
-                    estado:
-                      type: string
-                      example: "SP"
-                    pais:
-                      type: string
-                      example: "Brasil"
-                    numero:
-                      type: integer
-                      example: 1000
-                    complemento:
-                      type: string
-                      example: "Apto 42"
-                    tipo:
-                      type: string
-                      example: "residencial"
-              example:
-                [
-                  {
-                    "id": 1,
-                    "id_usuario": 1,
-                    "logradouro": "Avenida Paulista",
-                    "bairro": "Bela Vista",
-                    "cidade": "São Paulo",
-                    "estado": "SP",
-                    "pais": "Brasil",
-                    "numero": 1000,
-                    "complemento": "Apto 42",
-                    "tipo": "residencial",
-                  },
-                  {
-                    "id": 2,
-                    "id_usuario": 2,
-                    "logradouro": "Rua Augusta",
-                    "bairro": "Consolação",
-                    "cidade": "São Paulo",
-                    "estado": "SP",
-                    "pais": "Brasil",
-                    "numero": 500,
-                    "complemento": "Sala 123",
-                    "tipo": "trabalho",
-                  },
-                  {
-                    "id": 3,
-                    "id_usuario": 1,
-                    "logradouro": "Avenida Brigadeiro Faria Lima",
-                    "bairro": "Pinheiros",
-                    "cidade": "São Paulo",
-                    "estado": "SP",
-                    "pais": "Brasil",
-                    "numero": 3900,
-                    "complemento": "Andar 18",
-                    "tipo": "comercial",
-                  },
-                ]
-    post:
-      tags:
-        - Endereços
-      summary: Cadastrar Endereço
-      description: Cria um novo endereço
-      operationId: cadastrarEndereco
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    id_usuario:
-                      type: integer
-                      example: 1
-                    attributes:
-                      type: object
-                      properties:
-                        logradouro:
-                          type: string
-                          example: "Rua Augusta"
-                        bairro:
-                          type: string
-                          example: "Consolação"
-                        cidade:
-                          type: string
-                          example: "São Paulo"
-                        estado:
-                          type: string
-                          example: "SP"
-                        pais:
-                          type: string
-                          example: "Brasil"
-                        numero:
-                          type: integer
-                          example: 500
-                        complemento:
-                          type: string
-                          example: "Sala 123"
-                        tipo:
-                          type: string
-                          example: "trabalho"
-            example:
-              data:
-                id_usuario: 1
-                attributes:
-                  logradouro: "Rua Augusta"
-                  bairro: "Consolação"
-                  cidade: "São Paulo"
-                  estado: "SP"
-                  pais: "Brasil"
-                  numero: 500
-                  complemento: "Sala 123"
-                  tipo: "trabalho"
-      responses:
-        "201":
-          description: Endereço criado com sucesso
-        "400":
-          description: Entrada inválida
-  /endereco/{id}:
-    get:
-      tags:
-        - Endereços
-      summary: Obter Endereço
-      description: Retorna um endereço específico pelo ID
-      operationId: obterEnderecoPorId
-      parameters:
-        - name: id
-          in: path
-          description: ID do endereço a ser obtido
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 3
-      responses:
-        "200":
-          description: Operação realizada com sucesso
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                    format: int64
-                    example: 3
-                  id_usuario:
-                    type: integer
-                    format: int64
-                    example: 1
-                  logradouro:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      nome:
+                        type: string
+                        example: "Novo Nome"
+                      email:
+                        type: string
+                        format: email
+                        example: "novo@email.com"
+                      telefone:
+                        type: string
+                        format: phone
+                        example: "11948307497"
+        "400":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
                     type: string
-                    example: "Avenida Brigadeiro Faria Lima"
-                  bairro:
+                    example: "Ocorreu um erro ao processar seus dados!"
+        "403":
+          description: Alteração não permitida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
                     type: string
-                    example: "Pinheiros"
-                  cidade:
-                    type: string
-                    example: "São Paulo"
-                  estado:
-                    type: string
-                    example: "SP"
-                  pais:
-                    type: string
-                    example: "Brasil"
-                  numero:
-                    type: integer
-                    example: 3900
-                  complemento:
-                    type: string
-                    example: "Andar 18"
-                  tipo:
-                    type: string
-                    example: "comercial"
+                    example: "Este e-mail não pode ser alterado!"
         "404":
-          description: Endereço não encontrado
-    put:
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+
+    delete:
       tags:
-        - Endereços
-      summary: Alterar Endereço
-      description: Atualiza um endereço existente
-      operationId: alterarEndereco
+        - Usuários
+      summary: Deletar um usuário
+      description: Remove um usuário do sistema
       parameters:
         - name: id
           in: path
-          description: ID do endereço a ser atualizado
           required: true
+          description: ID do usuário
           schema:
-            type: integer
-            format: int64
-            example: 14
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Usuário deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Usuário deletado com sucesso"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+
+  /endereco:
+    post:
+      tags:
+        - Endereços
+      summary: Cadastrar novo endereço
+      description: Adiciona um novo endereço para um usuário
       requestBody:
         required: true
         content:
@@ -435,79 +289,512 @@ paths:
               properties:
                 data:
                   type: object
+                  required:
+                    - id_usuario
+                    - attributes
                   properties:
+                    id_usuario:
+                      type: string
+                      format: uuid
+                      example: "550e8400-e29b-41d4-a716-446655440000"
+                    attributes:
+                      type: object
+                      required:
+                        - logradouro
+                        - bairro
+                        - cidade
+                        - estado
+                        - pais
+                        - numero
+                        - tipo
+                      properties:
+                        logradouro:
+                          type: string
+                          example: "Rua Exemplo"
+                        bairro:
+                          type: string
+                          example: "Bairro Exemplo"
+                        cidade:
+                          type: string
+                          example: "Cidade Exemplo"
+                        estado:
+                          type: string
+                          example: "UF"
+                        pais:
+                          type: string
+                          example: "País Exemplo"
+                        numero:
+                          type: integer
+                          example: 123
+                        complemento:
+                          type: string
+                          example: "Apto 123"
+                        tipo:
+                          type: string
+                          enum: ["casa", "trabalho", "outro"]
+                          example: "casa"
+      responses:
+        "201":
+          description: Endereço criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "450e8400-e29b-41d4-a716-446655440000"
+                      id_usuario:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      attributes:
+                        type: object
+                        properties:
+                          logradouro:
+                            type: string
+                            example: "Rua Exemplo"
+                          bairro:
+                            type: string
+                            example: "Bairro Exemplo"
+                          cidade:
+                            type: string
+                            example: "Cidade Exemplo"
+                          estado:
+                            type: string
+                            example: "UF"
+                          pais:
+                            type: string
+                            example: "País Exemplo"
+                          numero:
+                            type: integer
+                            example: 123
+                          complemento:
+                            type: string
+                            example: "Apto 123"
+                          tipo:
+                            type: string
+                            example: "casa"
+        "400":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Tipo de endereço inválido! Escolha entre casa ou trabalho"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+        "409":
+          description: Tipo de endereço já existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Esse tipo de endereço já existe!"
+
+  /user/{id}/enderecos:
+    get:
+      tags:
+        - Endereços
+      summary: Listar endereços de um usuário
+      description: Retorna todos os endereços de um usuário específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de endereços
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: "450e8400-e29b-41d4-a716-446655440000"
+                        id_usuario:
+                          type: string
+                          format: uuid
+                          example: "550e8400-e29b-41d4-a716-446655440000"
+                        logradouro:
+                          type: string
+                          example: "Rua Exemplo"
+                        bairro:
+                          type: string
+                          example: "Bairro Exemplo"
+                        cidade:
+                          type: string
+                          example: "Cidade Exemplo"
+                        estado:
+                          type: string
+                          example: "UF"
+                        pais:
+                          type: string
+                          example: "País Exemplo"
+                        numero:
+                          type: integer
+                          example: 123
+                        complemento:
+                          type: string
+                          example: "Apto 123"
+                        tipo:
+                          type: string
+                          example: "casa"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+
+  /endereco/{id}:
+    put:
+      tags:
+        - Endereços
+      summary: Alterar um endereço
+      description: Atualiza os dados de um endereço específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do endereço
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                    - id_usuario
+                    - attributes
+                  properties:
+                    id_usuario:
+                      type: string
+                      format: uuid
+                      example: "550e8400-e29b-41d4-a716-446655440000"
                     attributes:
                       type: object
                       properties:
                         logradouro:
                           type: string
-                          example: "Rua Oscar Freire"
+                          example: "Nova Rua"
                         bairro:
                           type: string
-                          example: "Jardins"
+                          example: "Novo Bairro"
                         cidade:
                           type: string
-                          example: "São Paulo"
+                          example: "Nova Cidade"
                         estado:
                           type: string
-                          example: "SP"
+                          example: "NE"
                         pais:
                           type: string
-                          example: "Brasil"
+                          example: "Novo País"
                         numero:
                           type: integer
-                          example: 200
+                          example: 456
                         complemento:
                           type: string
-                          example: "Loja 45"
+                          example: "Bloco B"
                         tipo:
                           type: string
-                          example: "comercial"
-            example:
-              data:
-                attributes:
-                  logradouro: "Rua Oscar Freire"
-                  bairro: "Jardins"
-                  cidade: "São Paulo"
-                  estado: "SP"
-                  pais: "Brasil"
-                  numero: 200
-                  complemento: "Loja 45"
-                  tipo: "comercial"
+                          enum: ["casa", "trabalho", "outro"]
+                          example: "trabalho"
       responses:
         "200":
           description: Endereço atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "450e8400-e29b-41d4-a716-446655440000"
+                      id_usuario:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      attributes:
+                        type: object
+                        properties:
+                          logradouro:
+                            type: string
+                            example: "Nova Rua"
+                          bairro:
+                            type: string
+                            example: "Novo Bairro"
+                          cidade:
+                            type: string
+                            example: "Nova Cidade"
+                          estado:
+                            type: string
+                            example: "NE"
+                          pais:
+                            type: string
+                            example: "Novo País"
+                          numero:
+                            type: integer
+                            example: 456
+                          complemento:
+                            type: string
+                            example: "Bloco B"
+                          tipo:
+                            type: string
+                            example: "trabalho"
         "400":
-          description: Entrada inválida
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Tipo de endereço inválido! Escolha entre casa ou trabalho"
         "404":
           description: Endereço não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Endereço não encontrado!"
+        "409":
+          description: Tipo de endereço já existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Esse tipo de endereço já existe!"
+
     delete:
       tags:
         - Endereços
-      summary: Deletar Endereço
-      description: Remove um endereço
-      operationId: deletarEndereco
+      summary: Deletar um endereço
+      description: Remove um endereço do sistema
       parameters:
         - name: id
           in: path
-          description: ID do endereço a ser removido
           required: true
+          description: ID do endereço
           schema:
-            type: integer
-            format: int64
-            example: 10
+            type: string
+            format: uuid
+        - name: idUser
+          in: query
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
       responses:
-        "204":
-          description: Endereço removido com sucesso
+        "200":
+          description: Endereço deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Endereço deletado com sucesso"
         "404":
           description: Endereço não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Endereço não encontrado!"
+
   /send-email:
     post:
       tags:
         - Email
-      summary: Enviar Email
-      description: Envia um email
-      operationId: enviarEmail
+      summary: Enviar email
+      description: Envia um email para o endereço especificado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                    - email
+                  properties:
+                    email:
+                      type: string
+                      format: email
+                      example: "destinatario@email.com"
+      responses:
+        "200":
+          description: Email enviado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Email enviado com sucesso"
+        "400":
+          description: Email inválido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Email inválido"
+
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Realizar login
+      description: Autentica um usuário no sistema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                    - email
+                    - senha
+                  properties:
+                    email:
+                      type: string
+                      format: email
+                      example: "usuario@email.com"
+                    senha:
+                      type: string
+                      example: "senha123"
+      responses:
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            example: "550e8400-e29b-41d4-a716-446655440000"
+                          nome:
+                            type: string
+                            example: "Nome Exemplo"
+                          email:
+                            type: string
+                            format: email
+                            example: "usuario@email.com"
+        "401":
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Senha incorreta!"
+  /restaurantes:
+    get:
+      tags:
+        - Restaurantes
+      summary: Listar todos os restaurantes
+      responses:
+        "200":
+          description: Lista de restaurantes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Restaurante"
+    
+  /restaurante:
+    post:
+      tags:
+        - Restaurantes
+      summary: Criar um novo restaurante
       requestBody:
         required: true
         content:
@@ -518,15 +805,182 @@ paths:
                 data:
                   type: object
                   properties:
+                    nome:
+                      type: string
+                    descricao:
+                      type: string
                     email:
                       type: string
                       format: email
-                      example: "cliente@email.com.br"
-            example:
-              data:
-                email: "cliente@email.com.br"
+                    cnpj:
+                      type: string
+                    razao_social:
+                      type: string
+                    especialidade:
+                      type: string
+                    telefone:
+                      type: string
+                    horario_funcionamento:
+                      type: string
+                    banco:
+                      type: string
+                    agencia:
+                      type: string
+                    nro_conta:
+                      type: string
+                    tipo_conta:
+                      type: string
+                    endereco:
+                      type: object
+                      properties:
+                        logradouro:
+                          type: string
+                        bairro:
+                          type: string
+                        cidade:
+                          type: string
+                        estado:
+                          type: string
+                        pais:
+                          type: string
+                        numero:
+                          type: integer
+                        complemento:
+                          type: string
+      responses:
+        "201":
+          description: Restaurante criado com sucesso
+        "400":
+          description: Requisição inválida
+  /restaurante/{id}:
+    get:
+      tags:
+        - Restaurantes
+      summary: Obter restaurante por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do restaurante
       responses:
         "200":
-          description: Email enviado com sucesso
-        "400":
-          description: Entrada inválida
+          description: Dados do restaurante
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Restaurante"
+        "404":
+          description: Restaurante não encontrado
+
+    delete:
+      tags:
+        - Restaurantes
+      summary: Deletar restaurante por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Restaurante deletado com sucesso
+        "404":
+          description: Restaurante não encontrado
+
+    put:
+      tags:
+        - Restaurantes
+      summary: Atualizar dados do restaurante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    agencia:
+                      type: string
+                    banco:
+                      type: string
+                    cnpj:
+                      type: string
+                    email:
+                      type: string
+                    especialidade:
+                      type: string
+                    horario_funcionamento:
+                      type: string
+                    nome:
+                      type: string
+                    descricao:
+                      type: string
+                    nro_conta:
+                      type: string
+                    razao_social:
+                      type: string
+                    telefone:
+                      type: string
+                    tipo_conta:
+                      type: string
+      responses:
+        "200":
+          description: Restaurante atualizado com sucesso
+        "404":
+          description: Restaurante não encontrado
+  /restaurante/endereco/{id}:
+    put:
+      tags:
+        - Restaurantes
+      summary: Atualizar endereço do restaurante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    attributes:
+                      type: object
+                      properties:
+                        logradouro:
+                          type: string
+                        bairro:
+                          type: string
+                        cidade:
+                          type: string
+                        estado:
+                          type: string
+                        pais:
+                          type: string
+                        numero:
+                          type: integer
+                        complemento:
+                          type: string
+                        tipo:
+                          type: string
+      responses:
+        "200":
+          description: Endereço atualizado com sucesso
+        "404":
+          description: Restaurante não encontrado

@@ -146,6 +146,12 @@ docker compose down -v
 
 - `-v`: remove os volumes criados, incluindo o banco de dados para liberar espaço em disco.
 
+#### Para remover as imagens, use:
+
+```sh
+docker rmi $(docker images -a -q)
+```
+
 ## **MySQL: Acesso e Comandos**
 
 Para acessar o banco de dados MySQL que está rodando no container Docker, você pode usar um dos seguintes métodos:
@@ -214,4 +220,4 @@ Você também pode acessar o banco de dados MySQL usando uma interface gráfica 
 
 Com o backend em execução, acesse o Swagger através do navegador:
 
-    localhost:5000/doc
+    localhost:5000/docs

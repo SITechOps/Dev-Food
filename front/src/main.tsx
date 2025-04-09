@@ -1,67 +1,16 @@
 import "./index.css";
-import { StrictMode, Suspense, lazy } from "react";
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Loading } from "./components/Loading.tsx";
-import Intermediaria from "./pages/Intermediaria.tsx";
-import CadastroRestaurante from "./pages/Restaurante/CadastroRestaurante.tsx";
-import DadosRestaurante from "./pages/Restaurante/DadosRestaurante.tsx";
 
-const pages = {
-  App: "./App.tsx",
-  Home: "./pages/Home.tsx",
-  Login: "./pages/Login.tsx",
-  Account: "./pages/Account.tsx",
-  CadastroEndereco: "./components/CadastroEndereco.tsx",
-  Intermediaria: "./pages/Intermediaria.tsx",
-};
-
-const { App, Home, Login, Account, CadastroEndereco } = Object.fromEntries(
-  Object.entries(pages).map(([key, path]) => [key, lazy(() => import(path))]),
-);
-
-const router = createBrowserRouter([
-  {
-    path: "/cadastro",
-    element: <App />,
-  },
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/account",
-    element: <Account />,
-  },
-  {
-    path: "/c-endereco",
-    element: <CadastroEndereco />,
-  },
-  {
-    path: "/intermediaria",
-    element: <Intermediaria />,
-  },
-  {
-    path: "/cadastro-restaurante",
-    element: <CadastroRestaurante />,
-  },
-  {
-    path: "/dados-restaurante",
-    element: <DadosRestaurante />,
-  },
-]);
-
-createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId="712065091138-0iaa0qpolcm1646nmnd91thctaqinv9v.apps.googleusercontent.com">
-    <StrictMode>
-      <Suspense fallback={<Loading />}>
-        <RouterProvider router={router} />
-      </Suspense>
-    </StrictMode>
+    <React.StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </React.StrictMode>
   </GoogleOAuthProvider>,
 );
