@@ -5,16 +5,18 @@ import { IoClose } from "react-icons/io5";
 
 interface ModalEmailPros {
   email: string;
-  telefone: string;
+  telefone?: string;
   codigoEnviado: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSuccess: () => void;
 }
 
 export default function ModalEmail({
   codigoEnviado,
   isModalOpen,
   setIsModalOpen,
+  onSuccess,
 }: ModalEmailPros) {
   const [codigoDigitado, setCodigoDigitado] = useState("");
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -34,12 +36,13 @@ export default function ModalEmail({
   }, [isModalOpen]);
 
   function validarCodigo() {
-    if (codigoDigitado != codigoEnviado) {
+    if (!codigoDigitado || codigoDigitado.toString() != codigoEnviado) {
       alert("Código inválido!");
-    } else {
-      alert("Código confirmado!");
-      setIsModalOpen(false);
+      return;
     }
+    alert("Código confirmado!");
+    setIsModalOpen(false);
+    onSuccess();
   }
 
   function closeModal() {

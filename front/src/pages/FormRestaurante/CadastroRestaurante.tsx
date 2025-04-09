@@ -3,36 +3,29 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import ModalEmail from "../../components/ModalEmail";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../connection/axios";
 
 export default function CadastroRestaurante() {
   const [nome, setNome] = useState("");
   const [celular, setCelular] = useState("");
   const [email, setEmail] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [codigoEnviado, setcodigoEnviado] = useState("123456"); // código simulado enviado por e-mail
+  const [codigoEnviado, setCodigoEnviado] = useState(""); // código simulado enviado por e-mail
 
   const navigate = useNavigate();
 
-  const validarCampos = () => {
-    return nome.trim() !== "" && celular.trim() !== "" && email.trim() !== "";
-  };
-
-  const ContinuarClick = () => {
-    if (validarCampos()) {
-      setMostrarModal(true);
-    } else {
-      alert("Por favor, preencha todos os campos obrigatórios.");
+  async function continuarCadastro() {
+    setMostrarModal(true);
+    try {
+      const response = await api.post("/send-email", {
+        data: { email },
+      });
+      setCodigoEnviado(response.data.properties.verificationCode);
+    } catch (error) {
+      console.error("Erro na tentativa do envio do codigo:", error);
+      alert("Erro na tentativa do envio do codigo");
     }
-  };
-
-  const confirmarModal = () => {
-    setMostrarModal(false);
-    navigate("/dados-restaurante");
-  };
-
-  const fecharModal = () => {
-    setMostrarModal(false);
-  };
+  }
 
   return (
     <div className="relative flex h-screen items-center justify-center bg-gray-100">
@@ -43,49 +36,38 @@ export default function CadastroRestaurante() {
             As informações abaixo serão usadas para iniciar o cadastro do seu
             restaurante
           </p>
-          <div className="mt-6 text-left">
-            <label htmlFor="nome" className="block font-medium text-gray-700">
-              Nome completo*
-            </label>
+          <div className="mt-6 space-y-4 text-left">
             <Input
-              className="border"
               id="nome"
               name="nome"
+              textLabel="Nome Completo *"
               placeholder="Digite seu nome e sobrenome"
               value={nome}
               onChange={setNome}
               type="text"
+              required
             />
 
-            <label
-              htmlFor="celular"
-              className="mt-4 block font-medium text-gray-700"
-            >
-              Celular*
-            </label>
             <Input
               id="celular"
               name="celular"
+              textLabel="Celular*"
               placeholder="(00) 00000-0000"
               value={celular}
               onChange={setCelular}
               type="text"
+              required
             />
 
-            <label
-              htmlFor="email"
-              className="mt-4 block font-medium text-gray-700"
-            >
-              E-mail*
-            </label>
             <Input
-              className="border"
+              textLabel="E-mail*"
               id="email"
               name="email"
               placeholder="exemplo@gmail.com"
               value={email}
               onChange={setEmail}
               type="text"
+              required
             />
 
             <p className="mt-4 text-sm text-gray-500">
@@ -99,7 +81,12 @@ export default function CadastroRestaurante() {
           Privacidade e aos Termos de Serviço do Google
         </p>
 
-        <Button className="mt-6 w-48" type="button" onClick={ContinuarClick}>
+        <Button
+          className="mt-6 w-48"
+          type="button"
+          disabled={!nome || !celular || !email}
+          onClick={continuarCadastro}
+        >
           Continuar
         </Button>
       </div>
@@ -107,9 +94,10 @@ export default function CadastroRestaurante() {
       {mostrarModal && (
         <ModalEmail
           email={email}
-          onConfirm={confirmarModal}
-          onClose={fecharModal}
           codigoEnviado={codigoEnviado}
+          isModalOpen={mostrarModal}
+          setIsModalOpen={setMostrarModal}
+          onSuccess={() => navigate("/dados-restaurante")}
         />
       )}
     </div>
