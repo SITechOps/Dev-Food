@@ -1,4 +1,6 @@
 import re
+from src.model.entities.user import User
+from src.model.entities.restaurante import Restaurante
 from src.model.repositories.interfaces.irestaurantes_repository import IRestaurantesRepository
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
@@ -17,8 +19,7 @@ class UsersManager:
         email = login_info.get("email")
         is_created = False
         
-        user_found = self.__users_repo.find_by_email(email) or \
-                     self.__restaurantes_repo.find_by_email(email)
+        user_found = self.get_account_by_email(email)
         
         if user_found:
             id_user = user_found.id
@@ -67,3 +68,8 @@ class UsersManager:
             username_part = user_info.get("email").split("@")[0]
             cleaned_name = re.sub(r'[\d]|[._\-]+', ' ', username_part) # troca os símbolos por espaço
             user_info["nome"] = ' '.join(part.capitalize() for part in cleaned_name.split())
+
+
+    def get_account_by_email(self, email: str) -> User | Restaurante | None:
+        return self.__users_repo.find_by_email(email) or \
+               self.__restaurantes_repo.find_by_email(email)

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from src.main.handlers.custom_exceptions import BaseCustomException
 from src.model.repositories.restaurantes_repository import RestaurantesRepository
 from src.model.repositories.users_repository import UsersRepository
 from src.controllers.users_manager import UsersManager
@@ -63,3 +64,21 @@ def delete_user(id):
     http_response = users_manager.delete(http_request)
     
     return jsonify(http_response.body), http_response.status_code
+
+
+@user_route_bp.get('/user/exists')
+def is_user_registered():
+    email = request.args.get('email')
+    if not email:
+        raise BaseCustomException("Email não informado!", 400)
+
+    user_repo = UsersRepository()
+    restaurantes_repo = RestaurantesRepository()
+    user_manager = UsersManager(user_repo, restaurantes_repo)
+
+    user_found = user_manager.get_account_by_email(email)
+
+    return jsonify({
+        "user_exists": bool(user_found),
+        **({"type": type(user_found).__name__} if user_found else {})
+    }), 200
