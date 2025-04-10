@@ -15,7 +15,7 @@ const DadosRestaurante = lazy(
   () => import("./pages/FormRestaurante/DadosRestaurante"),
 );
 const DetalhesRestaurante = lazy(
-  () => import("./components/InfoRestaurante/Detalhes"),
+  () => import("./pages/InfoRestaurante/Detalhes"),
 );
 
 function App() {
