@@ -9,6 +9,7 @@ from random import randint
 
 class EmailSender:
     def __init__(self, app):
+        app.config['MAIL_DEBUG'] = False
         self.mail = Mail(app)
 
 
