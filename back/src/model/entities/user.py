@@ -1,9 +1,7 @@
 from uuid import uuid4
-from datetime import datetime
-from sqlalchemy import Column, CHAR, DateTime, String
+from sqlalchemy import Column, CHAR, String
 from sqlalchemy.orm import relationship
 from src.model.configs.base import Base
-from src.main.utils.timezone_sp import tz_sp
 
 class User(Base):
     __tablename__ = "Usuario"
@@ -11,8 +9,6 @@ class User(Base):
     nome = Column(String(50))
     email = Column(String(50), unique=True)
     telefone = Column(String(15), nullable=True)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp))
-    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp), onupdate=lambda: datetime.now(tz_sp))
 
     enderecos_associados = relationship("UserEndereco", back_populates="usuario", cascade="all, delete-orphan")
     

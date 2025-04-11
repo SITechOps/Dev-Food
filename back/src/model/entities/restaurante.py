@@ -3,7 +3,6 @@ from datetime import datetime
 from sqlalchemy import Column, CHAR, DateTime, String, ForeignKey
 from sqlalchemy.orm import relationship
 from src.model.configs.base import Base
-from src.main.utils.timezone_sp import tz_sp
 
 class Restaurante(Base):
     __tablename__ = "Restaurante"
@@ -26,11 +25,6 @@ class Restaurante(Base):
 
     endereco = relationship("Endereco", back_populates="restaurante", uselist=False)
 
-
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp))
-    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(tz_sp), onupdate=lambda: datetime.now(tz_sp))
-
-
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -47,7 +41,5 @@ class Restaurante(Base):
             "nro_conta": self.nro_conta,
             "tipo_conta": self.tipo_conta,
             "logo": self.logo,
-            "endereco": self.endereco.to_dict() if self.endereco else None,
-            "created_at": self.created_at.astimezone(tz_sp).isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.astimezone(tz_sp).isoformat() if self.updated_at else None
+            "endereco": self.endereco.to_dict() if self.endereco else None
         }
