@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../connection/axios";
-import Card from "../components/InfoRestaurante/Card";
+import Card from "../pages/RestaurantesDisponiveis/Card";
 
 export default function Home() {
   const [restaurantes, setrestaurantes] = useState([

@@ -60,3 +60,14 @@
     @apply bg-gray-light outline-gray-medium mt-1 w-full rounded-sm px-4 py-3 [&::-ms-reveal]:hidden;
   }
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remover nos navegadores Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

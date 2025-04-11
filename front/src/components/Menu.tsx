@@ -27,7 +27,7 @@ export default function Menu() {
       >
         <div className="mx-auto flex max-w-4/5 items-center justify-between">
           <Link to="/">
-            <img src={iFoodLogo} alt="iFood Logo" className="h-15" />
+            <img src={iFoodLogo} alt="iFood Logo" className="h-12 py-1" />
           </Link>
 
           {idUsuario ? (

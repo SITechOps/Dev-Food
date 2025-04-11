@@ -63,7 +63,7 @@ export default function ModalEmail({
 
         <div className="flex gap-2">
           <CodeInput
-            className="[&_input::-moz-appearance]:textfield selection:bg-transparent [&_input::-webkit-inner-spin-button]:hidden"
+            className="[&_input::-moz-appearance]:none selection:bg-transparent [&_input::-webkit-inner-spin-button]:hidden"
             type="number"
             fields={6}
             onChange={(code) => {

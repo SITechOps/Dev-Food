@@ -6,7 +6,7 @@ import Menu from "./components/Menu";
 const Home = lazy(() => import("./pages/Home"));
 const AuthUser = lazy(() => import("./pages/Auth/AuthUser"));
 const Intermediaria = lazy(() => import("./pages/Intermediaria"));
-const Account = lazy(() => import("./pages/Account/Account"));
+const Account = lazy(() => import("./pages/Account/index"));
 const CadastroEndereco = lazy(() => import("./components/CadastroEndereco"));
 const CadastroRestaurante = lazy(
   () => import("./pages/FormRestaurante/CadastroRestaurante"),
