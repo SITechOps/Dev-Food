@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "../../connection/axios";
+import { api } from "../../../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
-import { decodeToken } from "../../utils/decodeToken";
+import { decodeToken } from "../../../utils/decodeToken";
 
-export const useAccountComponent = () => {
+export const useUserAccountComponent = () => {
   const navigate = useNavigate();
   const [formList, setFormList] = useState({
     nome: "",

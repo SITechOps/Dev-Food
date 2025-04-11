@@ -16,6 +16,7 @@ class EmailSender:
         try:
             destination_email = self.__get_email(http_request)
             verification_code = self.__generate_code()
+            print("CÓDIGO:", verification_code)
             message = render_template("email_message_template.html", verification_code=verification_code)
             msg = Message(
                 subject="Seu código de verificação chegou! 🔐",

@@ -1,12 +1,12 @@
 import { FaAngleLeft } from "react-icons/fa6";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+import Input from "../../../components/Input";
+import Button from "../../../components/Button";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
-import { useAccountComponent } from "./useAccount-component";
+import { useUserAccountComponent } from "../hooks/useUserAccount";
 
-export default function Account() {
+export default function UserForm() {
   const {
     navigate,
     formList,
@@ -17,7 +17,7 @@ export default function Account() {
     handleLogout,
     deletarDados,
     alterarDados,
-  } = useAccountComponent();
+  } = useUserAccountComponent();
   const baseText =
     "text-blue mt-3 flex items-center justify-start gap-2 p-0 text-lg";
   const iconStyle =
