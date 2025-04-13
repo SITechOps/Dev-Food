@@ -24,6 +24,7 @@ class Restaurante(Base):
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id", ondelete="CASCADE"), nullable=False)
 
     endereco = relationship("Endereco", back_populates="restaurante", uselist=False)
+    produtos = relationship("Produto", back_populates="restaurante", cascade="all, delete-orphan")
 
     def to_dict(self) -> dict:
         return {
