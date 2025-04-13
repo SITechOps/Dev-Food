@@ -1,5 +1,5 @@
 from uuid import uuid4
-from sqlalchemy import Column, CHAR, ForeignKey, Integer, Numeric, String, UniqueConstraint
+from sqlalchemy import Column, CHAR, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
 from sqlalchemy.orm import relationship
 from src.model.configs.base import Base
 
@@ -9,7 +9,7 @@ class Produto(Base):
     nome = Column(String(150))
     valor_unitario = Column(Numeric(5, 2))
     qtd_estoque = Column(Integer)
-    imageUrl = Column(String(200), nullable=True)
+    imageUrl = Column(Text, nullable=True)
 
     id_restaurante = Column(CHAR(36), ForeignKey("Restaurante.id", ondelete="CASCADE"), nullable=False)
 
