@@ -55,6 +55,16 @@ class RestaurantAddressAlreadyExists(BaseCustomException):
 
 class RestaurantNotFound(BaseCustomException):
     def __init__(self, message="Restaurante não encontrado!"):
+        super().__init__(message, 404)
+
+
+class ProductNotFound(BaseCustomException):
+    def __init__(self, message="Produto não encontrado!"):
+        super().__init__(message, 404)
+
+
+class ProductAlreadyExists(BaseCustomException):
+    def __init__(self, message="Produto já existe!"):
         super().__init__(message, 409)
 
         

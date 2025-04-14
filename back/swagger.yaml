@@ -17,6 +17,8 @@ tags:
     description: Operações relacionadas a envio de emails
   - name: Restaurantes
     description: Operações relacionadas a restaurantes
+  - name: Produtos
+    description: Operações relacionadas a produtos
 
 paths:
   /user:
@@ -984,3 +986,251 @@ paths:
           description: Endereço atualizado com sucesso
         "404":
           description: Restaurante não encontrado
+  /produto:
+    post:
+      tags:
+        - Produtos
+      summary: "Criar novo produto"
+      description: "Adiciona um novo produto ao banco de dados."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    valor_unitario:
+                      type: number
+                      format: float
+                    qtd_estoque:
+                      type: integer
+              required:
+                - data
+                - nome
+                - valor_unitario
+                - qtd_estoque
+            example:
+              data:
+                nome: "Pizza de Mussarela"
+                valor_unitario: 52.00
+                qtd_estoque: 100
+      responses:
+        '201':
+          description: "Produto criado com sucesso."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                      valor_unitario:
+                        type: number
+                        format: float
+                      qtd_estoque:
+                        type: integer
+              example:
+                message:
+                  "Produto criado com sucesso!"
+        '404':
+          description: "Restaurante não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Restaurante não encontrado!"
+        '409':
+          description: "Produto já existe"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto já existe!"
+
+  /restaurante/{id}/produtos:
+    get:
+      tags:
+        - Produtos
+      summary: "Listar produtos por restaurante"
+      description: "Retorna a lista de produtos de um restaurante específico."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: string
+          description: "ID do restaurante"
+      responses:
+        '200':
+          description: "Lista de produtos do restaurante."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      Type:
+                        type: string
+                        example: "Produto"
+                      attributes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            nome:
+                              type: string
+                            qtd_estoque:
+                              type: integer
+                            valor_unitario:
+                              type: number
+                              format: float
+                      count:
+                        type: integer
+                        example: 4
+              example:
+                data:
+                  Type: "Produto"
+                  attributes:
+                    - id: "3a969b87-bd48-4a99-9f0d-b7bc4b256a39"
+                      nome: "Sashimi de Salmão"
+                      qtd_estoque: 50
+                      valor_unitario: 48.00
+                    - id: "7b89bea4-f021-487c-94f0-cf644eb1081d"
+                      nome: "Temaki Salmão"
+                      qtd_estoque: 60
+                      valor_unitario: 28.00
+                    - id: "b9fab80b-6d82-41af-a1bc-5ad5107a5eb1"
+                      nome: "Sushi Especial"
+                      qtd_estoque: 80
+                      valor_unitario: 45.00
+                  count: 3
+        '404':
+          description: "Restaurante não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Restaurante não encontrado!"
+
+  /produto/{id}:
+    put:
+      tags:
+        - Produtos
+      summary: "Atualizar produto"
+      description: "Atualiza os dados de um produto existente."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: string
+          description: "ID do produto"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    valor_unitario:
+                      type: number
+                      format: float
+                    qtd_estoque:
+                      type: integer
+              required:
+                - data
+                - nome
+                - valor_unitario
+                - qtd_estoque
+            example:
+              data:
+                nome: "Sushimi de Salmão - Atualizado"
+                valor_unitario: 50.00
+                qtd_estoque: 45
+      responses:
+        '200':
+          description: "Produto alterado com sucesso."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                      valor_unitario:
+                        type: number
+                        format: float
+                      qtd_estoque:
+                        type: integer
+              example:
+                message:
+                  Produto alterado com sucesso.
+        '404':
+          description: "Produto não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto não encontrado!"
+        '409':
+          description: "Produto já existe"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto já existe!"
+
+    delete:
+      tags:
+        - Produtos
+      summary: "Excluir produto"
+      description: "Deleta um produto existente."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: string
+          description: "ID do produto"
+      responses:
+        '200':
+          description: "Produto deletado com sucesso."
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: "Produto deletado com sucesso."
+        '404':
+          description: "Produto não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto não encontrado!"

@@ -1,6 +1,5 @@
 from uuid import uuid4
-from datetime import datetime
-from sqlalchemy import Column, CHAR, DateTime, String, ForeignKey
+from sqlalchemy import Column, CHAR, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from src.model.configs.base import Base
 
@@ -9,7 +8,7 @@ class Restaurante(Base):
 
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
     nome = Column(String(50), nullable=False)
-    descricao = Column(String(200), nullable=False)
+    descricao = Column(String(255), nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     cnpj = Column(String(14), unique=True, nullable=False)
     razao_social = Column(String(30), unique=True, nullable=False)
@@ -20,10 +19,11 @@ class Restaurante(Base):
     agencia = Column(String(5), nullable=False)
     nro_conta = Column(String(13), nullable=False)
     tipo_conta = Column(String(13), nullable=False)
-    logo = Column(String(200), nullable=True)
+    logo = Column(Text, nullable=True)
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id", ondelete="CASCADE"), nullable=False)
 
     endereco = relationship("Endereco", back_populates="restaurante", uselist=False)
+    produtos = relationship("Produto", back_populates="restaurante", cascade="all, delete-orphan")
 
     def to_dict(self) -> dict:
         return {
