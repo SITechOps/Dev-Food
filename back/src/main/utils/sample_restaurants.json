@@ -1,122 +1,198 @@
 [
-    {
-      "nome": "Sabor Brasileiro",
-      "descricao": "O Sabor Brasileiro oferece uma experiência autêntica da culinária brasileira, com pratos típicos de várias regiões do Brasil. Nosso cardápio inclui feijoada, churrasco e moqueca. Um lugar aconchegante e tradicional, perfeito para momentos especiais.",
-      "email": "contato@saborbrasileiro.com.br",
-      "cnpj": "12345678901234",
-      "razao_social": "Sabor Brasileiro LTDA",
-      "especialidade": "Brasileira",
-      "telefone": "(11) 3456-7890",
-      "horario_funcionamento": "11:00 - 23:00",
-      "banco": "Banco do Brasil",
-      "agencia": "3245",
-      "nro_conta": "56789-0",
-      "tipo_conta": "Corrente",
-      "logo": "",
-      "endereco": {
-        "logradouro": "Avenida Paulista",
-        "numero": "1500",
-        "bairro": "Bela Vista",
-        "cidade": "São Paulo",
-        "estado": "SP",
-        "complemento": "Andar 10",
-        "pais": "Brasil"
-      },
-      "produtos": [
-        {"nome": "Feijoada Completa", "valor_unitario": 45.00, "qtd_estoque": 50},
-        {"nome": "Picanha na Chapa", "valor_unitario": 68.00, "qtd_estoque": 40},
-        {"nome": "Moqueca de Peixe", "valor_unitario": 55.00, "qtd_estoque": 30},
-        {"nome": "Brigadeiro Gourmet", "valor_unitario": 8.00, "qtd_estoque": 100}
-      ]
+  {
+    "nome": "Sabor Brasileiro",
+    "descricao": "O Sabor Brasileiro oferece uma experiência autêntica da culinária brasileira, com pratos típicos de várias regiões do Brasil. Nosso cardápio inclui feijoada, churrasco e moqueca. Um lugar aconchegante e tradicional, perfeito para momentos especiais.",
+    "email": "contato@saborbrasileiro.com.br",
+    "cnpj": "12345678901234",
+    "razao_social": "Sabor Brasileiro LTDA",
+    "especialidade": "Brasileira",
+    "telefone": "(11) 3456-7890",
+    "horario_funcionamento": "11:00 - 23:00",
+    "banco": "Banco do Brasil",
+    "agencia": "3245",
+    "nro_conta": "56789-0",
+    "tipo_conta": "Corrente",
+    "endereco": {
+      "logradouro": "Avenida Paulista",
+      "numero": "1500",
+      "bairro": "Bela Vista",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "complemento": "Andar 10",
+      "pais": "Brasil"
     },
-    {
-      "nome": "Cantina Italiana",
-      "descricao": "A Cantina Italiana traz a tradição das cantinas italianas, com massas frescas e pizzas autênticas. O ambiente é acolhedor, ideal para momentos especiais. No menu, temos pratos como spaghetti, lasanha e risoto, preparados com ingredientes frescos.",
-      "email": "reservas@cantinaitaliana.com.br",
-      "cnpj": "98765432109876",
-      "razao_social": "Cantina Bella Italia",
-      "especialidade": "Italiana",
-      "telefone": "(11) 2345-6789",
-      "horario_funcionamento": "18:00 - 00:00",
-      "banco": "Santander",
-      "agencia": "1789",
-      "nro_conta": "12345-6",
-      "tipo_conta": "Empresarial",
-      "logo": "",
-      "endereco": {
-        "logradouro": "Rua Augusta",
-        "numero": "789",
-        "bairro": "Consolação",
-        "cidade": "São Paulo",
-        "estado": "SP",
-        "complemento": "",
-        "pais": "Brasil"
+    "produtos": [
+      {
+        "nome": "Feijoada Completa",
+        "valor_unitario": 45.0,
+        "qtd_estoque": 50,
+        "descricao": "Tradicional feijoada brasileira com feijão preto, carnes diversas e acompanhamentos típicos. Uma refeição rica e saborosa para celebrar a culinária do Brasil."
       },
-      "produtos": [
-        {"nome": "Spaghetti à Bolonhesa", "valor_unitario": 39.90, "qtd_estoque": 60},
-        {"nome": "Lasanha Quatro Queijos", "valor_unitario": 42.00, "qtd_estoque": 50},
-        {"nome": "Risoto de Funghi", "valor_unitario": 47.00, "qtd_estoque": 30},
-        {"nome": "Tiramisu", "valor_unitario": 16.00, "qtd_estoque": 80}
-      ]
+      {
+        "nome": "Picanha na Chapa",
+        "valor_unitario": 68.0,
+        "qtd_estoque": 40,
+        "descricao": "Saborosa picanha grelhada na chapa, com temperos realçados e corte macio, servida com acompanhamentos que destacam o melhor da carne."
+      },
+      {
+        "nome": "Moqueca de Peixe",
+        "valor_unitario": 55.0,
+        "qtd_estoque": 30,
+        "descricao": "Moqueca de peixe com sabor marcante, elaborada com peixe fresco, leite de coco, dendê e temperos que remetem à culinária baiana."
+      },
+      {
+        "nome": "Brigadeiro Gourmet",
+        "valor_unitario": 8.0,
+        "qtd_estoque": 100,
+        "descricao": "Delicioso brigadeiro gourmet preparado com chocolate de alta qualidade e ingredientes selecionados, perfeito para fechar a refeição com doçura."
+      }
+    ]
+  },
+  {
+    "nome": "Cantina Italiana",
+    "descricao": "A Cantina Italiana traz a tradição das cantinas italianas, com massas frescas e pizzas autênticas. O ambiente é acolhedor, ideal para momentos especiais. No menu, temos pratos como spaghetti, lasanha e risoto, preparados com ingredientes frescos.",
+    "email": "reservas@cantinaitaliana.com.br",
+    "cnpj": "98765432109876",
+    "razao_social": "Cantina Bella Italia",
+    "especialidade": "Italiana",
+    "telefone": "(11) 2345-6789",
+    "horario_funcionamento": "18:00 - 00:00",
+    "banco": "Santander",
+    "agencia": "1789",
+    "nro_conta": "12345-6",
+    "tipo_conta": "Empresarial",
+    "endereco": {
+      "logradouro": "Rua Augusta",
+      "numero": "789",
+      "bairro": "Consolação",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "complemento": "",
+      "pais": "Brasil"
     },
-    {
-      "nome": "Sushi Express",
-      "descricao": "O Sushi Express oferece sushis e sashimis frescos, preparados com ingredientes selecionados. Somos especializados em comida japonesa rápida, mas de qualidade. Todos os pratos são feitos por chefs experientes para garantir frescor e sabor.",
-      "email": "atendimento@sushiexpress.com.br",
-      "cnpj": "45678912345678",
-      "razao_social": "Sushi Express LTDA",
-      "especialidade": "Japonesa",
-      "telefone": "(11) 3333-4444",
-      "horario_funcionamento": "11:00 - 22:00",
-      "banco": "Bradesco",
-      "agencia": "0123",
-      "nro_conta": "987654-3",
-      "tipo_conta": "Corrente",
-      "logo": "",
-      "endereco": {
-        "logradouro": "Rua Liberdade",
-        "numero": "123",
-        "bairro": "Liberdade",
-        "cidade": "São Paulo",
-        "estado": "SP",
-        "complemento": "Loja 45",
-        "pais": "Brasil"
+    "produtos": [
+      {
+        "nome": "Spaghetti à Bolonhesa",
+        "valor_unitario": 39.9,
+        "qtd_estoque": 60,
+        "descricao": "Clássico spaghetti com molho à bolonhesa rico e aromático, preparado com carne moída e temperos italianos, servido com queijo parmesão."
       },
-      "produtos": [
-        {"nome": "Sushi Especial", "valor_unitario": 45.00, "qtd_estoque": 80},
-        {"nome": "Temaki Salmão", "valor_unitario": 28.00, "qtd_estoque": 60},
-        {"nome": "Uramaki de Atum", "valor_unitario": 35.00, "qtd_estoque": 40},
-        {"nome": "Sashimi de Salmão", "valor_unitario": 48.00, "qtd_estoque": 50}
-      ]
+      {
+        "nome": "Lasanha Quatro Queijos",
+        "valor_unitario": 42.0,
+        "qtd_estoque": 50,
+        "descricao": "Lasanha cremosa com quatro tipos de queijo, camada sobre camada de massa fresca, gratinada ao forno para um sabor irresistível."
+      },
+      {
+        "nome": "Risoto de Funghi",
+        "valor_unitario": 47.0,
+        "qtd_estoque": 30,
+        "descricao": "Risoto de funghi preparado com cogumelos frescos, caldo especial e finalizado com manteiga e queijo, trazendo o autêntico sabor italiano."
+      },
+      {
+        "nome": "Tiramisu",
+        "valor_unitario": 16.0,
+        "qtd_estoque": 80,
+        "descricao": "Sobremesa clássica italiana com camadas de biscoitos embebidos em café, creme de mascarpone e finalizada com um toque de cacau."
+      }
+    ]
+  },
+  {
+    "nome": "Sushi Express",
+    "descricao": "O Sushi Express oferece sushis e sashimis frescos, preparados com ingredientes selecionados. Somos especializados em comida japonesa rápida, mas de qualidade. Todos os pratos são feitos por chefs experientes para garantir frescor e sabor.",
+    "email": "atendimento@sushiexpress.com.br",
+    "cnpj": "45678912345678",
+    "razao_social": "Sushi Express LTDA",
+    "especialidade": "Japonesa",
+    "telefone": "(11) 3333-4444",
+    "horario_funcionamento": "11:00 - 22:00",
+    "banco": "Bradesco",
+    "agencia": "0123",
+    "nro_conta": "987654-3",
+    "tipo_conta": "Corrente",
+    "endereco": {
+      "logradouro": "Rua Liberdade",
+      "numero": "123",
+      "bairro": "Liberdade",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "complemento": "Loja 45",
+      "pais": "Brasil"
     },
-    {
-      "nome": "Cantina Mexicana",
-      "descricao": "A Cantina Mexicana traz pratos autênticos como tacos, burritos e guacamole. O ambiente é animado e cheio de cores, perfeito para uma refeição divertida. Com ingredientes frescos e preparados com carinho, garantimos a verdadeira experiência mexicana.",
-      "email": "atendimento@cantinamexicana.com.br",
-      "cnpj": "78945612398765",
-      "razao_social": "Cantina Mexicana LTDA",
-      "especialidade": "Mexicana",
-      "telefone": "(11) 5678-9012",
-      "horario_funcionamento": "11:00 - 23:00",
-      "banco": "Caixa Econômica",
-      "agencia": "1452",
-      "nro_conta": "34567-8",
-      "tipo_conta": "Corrente",
-      "logo": "",
-      "endereco": {
-        "logradouro": "Rua dos Três Irmãos",
-        "numero": "500",
-        "bairro": "Vila Mariana",
-        "cidade": "São Paulo",
-        "estado": "SP",
-        "complemento": "Loja 2",
-        "pais": "Brasil"
+    "produtos": [
+      {
+        "nome": "Sushi Especial",
+        "valor_unitario": 45.0,
+        "qtd_estoque": 80,
+        "descricao": "Seleção especial de sushi, combinando arroz temperado e peixe fresco, que oferece equilíbrio perfeito de sabores e texturas."
       },
-      "produtos": [
-        {"nome": "Taco de Carne", "valor_unitario": 18.00, "qtd_estoque": 100},
-        {"nome": "Burrito de Frango", "valor_unitario": 22.00, "qtd_estoque": 60},
-        {"nome": "Guacamole com Nachos", "valor_unitario": 16.00, "qtd_estoque": 80},
-        {"nome": "Fajita de Camarão", "valor_unitario": 30.00, "qtd_estoque": 50}
-      ]
-    }
-] 
+      {
+        "nome": "Temaki Salmão",
+        "valor_unitario": 28.0,
+        "qtd_estoque": 60,
+        "descricao": "Temaki de salmão preparado com arroz, algas e tiras de salmão fresco, finalizado com molho especial para uma experiência leve."
+      },
+      {
+        "nome": "Uramaki de Atum",
+        "valor_unitario": 35.0,
+        "qtd_estoque": 40,
+        "descricao": "Uramaki com recheio generoso de atum fresco, combinando ingredientes que harmonizam sabores para um prato tradicional e inovador."
+      },
+      {
+        "nome": "Sashimi de Salmão",
+        "valor_unitario": 48.0,
+        "qtd_estoque": 50,
+        "descricao": "Fatias finas de salmão fresco, cortadas com precisão e servidas com leves temperos que realçam o sabor natural do peixe."
+      }
+    ]
+  },
+  {
+    "nome": "Cantina Mexicana",
+    "descricao": "A Cantina Mexicana traz pratos autênticos como tacos, burritos e guacamole. O ambiente é animado e cheio de cores, perfeito para uma refeição divertida. Com ingredientes frescos e preparados com carinho, garantimos a verdadeira experiência mexicana.",
+    "email": "atendimento@cantinamexicana.com.br",
+    "cnpj": "78945612398765",
+    "razao_social": "Cantina Mexicana LTDA",
+    "especialidade": "Mexicana",
+    "telefone": "(11) 5678-9012",
+    "horario_funcionamento": "11:00 - 23:00",
+    "banco": "Caixa Econômica",
+    "agencia": "1452",
+    "nro_conta": "34567-8",
+    "tipo_conta": "Corrente",
+    "endereco": {
+      "logradouro": "Rua dos Três Irmãos",
+      "numero": "500",
+      "bairro": "Vila Mariana",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "complemento": "Loja 2",
+      "pais": "Brasil"
+    },
+    "produtos": [
+      {
+        "nome": "Taco de Carne",
+        "valor_unitario": 18.0,
+        "qtd_estoque": 100,
+        "descricao": "Taco de carne suculenta, recheado com temperos mexicanos e servido em tortilhas crocantes, com guarnições que realçam o sabor autêntico."
+      },
+      {
+        "nome": "Burrito de Frango",
+        "valor_unitario": 22.0,
+        "qtd_estoque": 60,
+        "descricao": "Burrito recheado com frango temperado, feijão e arroz, envolto em tortilla macia, oferecendo o verdadeiro sabor da culinária mexicana."
+      },
+      {
+        "nome": "Guacamole com Nachos",
+        "valor_unitario": 16.0,
+        "qtd_estoque": 80,
+        "descricao": "Guacamole fresco preparado com abacate e temperos equilibrados, servido com nachos crocantes, ideal para compartilhar entre amigos."
+      },
+      {
+        "nome": "Fajita de Camarão",
+        "valor_unitario": 30.0,
+        "qtd_estoque": 50,
+        "descricao": "Fajita de camarão com temperos mexicanos, camarões salteados e vegetais frescos, servidos com tortillas quentes para uma refeição vibrante."
+      }
+    ]
+  }
+]
