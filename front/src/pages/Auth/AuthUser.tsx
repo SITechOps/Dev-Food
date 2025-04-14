@@ -9,7 +9,8 @@ import { useAuthUserComponent } from "./useAuthUser-component";
 
 export default function AuthUser() {
   const {
-    handleContinuar,
+    validarEmail,
+    validarTelefone,
     formList,
     setFormList,
     isModalOpen,
@@ -26,8 +27,6 @@ export default function AuthUser() {
         <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
           {isModalOpen && (
             <ModalEmail
-              email={formList.email}
-              telefone={formList.telefone}
               codigoEnviado={codigoEnviado}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
@@ -79,7 +78,7 @@ export default function AuthUser() {
 
                 <Button
                   type="button"
-                  onClick={handleContinuar}
+                  onClick={validarEmail}
                   disabled={!formList.email}
                 >
                   Continuar
@@ -102,11 +101,14 @@ export default function AuthUser() {
                   type="tel"
                   id="telefone"
                 />
-                <p className="my-5">
-                  Preencha o telefone apenas se preferir esse meio de contato
+                <p className="mb-4">
+                  Preencha o telefone apenas se preferir, esse meio de contato
                   (não obrigatório).
                 </p>
-                <Button type="submit">Entrar</Button>
+                <div className="flex gap-4">
+                <Button color="secondary" type="button" className="p-2"  onClick={validarTelefone}>Validar Telefone</Button>
+                <Button type="submit" className="p-2">Entrar</Button>
+                </div>
               </>
             )}
           </form>

@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 interface ModalEmailPros {
-  email: string;
-  telefone?: string;
   codigoEnviado: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

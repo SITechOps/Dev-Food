@@ -12,6 +12,7 @@ export const useUserAccountComponent = () => {
   });
   const token = localStorage.getItem("token");
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const idUsuario = token ? decodeToken(token)?.sub : undefined;
 
   useEffect(() => {
@@ -29,7 +30,9 @@ export const useUserAccountComponent = () => {
         email: respUser.email || "",
         telefone: respUser.telefone || "",
       });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Erro ao buscar usuário:", error);
     }
   }
@@ -40,8 +43,10 @@ export const useUserAccountComponent = () => {
     try {
       await api.put(`/user/${idUsuario}`, { data: formList });
       alert("Usuário alterado com sucesso!");
+      setLoading(false);
       setIsEditing(false);
     } catch (error) {
+      setLoading(false);
       alert("Erro ao alterar usuário. Tente novamente.");
     }
 
@@ -54,9 +59,11 @@ export const useUserAccountComponent = () => {
       alert("Usuário removido com sucesso!");
 
       localStorage.clear();
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.error(error);
+      setLoading(false);
       alert("Erro ao deletar usuário. Tente novamente.");
     }
   }
