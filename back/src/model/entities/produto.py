@@ -6,7 +6,8 @@ from src.model.configs.base import Base
 class Produto(Base):
     __tablename__ = "Produto"
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
-    nome = Column(String(150))
+    nome = Column(String(100))
+    descricao = Column(String(255))
     valor_unitario = Column(Numeric(5, 2))
     qtd_estoque = Column(Integer)
     imageUrl = Column(Text, nullable=True)
