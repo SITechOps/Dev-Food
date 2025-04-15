@@ -32,7 +32,7 @@ const MenuRestaurante = () => {
     },
     {
       name: "Sair",
-      icon: <LogOut size={20} />,
+      icon: <LogOut size={20} className="text-brown-dark" />,
       link: "",
       action: handleLogout,
     },
@@ -64,14 +64,18 @@ const MenuRestaurante = () => {
                   className="flex w-full items-center gap-3"
                 >
                   {item.icon}
-                  <span className={item.name === "Sair" ? "text-brown-light" : ""}>
+                  <span
+                    className={item.name === "Sair" ? "text-brown-dark" : ""}
+                  >
                     {item.name}
                   </span>
                 </button>
               ) : (
                 <Link to={item.link} className="flex w-full items-center gap-3">
                   {item.icon}
-                  <span className={item.name === "Sair" ? "text-brown-light" : ""}>
+                  <span
+                    className={item.name === "Sair" ? "text-brown-dark" : ""}
+                  >
                     {item.name}
                   </span>
                 </Link>
