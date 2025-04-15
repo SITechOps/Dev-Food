@@ -3,9 +3,22 @@ import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
-export const useUserAccountComponent = () => {
+export const useUserAccount = () => {
   const navigate = useNavigate();
-  const [formList, setFormList] = useState({
+
+  const userFormFields = [
+    { label: "Nome:", name: "nome", type: "text" },
+    {
+      label: "Telefone:",
+      name: "telefone",
+      type: "tel",
+      isFormatted: true,
+      format: "(##) #####-####",
+    },
+    { label: "Email:", name: "email", type: "email" },
+  ];
+
+  const [userFormList, setUserFormList] = useState({
     nome: "",
     email: "",
     telefone: "",
@@ -25,7 +38,7 @@ export const useUserAccountComponent = () => {
       const response = await api.get(`/user/${idUsuario}`);
       const respUser = response.data?.data?.attributes || [];
       console.log(respUser);
-      setFormList({
+      setUserFormList({
         nome: respUser.nome || "",
         email: respUser.email || "",
         telefone: respUser.telefone || "",
@@ -41,7 +54,7 @@ export const useUserAccountComponent = () => {
     event.preventDefault();
 
     try {
-      await api.put(`/user/${idUsuario}`, { data: formList });
+      await api.put(`/user/${idUsuario}`, { data: userFormList });
       alert("Usuário alterado com sucesso!");
       setLoading(false);
       setIsEditing(false);
@@ -75,8 +88,10 @@ export const useUserAccountComponent = () => {
 
   return {
     navigate,
-    formList,
-    setFormList,
+    loading,
+    userFormList,
+    setUserFormList,
+    userFormFields,
     isEditing,
     setIsEditing,
     idUsuario,

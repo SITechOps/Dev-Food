@@ -60,6 +60,20 @@ class RestaurantesManager:
 
         self.__restaurante_repo.update(id_restaurante, restaurante_info)
         return ResponseFormatter.display_operation(self.class_name, "alterado")
+    
+
+    def update_financeiro(self, http_request: HttpRequest) -> HttpResponse:
+        id_restaurante = http_request.params.get("id")
+        financeiro_info = http_request.body.get("data")
+
+        if not financeiro_info:
+            return ResponseFormatter.display_error("Requisição inválida: 'data' é obrigatório.", 400)
+
+        if not id_restaurante:
+            return ResponseFormatter.display_error("ID do restaurante é obrigatório.", 400)
+        
+        self.__restaurante_repo.update_dados_financeiros(id_restaurante, financeiro_info)
+        return ResponseFormatter.display_operation(self.class_name, "alterado")
 
 
     def update_endereco(self, http_request: HttpRequest) -> HttpResponse:

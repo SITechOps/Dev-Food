@@ -99,13 +99,35 @@ class RestaurantesRepository(IRestaurantesRepository):
 
                 campos_permitidos = [
                     'nome', 'descricao', 'email', 'telefone', 'especialidade',
-                    'horario_funcionamento', 'logo', 'banco', 'agencia', 'nro_conta', 'tipo_conta',
+                    'horario_funcionamento', 'logo',
                     'razao_social', 'cnpj'
                 ]
 
                 for key in campos_permitidos:
                     if key in info_restaurante:
                         setattr(restaurante, key, info_restaurante[key])
+
+                db.session.add(restaurante)
+                db.session.commit()
+            except Exception as exception:
+                db.session.rollback()
+                raise exception
+
+
+    def update_dados_financeiros(self, id_restaurante: str, financeiro_data: dict ) -> None:
+        with DBConnectionHandler() as db:
+            try:
+                restaurante = self.find_by_id(id_restaurante)
+                if not restaurante:
+                    raise RestaurantNotFound()
+
+                campos_permitidos = [
+                    'banco', 'agencia', 'nro_conta', 'tipo_conta'
+                ]
+
+                for key in campos_permitidos:
+                    if key in financeiro_data:
+                        setattr(restaurante, key, financeiro_data[key])
 
                 db.session.add(restaurante)
                 db.session.commit()
@@ -123,7 +145,6 @@ class RestaurantesRepository(IRestaurantesRepository):
 
                 id_endereco_atual = restaurante.id_endereco
 
-                # Verifica se o endereço atual está sendo usado por algum usuário
                 endereco_em_uso_por_usuario = (
                     db.session.query(UserEndereco)
                     .filter_by(id_endereco=id_endereco_atual)
@@ -131,7 +152,6 @@ class RestaurantesRepository(IRestaurantesRepository):
                 )
 
                 if endereco_em_uso_por_usuario:
-                    # Existe algum usuário com o novo endereço?
                     usuario_com_novo_endereco = (
                         db.session.query(UserEndereco)
                         .join(Endereco, Endereco.id == UserEndereco.id_endereco)
@@ -140,11 +160,9 @@ class RestaurantesRepository(IRestaurantesRepository):
                     )
 
                     if usuario_com_novo_endereco:
-                        # Reutiliza endereço já existente de usuário
                         restaurante.id_endereco = usuario_com_novo_endereco.id_endereco
 
                     else:
-                        # Verifica se já existe restaurante com esse novo endereço
                         restaurante_existente = (
                             db.session.query(Restaurante)
                             .join(Endereco, Endereco.id == Restaurante.id_endereco)
@@ -154,7 +172,6 @@ class RestaurantesRepository(IRestaurantesRepository):
                         if restaurante_existente:
                             raise RestaurantAddressAlreadyExists()
 
-                        # Cria novo endereço e associa ao restaurante
                         novo_endereco = Endereco(**endereco_data)
                         db.session.add(novo_endereco)
                         db.session.flush()
@@ -164,8 +181,6 @@ class RestaurantesRepository(IRestaurantesRepository):
                         db.session.add(restaurante)  
 
                 else:
-                    # Endereço atual NÃO está em uso por usuários
-                    # Verifica se já existe restaurante com novo endereço
                     restaurante_existente = (
                         db.session.query(Restaurante)
                         .join(Endereco, Endereco.id == Restaurante.id_endereco)
@@ -175,7 +190,6 @@ class RestaurantesRepository(IRestaurantesRepository):
                     if restaurante_existente:
                         raise RestaurantAddressAlreadyExists()
 
-                    # Atualiza endereço atual com os dados novos
                     endereco_atual = db.session.query(Endereco).get(id_endereco_atual)
                     for key, value in endereco_data.items():
                         setattr(endereco_atual, key, value)

@@ -29,6 +29,11 @@ class IRestaurantesRepository(ABC):
 
 
     @abstractmethod
+    def update_dados_financeiros(self, id_restaurante: str, financeiro_data: dict ) -> None:
+        raise NotImplementedError("Subclasses devem implementar este método")
+
+
+    @abstractmethod
     def update_endereco(self, id_restaurante: str, endereco_data: dict) -> None:
         raise NotImplementedError("Subclasses devem implementar este método")
 

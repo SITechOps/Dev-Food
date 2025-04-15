@@ -37,7 +37,7 @@ def get_restaurant_by_id(id):
     return jsonify(http_response.body), http_response.status_code
 
 
-@restaurante_route_bp.put('/restaurante/<id>')
+@restaurante_route_bp.patch('/restaurante/<id>')
 def update_restaurant(id):
     http_request = HttpRequest(params={"id": id}, body=request.json)
 
@@ -45,6 +45,18 @@ def update_restaurant(id):
     restaurante_manager = RestaurantesManager(restaurante_repo)
 
     http_response = restaurante_manager.update(http_request)
+
+    return jsonify(http_response.body), http_response.status_code
+
+
+@restaurante_route_bp.patch('/restaurante/<id>/financeiro')
+def update_dados_bancarios(id):
+    http_request = HttpRequest(params={"id": id}, body=request.json)
+
+    restaurante_repo = RestaurantesRepository()
+    restaurante_manager = RestaurantesManager(restaurante_repo)
+
+    http_response = restaurante_manager.update_financeiro(http_request)
 
     return jsonify(http_response.body), http_response.status_code
 

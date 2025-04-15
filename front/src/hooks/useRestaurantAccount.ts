@@ -3,26 +3,61 @@ import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
-export const useRestaurantAccountComponent = () => {
+export const useRestaurantAccount = () => {
   const { logout, userData } = useAuth();
   const navigate = useNavigate();
+  const restaurantBankFields = [
+    { label: "Banco:", name: "banco", type: "text" },
+    { label: "Agência:", name: "agencia", type: "text" },
+    { label: "Número da Conta:", name: "nro_conta", type: "text" },
+    { label: "Tipo de Conta:", name: "tipo_conta", type: "text" },
+  ];
+  const restaurantFormFields = [
+    { label: "Nome:", name: "nome", type: "text" },
+    {
+      label: "Telefone:",
+      name: "telefone",
+      type: "tel",
+      isFormatted: true,
+      format: "(##) #####-####",
+    },
+    { label: "Email:", name: "email", type: "email" },
+    { label: "Descrição:", name: "descricao", type: "text" },
+    { label: "Especialidade:", name: "especialidade", type: "text" },
+    {
+      label: "Horário de Funcionamento:",
+      name: "horario_funcionamento",
+      type: "text",
+    },
+    { label: "Razão Social:", name: "razao_social", type: "text" },
+    {
+      label: "CNPJ:",
+      name: "cnpj",
+      type: "text",
+      isFormatted: true,
+      format: "##.###.###/####-##",
+    },
+  ];
   const [formList, setFormList] = useState({
     nome: "",
     telefone: "",
     email: "",
     descricao: "",
-    agencia: "",
-    banco: "",
     cnpj: "",
     especialidade: "",
     horario_funcionamento: "",
-    nro_conta: "",
     razao_social: "",
+  });
+
+  const [formListBancario, setFormListBancario] = useState({
+    banco: "",
+    agencia: "",
+    nro_conta: "",
     tipo_conta: "",
   });
+
   const [isEditing, setIsEditing] = useState(false);
   const idRestaurante = userData?.sub;
-  console.log(idRestaurante);
 
   useEffect(() => {
     if (!idRestaurante) return;
@@ -33,19 +68,22 @@ export const useRestaurantAccountComponent = () => {
     try {
       const response = await api.get(`/restaurante/${idRestaurante}`);
       const respRestaurante = response.data?.data?.attributes || [];
-      console.log(respRestaurante);
+
       setFormList({
         nome: respRestaurante.nome || "",
         telefone: respRestaurante.telefone || "",
         email: respRestaurante.email || "",
         descricao: respRestaurante.descricao || "",
-        agencia: respRestaurante.agencia || "",
-        banco: respRestaurante.banco || "",
         cnpj: respRestaurante.cnpj || "",
         especialidade: respRestaurante.especialidade || "",
         horario_funcionamento: respRestaurante.horario_funcionamento || "",
-        nro_conta: respRestaurante.nro_conta || "",
         razao_social: respRestaurante.razao_social || "",
+      });
+
+      setFormListBancario({
+        banco: respRestaurante.banco || "",
+        agencia: respRestaurante.agencia || "",
+        nro_conta: respRestaurante.nro_conta || "",
         tipo_conta: respRestaurante.tipo_conta || "",
       });
     } catch (error) {
@@ -53,15 +91,31 @@ export const useRestaurantAccountComponent = () => {
     }
   }
 
-  async function alterarDados(event: FormEvent<HTMLFormElement>) {
+  async function alterarDadosRestaurante(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      await api.put(`/restaurante/${idRestaurante}`, { data: formList });
-      alert("restaurante alterado com sucesso!");
+      await api.patch(`/restaurante/${idRestaurante}`, { data: formList });
+      alert("Restaurante alterado com sucesso!");
       setIsEditing(false);
     } catch (error) {
       alert("Erro ao alterar restaurante. Tente novamente.");
+    }
+
+    fetchUserData();
+  }
+
+  async function alterarDadosBancarios(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    try {
+      await api.patch(`/restaurante/${idRestaurante}/financeiro`, {
+        data: formListBancario,
+      });
+      alert("Dados bancários alterados com sucesso!");
+      setIsEditing(false);
+    } catch (error) {
+      alert("Erro ao alterar dados bancários. Tente novamente.");
     }
 
     fetchUserData();
@@ -89,11 +143,16 @@ export const useRestaurantAccountComponent = () => {
     navigate,
     formList,
     setFormList,
+    formListBancario,
+    setFormListBancario,
+    restaurantFormFields,
+    restaurantBankFields,
     isEditing,
     setIsEditing,
     idRestaurante,
     handleLogout,
     deletarDados,
-    alterarDados,
+    alterarDadosRestaurante,
+    alterarDadosBancarios,
   };
 };

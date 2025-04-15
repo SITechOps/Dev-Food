@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import UserForm from "../../components/UserForm";
-import RestaurantForm from "../../components/RestaurantForm";
-import Button from "../../components/Button";
-import { useAuth } from "../../contexts/AuthContext";
+import UserForm from "../components/UserAccount";
+import RestaurantForm from "../components/RestaurantAccount";
+import Button from "../components/Button";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Account() {
   const { userData, isAuthenticated } = useAuth();
@@ -26,7 +26,7 @@ export default function Account() {
   }
 
   return (
-    <section className="container mx-auto mt-10 rounded bg-white p-5 shadow">
+    <section className="flex w-full justify-center">
       {userData?.role === "usuario" ? <UserForm /> : <RestaurantForm />}
     </section>
   );
