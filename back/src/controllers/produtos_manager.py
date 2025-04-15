@@ -27,8 +27,8 @@ class ProdutosManager:
         id_restaurante = http_request.params.get("id_restaurante")
         self.__check_if_restaurant_exists(id_restaurante)
 
-        lista_enderecos = self.__produtos_repo.list_products(id_restaurante)
-        return ResponseFormatter.display_obj_list(self.class_name, lista_enderecos)
+        lista_produtos = self.__produtos_repo.list_products(id_restaurante)
+        return ResponseFormatter.display_obj_list(self.class_name, lista_produtos)
     
     
     def update(self, http_request: HttpRequest) -> HttpResponse:

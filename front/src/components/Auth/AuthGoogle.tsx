@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
-import Button from "../Button";
 import { postUser } from "../../connection/AuthUserController";
+import { useAuth } from "../../contexts/AuthContext";
+import Button from "../Button";
 
 export default function AuthGoogle() {
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
   const [user, setUser] = useState<TokenResponse | null>(null);
 
   const loginGoogle = useGoogleLogin({
@@ -29,26 +31,26 @@ export default function AuthGoogle() {
         },
       )
       .then(async (res) => {
-        const respGoogle = res.data;
-        const { email, telefone } = respGoogle;
+        const { email, telefone } = res.data;
 
         try {
-          const token = await postUser(email, telefone);
+          const token = await postUser(email, telefone, setAuth);
 
           if (!token) {
             throw new Error("Token não encontrado na resposta da API.");
           }
-          navigate("/");
+
           alert("Login realizado com sucesso!");
+          navigate("/");
         } catch (error: any) {
           console.error("Erro no login:", error);
           alert(error.response?.data?.message || "Erro ao fazer login.");
         }
       })
-      .catch((err) =>
-        console.error("Erro ao buscar informações do Google:", err),
-      );
-  }, [user]);
+      .catch((err) => {
+        console.error("Erro ao buscar informações do Google:", err);
+      });
+  }, [user, setAuth, navigate]);
 
   return (
     <Button

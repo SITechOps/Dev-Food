@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../connection/axios";
+import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
-import { decodeToken } from "../../../utils/decodeToken";
+import { useAuth } from "../contexts/AuthContext";
 
 export const useRestaurantAccountComponent = () => {
+  const { logout, userData } = useAuth();
   const navigate = useNavigate();
   const [formList, setFormList] = useState({
     nome: "",
@@ -19,9 +20,9 @@ export const useRestaurantAccountComponent = () => {
     razao_social: "",
     tipo_conta: "",
   });
-  const token = localStorage.getItem("token");
   const [isEditing, setIsEditing] = useState(false);
-  const idRestaurante = token ? decodeToken(token)?.sub : undefined;
+  const idRestaurante = userData?.sub;
+  console.log(idRestaurante);
 
   useEffect(() => {
     if (!idRestaurante) return;
@@ -80,7 +81,7 @@ export const useRestaurantAccountComponent = () => {
   }
 
   function handleLogout() {
-    localStorage.clear();
+    logout();
     navigate("/Auth");
   }
 

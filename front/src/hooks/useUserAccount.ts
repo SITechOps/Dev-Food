@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../connection/axios";
+import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
-import { decodeToken } from "../../../utils/decodeToken";
+import { useAuth } from "../contexts/AuthContext";
 
 export const useUserAccountComponent = () => {
   const navigate = useNavigate();
@@ -10,10 +10,10 @@ export const useUserAccountComponent = () => {
     email: "",
     telefone: "",
   });
-  const token = localStorage.getItem("token");
+  const { logout, userData } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const idUsuario = userData?.sub;
   const [loading, setLoading] = useState(true);
-  const idUsuario = token ? decodeToken(token)?.sub : undefined;
 
   useEffect(() => {
     if (!idUsuario) return;
@@ -69,7 +69,7 @@ export const useUserAccountComponent = () => {
   }
 
   function handleLogout() {
-    localStorage.clear();
+    logout();
     navigate("/Auth");
   }
 

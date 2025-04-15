@@ -2,8 +2,10 @@ import { FormEvent, useState } from "react";
 import { api } from "../../connection/axios";
 import { postUser } from "../../connection/AuthUserController";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const useAuthUserComponent = () => {
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
   const [formList, setFormList] = useState({
     telefone: "",
@@ -48,11 +50,12 @@ export const useAuthUserComponent = () => {
   async function loginUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      const token = await postUser(formList.email, formList.telefone);
+      const token = await postUser(formList.email, formList.telefone, setAuth);
 
       if (!token) {
         throw new Error("Token não encontrado na resposta da API.");
       }
+      setAuth(token);
       navigate("/");
       alert("Login realizado com sucesso!");
     } catch (error: any) {

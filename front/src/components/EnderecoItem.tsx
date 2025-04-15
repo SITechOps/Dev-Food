@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../connection/axios";
-import { AiOutlineDelete } from "react-icons/ai";
-import { FaHome, FaBriefcase } from "react-icons/fa"; // Importe os ícones
+import { FaHome, FaBriefcase } from "react-icons/fa";
 
 interface EnderecoItemProps {
   endereco: any;
