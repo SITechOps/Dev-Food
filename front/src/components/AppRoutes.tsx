@@ -8,7 +8,7 @@ const Account = lazy(() => import("../pages/Account/Account"));
 const Cardapio = lazy(() => import("./Cardapios"));
 const CadastroEndereco = lazy(() => import("../components/CadastroEndereco"));
 const CadastroRestaurante = lazy(
-  () => import("../pages/FormRestaurante/CadastroRestaurante"),
+  () => import("../pages/Usuario/Restaurante/FormRestaurante/CadastroRestaurante"),
 );
 const DetalhesRestaurante = lazy(
   () => import("../pages/RestaurantesDisponiveis/Detalhes"),

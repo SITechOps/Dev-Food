@@ -1,9 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../connection/axios";
+import { api } from "../../../../connection/axios";
 import axios from "axios";
-
-
 
 export const useCadastroRestaurante = () => {
 	const [formList, setFormList] = useState({
@@ -17,6 +15,7 @@ export const useCadastroRestaurante = () => {
 		bairro: "",
 		complemento: "",
 		numero: "",
+		razaoSocial: "",
 		cnpj: "",
 		especialidade: "",  
 		descricao: "",  
@@ -79,7 +78,7 @@ export const useCadastroRestaurante = () => {
 		  descricao: formList.descricao, 
 		  email: formList.email,
 		  cnpj: formList.cnpj,
-		  razao_social: formList.nome, 
+		  razao_social: formList.razaoSocial, 
 		  especialidade: formList.especialidade,
 		  telefone: formList.telefone,
 		  horario_funcionamento: "", 
@@ -121,7 +120,6 @@ export const useCadastroRestaurante = () => {
 		etapa,
 		setEtapa,
 		validarEmail,
-		navigate,
 		setCepLimpo,
 		mostrarModal,
 		setMostrarModal,

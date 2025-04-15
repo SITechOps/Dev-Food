@@ -1,9 +1,9 @@
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+import Input from "../../../../components/Input";
+import Button from "../../../../components/Button";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useCadastroRestaurante } from "./useCadastroRestaurante";
-import ModalEmail from "../../components/ModalEmail";
+import ModalEmail from "../../../../components/ModalEmail";
 
 export default function CadastroRestaurante() {
   const {
@@ -13,15 +13,12 @@ export default function CadastroRestaurante() {
 		etapa,
 		setEtapa,
 		validarEmail,
-		navigate,
 		setCepLimpo,
 		mostrarModal,
 		setMostrarModal,
 		codigoEnviado,
 		handleSubmit
   } = useCadastroRestaurante();
-
-  
  
   return (
     <>
@@ -49,7 +46,7 @@ export default function CadastroRestaurante() {
                 <Input
                   id="nome"
                   name="nome"
-                  textLabel="Infome o Razão Social:"
+                  textLabel="Infome o seu nome completo:"
                   value={formList.nome}
                   onChange={(value) =>
                     setFormList({ ...formList, nome: value })
@@ -230,6 +227,19 @@ export default function CadastroRestaurante() {
               <h3 className="my-5 font-bold">
                 Agora, nos fale mais sobre seu negócio
               </h3>
+
+              <Input
+                  id="razaoSocial"
+                  name="razaoSocial"  
+                  className={`${styleInput}`}
+                  textLabel="Infome o Razão Social:"
+                  value={formList.razaoSocial}
+                  onChange={(value) =>
+                    setFormList({ ...formList, razaoSocial: value })
+                  }
+                  type="text"
+                  required
+                />
 
               <label htmlFor="cnpj" className="font-medium">Insira seu CNPJ:</label>
               <PatternFormat
