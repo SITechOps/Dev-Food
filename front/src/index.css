@@ -67,7 +67,6 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Remover nos navegadores Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
 }

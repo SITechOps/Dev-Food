@@ -4,14 +4,15 @@ import iFoodLogo from "../assets/ifood.png";
 import { CiUser } from "react-icons/ci";
 import Button from "./Button";
 import ListagemEndereco from "./ListagemEndereco";
-import { decodeToken } from "../utils/decodeToken";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Menu() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const idUsuario = token ? decodeToken(token)?.sub : undefined;
+  const { userData } = useAuth();
+  const idUsuario = userData?.sub;
 
   useEffect(() => {
     if (menuRef.current) {

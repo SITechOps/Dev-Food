@@ -24,6 +24,8 @@ class Produto(Base):
         return {
             "id": self.id,
             "nome": self.nome,
+            "descricao": self.descricao,
             "valor_unitario": self.valor_unitario,
-            "qtd_estoque": self.qtd_estoque
+            "qtd_estoque": self.qtd_estoque,
+            "imageUrl": self.imageUrl   
         }

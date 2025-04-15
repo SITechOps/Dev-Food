@@ -1,8 +1,8 @@
 import { FaAngleLeft } from "react-icons/fa6";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import Input from "../../../components/Input";
-import Button from "../../../components/Button";
+import Input from "./Input";
+import Button from "./Button";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
 import { useRestaurantAccountComponent } from "../hooks/useRestaurantAccount";
 
@@ -37,7 +37,7 @@ export default function RestaurantForm() {
 
   return (
     <>
-      <section className="m-auto mt-12 flex w-1/2 flex-col justify-center rounded-md bg-white p-5 shadow">
+      <section className="m-auto mt-10 flex w-1/2 flex-col justify-center rounded-md bg-white p-5 shadow">
         <div className="flex w-full items-center justify-between">
           <button onClick={() => navigate("/")} className="self-start">
             <FaAngleLeft className="icon h-10 w-10" />

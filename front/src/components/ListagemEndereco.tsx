@@ -5,16 +5,17 @@ import Modal from "./Modal";
 import EnderecoItem from "./EnderecoItem";
 import { useLocation, useNavigate } from "react-router-dom";
 import ifoodLogo from "../assets/ifood.png"; // Importe a imagem do logo do iFood
-import { decodeToken } from "../utils/decodeToken";
 import Button from "./Button";
+import { IAddress } from "../interface/IAddress";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function ListagemEndereco() {
-  const [enderecos, setEnderecos] = useState([]);
+  const [enderecos, setEnderecos] = useState<IAddress[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const token = localStorage.getItem("token");
-  const idUsuario = token ? decodeToken(token)?.sub : undefined;
+  const { userData, token } = useAuth();
+  const idUsuario = userData?.sub;
   const location = useLocation();
   const navigate = useNavigate();
 

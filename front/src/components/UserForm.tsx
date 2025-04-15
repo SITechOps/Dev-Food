@@ -1,8 +1,8 @@
 import { FaAngleLeft } from "react-icons/fa6";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import Input from "../../../components/Input";
-import Button from "../../../components/Button";
+import Input from "./Input";
+import Button from "./Button";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
 import { useUserAccountComponent } from "../hooks/useUserAccount";
 

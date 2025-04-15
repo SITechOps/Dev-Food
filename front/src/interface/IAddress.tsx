@@ -1,4 +1,5 @@
 export interface IAddress {
+  id?: string;
   logradouro: string;
   numero: string;
   bairro: string;
