@@ -14,6 +14,7 @@ export default function DadosRestaurante() {
   const [complemento, setComplemento] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [especialidade, setEspecialidade] = useState("");
+  const styleInput = "border-2 border-gray-medium my-3";
 
   // Faz a busca no ViaCEP quando o CEP tiver 8 dígitos
   useEffect(() => {
@@ -67,35 +68,34 @@ export default function DadosRestaurante() {
   };
 
   return (
-    <div className="mt-12 flex justify-center gap-30">
-      <div>
-        <p className="font-bold">INFORMAÇÕES DA LOJA</p>
-        <h1 className="mt-5 font-bold">Onde fica sua loja?</h1>
-        <p className="mt-2 font-bold">Digite o CEP e complete as informações</p>
-        <label className="mt-2 block font-medium text-gray-700">CEP*</label>
+    <div className="mt-[5rem] m-auto flex flex-wrap justify-center gap-30 w-full items-start">
+      <div className="">
+        <h1 className="font-bold">Infomações da Loja</h1>
+        <h3 className="mt-5 font-bold">Onde fica sua loja?</h3>
+        <p className="my-4">Digite o CEP e complete as informações</p>
         <Input
-          className="border"
+          textLabel="CEP:"
+          className={styleInput}
           id="cep"
           name="cep"
-          placeholder="00000-000"
+          placeholder="00000-000" // faltou formatar use o PatternFormat, NumberFormatValues
           value={cep}
           onChange={setCep}
           type="text"
         />
-        <br />
         <div className="flex gap-4">
-          <label className="mt-2 block font-medium text-gray-700">Estado</label>
           <Input
-            className="border"
+            textLabel="Estado:"
+            className={styleInput}
             id="estado"
             name="estado"
             value={estado}
             onChange={setEstado}
             type="text"
           />
-          <label className="mt-2 block font-medium text-gray-700">Cidade</label>
           <Input
-            className="border"
+            textLabel="Cidade:"
+            className={styleInput}
             id="cidade"
             name="cidade"
             value={cidade}
@@ -103,9 +103,10 @@ export default function DadosRestaurante() {
             type="text"
           />
         </div>
-        <label className="mt-2 block font-medium text-gray-700">Bairro</label>
+
         <Input
-          className="border"
+          textLabel="Bairro:"
+          className={`${styleInput} mt-3`}
           id="bairro"
           name="bairro"
           placeholder="Exemplo:Centro"
@@ -113,9 +114,9 @@ export default function DadosRestaurante() {
           onChange={setBairro}
           type="text"
         />
-        <label className="mt-2 block font-medium text-gray-700">Endereço</label>
         <Input
-          className="border"
+          textLabel="Endereço:"
+          className={styleInput}
           id="endereço"
           name="endereço"
           placeholder="Exemplo:Avenida Brasil"
@@ -123,22 +124,19 @@ export default function DadosRestaurante() {
           onChange={setEndereço}
           type="text"
         />
-        <br />
         <div className="flex gap-4">
-          <label className="mt-2 block font-medium text-gray-700">Número</label>
           <Input
-            className="border"
+            textLabel="Número:"
+            className={styleInput}
             id="numero"
             name="numero"
             value={numero}
             onChange={setNumero}
             type="number"
           />
-          <label className="mt-2 block font-medium text-gray-700">
-            Complemento
-          </label>
           <Input
-            className="border"
+            textLabel="Complemento:"
+            className={styleInput}
             id="complemento"
             name="complemento"
             value={complemento}
@@ -148,42 +146,54 @@ export default function DadosRestaurante() {
         </div>
       </div>
 
-      <div className="">
-        <p className="font-bold">NEGÓCIO E RESPONSÁVEL</p>
-        <h1 className="mt-5 font-bold">
-          Agora, nos fale mais sobre seu negócio
-        </h1>
+      <hr className="w-px h-[38rem] bg-gray-medium border-1" />
 
-        <label className="mt-8 block font-medium text-gray-700">CNPJ</label>
+
+      <div className="">
+
+        <h1 className="font-bold">Negócio e Responsável</h1>
+        <h3 className="my-5 font-bold">
+          Agora, nos fale mais sobre seu negócio
+        </h3>
+
         <Input
-          className="border"
+          textLabel="CNPJ:"
+          className={styleInput}
           id="cnpj"
           name="cnpj"
-          placeholder="00.000.000/0000-00"
+          placeholder="00.000.000/0000-00"  // faltou formatar use o PatternFormat, NumberFormatValues
           value={cnpj}
           onChange={setCnpj}
         />
-        <label className="mt-8 block font-medium text-gray-700">
-          Especialidade
-        </label>
-        <select
-          className="mt-2 w-full rounded border p-2"
-          id="especialidade"
-          name="especialidade"
-          value={especialidade}
-          onChange={(e) => setEspecialidade(e.target.value)}
-        >
-          <option value="">Selecione</option>
-          <option value="Brasileira">Brasileira</option>
-          <option value="Japonesa">Japonesa</option>
-          <option value="Italiana">Italiana</option>
-          <option value="Mexicana">Mexicana</option>
-          <option value="Outros">Outros</option>
-        </select>
+        <div id="compo-select">
+          <label className="mt-4 mb-1 block font-medium text-gray-700">
+            Especialidade
+          </label>
+          <select
+            className="mt-2 w-full rounded border p-2 input"
+            id="especialidade"
+            name="especialidade"
+            value={especialidade}
+            onChange={(e) => setEspecialidade(e.target.value)}
+          >
+            <option value="">Selecione</option>
+            <option value="Brasileira">Brasileira</option>
+            <option value="Japonesa">Japonesa</option>
+            <option value="Italiana">Italiana</option>
+            <option value="Mexicana">Mexicana</option>
+            <option value="Outros">Outros</option>
+          </select>
+          <p className="mt-2">Esse item poderá ser alterado posteriormente</p>
+        </div>
 
-        <p>Esse item poderá ser alterado posteriormente</p>
-        <div className="mt-6 flex justify-center">
-          <Button className="w-48" onClick={handleSubmit}>
+        <h3 className="my-5 font-bold">
+          Agora, nos informe seu dados bancários 
+        </h3>
+
+        {/* incluir os inputs dos dados bancarios */}
+
+        <div className="mt-[10rem]">
+          <Button className="" onClick={handleSubmit}>
             Finalizar
           </Button>
         </div>

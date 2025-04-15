@@ -40,7 +40,7 @@ export default function CadastroRestaurante() {
             <Input
               id="nome"
               name="nome"
-              textLabel="Nome Completo *"
+              textLabel="Nome Completo:"
               placeholder="Digite seu nome e sobrenome"
               value={nome}
               onChange={setNome}
@@ -51,7 +51,7 @@ export default function CadastroRestaurante() {
             <Input
               id="celular"
               name="celular"
-              textLabel="Celular*"
+              textLabel="Celular:"
               placeholder="(00) 00000-0000"
               value={celular}
               onChange={setCelular}
@@ -60,7 +60,7 @@ export default function CadastroRestaurante() {
             />
 
             <Input
-              textLabel="E-mail*"
+              textLabel="E-mail:"
               id="email"
               name="email"
               placeholder="exemplo@gmail.com"
@@ -93,10 +93,11 @@ export default function CadastroRestaurante() {
 
       {mostrarModal && (
         <ModalEmail
-          email={email}
+          // email={email}
           codigoEnviado={codigoEnviado}
           isModalOpen={mostrarModal}
           setIsModalOpen={setMostrarModal}
+          tipoEnvioCodigo={"email"}
           onSuccess={() => navigate("/dados-restaurante")}
         />
       )}
