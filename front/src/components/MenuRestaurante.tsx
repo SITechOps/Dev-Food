@@ -64,14 +64,14 @@ const MenuRestaurante = () => {
                   className="flex w-full items-center gap-3"
                 >
                   {item.icon}
-                  <span className={item.name === "Sair" ? "color-brown-light" : ""}>
+                  <span className={item.name === "Sair" ? "text-brown-light" : ""}>
                     {item.name}
                   </span>
                 </button>
               ) : (
                 <Link to={item.link} className="flex w-full items-center gap-3">
                   {item.icon}
-                  <span className={item.name === "Sair" ? "color-brown-light" : ""}>
+                  <span className={item.name === "Sair" ? "text-brown-light" : ""}>
                     {item.name}
                   </span>
                 </Link>
