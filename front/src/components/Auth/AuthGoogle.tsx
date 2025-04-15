@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
-import Button from "./Button";
-import { postUser } from "../connection/AuthUserController";
-import { useAuth } from "../contexts/AuthContext";
+import Button from "../Button";
+import { useAuth } from "../../contexts/AuthContext";
+import { postUser } from "../../connection/AuthUserController";
 
 export default function AuthGoogle() {
   const navigate = useNavigate();

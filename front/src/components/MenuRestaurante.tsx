@@ -61,7 +61,7 @@ const MenuRestaurante = () => {
               {item.action ? (
                 <button
                   onClick={item.action}
-                  className="flex w-full items-center gap-3"
+                  className="flex w-full cursor-pointer items-center gap-3"
                 >
                   {item.icon}
                   <span

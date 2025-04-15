@@ -5,29 +5,36 @@ import axios from "axios";
 import { api } from "../../connection/axios";
 
 export default function DadosRestaurante() {
-  const [cep, setCep] = useState("");
-  const [estado, setEstado] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [bairro, setBairro] = useState("");
-  const [endereço, setEndereço] = useState("");
-  const [numero, setNumero] = useState("");
-  const [complemento, setComplemento] = useState("");
-  const [cnpj, setCnpj] = useState("");
-  const [especialidade, setEspecialidade] = useState("");
+  const [formList, setFormList] = useState({
+    cep: "",
+    estado: "",
+    cidade: "",
+    bairro: "",
+    endereco: "",
+    complemento: "",
+    numero: "",
+    cnpj: "",
+    especialidade: "",
+  });
+
+  const styleInput = "border-2 border-gray-medium my-3";
 
   // Faz a busca no ViaCEP quando o CEP tiver 8 dígitos
   useEffect(() => {
-    const cepLimpo = cep.replace(/\D/g, "");
+    const cepLimpo = formList.cep.replace(/\D/g, "");
 
     if (cepLimpo.length === 8) {
       axios
         .get(`https://viacep.com.br/ws/${cepLimpo}/json/`)
         .then((res) => {
           if (!res.data.erro) {
-            setEstado(res.data.uf);
-            setCidade(res.data.localidade);
-            setBairro(res.data.bairro);
-            setEndereço(res.data.logradouro);
+            setFormList({
+              ...formList,
+              estado: res.data.uf,
+              cidade: res.data.localidade,
+              bairro: res.data.bairro,
+              endereco: res.data.logradouro,
+            })
           } else {
             console.warn("CEP não encontrado.");
           }
@@ -36,20 +43,20 @@ export default function DadosRestaurante() {
           console.error("Erro ao buscar o CEP:", err);
         });
     }
-  }, [cep]);
+  }, [formList.cep]);
 
   const handleSubmit = () => {
     const dados = {
-      cnpj: cnpj,
-      especialidade: especialidade,
+      cnpj: formList.cnpj,
+      especialidade: formList.especialidade,
       endereco: {
-        logradouro: endereço,
-        bairro: bairro,
-        cidade: cidade,
-        estado: estado,
+        logradouro: formList.endereco,
+        bairro: formList.bairro,
+        cidade: formList.cidade,
+        estado: formList.estado,
         pais: "Brasil",
-        numero: parseInt(numero),
-        complemento: complemento,
+        numero: parseInt(formList.numero),
+        complemento: formList.complemento,
       },
     };
 
@@ -67,123 +74,150 @@ export default function DadosRestaurante() {
   };
 
   return (
-    <div className="mt-12 flex justify-center gap-30">
-      <div>
-        <p className="font-bold">INFORMAÇÕES DA LOJA</p>
-        <h1 className="mt-5 font-bold">Onde fica sua loja?</h1>
-        <p className="mt-2 font-bold">Digite o CEP e complete as informações</p>
-        <label className="mt-2 block font-medium text-gray-700">CEP*</label>
+    <div className="mt-[5rem] m-auto flex flex-wrap justify-center gap-30 w-full items-start">
+      <div className="">
+        <h1 className="font-bold">Infomações da Loja</h1>
+        <h3 className="mt-5 font-bold">Onde fica sua loja?</h3>
+        <p className="my-4">Digite o CEP e complete as informações</p>
         <Input
-          className="border"
+          textLabel="CEP:"
+          className={styleInput}
           id="cep"
           name="cep"
-          placeholder="00000-000"
-          value={cep}
-          onChange={setCep}
+          placeholder="00000-000" // faltou formatar use o PatternFormat, NumberFormatValues
+          value={formList.cep}
+          onChange={(value) =>
+            setFormList({ ...formList, cep: value })
+          }
           type="text"
         />
-        <br />
         <div className="flex gap-4">
-          <label className="mt-2 block font-medium text-gray-700">Estado</label>
           <Input
-            className="border"
+            textLabel="Estado:"
+            className={styleInput}
             id="estado"
             name="estado"
-            value={estado}
-            onChange={setEstado}
+            value={formList.estado}
+            onChange={(value) =>
+              setFormList({ ...formList, estado: value })
+            }
             type="text"
           />
-          <label className="mt-2 block font-medium text-gray-700">Cidade</label>
           <Input
-            className="border"
+            textLabel="Cidade:"
+            className={styleInput}
             id="cidade"
             name="cidade"
-            value={cidade}
-            onChange={setCidade}
+            value={formList.cidade}
+            onChange={(value) =>
+              setFormList({ ...formList, cidade: value })
+            }
             type="text"
           />
         </div>
-        <label className="mt-2 block font-medium text-gray-700">Bairro</label>
+
         <Input
-          className="border"
+          textLabel="Bairro:"
+          className={`${styleInput} mt-3`}
           id="bairro"
           name="bairro"
           placeholder="Exemplo:Centro"
-          value={bairro}
-          onChange={setBairro}
+          value={formList.bairro}
+          onChange={(value) =>
+            setFormList({ ...formList, bairro: value })
+          }
           type="text"
         />
-        <label className="mt-2 block font-medium text-gray-700">Endereço</label>
         <Input
-          className="border"
+          textLabel="Endereço:"
+          className={styleInput}
           id="endereço"
           name="endereço"
           placeholder="Exemplo:Avenida Brasil"
-          value={endereço}
-          onChange={setEndereço}
+          value={formList.endereco}
+          onChange={(value) =>
+            setFormList({ ...formList, endereco: value })
+          }
           type="text"
         />
-        <br />
         <div className="flex gap-4">
-          <label className="mt-2 block font-medium text-gray-700">Número</label>
           <Input
-            className="border"
+            textLabel="Número:"
+            className={styleInput}
             id="numero"
             name="numero"
-            value={numero}
-            onChange={setNumero}
+            value={formList.numero}
+            onChange={(value) =>
+              setFormList({ ...formList, numero: value })
+            }
             type="number"
           />
-          <label className="mt-2 block font-medium text-gray-700">
-            Complemento
-          </label>
           <Input
-            className="border"
+            textLabel="Complemento:"
+            className={styleInput}
             id="complemento"
             name="complemento"
-            value={complemento}
-            onChange={setComplemento}
+            value={formList.complemento}
+            onChange={(value) =>
+              setFormList({ ...formList, complemento: value })
+            }
             type="text"
           />
         </div>
       </div>
 
-      <div className="">
-        <p className="font-bold">NEGÓCIO E RESPONSÁVEL</p>
-        <h1 className="mt-5 font-bold">
-          Agora, nos fale mais sobre seu negócio
-        </h1>
+      <hr className="w-px h-[38rem] bg-gray-medium border-1" />
 
-        <label className="mt-8 block font-medium text-gray-700">CNPJ</label>
+
+      <div className="">
+
+        <h1 className="font-bold">Negócio e Responsável</h1>
+        <h3 className="my-5 font-bold">
+          Agora, nos fale mais sobre seu negócio
+        </h3>
+
         <Input
-          className="border"
+          textLabel="CNPJ:"
+          className={styleInput}
           id="cnpj"
           name="cnpj"
-          placeholder="00.000.000/0000-00"
-          value={cnpj}
-          onChange={setCnpj}
+          placeholder="00.000.000/0000-00"  // faltou formatar use o PatternFormat, NumberFormatValues
+          value={formList.cnpj}
+          onChange={(value) =>
+            setFormList({ ...formList, cnpj: value })
+          }
         />
-        <label className="mt-8 block font-medium text-gray-700">
-          Especialidade
-        </label>
-        <select
-          className="mt-2 w-full rounded border p-2"
-          id="especialidade"
-          name="especialidade"
-          value={especialidade}
-          onChange={(e) => setEspecialidade(e.target.value)}
-        >
-          <option value="">Selecione</option>
-          <option value="Brasileira">Brasileira</option>
-          <option value="Japonesa">Japonesa</option>
-          <option value="Italiana">Italiana</option>
-          <option value="Mexicana">Mexicana</option>
-          <option value="Outros">Outros</option>
-        </select>
+        <div id="compo-select">
+          <label className="mt-4 mb-1 block font-medium text-gray-700">
+            Especialidade
+          </label>
+          <select
+            className="mt-2 w-full rounded border p-2 input"
+            id="especialidade"
+            name="especialidade"
+            value={formList.especialidade}
+            onChange={(e) =>
+              setFormList({ ...formList, especialidade: e.target.value })
+            }
+          >
+            <option value="">Selecione</option>
+            <option value="Brasileira">Brasileira</option>
+            <option value="Japonesa">Japonesa</option>
+            <option value="Italiana">Italiana</option>
+            <option value="Mexicana">Mexicana</option>
+            <option value="Outros">Outros</option>
+          </select>
+          <p className="mt-2">Esse item poderá ser alterado posteriormente</p>
+        </div>
 
-        <p>Esse item poderá ser alterado posteriormente</p>
-        <div className="mt-6 flex justify-center">
-          <Button className="w-48" onClick={handleSubmit}>
+        <h3 className="my-5 font-bold">
+          Agora, nos informe seu dados bancários 
+        </h3>
+
+        {/* incluir os inputs dos dados bancarios */}
+
+        <div className="mt-[10rem]">
+          <Button className="" onClick={handleSubmit}>
             Finalizar
           </Button>
         </div>
