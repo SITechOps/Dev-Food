@@ -10,9 +10,6 @@ const CadastroEndereco = lazy(() => import("../components/CadastroEndereco"));
 const CadastroRestaurante = lazy(
   () => import("../pages/FormRestaurante/CadastroRestaurante"),
 );
-const DadosRestaurante = lazy(
-  () => import("../pages/FormRestaurante/DadosRestaurante"),
-);
 const DetalhesRestaurante = lazy(
   () => import("../pages/RestaurantesDisponiveis/Detalhes"),
 );
@@ -27,7 +24,6 @@ const AppRoutes = () => {
       <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
       <Route path="/intermediaria" element={<Intermediaria />} />
       <Route path="/cadastro-restaurante" element={<CadastroRestaurante />} />
-      <Route path="/dados-restaurante" element={<DadosRestaurante />} />
       <Route path="/cardapios" element={<Cardapio />} />
     </Routes>
   );
