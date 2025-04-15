@@ -16,8 +16,8 @@ export const useAuthUserComponent = () => {
   const [etapa, setEtapa] = useState<"email" | "telefone">("email");
 
   async function validarEmail() {
+    setEtapa("email");
     setIsModalOpen(true);
-
     const response = await api.post("/send-email", {
       data: {
         email: formList.email,
@@ -27,6 +27,7 @@ export const useAuthUserComponent = () => {
   }
 
   async function validarTelefone() {
+    setEtapa("telefone");
     setIsModalOpen(true);
     const response = await api.post("/send-sms", {
       data: { telefone: `55${formList.telefone}` },

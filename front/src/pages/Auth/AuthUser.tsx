@@ -1,8 +1,8 @@
 import Input from "../../components/Input";
 import { FaAngleLeft } from "react-icons/fa6";
 import Button from "../../components/Button";
-import AuthGoogle from "../../components/AuthGoogle";
-import AuthFacebook from "../../components/AuthFacebook";
+import AuthGoogle from "../../components/Auth/AuthGoogle";
+import AuthFacebook from "../../components/Auth/AuthFacebook";
 import ModalEmail from "../../components/ModalEmail";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "./useAuthUser-component";
@@ -30,7 +30,8 @@ export default function AuthUser() {
               codigoEnviado={codigoEnviado}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
-              onSuccess={() => setEtapa("telefone")}
+              tipoEnvioCodigo={etapa}
+              onSuccess={() => { if (etapa === "email") setEtapa("telefone");}}
             />
           )}
 
@@ -46,7 +47,7 @@ export default function AuthUser() {
           <div className="text-center">
             <h1 className="mt-4 font-bold">Falta pouco para matar sua fome!</h1>
 
-            <legend className="mt-4 mb-3">Como deseja continuar?</legend>
+            <legend className="mt-4">Como deseja continuar?</legend>
           </div>
 
           {etapa === "email" && (
@@ -102,8 +103,8 @@ export default function AuthUser() {
                   id="telefone"
                 />
                 <p className="mb-4">
-                  Preencha o telefone apenas se preferir, esse meio de contato
-                  (não obrigatório).
+                  Preencha o telefone apenas se preferir, esse meio de validação
+                  (não obrigatório)!
                 </p>
                 <div className="flex gap-4">
                 <Button color="secondary" type="button" className="p-2"  onClick={validarTelefone}>Validar Telefone</Button>
