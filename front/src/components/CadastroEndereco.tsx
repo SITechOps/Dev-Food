@@ -4,11 +4,9 @@ import { TbHomeFilled } from "react-icons/tb";
 import { IoBusiness } from "react-icons/io5";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-
+import { useEndereco } from "../hooks/useAddress";
 import Input from "./Input";
 import Button from "./Button";
-
-import { useEndereco } from "../hooks/useAddress";
 
 const CadastroEndereco = () => {
   const {
@@ -16,6 +14,7 @@ const CadastroEndereco = () => {
     numero,
     complemento,
     tipo,
+    role,
     setNumero,
     setComplemento,
     searchInput,
@@ -108,47 +107,49 @@ const CadastroEndereco = () => {
                   />
                 </div>
 
-                <div className="mt-5">
-                  <label>Favoritar como:</label>
-                  <div className="my-5 flex space-x-4">
-                    <button
-                      type="button"
-                      onClick={() => handleFavoritar("Casa")}
-                      className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
-                        tipo === "Casa"
-                          ? "border-brown-normal border-2"
-                          : "hover:border-gray-medium border-2 border-transparent"
-                      }`}
-                    >
-                      <TbHomeFilled
-                        className={`transition-colors duration-300 ${
+                {role != "restaurante" && (
+                  <div className="mt-5">
+                    <label>Favoritar como:</label>
+                    <div className="my-5 flex space-x-4">
+                      <button
+                        type="button"
+                        onClick={() => handleFavoritar("Casa")}
+                        className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
                           tipo === "Casa"
-                            ? "text-brown-normal"
-                            : "text-gray-medium hover:text-gray-medium"
+                            ? "border-brown-normal border-2"
+                            : "hover:border-gray-medium border-2 border-transparent"
                         }`}
-                      />
-                      <span>Casa</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleFavoritar("Trabalho")}
-                      className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
-                        tipo === "Trabalho"
-                          ? "border-brown-normal border-2"
-                          : "hover:border-gray-medium border-2 border-transparent"
-                      }`}
-                    >
-                      <IoBusiness
-                        className={`transition-colors duration-300 ${
+                      >
+                        <TbHomeFilled
+                          className={`transition-colors duration-300 ${
+                            tipo === "Casa"
+                              ? "text-brown-normal"
+                              : "text-gray-medium hover:text-gray-medium"
+                          }`}
+                        />
+                        <span>Casa</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleFavoritar("Trabalho")}
+                        className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
                           tipo === "Trabalho"
-                            ? "text-brown-normal"
-                            : "text-gray-medium hover:text-gray-medium"
+                            ? "border-brown-normal border-2"
+                            : "hover:border-gray-medium border-2 border-transparent"
                         }`}
-                      />
-                      <span>Trabalho</span>
-                    </button>
+                      >
+                        <IoBusiness
+                          className={`transition-colors duration-300 ${
+                            tipo === "Trabalho"
+                              ? "text-brown-normal"
+                              : "text-gray-medium hover:text-gray-medium"
+                          }`}
+                        />
+                        <span>Trabalho</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <Button
                   type="submit"

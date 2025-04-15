@@ -10,6 +10,7 @@ import { useCallback } from "react";
 export const useEndereco = () => {
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
+  const role = userData?.role;
   const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
   const mapApiJs = "https://maps.googleapis.com/maps/api/js";
   const navigate = useNavigate();
@@ -159,6 +160,7 @@ export const useEndereco = () => {
     numero,
     complemento,
     tipo,
+    role,
     setNumero,
     setTipo,
     setComplemento,
