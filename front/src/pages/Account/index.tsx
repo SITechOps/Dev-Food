@@ -28,7 +28,7 @@ export default function Account() {
     );
 
   return (
-    <section className="container mx-auto mt-12 rounded bg-white p-5 shadow">
+    <section className="container mx-auto mt-12">
       {role === "usuario" ? <UserForm /> : <RestaurantForm />}
     </section>
   );

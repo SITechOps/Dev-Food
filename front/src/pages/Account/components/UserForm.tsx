@@ -38,7 +38,7 @@ export default function UserForm() {
   return (
     <>
       <section className="m-auto mt-12 flex w-1/2 flex-col justify-center">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between rounded bg-white p-5 shadow">
           <button onClick={() => navigate("/")} className="self-start">
             <FaAngleLeft className="icon h-10 w-10" />
           </button>

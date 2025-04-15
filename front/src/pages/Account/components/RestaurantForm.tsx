@@ -103,17 +103,7 @@ export default function RestaurantForm() {
 
           <div className={baseText}>
             Email:
-            {isEditing ? (
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                value={formList.email}
-                onChange={(value) => setFormList({ ...formList, email: value })}
-              />
-            ) : (
-              <span className="font-semibold">{formList.email}</span>
-            )}
+            <span className="font-semibold">{formList.email}</span>
           </div>
 
           <div className={baseText}>
