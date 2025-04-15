@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 interface ModalEmailPros {
-  email: string;
-  telefone?: string;
+  tipoEnvioCodigo: string,
   codigoEnviado: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +15,7 @@ export default function ModalEmail({
   codigoEnviado,
   isModalOpen,
   setIsModalOpen,
+  tipoEnvioCodigo,
   onSuccess,
 }: ModalEmailPros) {
   const [codigoDigitado, setCodigoDigitado] = useState("");
@@ -84,7 +84,7 @@ export default function ModalEmail({
             inputMode={"tel"}
           />
         </div>
-        <p className="text-lg">Insira o código enviado por email!</p>
+        <p className="text-lg"> Insira o código enviado por {tipoEnvioCodigo === "email" ? "email" : "SMS"}!</p>
         <Button ref={buttonRef} onClick={() => validarCodigo()} className="p-2">
           Confirmar
         </Button>
