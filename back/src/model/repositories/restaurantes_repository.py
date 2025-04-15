@@ -1,11 +1,11 @@
 from src.model.configs.connection import DBConnectionHandler
 from .interfaces.irestaurantes_repository import IRestaurantesRepository
-from src.main.handlers.custom_exceptions import RestaurantAlreadyExists, RestaurantNotFound, RestaurantAddressAlreadyExists, AddressRequired
+from src.main.handlers.custom_exceptions import RestaurantAlreadyExists, RestaurantNotFound, RestaurantAddressAlreadyExists, AddressRequired, UserAlreadyExists
 from src.model.entities.restaurante import Restaurante
 from src.model.entities.endereco import Endereco
 from src.model.entities.user_endereco import UserEndereco
 from sqlalchemy.orm import joinedload
-from sqlalchemy import or_
+from sqlalchemy.exc import IntegrityError
 
 class RestaurantesRepository(IRestaurantesRepository):
 
@@ -16,6 +16,11 @@ class RestaurantesRepository(IRestaurantesRepository):
                 endereco_data = info_restaurante.pop("endereco", None)
                 if not endereco_data:
                     raise AddressRequired()
+                
+                email = info_restaurante.get("email")
+                cnpj = info_restaurante.get("cnpj")
+                razao_social = info_restaurante.get("razao_social")
+                self.__verificar_duplicidade(email, cnpj, razao_social)
 
                 restaurante_existente = (
                     db.session.query(Restaurante)
@@ -25,11 +30,6 @@ class RestaurantesRepository(IRestaurantesRepository):
                 )
                 if restaurante_existente:
                     raise RestaurantAddressAlreadyExists()
-                
-                email = info_restaurante.get("email")
-                cnpj = info_restaurante.get("cnpj")
-                razao_social = info_restaurante.get("razao_social")
-                self.__verificar_duplicidade(email, cnpj, razao_social)
 
                 user_endereco = (
                     db.session.query(UserEndereco)
@@ -57,9 +57,11 @@ class RestaurantesRepository(IRestaurantesRepository):
                     .first()
                 )
 
-            except Exception:
+            except Exception as e:
+                if isinstance(e, IntegrityError) and "Duplicate entry" in str(e.orig):
+                    raise UserAlreadyExists("Esse email já está em uso!") from e
                 db.session.rollback()
-                raise
+                raise e
 
 
     def list_all(self) -> list[Restaurante]:
@@ -109,9 +111,11 @@ class RestaurantesRepository(IRestaurantesRepository):
 
                 db.session.add(restaurante)
                 db.session.commit()
-            except Exception as exception:
+            except Exception as e:
+                if isinstance(e, IntegrityError) and "Duplicate entry" in str(e.orig):
+                    raise UserAlreadyExists("Esse email já está em uso!") from e
                 db.session.rollback()
-                raise exception
+                raise e
 
 
     def update_endereco(self, id_restaurante: str, endereco_data: dict) -> None:

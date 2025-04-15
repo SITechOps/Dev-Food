@@ -27,13 +27,15 @@ class UsersManager:
             self.__fill_missing_name(login_info)
             id_user = self.__users_repo.insert(login_info)
             is_created = True
+
+        role = "restaurante" if getattr(user_found, 'cnpj', None) else "usuario"
             
         token = create_access_token(
             identity=id_user,
-            additional_claims={"role": "restaurante" if getattr(user_found, 'cnpj', None) else "usuario"}
+            additional_claims={"role": role}
         )
         return ResponseFormatter.display_operation(
-            self.class_name, "criado" if is_created else "logado", token
+            role.capitalize(), "criado" if is_created else "logado", token
         )
     
 
@@ -71,5 +73,5 @@ class UsersManager:
 
 
     def get_account_by_email(self, email: str) -> User | Restaurante | None:
-        return self.__users_repo.find_by_email(email) or \
-               self.__restaurantes_repo.find_by_email(email)
+        return self.__restaurantes_repo.find_by_email(email) or \
+               self.__users_repo.find_by_email(email)

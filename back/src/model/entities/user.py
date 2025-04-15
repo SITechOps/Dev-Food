@@ -6,9 +6,9 @@ from src.model.configs.base import Base
 class User(Base):
     __tablename__ = "Usuario"
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
-    nome = Column(String(50))
-    email = Column(String(50), unique=True)
-    telefone = Column(String(15), nullable=True)
+    nome = Column(String(50), nullable=False)
+    email = Column(String(50), unique=True, nullable=False)
+    telefone = Column(String(15))
 
     enderecos_associados = relationship("UserEndereco", back_populates="usuario", cascade="all, delete-orphan")
     

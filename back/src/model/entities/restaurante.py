@@ -1,19 +1,16 @@
 from uuid import uuid4
 from sqlalchemy import Column, CHAR, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from src.model.configs.base import Base
+from src.model.entities.user import User
 
-class Restaurante(Base):
+class Restaurante(User):
     __tablename__ = "Restaurante"
 
-    id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
-    nome = Column(String(50), nullable=False)
+    id = Column(CHAR(36), ForeignKey("Usuario.id"), primary_key=True)
     descricao = Column(String(255), nullable=False)
-    email = Column(String(50), unique=True, nullable=False)
     cnpj = Column(String(14), unique=True, nullable=False)
     razao_social = Column(String(30), unique=True, nullable=False)
     especialidade = Column(String(15), nullable=False)
-    telefone = Column(String(15), nullable=False)
     horario_funcionamento = Column(String(15), nullable=False)
     banco = Column(String(30), nullable=False)
     agencia = Column(String(5), nullable=False)
