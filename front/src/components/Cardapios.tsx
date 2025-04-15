@@ -1,7 +1,7 @@
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Button from "./Button";
-import Combo from "../assets/prato-padrao.png";
+import Padrao from "../assets/prato-padrao.png";
 import Input from "./Input";
 import ModalProduto from "./ModalProduto";
 import { Search } from "lucide-react";
@@ -45,8 +45,8 @@ const Cardapios = () => {
         </div>
       </div>
 
-      <div className="border-gray-medium overflow-hidden rounded-md border">
-        <div className="bg-brown-light text-brown-normal grid grid-cols-[140px_180px_200px_130px_120px] text-lg font-semibold">
+      <div className="border-gray-medium overflow-x-auto rounded-md border">
+        <div className="bg-brown-light text-brown-normal grid grid-cols-[140px_180px_200px_130px_120px] text-lg font-semibold sm:grid-cols-[1fr_2fr_3fr_2fr_2fr]">
           <div className="flex items-center justify-center p-4">Foto</div>
           <div className="flex items-center justify-center p-4">Produto</div>
           <div className="flex items-center justify-center p-4">Descrição</div>
@@ -57,13 +57,13 @@ const Cardapios = () => {
         {produtosFiltrados.map((product) => (
           <div
             key={product.id}
-            className="border-gray-medium grid grid-cols-[140px_180px_200px_130px_120px] border-t bg-white px-2.5"
+            className="border-gray-medium grid grid-cols-[140px_180px_200px_130px_120px] border-t bg-white px-2.5 sm:grid-cols-[1fr_2fr_3fr_2fr_2fr]"
           >
             <div className="flex flex-col items-center p-4">
               <img
-                src={product.imageUrl ? product.imageUrl : Combo}
+                src={product.imageUrl ? product.imageUrl : Padrao}
                 alt={product.nome}
-                className="h-20 w-20 rounded object-cover"
+                className="h-20 w-20 rounded object-contain"
               />
               <span className="text-blue mt-1 text-sm">
                 Qtd: {product.qtd_estoque}
