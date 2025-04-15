@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Star, Clock, MapPin, ChevronRight } from "lucide-react";
+import { IoClose } from "react-icons/io5";
 import { api } from "../../connection/axios";
+import Button from "../../components/Button";
 
 export default function DetalhesRestaurante() {
   const { id } = useParams();
@@ -26,12 +28,10 @@ export default function DetalhesRestaurante() {
     async function getDetalhesRestaurante() {
       try {
         const response = await api.get(`/restaurante/${id}`);
-        // Ajustando para acessar os dados corretamente
         setRestaurante(response.data.data.attributes);
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar detalhes do restaurante:", error);
-        // Fallback para dados de exemplo caso a API não esteja disponível
         setLoading(false);
       }
     }
@@ -56,8 +56,8 @@ export default function DetalhesRestaurante() {
   }
 
   return (
-    <div className="mx-auto mt-[5rem] max-w-4xl pb-10">
-      <div className="relative h-48 w-full md:h-64">
+    <div className="mx-auto pb-10">
+      <div className="relative h-48 w-full md:h-64 mt-[5rem] rounded-md">
         <img
           src={
             "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -66,7 +66,6 @@ export default function DetalhesRestaurante() {
           className="h-full w-full object-cover"
         />
       </div>
-
       <div className="px-4 py-6">
         <div className="flex items-start justify-between">
           <div>
@@ -85,13 +84,13 @@ export default function DetalhesRestaurante() {
             </div>
           </div>
 
-          <button
-            className="bg-brown-normal hover:bg-brown-dark flex items-center rounded-md px-4 py-2 text-white"
+          <Button
+            className="flex items-center rounded-md px-4 py-2 w-28"
             onClick={() => setIsModalOpen(true)}
           >
             Ver mais
             <ChevronRight className="ml-1 h-4 w-4" />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -101,15 +100,14 @@ export default function DetalhesRestaurante() {
           <div className="h-full w-full max-w-md overflow-y-auto bg-white">
             <div className="p-6">
               <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-bold">
+                <h2 className="text-xl font-bold mt-8">
                   Informações do Restaurante
                 </h2>
-                <button
+                <IoClose
+                  className="icon absolute top-3 right-4"
+                  size={26}
                   onClick={() => setIsModalOpen(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  ✕
-                </button>
+                />
               </div>
 
               <div className="space-y-6">
@@ -118,7 +116,7 @@ export default function DetalhesRestaurante() {
                   <p className="text-gray-600">{restaurante.descricao}</p>
                 </div>
 
-                <hr className="border-gray-200" />
+                <hr className="text-gray-normal" />
 
                 <div>
                   <h3 className="mb-2 flex items-center font-semibold">
@@ -132,7 +130,7 @@ export default function DetalhesRestaurante() {
                   </p>
                 </div>
 
-                <hr className="border-gray-200" />
+                <hr className="text-gray-normal" />
 
                 <div>
                   <h3 className="mb-2 flex items-center font-semibold">

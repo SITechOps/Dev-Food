@@ -13,6 +13,7 @@ export const useUserAccountComponent = () => {
   const { logout, userData } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const idUsuario = userData?.sub;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!idUsuario) return;
@@ -29,7 +30,9 @@ export const useUserAccountComponent = () => {
         email: respUser.email || "",
         telefone: respUser.telefone || "",
       });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Erro ao buscar usuário:", error);
     }
   }
@@ -40,8 +43,10 @@ export const useUserAccountComponent = () => {
     try {
       await api.put(`/user/${idUsuario}`, { data: formList });
       alert("Usuário alterado com sucesso!");
+      setLoading(false);
       setIsEditing(false);
     } catch (error) {
+      setLoading(false);
       alert("Erro ao alterar usuário. Tente novamente.");
     }
 
@@ -54,9 +59,11 @@ export const useUserAccountComponent = () => {
       alert("Usuário removido com sucesso!");
 
       localStorage.clear();
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.error(error);
+      setLoading(false);
       alert("Erro ao deletar usuário. Tente novamente.");
     }
   }

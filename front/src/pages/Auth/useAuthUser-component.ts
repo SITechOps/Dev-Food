@@ -11,19 +11,35 @@ export const useAuthUserComponent = () => {
     telefone: "",
     email: "",
   });
+
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [codigoEnviado, setCodigoEnviado] = useState("");
   const [etapa, setEtapa] = useState<"email" | "telefone">("email");
 
-  async function handleContinuar() {
+  async function validarEmail() {
+    setEtapa("email");
     setIsModalOpen(true);
+    const response = await api.post("/send-email", {
+      data: {
+        email: formList.email,
+      },
+    });
+    tratamentoResposta(response);
+  }
 
+  async function validarTelefone() {
+    setEtapa("telefone");
+    setIsModalOpen(true);
+    const response = await api.post("/send-sms", {
+      data: { telefone: `55${formList.telefone}` },
+    });
+    tratamentoResposta(response);
+  }
+
+  function tratamentoResposta(response: any) {
     try {
-      const response = await api.post("/send-email", {
-        data: {
-          email: formList.email,
-        },
-      });
+      setLoading(false);
       setCodigoEnviado(response.data.properties.verificationCode);
     } catch (error) {
       console.error("Erro na tentativa do envio do codigo:", error);
@@ -49,7 +65,8 @@ export const useAuthUserComponent = () => {
   }
 
   return {
-    handleContinuar,
+    validarEmail,
+    validarTelefone,
     formList,
     setFormList,
     isModalOpen,

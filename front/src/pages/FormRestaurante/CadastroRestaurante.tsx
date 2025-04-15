@@ -6,11 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../connection/axios";
 
 export default function CadastroRestaurante() {
-  const [nome, setNome] = useState("");
-  const [celular, setCelular] = useState("");
-  const [email, setEmail] = useState("");
+  const [formList, setFormList] = useState({
+    nome: "",
+    telefone: "",
+    email: "",
+  });
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [codigoEnviado, setCodigoEnviado] = useState(""); // código simulado enviado por e-mail
+  const [codigoEnviado, setCodigoEnviado] = useState("");
 
   const navigate = useNavigate();
 
@@ -18,7 +20,9 @@ export default function CadastroRestaurante() {
     setMostrarModal(true);
     try {
       const response = await api.post("/send-email", {
-        data: { email },
+        data: {
+          email: formList.email,
+        },
       });
       setCodigoEnviado(response.data.properties.verificationCode);
     } catch (error) {
@@ -40,33 +44,39 @@ export default function CadastroRestaurante() {
             <Input
               id="nome"
               name="nome"
-              textLabel="Nome Completo *"
+              textLabel="Infome o nome Completo:"
               placeholder="Digite seu nome e sobrenome"
-              value={nome}
-              onChange={setNome}
+              value={formList.nome}
+              onChange={(value) =>
+                setFormList({ ...formList, nome: value })
+              }
               type="text"
               required
             />
 
             <Input
-              id="celular"
-              name="celular"
-              textLabel="Celular*"
-              placeholder="(00) 00000-0000"
-              value={celular}
-              onChange={setCelular}
+              id="telefone"
+              name="telefone"
+              textLabel="Insira seu Telefone:"
+              placeholder="(00) 00000-0000"  // faltou formatar use o PatternFormat, NumberFormatValues
+              value={formList.telefone}
+              onChange={(value) =>
+                setFormList({ ...formList, telefone: value })
+              }
               type="text"
               required
             />
 
             <Input
-              textLabel="E-mail*"
+              textLabel="Infome seu E-mail:"
               id="email"
               name="email"
               placeholder="exemplo@gmail.com"
-              value={email}
-              onChange={setEmail}
-              type="text"
+              value={formList.email}
+              onChange={(value) =>
+                setFormList({ ...formList, email: value })
+              }
+              type="email"
               required
             />
 
@@ -76,15 +86,10 @@ export default function CadastroRestaurante() {
           </div>
         </form>
 
-        <p className="mt-4 max-w-sm text-center text-xs text-gray-500">
-          Esse site é protegido pelo reCAPTCHA e está sujeito à Política de
-          Privacidade e aos Termos de Serviço do Google
-        </p>
-
         <Button
           className="mt-6 w-48"
           type="button"
-          disabled={!nome || !celular || !email}
+          disabled={!formList.nome || !formList.telefone || !formList.email}
           onClick={continuarCadastro}
         >
           Continuar
@@ -93,10 +98,10 @@ export default function CadastroRestaurante() {
 
       {mostrarModal && (
         <ModalEmail
-          email={email}
           codigoEnviado={codigoEnviado}
           isModalOpen={mostrarModal}
           setIsModalOpen={setMostrarModal}
+          tipoEnvioCodigo={"email"}
           onSuccess={() => navigate("/dados-restaurante")}
         />
       )}
