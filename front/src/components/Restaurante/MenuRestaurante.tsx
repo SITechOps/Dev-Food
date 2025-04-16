@@ -33,7 +33,11 @@ const MenuRestaurante = () => {
   const menuItems: MenuItem[] = [
     { name: "Início", icon: <Home size={20} />, link: "/" },
     { name: "Minha Conta", icon: <User size={20} />, link: "/account" },
-    { name: "Endereço", icon: <MapPin size={20} />, link: "/c-endereco" },
+    {
+      name: "Endereço",
+      icon: <MapPin size={20} />,
+      link: "/c-endereco",
+    },
     {
       name: "Cardápios",
       icon: <ClipboardList size={20} />,
@@ -93,7 +97,7 @@ const MenuRestaurante = () => {
                   </Link>
                 )}
                 {item.badge && (
-                  <span className="bg-brown-normal text-brown-normal rounded-full px-2 py-0.5 text-xs">
+                  <span className="bg-brown-dark flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
                     {item.badge}
                   </span>
                 )}
