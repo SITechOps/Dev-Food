@@ -3,7 +3,7 @@ import Button from "../ui/Button";
 import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
-interface ModalEmailPros {
+interface ModalCodigoVerificacaoPros {
   tipoEnvioCodigo: string;
   codigoEnviado: string;
   isModalOpen: boolean;
@@ -11,13 +11,13 @@ interface ModalEmailPros {
   onSuccess: () => void;
 }
 
-export default function ModalEmail({
+export default function ModalCodigoVerificacao({
   codigoEnviado,
   isModalOpen,
   setIsModalOpen,
   tipoEnvioCodigo,
   onSuccess,
-}: ModalEmailPros) {
+}: ModalCodigoVerificacaoPros) {
   const [codigoDigitado, setCodigoDigitado] = useState("");
   const buttonRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);

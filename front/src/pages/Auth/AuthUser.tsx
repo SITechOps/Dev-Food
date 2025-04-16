@@ -3,7 +3,7 @@ import { FaAngleLeft } from "react-icons/fa6";
 import Button from "../../components/ui/Button";
 import AuthGoogle from "../../components/Auth/AuthGoogle";
 import AuthFacebook from "../../components/Auth/AuthFacebook";
-import ModalEmail from "../../components/shared/ModalCodigoVerificacao";
+import ModalCodigoVerificacao from "../../components/shared/ModalCodigoVerificacao";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
 
@@ -26,7 +26,7 @@ export default function AuthUser() {
       <div className="m-auto flex w-full flex-col items-center justify-center pt-10">
         <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
           {isModalOpen && (
-            <ModalEmail
+            <ModalCodigoVerificacao
               codigoEnviado={codigoEnviado}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
