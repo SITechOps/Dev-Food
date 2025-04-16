@@ -27,5 +27,5 @@ class Produto(Base):
             "descricao": self.descricao,
             "valor_unitario": self.valor_unitario,
             "qtd_estoque": self.qtd_estoque,
-            "imageUrl": self.imageUrl   
+            "imageUrl": self.imageUrl or ""
         }

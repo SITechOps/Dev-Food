@@ -23,11 +23,16 @@ class ProdutosManager:
         return ResponseFormatter.display_operation(self.class_name, "criado")
     
 
-    def list_products_by_restaurante(self, http_request: HttpRequest) -> HttpResponse:
+    def get_products_by_restaurante(self, http_request: HttpRequest) -> HttpResponse:
         id_restaurante = http_request.params.get("id_restaurante")
         self.__check_if_restaurant_exists(id_restaurante)
 
-        lista_produtos = self.__produtos_repo.list_products(id_restaurante)
+        lista_produtos = self.__produtos_repo.list_products_by_restaurante(id_restaurante)
+        return ResponseFormatter.display_obj_list(self.class_name, lista_produtos)
+    
+
+    def get_all_products(self) -> HttpResponse:
+        lista_produtos = self.__produtos_repo.list_all_products()
         return ResponseFormatter.display_obj_list(self.class_name, lista_produtos)
     
     

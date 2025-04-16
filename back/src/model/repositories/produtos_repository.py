@@ -53,13 +53,27 @@ class ProdutosRepository(IProdutosRepository):
                 raise e
         
 
-    def list_products(self, restaurante_id: str) -> list[Produto]:
+    def list_products_by_restaurante(self, restaurante_id: str) -> list[Produto]:
         with DBConnectionHandler() as db:
             try:
                 produtos = (
                     db.session
                     .query(Produto)
                     .filter_by(id_restaurante=restaurante_id)
+                    .all()
+                )
+                return produtos
+            except Exception as e:
+                db.session.rollback()
+                raise e
+            
+
+    def list_all_products(self) -> list[Produto]:
+        with DBConnectionHandler() as db:
+            try:
+                produtos = (
+                    db.session
+                    .query(Produto)
                     .all()
                 )
                 return produtos
