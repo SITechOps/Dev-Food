@@ -80,6 +80,7 @@ class RestaurantesManager:
         id_restaurante = http_request.params.get("id")
         restaurante_info = http_request.body.get("data")
         endereco_info = restaurante_info.get("attributes")
+        print(http_request) 
 
         self.__restaurante_repo.update_endereco(id_restaurante, endereco_info)
         return ResponseFormatter.display_operation(self.class_name, "atualizado com novo endereço")

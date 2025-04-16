@@ -21,6 +21,9 @@ const DadosRestaurante = lazy(
 const DetalhesRestaurante = lazy(
   () => import("../pages/RestaurantesDisponiveis/Detalhes"),
 );
+const AlterarEnderecoRestaurante = lazy(
+  () => import("../components/Endereco/EnderecoModal"),
+);
 
 const AppRoutes = () => {
   return (
@@ -31,6 +34,10 @@ const AppRoutes = () => {
         <Route path="/cardapios" element={<Cardapio />} />
         <Route path="/financeiro" element={<Financeiro />} />
         <Route path="/c-endereco" element={<CadastroEndereco />} />
+        <Route
+          path="/alterar-endereco"
+          element={<AlterarEnderecoRestaurante />}
+        />
       </Route>
 
       {/* Rotas neutras — ambos podem acessar */}

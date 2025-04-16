@@ -36,7 +36,7 @@ const MenuRestaurante = () => {
     {
       name: "Endereço",
       icon: <MapPin size={20} />,
-      link: "/c-endereco",
+      link: "/alterar-endereco",
     },
     {
       name: "Cardápios",
