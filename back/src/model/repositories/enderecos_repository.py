@@ -1,5 +1,5 @@
 from src.model.entities.restaurante import Restaurante
-from src.model.entities.user_endereco import UserEndereco
+from src.model.entities.usuario_endereco import UsuarioEndereco
 from src.model.configs.connection import DBConnectionHandler
 from src.model.entities.endereco import Endereco
 from src.main.handlers.custom_exceptions import AddressTypeAlreadyExists, AddressNotFound, MinimumOneAddressRequired
@@ -19,7 +19,7 @@ class EnderecosRepository(IEnderecosRepository):
 
                 if existing_endereco:
                     already_linked_to_user = (
-                        db.session.query(UserEndereco)
+                        db.session.query(UsuarioEndereco)
                         .filter_by(
                             id_usuario=id_usuario,
                             id_endereco=existing_endereco.id
@@ -40,7 +40,7 @@ class EnderecosRepository(IEnderecosRepository):
                     db.session.flush() 
                     endereco_id = new_endereco.id
 
-                user_endereco = UserEndereco(
+                user_endereco = UsuarioEndereco(
                     id_usuario=id_usuario,
                     id_endereco=endereco_id,
                     tipo=tipo
@@ -58,10 +58,10 @@ class EnderecosRepository(IEnderecosRepository):
             enderecos = (
                 db.session.query(
                     Endereco,
-                    UserEndereco.tipo  # Inclui o campo 'tipo' da tabela associativa
+                    UsuarioEndereco.tipo  # Inclui o campo 'tipo' da tabela associativa
                 )
-                .join(UserEndereco, Endereco.id == UserEndereco.id_endereco)
-                .filter(UserEndereco.id_usuario == id_usuario)
+                .join(UsuarioEndereco, Endereco.id == UsuarioEndereco.id_endereco)
+                .filter(UsuarioEndereco.id_usuario == id_usuario)
                 .all()
             )
 
@@ -94,7 +94,7 @@ class EnderecosRepository(IEnderecosRepository):
 
                 user_endereco = (
                     db.session
-                    .query(UserEndereco)
+                    .query(UsuarioEndereco)
                     .filter_by(id_usuario=id_usuario, id_endereco=id_endereco)
                     .first()
                 )
@@ -118,7 +118,7 @@ class EnderecosRepository(IEnderecosRepository):
                     db.session.add(novo_endereco)
                     db.session.flush()  # Para obter novo ID
 
-                    # Atualizamos o UserEndereco
+                    # Atualizamos o UsuarioEndereco
                     user_endereco.id_endereco = novo_endereco.id
                     user_endereco.tipo = info_endereco.get("tipo", "").lower()
 
@@ -137,12 +137,12 @@ class EnderecosRepository(IEnderecosRepository):
     def delete(self, id_endereco: str, id_usuario: str) -> None:
         with DBConnectionHandler() as db:
             try:
-                # 1. Buscar a relação UserEndereco
+                # 1. Buscar a relação UsuarioEndereco
                 user_endereco = (
-                    db.session.query(UserEndereco)
+                    db.session.query(UsuarioEndereco)
                     .filter(
-                        UserEndereco.id_usuario == id_usuario,
-                        UserEndereco.id_endereco == id_endereco
+                        UsuarioEndereco.id_usuario == id_usuario,
+                        UsuarioEndereco.id_endereco == id_endereco
                     )
                     .one_or_none()
                 )
@@ -151,8 +151,8 @@ class EnderecosRepository(IEnderecosRepository):
                     raise AddressNotFound()
                 # Verifica quantos endereços o usuário tem
                 qtd_enderecos_usuario = (
-                    db.session.query(UserEndereco)
-                    .filter(UserEndereco.id_usuario == id_usuario)
+                    db.session.query(UsuarioEndereco)
+                    .filter(UsuarioEndereco.id_usuario == id_usuario)
                     .count()
                 )
 
@@ -180,9 +180,9 @@ class EnderecosRepository(IEnderecosRepository):
     def __check_existing_type(self, db, id_usuario: str, tipo: str) -> None:
         existing_type = (
             db.session
-            .query(UserEndereco)
-            .filter(UserEndereco.id_usuario == id_usuario,
-                    UserEndereco.tipo == tipo)
+            .query(UsuarioEndereco)
+            .filter(UsuarioEndereco.id_usuario == id_usuario,
+                    UsuarioEndereco.tipo == tipo)
             .one_or_none()
         )
         if existing_type:
@@ -205,11 +205,11 @@ class EnderecosRepository(IEnderecosRepository):
     
     def __is_empty(self, db, id_endereco: str) -> bool:
         """
-        Verifica se o endereço está órfão (sem associações na tabela UserEndereco).
+        Verifica se o endereço está órfão (sem associações na tabela UsuarioEndereco).
         """
         remaining_associations = (
-            db.session.query(UserEndereco)
-            .filter(UserEndereco.id_endereco == id_endereco)
+            db.session.query(UsuarioEndereco)
+            .filter(UsuarioEndereco.id_endereco == id_endereco)
             .count()
         )
         return remaining_associations == 0
@@ -218,8 +218,8 @@ class EnderecosRepository(IEnderecosRepository):
     def __is_address_used(self, db, id_endereco: str) -> bool:
         # Verifica se há alguma associação com usuários
         user_links = (
-            db.session.query(UserEndereco)
-            .filter(UserEndereco.id_endereco == id_endereco)
+            db.session.query(UsuarioEndereco)
+            .filter(UsuarioEndereco.id_endereco == id_endereco)
             .count()
         )
 

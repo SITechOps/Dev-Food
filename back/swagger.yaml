@@ -631,7 +631,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: idUser
+        - name: idUsuario
           in: query
           required: true
           description: ID do usuário

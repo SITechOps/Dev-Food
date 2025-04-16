@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from src.model.configs.connection import DBConnectionHandler
 from src.main.utils.load_restaurants import load_sample_restaurants
-from src.main.routes.user_route import user_route_bp
+from src.main.routes.usuario_route import usuario_route_bp
 from src.main.routes.email_route import email_route_bp
 from src.main.routes.endereco_route import endereco_route_bp
 from src.main.routes.restaurante_route import restaurante_route_bp
@@ -20,7 +20,7 @@ def create_app():
     configure_swagger(app)
     configure_twilio(app)
 
-    app.register_blueprint(user_route_bp)
+    app.register_blueprint(usuario_route_bp)
     app.register_blueprint(endereco_route_bp)
     app.register_blueprint(restaurante_route_bp)
     app.register_blueprint(produto_route_bp)

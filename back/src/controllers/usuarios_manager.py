@@ -1,43 +1,34 @@
-import re
-from src.model.entities.user import User
-from src.model.entities.restaurante import Restaurante
-from src.model.repositories.interfaces.irestaurantes_repository import IRestaurantesRepository
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
-from src.model.repositories.interfaces.iusers_repository import IUsersRepository
+from src.model.repositories.interfaces.iusuarios_repository import IUsuariosRepository
 from src.main.utils.response_formatter import ResponseFormatter
 from flask_jwt_extended import create_access_token
+import re
 
-class UsersManager:
-    def __init__(self, users_repo: IUsersRepository, restaurantes_repo: IRestaurantesRepository = None) -> None:
+class UsuariosManager:
+    def __init__(self, users_repo: IUsuariosRepository) -> None:
         self.__users_repo = users_repo
-        self.__restaurantes_repo = restaurantes_repo
         self.class_name = "Usuário"
+
 
     def authenticate_user(self, http_request: HttpRequest) -> HttpResponse:
         login_info = http_request.body.get("data")
         email = login_info.get("email")
-        is_created = False
-        
-        user_found = self.get_account_by_email(email)
-        
-        if user_found:
-            id_user = user_found.id
-        else:
-            self.__fill_missing_name(login_info)
-            id_user = self.__users_repo.insert(login_info)
-            is_created = True
 
-        role = "restaurante" if getattr(user_found, 'cnpj', None) else "usuario"
+        user_found = self.__users_repo.find_by_email(email)
+        operacao = "logado" if user_found else "criado"
+        
+        if not user_found:
+            self.__fill_missing_name(login_info)
+            user_found = self.__users_repo.insert(login_info)
             
+        role = user_found.role
         token = create_access_token(
-            identity=id_user,
+            identity=user_found.id,
             additional_claims={"role": role}
         )
-        return ResponseFormatter.display_operation(
-            role.capitalize(), "criado" if is_created else "logado", token
-        )
-    
+        return ResponseFormatter.display_operation(role.capitalize(), operacao, token)
+       
 
     def get_user_by_id(self, http_request: HttpRequest) -> HttpResponse:
         user_id = http_request.params.get("id")
@@ -47,7 +38,7 @@ class UsersManager:
 
     def get_all_users(self) -> HttpResponse:
         users_list = self.__users_repo.find_all_users()
-        return ResponseFormatter.display_obj_list("User", users_list)
+        return ResponseFormatter.display_obj_list("Usuario", users_list)
     
 
     def update(self, http_request: HttpRequest) -> HttpResponse:
@@ -70,8 +61,3 @@ class UsersManager:
             username_part = user_info.get("email").split("@")[0]
             cleaned_name = re.sub(r'[\d]|[._\-]+', ' ', username_part) # troca os símbolos por espaço
             user_info["nome"] = ' '.join(part.capitalize() for part in cleaned_name.split())
-
-
-    def get_account_by_email(self, email: str) -> User | Restaurante | None:
-        return self.__restaurantes_repo.find_by_email(email) or \
-               self.__users_repo.find_by_email(email)

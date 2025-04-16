@@ -1,9 +1,9 @@
 from src.model.configs.connection import DBConnectionHandler
 from .interfaces.irestaurantes_repository import IRestaurantesRepository
-from src.main.handlers.custom_exceptions import RestaurantAlreadyExists, RestaurantNotFound, RestaurantAddressAlreadyExists, AddressRequired, UserAlreadyExists
+from src.main.handlers.custom_exceptions import RestaurantAlreadyExists, RestaurantNotFound, RestaurantAddressAlreadyExists, AddressRequired, UsuarioAlreadyExists
 from src.model.entities.restaurante import Restaurante
 from src.model.entities.endereco import Endereco
-from src.model.entities.user_endereco import UserEndereco
+from src.model.entities.usuario_endereco import UsuarioEndereco
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
 
@@ -32,7 +32,7 @@ class RestaurantesRepository(IRestaurantesRepository):
                     raise RestaurantAddressAlreadyExists()
 
                 user_endereco = (
-                    db.session.query(UserEndereco)
+                    db.session.query(UsuarioEndereco)
                     .join(Endereco)
                     .filter_by(**endereco_data)
                     .first()
@@ -59,7 +59,7 @@ class RestaurantesRepository(IRestaurantesRepository):
 
             except Exception as e:
                 if isinstance(e, IntegrityError) and "Duplicate entry" in str(e.orig):
-                    raise UserAlreadyExists("Esse email já está em uso!") from e
+                    raise UsuarioAlreadyExists("Esse email já está em uso!") from e
                 db.session.rollback()
                 raise e
 
@@ -113,7 +113,7 @@ class RestaurantesRepository(IRestaurantesRepository):
                 db.session.commit()
             except Exception as e:
                 if isinstance(e, IntegrityError) and "Duplicate entry" in str(e.orig):
-                    raise UserAlreadyExists("Esse email já está em uso!") from e
+                    raise UsuarioAlreadyExists("Esse email já está em uso!") from e
                 db.session.rollback()
                 raise e
 
@@ -150,15 +150,15 @@ class RestaurantesRepository(IRestaurantesRepository):
                 id_endereco_atual = restaurante.id_endereco
 
                 endereco_em_uso_por_usuario = (
-                    db.session.query(UserEndereco)
+                    db.session.query(UsuarioEndereco)
                     .filter_by(id_endereco=id_endereco_atual)
                     .first()
                 )
 
                 if endereco_em_uso_por_usuario:
                     usuario_com_novo_endereco = (
-                        db.session.query(UserEndereco)
-                        .join(Endereco, Endereco.id == UserEndereco.id_endereco)
+                        db.session.query(UsuarioEndereco)
+                        .join(Endereco, Endereco.id == UsuarioEndereco.id_endereco)
                         .filter_by(**endereco_data)
                         .first()
                     )
@@ -217,7 +217,7 @@ class RestaurantesRepository(IRestaurantesRepository):
                 db.session.commit()
                 
                 if not db.session.query(Restaurante).filter_by(id_endereco=id_endereco).first() and \
-                   not db.session.query(UserEndereco).filter_by(id_endereco=id_endereco).first():
+                   not db.session.query(UsuarioEndereco).filter_by(id_endereco=id_endereco).first():
                     endereco = db.session.query(Endereco).get(id_endereco)
                     if endereco:
                         db.session.delete(endereco)

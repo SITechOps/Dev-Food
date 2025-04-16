@@ -5,7 +5,7 @@ class BaseCustomException(Exception):
         self.status_code = status_code
 
 
-class UserAlreadyExists(BaseCustomException):
+class UsuarioAlreadyExists(BaseCustomException):
     def __init__(self, message="Usuário já existe!"):
         super().__init__(message, 409)
 
@@ -15,7 +15,7 @@ class AddressTypeAlreadyExists(BaseCustomException):
         super().__init__(message, 409)
 
 
-class UserNotFound(BaseCustomException):
+class UsuarioNotFound(BaseCustomException):
     def __init__(self, message="Usuário não encontrado!"):
         super().__init__(message, 404)
 

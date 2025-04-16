@@ -16,7 +16,7 @@ class Endereco(Base):
     complemento = Column(String(20), nullable=True)
     tipo = None
 
-    usuarios_associados = relationship("UserEndereco", back_populates="endereco")
+    usuarios_associados = relationship("UsuarioEndereco", back_populates="endereco")
     restaurante = relationship("Restaurante", back_populates="endereco", uselist=False)
 
     def to_dict(self) -> dict:

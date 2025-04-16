@@ -1,5 +1,5 @@
-from .user import User
+from .usuario import Usuario
 from .endereco import Endereco
-from .user_endereco import UserEndereco
+from .usuario_endereco import UsuarioEndereco
 from .restaurante import Restaurante
 from .produto import Produto

@@ -1,54 +1,61 @@
-from src.main.handlers.custom_exceptions import EmailChangeNotAllowed, UserNotFound
+from src.main.handlers.custom_exceptions import EmailChangeNotAllowed, UsuarioNotFound
 from src.model.configs.connection import DBConnectionHandler
-from .interfaces.iusers_repository import IUsersRepository
-from src.model.entities.user import User
+from src.model.entities.usuario import Usuario
+from .interfaces.iusuarios_repository import IUsuariosRepository
+from sqlalchemy.orm import with_polymorphic
 
-class UsersRepository(IUsersRepository):
+class UsuariosRepository(IUsuariosRepository):
 
     
-    def insert(self, user_info: dict) -> None:
+    def insert(self, user_info: dict) -> Usuario:
         with DBConnectionHandler() as db:
             try:
-                new_user = User(**user_info)
+                new_user = Usuario(**user_info)
                 db.session.add(new_user)
                 db.session.commit()
-                return new_user.id
+                db.session.refresh(new_user)
+                return new_user
             except Exception as exception:
                 db.session.rollback()
                 raise exception
                 
 
-    def find_by_id(self, user_id: str) -> User:
+    def find_by_id(self, user_id: str) -> Usuario:
         with DBConnectionHandler() as db:
             user = (
                 db.session
-                .query(User)
-                .filter(User.id == user_id)
+                .query(Usuario)
+                .filter(Usuario.id == user_id)
                 .one_or_none()
             )
-            if not user: raise UserNotFound()
+            if not user: raise UsuarioNotFound()
             return user
         
 
-    def find_by_email(self, user_email: str) -> User | None:
+    def find_by_email(self, user_email: str) -> Usuario | None:
         with DBConnectionHandler() as db:
             user = (
                 db.session
-                .query(User)
-                .filter(User.email == user_email)
+                .query(Usuario)
+                .filter(Usuario.email == user_email)
                 .one_or_none()
             )
             return user
         
 
-    def find_all_users(self) -> list[User]:
+    def find_all_users(self) -> list[Usuario]:
         with DBConnectionHandler() as db:
-            users = (
-                db.session
-                .query(User)
-                .all()
-            )
-            return users
+            try:
+                users = (
+                    db.session
+                    .query(Usuario)
+                    .filter_by(role="usuario")
+                    .all()
+                )
+                return users
+            except Exception as exception:
+                db.session.rollback()
+                raise exception
     
 
     def update(self, user_id: str, user_info: dict) -> None:

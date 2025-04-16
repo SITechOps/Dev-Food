@@ -1,12 +1,12 @@
 from src.http_types.http_response import HttpResponse
 from src.http_types.http_request import HttpRequest
-from src.model.repositories.interfaces.iusers_repository import IUsersRepository
+from src.model.repositories.interfaces.iusuarios_repository import IUsuariosRepository
 from src.model.repositories.interfaces.ienderecos_repository import IEnderecosRepository
 from src.main.handlers.custom_exceptions import InvalidAddressType
 from src.main.utils.response_formatter import ResponseFormatter
 
 class EnderecosManager:
-    def __init__(self, enderecos_repo: IEnderecosRepository, users_repo: IUsersRepository = None) -> None:
+    def __init__(self, enderecos_repo: IEnderecosRepository, users_repo: IUsuariosRepository = None) -> None:
         self.__enderecos_repo = enderecos_repo
         self.__users_repo = users_repo
         self.class_name = "Endereço"

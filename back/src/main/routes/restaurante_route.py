@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from src.model.repositories.restaurantes_repository import RestaurantesRepository
-from src.controllers.restaurante_manager import RestaurantesManager
+from src.controllers.restaurantes_manager import RestaurantesManager
 from src.http_types.http_request import HttpRequest
 
 restaurante_route_bp = Blueprint('restaurante_route', __name__)
