@@ -27,7 +27,18 @@ def get_products_by_restaurant(id: str):
     restaurantes_repo = RestaurantesRepository()
     produtos_manager = ProdutosManager(produtos_repo, restaurantes_repo)
 
-    http_response = produtos_manager.list_products_by_restaurante(http_request)
+    http_response = produtos_manager.get_products_by_restaurante(http_request)
+    
+    return jsonify(http_response.body), http_response.status_code
+
+
+
+@produto_route_bp.get('/produtos')
+def get_all_products():
+    produtos_repo = ProdutosRepository()
+    produtos_manager = ProdutosManager(produtos_repo)
+
+    http_response = produtos_manager.get_all_products()
     
     return jsonify(http_response.body), http_response.status_code
 
