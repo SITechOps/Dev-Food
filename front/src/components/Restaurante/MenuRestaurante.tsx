@@ -89,11 +89,7 @@ const MenuRestaurante = () => {
                     className="flex w-full items-center gap-3"
                   >
                     {item.icon}
-                    <span
-                      className={item.name === "Sair" ? "text-brown-dark" : ""}
-                    >
-                      {item.name}
-                    </span>
+                    <span>{item.name}</span>
                   </Link>
                 )}
                 {item.badge && (
