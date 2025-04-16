@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
-import Input from "./Input";
-import Button from "./Button";
-import { IProduto } from "../interface/IProduct";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import { IProduto } from "../../interface/IProduct";
 
 interface ModalProdutoProps {
   isOpen: boolean;

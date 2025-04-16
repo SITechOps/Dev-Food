@@ -1,10 +1,10 @@
 import CodeInput from "react-code-input";
-import Button from "./Button";
+import Button from "../ui/Button";
 import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 interface ModalEmailPros {
-  tipoEnvioCodigo: string,
+  tipoEnvioCodigo: string;
   codigoEnviado: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -84,7 +84,11 @@ export default function ModalEmail({
             inputMode={"tel"}
           />
         </div>
-        <p className="text-lg"> Insira o código enviado por {tipoEnvioCodigo === "email" ? "email" : "SMS"}!</p>
+        <p className="text-lg">
+          {" "}
+          Insira o código enviado por{" "}
+          {tipoEnvioCodigo === "email" ? "email" : "SMS"}!
+        </p>
         <Button ref={buttonRef} onClick={() => validarCodigo()} className="p-2">
           Confirmar
         </Button>

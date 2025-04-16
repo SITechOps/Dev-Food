@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { api } from "../connection/axios";
-import Modal from "./Modal";
+import { api } from "../../connection/axios";
+import Modal from "../ui/Modal";
 import EnderecoItem from "./EnderecoItem";
 import { useLocation, useNavigate } from "react-router-dom";
-import ifoodLogo from "../assets/ifood.png"; // Importe a imagem do logo do iFood
-import Button from "./Button";
-import { IAddress } from "../interface/IAddress";
-import { useAuth } from "../contexts/AuthContext";
+import ifoodLogo from "../../assets/ifood.png";
+import Button from "../ui/Button";
+import { IAddress } from "../../interface/IAddress";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function ListagemEndereco() {
   const [enderecos, setEnderecos] = useState<IAddress[]>([]);

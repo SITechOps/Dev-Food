@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../connection/axios";
 import Card from "../pages/RestaurantesDisponiveis/Card";
-// import MenuRestaurante from "../components/MenuRestaurante";
 
 export default function Home() {
   const [restaurantes, setrestaurantes] = useState([
@@ -41,7 +40,6 @@ export default function Home() {
 
   return (
     <>
-      {/* <MenuRestaurante /> */}
       <div className="mt-[5rem]">
         <h1 className="my-8 text-center font-medium">
           Conheça os restaurantes disponíveis

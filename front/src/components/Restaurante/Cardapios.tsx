@@ -1,11 +1,11 @@
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import Button from "./Button";
-import Padrao from "../assets/prato-padrao.png";
-import Input from "./Input";
-import ModalProduto from "./ModalProduto";
+import Button from "../ui/Button";
+import Padrao from "../../assets/prato-padrao.png";
+import Input from "../ui/Input";
+import ModalProduto from "../Produto/ModalProduto";
 import { Search } from "lucide-react";
-import useProdutos from "../hooks/useProducts";
+import useProdutos from "../../hooks/useProducts";
 
 const Cardapios = () => {
   const iconStyle =

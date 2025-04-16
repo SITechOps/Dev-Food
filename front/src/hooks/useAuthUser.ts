@@ -1,8 +1,8 @@
 import { FormEvent, useState } from "react";
-import { api } from "../../connection/axios";
-import { postUser } from "../../connection/AuthUserController";
+import { api } from "../connection/axios";
+import { postUser } from "../connection/AuthUserController";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export const useAuthUserComponent = () => {
   const { setAuth } = useAuth();
@@ -12,7 +12,6 @@ export const useAuthUserComponent = () => {
     email: "",
   });
 
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [codigoEnviado, setCodigoEnviado] = useState("");
   const [etapa, setEtapa] = useState<"email" | "telefone">("email");
@@ -39,7 +38,6 @@ export const useAuthUserComponent = () => {
 
   function tratamentoResposta(response: any) {
     try {
-      setLoading(false);
       setCodigoEnviado(response.data.properties.verificationCode);
     } catch (error) {
       console.error("Erro na tentativa do envio do codigo:", error);

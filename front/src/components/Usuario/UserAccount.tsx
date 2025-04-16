@@ -1,5 +1,5 @@
-import FormComponent from "./FormComponent";
-import { useUserAccount } from "../hooks/useUserAccount";
+import FormComponent from "../ui/FormComponent";
+import { useUserAccount } from "../../hooks/useUserAccount";
 
 export default function UserForm() {
   const {

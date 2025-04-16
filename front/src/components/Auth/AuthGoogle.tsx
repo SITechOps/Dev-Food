@@ -5,7 +5,7 @@ import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { postUser } from "../../connection/AuthUserController";
 import { useAuth } from "../../contexts/AuthContext";
-import Button from "../Button";
+import Button from "../ui/Button";
 
 export default function AuthGoogle() {
   const navigate = useNavigate();

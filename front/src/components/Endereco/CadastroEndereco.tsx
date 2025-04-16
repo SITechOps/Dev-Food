@@ -4,9 +4,9 @@ import { TbHomeFilled } from "react-icons/tb";
 import { IoBusiness } from "react-icons/io5";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import { useEndereco } from "../hooks/useAddress";
-import Input from "./Input";
-import Button from "./Button";
+import { useEndereco } from "../../hooks/useAddress";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
 
 const CadastroEndereco = () => {
   const {

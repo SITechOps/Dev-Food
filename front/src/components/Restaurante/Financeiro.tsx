@@ -1,17 +1,15 @@
-import { useRestaurantAccount } from "../hooks/useRestaurantAccount";
-import FormComponent from "./FormComponent";
+import { useRestaurantAccount } from "../../hooks/useRestaurantAccount";
+import FormComponent from "../ui/FormComponent";
 
-export default function RestaurantForm() {
+export default function Financeiro() {
   const {
     navigate,
-    formList,
-    setFormList,
-    restaurantFormFields,
+    formListBancario,
+    setFormListBancario,
+    restaurantBankFields,
     isEditing,
     setIsEditing,
-    handleLogout,
-    deletarDados,
-    alterarDadosRestaurante,
+    alterarDadosBancarios,
   } = useRestaurantAccount();
 
   const baseText = "text-lg mb-1";
@@ -25,19 +23,17 @@ export default function RestaurantForm() {
   return (
     <>
       <FormComponent
-        formFields={restaurantFormFields}
-        formList={formList}
-        setFormList={setFormList}
+        formFields={restaurantBankFields}
+        formList={formListBancario}
+        setFormList={setFormListBancario}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
         navigate={navigate}
-        onSubmit={alterarDadosRestaurante}
-        deletarDados={deletarDados}
-        handleLogout={handleLogout}
+        onSubmit={alterarDadosBancarios}
         iconStyle={iconStyle}
         baseText={baseText}
         labelStyle={labelStyle}
-        title="Minha Conta"
+        title="Dados Bancários"
       />
     </>
   );

@@ -1,6 +1,6 @@
-import Input from "../../components/Input";
+import Input from "../../components/ui/Input";
 import { useState, useEffect } from "react";
-import Button from "../../components/Button";
+import Button from "../../components/ui/Button";
 import axios from "axios";
 import { api } from "../../connection/axios";
 
@@ -34,7 +34,7 @@ export default function DadosRestaurante() {
               cidade: res.data.localidade,
               bairro: res.data.bairro,
               endereco: res.data.logradouro,
-            })
+            });
           } else {
             console.warn("CEP não encontrado.");
           }
@@ -74,7 +74,7 @@ export default function DadosRestaurante() {
   };
 
   return (
-    <div className="mt-[5rem] m-auto flex flex-wrap justify-center gap-30 w-full items-start">
+    <div className="m-auto mt-[5rem] flex w-full flex-wrap items-start justify-center gap-30">
       <div className="">
         <h1 className="font-bold">Infomações da Loja</h1>
         <h3 className="mt-5 font-bold">Onde fica sua loja?</h3>
@@ -86,9 +86,7 @@ export default function DadosRestaurante() {
           name="cep"
           placeholder="00000-000" // faltou formatar use o PatternFormat, NumberFormatValues
           value={formList.cep}
-          onChange={(value) =>
-            setFormList({ ...formList, cep: value })
-          }
+          onChange={(value) => setFormList({ ...formList, cep: value })}
           type="text"
         />
         <div className="flex gap-4">
@@ -98,9 +96,7 @@ export default function DadosRestaurante() {
             id="estado"
             name="estado"
             value={formList.estado}
-            onChange={(value) =>
-              setFormList({ ...formList, estado: value })
-            }
+            onChange={(value) => setFormList({ ...formList, estado: value })}
             type="text"
           />
           <Input
@@ -109,9 +105,7 @@ export default function DadosRestaurante() {
             id="cidade"
             name="cidade"
             value={formList.cidade}
-            onChange={(value) =>
-              setFormList({ ...formList, cidade: value })
-            }
+            onChange={(value) => setFormList({ ...formList, cidade: value })}
             type="text"
           />
         </div>
@@ -123,9 +117,7 @@ export default function DadosRestaurante() {
           name="bairro"
           placeholder="Exemplo:Centro"
           value={formList.bairro}
-          onChange={(value) =>
-            setFormList({ ...formList, bairro: value })
-          }
+          onChange={(value) => setFormList({ ...formList, bairro: value })}
           type="text"
         />
         <Input
@@ -135,9 +127,7 @@ export default function DadosRestaurante() {
           name="endereço"
           placeholder="Exemplo:Avenida Brasil"
           value={formList.endereco}
-          onChange={(value) =>
-            setFormList({ ...formList, endereco: value })
-          }
+          onChange={(value) => setFormList({ ...formList, endereco: value })}
           type="text"
         />
         <div className="flex gap-4">
@@ -147,9 +137,7 @@ export default function DadosRestaurante() {
             id="numero"
             name="numero"
             value={formList.numero}
-            onChange={(value) =>
-              setFormList({ ...formList, numero: value })
-            }
+            onChange={(value) => setFormList({ ...formList, numero: value })}
             type="number"
           />
           <Input
@@ -166,11 +154,9 @@ export default function DadosRestaurante() {
         </div>
       </div>
 
-      <hr className="w-px h-[38rem] bg-gray-medium border-1" />
-
+      <hr className="bg-gray-medium h-[38rem] w-px border-1" />
 
       <div className="">
-
         <h1 className="font-bold">Negócio e Responsável</h1>
         <h3 className="my-5 font-bold">
           Agora, nos fale mais sobre seu negócio
@@ -181,18 +167,16 @@ export default function DadosRestaurante() {
           className={styleInput}
           id="cnpj"
           name="cnpj"
-          placeholder="00.000.000/0000-00"  // faltou formatar use o PatternFormat, NumberFormatValues
+          placeholder="00.000.000/0000-00" // faltou formatar use o PatternFormat, NumberFormatValues
           value={formList.cnpj}
-          onChange={(value) =>
-            setFormList({ ...formList, cnpj: value })
-          }
+          onChange={(value) => setFormList({ ...formList, cnpj: value })}
         />
         <div id="compo-select">
           <label className="mt-4 mb-1 block font-medium text-gray-700">
             Especialidade
           </label>
           <select
-            className="mt-2 w-full rounded border p-2 input"
+            className="input mt-2 w-full rounded border p-2"
             id="especialidade"
             name="especialidade"
             value={formList.especialidade}
@@ -211,7 +195,7 @@ export default function DadosRestaurante() {
         </div>
 
         <h3 className="my-5 font-bold">
-          Agora, nos informe seu dados bancários 
+          Agora, nos informe seu dados bancários
         </h3>
 
         {/* incluir os inputs dos dados bancarios */}

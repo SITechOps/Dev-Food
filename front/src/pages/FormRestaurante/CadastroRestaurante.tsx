@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import ModalEmail from "../../components/ModalEmail";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+import ModalEmail from "../../components/shared/ModalCodigoVerificacao";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../connection/axios";
 
@@ -47,9 +47,7 @@ export default function CadastroRestaurante() {
               textLabel="Infome o nome Completo:"
               placeholder="Digite seu nome e sobrenome"
               value={formList.nome}
-              onChange={(value) =>
-                setFormList({ ...formList, nome: value })
-              }
+              onChange={(value) => setFormList({ ...formList, nome: value })}
               type="text"
               required
             />
@@ -58,7 +56,7 @@ export default function CadastroRestaurante() {
               id="telefone"
               name="telefone"
               textLabel="Insira seu Telefone:"
-              placeholder="(00) 00000-0000"  // faltou formatar use o PatternFormat, NumberFormatValues
+              placeholder="(00) 00000-0000" // faltou formatar use o PatternFormat, NumberFormatValues
               value={formList.telefone}
               onChange={(value) =>
                 setFormList({ ...formList, telefone: value })
@@ -73,9 +71,7 @@ export default function CadastroRestaurante() {
               name="email"
               placeholder="exemplo@gmail.com"
               value={formList.email}
-              onChange={(value) =>
-                setFormList({ ...formList, email: value })
-              }
+              onChange={(value) => setFormList({ ...formList, email: value })}
               type="email"
               required
             />

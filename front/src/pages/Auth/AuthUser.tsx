@@ -1,11 +1,11 @@
-import Input from "../../components/Input";
+import Input from "../../components/ui/Input";
 import { FaAngleLeft } from "react-icons/fa6";
-import Button from "../../components/Button";
+import Button from "../../components/ui/Button";
 import AuthGoogle from "../../components/Auth/AuthGoogle";
 import AuthFacebook from "../../components/Auth/AuthFacebook";
-import ModalEmail from "../../components/ModalEmail";
+import ModalEmail from "../../components/shared/ModalCodigoVerificacao";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
-import { useAuthUserComponent } from "./useAuthUser-component";
+import { useAuthUserComponent } from "../../hooks/useAuthUser";
 
 export default function AuthUser() {
   const {
@@ -31,7 +31,9 @@ export default function AuthUser() {
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
               tipoEnvioCodigo={etapa}
-              onSuccess={() => { if (etapa === "email") setEtapa("telefone");}}
+              onSuccess={() => {
+                if (etapa === "email") setEtapa("telefone");
+              }}
             />
           )}
 
@@ -107,8 +109,17 @@ export default function AuthUser() {
                   (não obrigatório)!
                 </p>
                 <div className="flex gap-4">
-                <Button color="secondary" type="button" className="p-2"  onClick={validarTelefone}>Validar Telefone</Button>
-                <Button type="submit" className="p-2">Entrar</Button>
+                  <Button
+                    color="secondary"
+                    type="button"
+                    className="p-2"
+                    onClick={validarTelefone}
+                  >
+                    Validar Telefone
+                  </Button>
+                  <Button type="submit" className="p-2">
+                    Entrar
+                  </Button>
                 </div>
               </>
             )}

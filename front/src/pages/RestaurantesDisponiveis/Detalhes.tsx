@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Star, Clock, MapPin, ChevronRight } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { api } from "../../connection/axios";
-import Button from "../../components/Button";
+import Button from "../../components/ui/Button";
 
 export default function DetalhesRestaurante() {
   const { id } = useParams();
@@ -57,7 +57,7 @@ export default function DetalhesRestaurante() {
 
   return (
     <div className="mx-auto pb-10">
-      <div className="relative h-48 w-full md:h-64 mt-[5rem] rounded-md">
+      <div className="relative mt-[5rem] h-48 w-full rounded-md md:h-64">
         <img
           src={
             "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -85,7 +85,7 @@ export default function DetalhesRestaurante() {
           </div>
 
           <Button
-            className="flex items-center rounded-md px-4 py-2 w-28"
+            className="flex w-28 items-center rounded-md px-4 py-2"
             onClick={() => setIsModalOpen(true)}
           >
             Ver mais
@@ -100,7 +100,7 @@ export default function DetalhesRestaurante() {
           <div className="h-full w-full max-w-md overflow-y-auto bg-white">
             <div className="p-6">
               <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-bold mt-8">
+                <h2 className="mt-8 text-xl font-bold">
                   Informações do Restaurante
                 </h2>
                 <IoClose

@@ -1,10 +1,10 @@
 import { useRef, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import iFoodLogo from "../assets/ifood.png";
+import iFoodLogo from "../../assets/ifood.png";
 import { CiUser } from "react-icons/ci";
-import Button from "./Button";
-import ListagemEndereco from "./ListagemEndereco";
-import { useAuth } from "../contexts/AuthContext";
+import Button from "../ui/Button";
+import ListagemEndereco from "../Endereco/ListagemEndereco";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Menu() {
   const navigate = useNavigate();
