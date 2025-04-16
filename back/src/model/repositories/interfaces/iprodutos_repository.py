@@ -16,7 +16,11 @@ class IProdutosRepository(ABC):
 
 
     @abstractmethod
-    def list_products(self, restaurante_id: str) -> list[Produto]: pass
+    def list_products_by_restaurante(self, restaurante_id: str) -> list[Produto]: pass
+
+
+    @abstractmethod
+    def list_all_products(self) -> list[Produto]: pass
 
 
     @abstractmethod

@@ -791,7 +791,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Restaurante"
-    
+
   /restaurante:
     post:
       tags:
@@ -986,6 +986,65 @@ paths:
           description: Endereço atualizado com sucesso
         "404":
           description: Restaurante não encontrado
+
+  paths:
+  /produtos:
+    get:
+      tags:
+        - Produtos
+      summary: Retorna a lista de produtos disponíveis
+      description: Retorna todos os produtos cadastrados, com informações como nome, descrição, valor, quantidade em estoque e URL da imagem.
+      responses:
+        "200":
+          description: Lista de produtos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      Type:
+                        type: string
+                        example: Produto
+                      attributes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            nome:
+                              type: string
+                            descricao:
+                              type: string
+                            valor_unitario:
+                              type: string
+                            qtd_estoque:
+                              type: integer
+                            imageUrl:
+                              type: string
+                    example:
+                      Type: Produto
+                      attributes:
+                        - id: "0a5ffbae-b4f8-4d2e-9406-7c74d0f41d65"
+                          nome: "Temaki Salmão"
+                          descricao: "Temaki de salmão preparado com arroz, algas e tiras de salmão fresco."
+                          valor_unitario: "28.00"
+                          qtd_estoque: 60
+                          imageUrl: ""
+                        - id: "0a92387a-56b3-4b9e-a47d-d39ebc1d8bb6"
+                          nome: "Taco de Carne"
+                          descricao: "Taco de carne suculenta, recheado com temperos mexicanos e servido em tortilhas crocantes."
+                          valor_unitario: "18.00"
+                          qtd_estoque: 100
+                          imageUrl: ""
+                  count:
+                    type: integer
+                    example: 2
+
   /produto:
     post:
       tags:
@@ -1020,7 +1079,7 @@ paths:
                 valor_unitario: 52.00
                 qtd_estoque: 100
       responses:
-        '201':
+        "201":
           description: "Produto criado com sucesso."
           content:
             application/json:
@@ -1038,9 +1097,8 @@ paths:
                       qtd_estoque:
                         type: integer
               example:
-                message:
-                  "Produto criado com sucesso!"
-        '404':
+                message: "Produto criado com sucesso!"
+        "404":
           description: "Restaurante não encontrado"
           content:
             application/json:
@@ -1048,7 +1106,7 @@ paths:
                 type: object
               example:
                 error_message: "Restaurante não encontrado!"
-        '409':
+        "409":
           description: "Produto já existe"
           content:
             application/json:
@@ -1071,7 +1129,7 @@ paths:
             type: string
           description: "ID do restaurante"
       responses:
-        '200':
+        "200":
           description: "Lista de produtos do restaurante."
           content:
             application/json:
@@ -1118,7 +1176,7 @@ paths:
                       qtd_estoque: 80
                       valor_unitario: 45.00
                   count: 3
-        '404':
+        "404":
           description: "Restaurante não encontrado"
           content:
             application/json:
@@ -1168,7 +1226,7 @@ paths:
                 valor_unitario: 50.00
                 qtd_estoque: 45
       responses:
-        '200':
+        "200":
           description: "Produto alterado com sucesso."
           content:
             application/json:
@@ -1186,9 +1244,8 @@ paths:
                       qtd_estoque:
                         type: integer
               example:
-                message:
-                  Produto alterado com sucesso.
-        '404':
+                message: Produto alterado com sucesso.
+        "404":
           description: "Produto não encontrado"
           content:
             application/json:
@@ -1196,7 +1253,7 @@ paths:
                 type: object
               example:
                 error_message: "Produto não encontrado!"
-        '409':
+        "409":
           description: "Produto já existe"
           content:
             application/json:
@@ -1218,7 +1275,7 @@ paths:
             type: string
           description: "ID do produto"
       responses:
-        '200':
+        "200":
           description: "Produto deletado com sucesso."
           content:
             application/json:
@@ -1226,7 +1283,7 @@ paths:
                 type: object
               example:
                 message: "Produto deletado com sucesso."
-        '404':
+        "404":
           description: "Produto não encontrado"
           content:
             application/json:
