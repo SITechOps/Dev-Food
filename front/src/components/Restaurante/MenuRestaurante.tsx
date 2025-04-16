@@ -9,11 +9,13 @@ import {
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useLocation } from "react-router-dom";
 
 const MenuRestaurante = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -61,40 +63,47 @@ const MenuRestaurante = () => {
         className={`border-t-gray-light border-r-gray-light z-10 mt-14 w-64 border-t border-r bg-white p-4 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:block lg:translate-x-0`}
       >
         <ul className="space-y-4">
-          {menuItems.map((item, i) => (
-            <li
-              key={i}
-              className="group text-blue hover:bg-brown-light-active hover:text-brown-dark flex cursor-pointer items-center justify-between gap-2 rounded-md p-3 transition-colors"
-            >
-              {item.action ? (
-                <button
-                  onClick={item.action}
-                  className="flex w-full items-center gap-3"
-                >
-                  {item.icon}
-                  <span
-                    className={item.name === "Sair" ? "text-brown-dark" : ""}
+          {menuItems.map((item, i) => {
+            const isActive = location.pathname === item.link;
+
+            return (
+              <li
+                key={i}
+                className={`group flex cursor-pointer items-center justify-between gap-2 rounded-md p-3 transition-colors ${isActive ? "bg-brown-light-active text-brown-dark" : "text-blue hover:bg-brown-light-active hover:text-brown-dark"}`}
+              >
+                {item.action ? (
+                  <button
+                    onClick={item.action}
+                    className="flex w-full cursor-pointer items-center gap-3"
                   >
-                    {item.name}
-                  </span>
-                </button>
-              ) : (
-                <Link to={item.link} className="flex w-full items-center gap-3">
-                  {item.icon}
-                  <span
-                    className={item.name === "Sair" ? "text-brown-dark" : ""}
+                    {item.icon}
+                    <span
+                      className={item.name === "Sair" ? "text-brown-dark" : ""}
+                    >
+                      {item.name}
+                    </span>
+                  </button>
+                ) : (
+                  <Link
+                    to={item.link}
+                    className="flex w-full items-center gap-3"
                   >
-                    {item.name}
+                    {item.icon}
+                    <span
+                      className={item.name === "Sair" ? "text-brown-dark" : ""}
+                    >
+                      {item.name}
+                    </span>
+                  </Link>
+                )}
+                {item.badge && (
+                  <span className="bg-brown-normal text-brown-normal rounded-full px-2 py-0.5 text-xs">
+                    {item.badge}
                   </span>
-                </Link>
-              )}
-              {item.badge && (
-                <span className="bg-brown-normal text-brown-normal rounded-full px-2 py-0.5 text-xs">
-                  {item.badge}
-                </span>
-              )}
-            </li>
-          ))}
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </>
