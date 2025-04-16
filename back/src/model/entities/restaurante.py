@@ -1,4 +1,3 @@
-from uuid import uuid4
 from sqlalchemy import Column, CHAR, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from src.model.entities.user import User
@@ -7,10 +6,10 @@ class Restaurante(User):
     __tablename__ = "Restaurante"
 
     id = Column(CHAR(36), ForeignKey("Usuario.id"), primary_key=True)
-    descricao = Column(String(255), nullable=False)
     cnpj = Column(String(14), unique=True, nullable=False)
     razao_social = Column(String(30), unique=True, nullable=False)
     especialidade = Column(String(15), nullable=False)
+    descricao = Column(String(255), nullable=False)
     horario_funcionamento = Column(String(15), nullable=False)
     banco = Column(String(30), nullable=False)
     agencia = Column(String(5), nullable=False)
@@ -22,8 +21,13 @@ class Restaurante(User):
     endereco = relationship("Endereco", back_populates="restaurante", uselist=False)
     produtos = relationship("Produto", back_populates="restaurante", cascade="all, delete-orphan")
 
+    __mapper_args__ = {
+        "polymorphic_identity": "restaurante"
+    }
+
     def to_dict(self) -> dict:
         return {
+            **super().to_dict(),
             "id": self.id,
             "nome": self.nome,
             "descricao": self.descricao,
