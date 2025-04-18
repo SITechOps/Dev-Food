@@ -1,43 +1,17 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { Star, Clock, MapPin, ChevronRight } from "lucide-react";
 import { IoClose } from "react-icons/io5";
-import { api } from "../../connection/axios";
 import Button from "../../components/ui/Button";
+import CardProdutos from "./ProdutoDisponiveis/Index";
+import { useRestauranteDisponiveisDetalhes } from "../../hooks/useRestauranteDisDetalhes";
 
 export default function DetalhesRestaurante() {
-  const { id } = useParams();
-
-  const [restaurante, setRestaurante] = useState({
-    nome: "",
-    descricao: "",
-    especialidade: "",
-    endereco: {
-      logradouro: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
-      pais: "",
-    },
-    horario_funcionamento: "",
-  });
-  const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    async function getDetalhesRestaurante() {
-      try {
-        const response = await api.get(`/restaurante/${id}`);
-        setRestaurante(response.data.data.attributes);
-        setLoading(false);
-      } catch (error) {
-        console.error("Erro ao buscar detalhes do restaurante:", error);
-        setLoading(false);
-      }
-    }
-
-    getDetalhesRestaurante();
-  }, [id]);
+    const {
+      restaurante,
+      loading,
+      isModalOpen,
+      setIsModalOpen,
+      jsonProdutos
+    } = useRestauranteDisponiveisDetalhes();
 
   if (loading) {
     return (
@@ -93,6 +67,19 @@ export default function DetalhesRestaurante() {
           </Button>
         </div>
       </div>
+      <div id="produtos" className="flex flex-col md:flex-row gap-8 mt-4 justify-between">
+        {jsonProdutos.produtos.map((produto) => (
+          <CardProdutos
+            key={produto.id}
+            id={produto.id}
+            nome={produto.nome}
+            descricao={produto.descricao}
+            imageUrl={produto.imageUrl}
+            valor_unitario={produto.valor_unitario}
+          />
+        ))}
+      </div>
+
 
       {/* Modal lateral */}
       {isModalOpen && (
