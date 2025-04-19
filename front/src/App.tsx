@@ -4,23 +4,25 @@ import Menu from "./components/shared/Menu";
 import LayoutRestaurante from "./components/Restaurante/LayoutRestaurante";
 import AppRoutes from "./routes/AppRoutes";
 import { useAuth } from "./contexts/AuthContext";
+import { CarrinhoProvider } from "./contexts/CarrinhoContext";
 
-function App() {
+export default function App() {
   const { userData, isAuthenticated } = useAuth();
 
   return (
     <Suspense fallback={<Loading />}>
-      <Menu />
+      <CarrinhoProvider>
+        <Menu />
 
-      {isAuthenticated && userData?.role === "restaurante" ? (
-        <LayoutRestaurante>
+        {isAuthenticated && userData?.role === "restaurante" ? (
+          <LayoutRestaurante>
+            <AppRoutes />
+          </LayoutRestaurante>
+        ) : (
           <AppRoutes />
-        </LayoutRestaurante>
-      ) : (
-        <AppRoutes />
-      )}
+        )}
+      </CarrinhoProvider>
     </Suspense>
   );
 }
 
-export default App;

@@ -16,13 +16,13 @@ export default function DetalhesRestaurante() {
     setIsModalOpen,
     jsonProdutos
   } = useRestauranteDisponiveisDetalhes();
-  
+
   if (loading) {
     return <Loading />;
   }
 
   return (
-    
+
     <div className="mx-auto pb-10">
       <button
         onClick={() => navigate("/")}
@@ -59,14 +59,17 @@ export default function DetalhesRestaurante() {
 
           <Button
             className="flex w-28 items-center rounded-md px-4 py-2"
-            onClick={() =>  setIsModalOpen(true) }
+            onClick={() => setIsModalOpen(true)}
           >
             Ver mais
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
       </div>
-      <div id="produtos" className="flex flex-col md:flex-row gap-8 mt-4 justify-between">
+      <div
+        id="produtos"
+        className="grid grid-cols-1 max-[1500px]:grid-cols-1 min-[1100px]:grid-cols-2 gap-8 mt-5 mb-[5rem]"
+      >
         {jsonProdutos.produtos.map((produto) => (
           <CardProdutos
             key={produto.id}
@@ -77,13 +80,13 @@ export default function DetalhesRestaurante() {
             valor_unitario={produto.valor_unitario}
             dadosRestaurante={restaurante}
           />
-
         ))}
       </div>
-           
+
+
       {isModalOpen && (
         <VerMaisRestaurante
-        onClose={() => setIsModalOpen(false)} />
+          onClose={() => setIsModalOpen(false)} />
       )}
 
     </div>

@@ -1,86 +1,63 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { IProduto } from "../interface/IProduct";
+import { IRestaurante } from "../interface/IRestaurante";
+import { CarrinhoContext } from "../contexts/CarrinhoContext";
 
-export const useCarrinho = () => {
-const [dados, setDados] = useState<any>([]);
-const navigate = useNavigate();
 
-	useEffect(() => {
+export function useCardProdutos(produto: IProduto, restaurante: IRestaurante) {
+const [quantidade, setQuantidade] = useState(0);
+	const [carrinho, setCarrinho] = useState<any[]>([]);
+	const { atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+
+
+	const incrementar = () => setQuantidade((q) => q + 1);
+	const decrementar = () => setQuantidade((q) => (q > 0 ? q - 1 : 0));
+
+	async function adicionarAoCarrinho() {
+
+		const addItem = {
+			...produto,
+			quantidade,
+			subtotal: produto.valor_unitario * quantidade,
+			restaurante,
+		};
+
 		const storedCarrinho = localStorage.getItem("carrinho");
+		let carrinho = storedCarrinho ? JSON.parse(storedCarrinho) : [];
 
-		if (storedCarrinho) {
-			const carrinho = JSON.parse(storedCarrinho);
+		const itemIndex = carrinho.findIndex((item: any) => item.id === addItem.id);
 
-			if (Array.isArray(carrinho) && carrinho.length > 0) {
-				console.log("Carrinho recuperado:", carrinho);
+		if (itemIndex !== -1) {
+			const itemExistente = carrinho[itemIndex];
 
-				const carrinhoAgrupado = Object.values(
-					carrinho.reduce((acc: any, item: any) => {
-						if (!acc[item.id]) {
-							acc[item.id] = { ...item }; 
-						} else {
-							acc[item.id].quantidade += item.quantidade; 
-							acc[item.id].subtotal += item.subtotal; 
-						}
-						return acc;
-					}, {})
-				);
+			if (itemExistente.quantidade === addItem.quantidade) {
+				console.log("A quantidade não foi alterada, mantendo a mesma.");
+				return;
+			}
 
-				setDados(carrinhoAgrupado); 
+			if (addItem.quantidade > itemExistente.quantidade) {
+				const diff = addItem.quantidade - itemExistente.quantidade;
+				itemExistente.quantidade = addItem.quantidade;
+				itemExistente.subtotal += diff * itemExistente.valor_unitario;
 			} else {
-				console.log("Carrinho vazio ou inválido.");
+				const diff = itemExistente.quantidade - addItem.quantidade;
+				itemExistente.quantidade = addItem.quantidade;
+				itemExistente.subtotal -= diff * itemExistente.valor_unitario;
 			}
 		} else {
-			console.log("Carrinho não encontrado no localStorage.");
+			carrinho.push(addItem);
 		}
-	}, []);
 
-	const incrementar = (id: number) => {
-		setDados((prevDados: any) =>
-			prevDados.map((item: any) =>
-				item.id === id
-					? {
-						...item,
-						quantidade: item.quantidade + 1,
-						subtotal: item.subtotal + item.valor_unitario,
-					}
-					: item
-			)
-		);
-	};
+		localStorage.setItem("carrinho", JSON.stringify(carrinho));
+		setCarrinho(carrinho);
+		setQuantidade(0);
+		atualizarQuantidadeTotal();
+	}
 
-	const decrementar = (id: number) => {
-		setDados((prevDados: any) =>
-			prevDados.map((item: any) =>
-				item.id === id && item.quantidade > 1
-					? {
-						...item,
-						quantidade: item.quantidade - 1,
-						subtotal: item.subtotal - item.valor_unitario,
-					}
-					: item
-			)
-		);
-	};
-
-	const removerItem = (id: string) => {
-		const novoCarrinho = dados.filter((item: any) => item.id !== id);
-		setDados(novoCarrinho);
-	};
-
-	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
-	const taxaEntrega = 5.0; // aplicar a logica para calcular a taxa de entrega
-	const total = subtotal + taxaEntrega;
-  
-	return {
-		navigate,
-		dados,
-		incrementar,
-		decrementar,
-		removerItem,
-		subtotal,
-		taxaEntrega,
-		total,
-		setDados, // Adicionei isso para que você possa atualizar os dados de fora do hook, se necessário
-	};
+  return {
+    quantidade,
+    incrementar,
+    decrementar,
+    adicionarAoCarrinho,
+  };
 }

@@ -1,126 +1,76 @@
-import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { IProduto } from "../../../interface/IProduct";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IRestaurante } from "../../../interface/IRestaurante";
+import { useCardProdutos } from "../../../hooks/useCardProduto";
 interface CardProdutosProps extends IProduto {
 	dadosRestaurante: IRestaurante;
 }
 
-export default function CardProdutos({
-	id,
-	nome,
-	descricao,
-	imageUrl,
-	valor_unitario,
-	dadosRestaurante,
-}: CardProdutosProps) {
+export default function CardProdutos(props: CardProdutosProps) {
+	const {
+	  nome,
+	  descricao,
+	  imageUrl,
+	  valor_unitario,
+	  dadosRestaurante,
+	} = props;
+  
+	const {
+	  quantidade,
+	  incrementar,
+	  decrementar,
+	  adicionarAoCarrinho,
+	} = useCardProdutos(props, dadosRestaurante);
 
-	console.log("dadosRestaurante", dadosRestaurante);
-	const [quantidade, setQuantidade] = useState(0);
-	const [carrinho, setCarrinho] = useState<any[]>([]);
-
-	const incrementar = () => setQuantidade((q) => q + 1);
-	const decrementar = () => setQuantidade((q) => (q > 0 ? q - 1 : 0));
-
-	async function adicionarAoCarrinho() {
-		console.log("Entrou na lógica");
-		console.log("dadosRestaurante:", dadosRestaurante);
-	  
-		const addItem = {
-		  id,
-		  nome,
-		  descricao,
-		  imageUrl,
-		  valor_unitario,
-		  quantidade,
-		  subtotal: valor_unitario * quantidade,
-		  restaurante: dadosRestaurante,
-		};
-	  
-		const storedCarrinho = localStorage.getItem("carrinho");
-		let carrinho = storedCarrinho ? JSON.parse(storedCarrinho) : [];
-	  
-		const itemIndex = carrinho.findIndex((item: any) => item.id === addItem.id);
-	  
-		if (itemIndex !== -1) {
-		  const itemExistente = carrinho[itemIndex];
-	  
-		  if (itemExistente.quantidade === addItem.quantidade) {
-			console.log("A quantidade não foi alterada, mantendo a mesma.");
-			return;
-		  }
-	  
-		  if (addItem.quantidade > itemExistente.quantidade) {
-			const diff = addItem.quantidade - itemExistente.quantidade;
-			itemExistente.quantidade = addItem.quantidade;
-			itemExistente.subtotal += diff * itemExistente.valor_unitario;
-		  } else {
-			const diff = itemExistente.quantidade - addItem.quantidade;
-			itemExistente.quantidade = addItem.quantidade;
-			itemExistente.subtotal -= diff * itemExistente.valor_unitario;
-		  }
-		} else {
-		  carrinho.push(addItem);
-		}
-	  
-		localStorage.setItem("carrinho", JSON.stringify(carrinho));
-		setCarrinho(carrinho);
-		setQuantidade(0); 
-	  }
-	  
 
 	return (
-		<div className="flex flex-col  gap-4 md:gap-8 md:flex-row items-center rounded-md border border-gray-medium bg-gray-light p-4 w-full">
-			<img
-				className="w-[10rem] rounded-md ml-4"
-				src={imageUrl}
-				alt={nome}
-			/>
-
-			<div className="">
+		<div
+			className="w-full max-w-full rounded-md border border-gray-medium bg-gray-light p-4 transition-all duration-300 cursor-pointer"
+		>
+			<div className="flex gap-8  items-center">
+				<img
+					className="ml-2 mr-2 w-15 h-15 object-cover rounded-full mb-4 mx-auto"
+					src={imageUrl}
+					alt={nome}
+				/>
 				<h3 className="font-bold">{nome}</h3>
+			</div>
+
+			<div className="w-full">
 				<p className="mt-3 font-light">{descricao}</p>
-				<p className="mt-3 font-normal text-2xl">R$ {valor_unitario}</p>
+				<p className="mt-3 text-3x1 font-semibold">R$ {valor_unitario}</p>
 
-				<div className="mt-4 flex items-center gap-4">
-					<div className="flex gap-6 p-2 items-center justify-between rounded-lg border border-gray-medium bg-white">
-						<Button
-							color="plain"
-							onClick={decrementar}
-							className="p-1"
-						>
-							<Minus size={20} className="stroke-2" />
-						</Button>
-						<span className="text-lg font-bold">{quantidade}</span>
-						<Button
-							color="plain"
-							onClick={incrementar}
-							className="p-1"
-						>
-							<Plus size={20} className="stroke-2" />
-						</Button>
-					</div>
-
-					{/* Botão Adicionar */}
-					<Button className="p-2 flex items-center justify-between"
-						disabled={quantidade === 0}
-						 onClick={adicionarAoCarrinho}>
-						<div className="flex items-center gap-2">
-							<AiOutlineShoppingCart className="text-2xl" />
-							<p>Adicionar</p>
+				<div className="mt-2">
+					<div className="flex flex-row gap-4 items-center w-full justify-end">
+						<div className="flex gap-6 p-2 items-center justify-between rounded-lg border border-gray-medium bg-white">
+							<Button color="plain" onClick={decrementar} className="p-1">
+								<Minus size={20} className="stroke-2" />
+							</Button>
+							<span className="text-lg font-bold">{quantidade}</span>
+							<Button color="plain" onClick={incrementar} className="p-1">
+								<Plus size={20} className="stroke-2" />
+							</Button>
 						</div>
 
-						<span>
-							R${" "}
-							{quantidade > 0
-								? (valor_unitario * quantidade).toFixed(2)
-								: valor_unitario.toFixed(2)}
-						</span>
-					</Button>
+						<Button
+							className="p-2 flex gap-6 items-center justify-between w-full md:w-auto"
+							disabled={quantidade === 0}
+							onClick={adicionarAoCarrinho}
+						>
+							<div className="flex items-center gap-2">
+								<AiOutlineShoppingCart className="text-2x1" />
+								<p className="text-sm md:text-base">Adicionar</p>
+							</div>
+							<span className="text-sm md:text-base">
+								R$ {quantidade > 0 ? (valor_unitario * quantidade).toFixed(2) : valor_unitario.toFixed(2)}
+							</span>
+						</Button>
+					</div>
 				</div>
 			</div>
 		</div>
+
 	);
 }
