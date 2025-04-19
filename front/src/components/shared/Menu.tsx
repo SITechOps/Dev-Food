@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import iFoodLogo from "../../assets/ifood.png";
 import { CiUser } from "react-icons/ci";
@@ -7,21 +7,28 @@ import ListagemEndereco from "../Endereco/ListagemEndereco";
 import { useAuth } from "../../contexts/AuthContext";
 import { HiShoppingCart } from "react-icons/hi";
 import Carrinho from "../Carrinho/Index";
+import { CarrinhoContext } from "../../contexts/CarrinhoContext";
 
 export default function Menu() {
   const navigate = useNavigate();
+  const { userData } = useAuth();
+  const idUsuario = userData?.sub;
   const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const { userData } = useAuth();
-  const idUsuario = userData?.sub;
   const [isCarrinhoOpen, setIsCarrinhoOpen] = useState(false);
+  const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+  console.log("Quantidade total no carrinho:", quantidadeTotal);
 
   useEffect(() => {
     if (menuRef.current) {
       setMenuHeight(menuRef.current.offsetHeight);
     }
   }, []);
+
+  useEffect(() => {
+    atualizarQuantidadeTotal();
+  }, [isCarrinhoOpen]); 
 
   return (
     <>
@@ -68,10 +75,10 @@ export default function Menu() {
               </Button>
             )}
 
-            <div className="relative w-fit cursor-pointer" onClick={() => setIsCarrinhoOpen(true)}>
+            <div className="relative w-fit cursor-pointer" onClick={() => {setIsCarrinhoOpen(true); atualizarQuantidadeTotal() }}>
               <HiShoppingCart className="text-brown-normal hover:text-brown-dark text-4xl self-center" />
-              <div className="bg-brown-light-active text-brown-normal font-bold rounded-full w-5 h-5 flex items-center justify-center absolute -top-2 -right-2">
-                1
+              <div className="bg-brown-light-active text-brown-normal font-bold rounded-full w-5 h-5 flex items-center justify-center absolute -top-2 -right-2">                  
+                  {quantidadeTotal}
               </div>
             </div>
           </div>

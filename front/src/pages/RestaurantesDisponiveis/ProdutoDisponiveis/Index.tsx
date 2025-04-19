@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { IProduto } from "../../../interface/IProduct";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IRestaurante } from "../../../interface/IRestaurante";
+import { CarrinhoContext } from "../../../contexts/CarrinhoContext";
 interface CardProdutosProps extends IProduto {
 	dadosRestaurante: IRestaurante;
 }
@@ -20,6 +21,8 @@ export default function CardProdutos({
 	console.log("dadosRestaurante", dadosRestaurante);
 	const [quantidade, setQuantidade] = useState(0);
 	const [carrinho, setCarrinho] = useState<any[]>([]);
+	const { atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+
 
 	const incrementar = () => setQuantidade((q) => q + 1);
 	const decrementar = () => setQuantidade((q) => (q > 0 ? q - 1 : 0));
@@ -27,49 +30,49 @@ export default function CardProdutos({
 	async function adicionarAoCarrinho() {
 		console.log("Entrou na lógica");
 		console.log("dadosRestaurante:", dadosRestaurante);
-	  
+
 		const addItem = {
-		  id,
-		  nome,
-		  descricao,
-		  imageUrl,
-		  valor_unitario,
-		  quantidade,
-		  subtotal: valor_unitario * quantidade,
-		  restaurante: dadosRestaurante,
+			id,
+			nome,
+			descricao,
+			imageUrl,
+			valor_unitario,
+			quantidade,
+			subtotal: valor_unitario * quantidade,
+			restaurante: dadosRestaurante,
 		};
-	  
+
 		const storedCarrinho = localStorage.getItem("carrinho");
 		let carrinho = storedCarrinho ? JSON.parse(storedCarrinho) : [];
-	  
+
 		const itemIndex = carrinho.findIndex((item: any) => item.id === addItem.id);
-	  
+
 		if (itemIndex !== -1) {
-		  const itemExistente = carrinho[itemIndex];
-	  
-		  if (itemExistente.quantidade === addItem.quantidade) {
-			console.log("A quantidade não foi alterada, mantendo a mesma.");
-			return;
-		  }
-	  
-		  if (addItem.quantidade > itemExistente.quantidade) {
-			const diff = addItem.quantidade - itemExistente.quantidade;
-			itemExistente.quantidade = addItem.quantidade;
-			itemExistente.subtotal += diff * itemExistente.valor_unitario;
-		  } else {
-			const diff = itemExistente.quantidade - addItem.quantidade;
-			itemExistente.quantidade = addItem.quantidade;
-			itemExistente.subtotal -= diff * itemExistente.valor_unitario;
-		  }
+			const itemExistente = carrinho[itemIndex];
+
+			if (itemExistente.quantidade === addItem.quantidade) {
+				console.log("A quantidade não foi alterada, mantendo a mesma.");
+				return;
+			}
+
+			if (addItem.quantidade > itemExistente.quantidade) {
+				const diff = addItem.quantidade - itemExistente.quantidade;
+				itemExistente.quantidade = addItem.quantidade;
+				itemExistente.subtotal += diff * itemExistente.valor_unitario;
+			} else {
+				const diff = itemExistente.quantidade - addItem.quantidade;
+				itemExistente.quantidade = addItem.quantidade;
+				itemExistente.subtotal -= diff * itemExistente.valor_unitario;
+			}
 		} else {
-		  carrinho.push(addItem);
+			carrinho.push(addItem);
 		}
-	  
+
 		localStorage.setItem("carrinho", JSON.stringify(carrinho));
 		setCarrinho(carrinho);
-		setQuantidade(0); 
-	  }
-	  
+		atualizarQuantidadeTotal();
+	}
+
 
 	return (
 		<div className="flex flex-col  gap-4 md:gap-8 md:flex-row items-center rounded-md border border-gray-medium bg-gray-light p-4 w-full">
@@ -106,7 +109,7 @@ export default function CardProdutos({
 					{/* Botão Adicionar */}
 					<Button className="p-2 flex items-center justify-between"
 						disabled={quantidade === 0}
-						 onClick={adicionarAoCarrinho}>
+						onClick={adicionarAoCarrinho}>
 						<div className="flex items-center gap-2">
 							<AiOutlineShoppingCart className="text-2xl" />
 							<p>Adicionar</p>

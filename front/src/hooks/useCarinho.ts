@@ -69,10 +69,14 @@ const navigate = useNavigate();
 		localStorage.setItem("carrinho", JSON.stringify(novoCarrinho));
 	};
 
+	useEffect(() => {
+		localStorage.setItem("carrinho", JSON.stringify(dados));
+	}, [dados]);		
+
 	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
 	const taxaEntrega = 5.0; // aplicar a logica para calcular a taxa de entrega
 	const total = subtotal + taxaEntrega;
-  
+
 	return {
 		navigate,
 		dados,

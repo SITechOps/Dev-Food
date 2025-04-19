@@ -1,7 +1,7 @@
 import { IoClose } from "react-icons/io5";
 import Button from "../ui/Button";
 import { Minus, Plus } from "lucide-react";
-import { useCarrinho } from "../../hooks/useCardProduto";
+import { useCarrinho } from "../../hooks/useCarinho";
 import ifoodLogo from "../../assets/ifood.png";
 
 interface MenuLeteralCarrinhoProps {
