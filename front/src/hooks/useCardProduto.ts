@@ -66,6 +66,7 @@ const navigate = useNavigate();
 	const removerItem = (id: string) => {
 		const novoCarrinho = dados.filter((item: any) => item.id !== id);
 		setDados(novoCarrinho);
+		localStorage.setItem("carrinho", JSON.stringify(novoCarrinho));
 	};
 
 	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
@@ -81,6 +82,6 @@ const navigate = useNavigate();
 		subtotal,
 		taxaEntrega,
 		total,
-		setDados, // Adicionei isso para que você possa atualizar os dados de fora do hook, se necessário
+		setDados, 
 	};
 }
