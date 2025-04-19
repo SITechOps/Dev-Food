@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const useCarrinho = () => {
-	
 const [dados, setDados] = useState<any>([]);
+const navigate = useNavigate();
 
 	useEffect(() => {
 		const storedCarrinho = localStorage.getItem("carrinho");
@@ -72,6 +73,7 @@ const [dados, setDados] = useState<any>([]);
 	const total = subtotal + taxaEntrega;
   
 	return {
+		navigate,
 		dados,
 		incrementar,
 		decrementar,
