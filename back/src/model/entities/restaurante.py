@@ -42,5 +42,5 @@ class Restaurante(Usuario):
             "nro_conta": self.nro_conta,
             "tipo_conta": self.tipo_conta,
             "logo": self.logo,
-            # "endereco": self.endereco.to_dict() if self.endereco else None
+            "endereco": self.endereco.to_dict() or {}
         }

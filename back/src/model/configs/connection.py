@@ -4,7 +4,6 @@ from alembic.migration import MigrationContext
 from alembic.autogenerate import compare_metadata
 from src.model.configs.base import Base
 
-
 class DBConnectionHandler:
 
     def __init__(self):
