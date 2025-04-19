@@ -3,6 +3,10 @@ import Button from "../../components/ui/Button";
 import { SiPix } from "react-icons/si";
 import { TfiMapAlt } from "react-icons/tfi";
 import { BsCreditCardFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { FaAngleLeft } from "react-icons/fa6";
+import PagePix from "./FormasPagamento/Pix";
+import PageCartao from "./FormasPagamento/Cartao";
 
 
 export default function Pagamento() {
@@ -12,9 +16,11 @@ export default function Pagamento() {
 		ruaENumero: "Rua das Laranjeiras, 123",
 		complemento: "Apto 45, Bloco B - São Paulo - SP"
 	}
+	const navigate = useNavigate();
+	const [etapa, setEtapa] = useState<"opcaoPagamento" | "pagePix" | "pageCartao">("opcaoPagamento");
 
 	return (
-		<div className="card mt-[5rem] w-[50rem] p-4">
+		<div className="card mt-[5rem] w-[50rem] p-4 m-auto border-b border-gray-medium">
 			<h1 className="my-8 text-center font-medium">
 				Finalize seu pedido
 			</h1>
@@ -56,21 +62,55 @@ export default function Pagamento() {
 				Pague na entrega
 			</Button> */}
 				</div>
-				<div id="opcoes-pagamento">
-					<button className={styleOptions}>
-						<SiPix className="text-2xl" />
-						<div className="">
-							<p className="font-semibold">Pague com Pix</p>
-							<p className="font-light">Use o QR Code ou copie e cole o código</p>
-						</div>
-					</button>
-					<button className={styleOptions}>
-						<BsCreditCardFill className="text-2xl" />
-						<div className="">
-							<p className="font-semibold">Pague com cartão</p>
-							<p className="font-light">Cadastre-se seu cartao ou Escolha seu cartão</p>
-						</div>
-					</button>
+				<div id="pagamento">
+					{etapa === "opcaoPagamento" && (
+						<>
+							<button className={styleOptions} onClick={() => setEtapa("pagePix")}>
+								<SiPix className="text-2xl" />
+								<div className="">
+									<p className="font-semibold">Pague com Pix</p>
+									<p className="font-light">Use o QR Code ou copie e cole o código</p>
+								</div>
+							</button>
+
+
+							<button className={styleOptions} onClick={() => setEtapa("pageCartao")}>
+								<BsCreditCardFill className="text-2xl" />
+								<div className="">
+									<p className="font-semibold">Pague com cartão</p>
+									<p className="font-light">Cadastre-se seu cartao ou Escolha seu cartão</p>
+								</div>
+							</button>
+						</>
+					)}
+
+					{etapa === "pagePix" && (
+						<>
+							<button
+								onClick={() => setEtapa("opcaoPagamento")}
+								className="mb-5 self-start"
+							>
+								<FaAngleLeft className="icon" />
+							</button>
+
+							<div className="mt-3">
+								<PagePix />
+							</div>
+						</>
+					)}
+					{etapa === "pageCartao" && (
+						<>
+							<button
+								onClick={() => setEtapa("opcaoPagamento")}
+								className="mb-5 self-start"
+							>
+								<FaAngleLeft className="icon" />
+							</button>
+							<div className="mt-3">
+								<PageCartao />
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</div>

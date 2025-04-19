@@ -14,6 +14,7 @@ export default function Carrinho({
   setIsCarrinhoOpen,
 }: MenuLeteralCarrinhoProps) {
   const {
+    navigate,
     dados,
     incrementar,
     decrementar,
@@ -112,7 +113,7 @@ export default function Carrinho({
                   Total
                   <span>R$ {total.toFixed(2)}</span>
                 </p>
-                <Button className="p-2 w-full mt-4">
+                <Button className="p-2 w-full mt-4" onClick={() => {navigate("/pagamento"); setIsCarrinhoOpen(false)}}>
                   Escolher a forma de pagamento
                 </Button>
               </div>
