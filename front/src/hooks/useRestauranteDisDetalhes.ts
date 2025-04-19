@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../connection/axios";
+import { IRestaurante } from "../interface/IRestaurante";
 
 export const useRestauranteDisponiveisDetalhes = () => {
 	const { id } = useParams();
-	const [restaurante, setRestaurante] = useState({
+	const [restaurante, setRestaurante] = useState<IRestaurante>({
 		nome: "",
 		descricao: "",
 		especialidade: "",
 		endereco: {
-			logradouro: "",
-			bairro: "",
-			cidade: "",
-			estado: "",
-			pais: "",
+		  logradouro: "",
+		  bairro: "",
+		  cidade: "",
+		  estado: "",
+		  pais: "",
 		},
 		horario_funcionamento: "",
-	});
+	  });
 	const [loading, setLoading] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const navigate = useNavigate();
@@ -55,7 +56,6 @@ export const useRestauranteDisponiveisDetalhes = () => {
 
 		getDetalhesRestaurante();
 	}, [id]); 
-
 
 	return {
 		restaurante,

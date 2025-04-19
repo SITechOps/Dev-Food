@@ -5,6 +5,8 @@ import { CiUser } from "react-icons/ci";
 import Button from "../ui/Button";
 import ListagemEndereco from "../Endereco/ListagemEndereco";
 import { useAuth } from "../../contexts/AuthContext";
+import { HiShoppingCart } from "react-icons/hi";
+import Carrinho from "../Carrinho/Index";
 
 export default function Menu() {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ export default function Menu() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
+  const [isCarrinhoOpen, setIsCarrinhoOpen] = useState(false);
 
   useEffect(() => {
     if (menuRef.current) {
@@ -37,14 +40,16 @@ export default function Menu() {
             </>
           ) : null}
 
-          <div className="flex gap-3">
-            <Button
-              color="plain"
-              onClick={() => navigate("/pedido")}
-              className="w-40 py-2"
-            >
-              Faça seu pedido
-            </Button>
+          <div className="flex gap-3 align-center">
+            {idUsuario ? (
+              <Button
+                color="plain"
+                onClick={() => navigate("/pedido")}
+                className="w-40 py-2"
+              >
+                Faça seu pedido
+              </Button>
+            ) : null}
             {token ? (
               <Button
                 color="secondary"
@@ -62,9 +67,23 @@ export default function Menu() {
                 Entrar
               </Button>
             )}
+
+            <div className="relative w-fit cursor-pointer" onClick={() => setIsCarrinhoOpen(true)}>
+              <HiShoppingCart className="text-brown-normal hover:text-brown-dark text-4xl self-center" />
+              <div className="bg-brown-light-active text-brown-normal font-bold rounded-full w-5 h-5 flex items-center justify-center absolute -top-2 -right-2">
+                1
+              </div>
+            </div>
           </div>
         </div>
-      </header>
+      </header>\
+      {isCarrinhoOpen && (
+        <Carrinho
+          isCarrinhoOpen={isCarrinhoOpen}
+          setIsCarrinhoOpen={setIsCarrinhoOpen}
+        />
+      )}
+
 
       <div style={{ height: menuHeight }} />
     </>

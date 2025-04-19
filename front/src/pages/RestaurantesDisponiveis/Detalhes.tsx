@@ -75,10 +75,12 @@ export default function DetalhesRestaurante() {
             descricao={produto.descricao}
             imageUrl={produto.imageUrl}
             valor_unitario={produto.valor_unitario}
+            dadosRestaurante={restaurante}
           />
 
         ))}
       </div>
+           
       {isModalOpen && (
         <VerMaisRestaurante
         onClose={() => setIsModalOpen(false)} />
