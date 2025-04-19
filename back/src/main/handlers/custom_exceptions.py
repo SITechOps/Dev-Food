@@ -5,6 +5,22 @@ class BaseCustomException(Exception):
         self.status_code = status_code
 
 
+class NotFound(BaseCustomException):
+    def __init__(self, object_name: str):
+        super().__init__(f"{object_name} não encontrado!", 404)
+
+
+class AlreadyExists(BaseCustomException):
+    def __init__(self, object_name: str):
+        super().__init__(f"{object_name} já existe!", 409)
+
+
+class EmailChangeNotAllowed(BaseCustomException):
+    def __init__(self, message="Este e-mail não pode ser alterado!"):
+        super().__init__(message, 403)
+
+
+
 class UsuarioAlreadyExists(BaseCustomException):
     def __init__(self, message="Usuário já existe!"):
         super().__init__(message, 409)
@@ -28,9 +44,7 @@ class AddressNotFound(BaseCustomException):
         super().__init__(message, 404)
 
 
-class EmailChangeNotAllowed(BaseCustomException):
-    def __init__(self, message="Este e-mail não pode ser alterado!"):
-        super().__init__(message, 403)
+
 
 
 class InvalidAddressType(BaseCustomException):

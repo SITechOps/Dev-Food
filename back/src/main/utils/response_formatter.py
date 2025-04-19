@@ -2,15 +2,15 @@ from flask import jsonify
 from src.model.entities.usuario import Usuario
 from src.model.entities.endereco import Endereco
 from src.model.entities.restaurante import Restaurante
+from src.model.entities.produto import Produto
 from src.http_types.http_response import HttpResponse
 from typing import Literal
-from typing import Union
 
 class ResponseFormatter:
     
     
     @staticmethod
-    def display_obj_list(class_name: str, obj_list: list[Union[Usuario, Endereco, Restaurante]]) -> HttpResponse:
+    def display_obj_list(class_name: str, obj_list: list[Usuario | Endereco | Restaurante | Produto]) -> HttpResponse:
         return HttpResponse(
             body={
                 "data": {
@@ -24,7 +24,7 @@ class ResponseFormatter:
 
 
     @staticmethod
-    def display_single_obj(obj: Union[Usuario, Endereco, Restaurante]) -> HttpResponse:
+    def display_single_obj(obj: Usuario | Endereco | Restaurante | Produto) -> HttpResponse:
         return HttpResponse(
             body={
                 "data": {
