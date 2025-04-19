@@ -3,37 +3,26 @@ import Button from "../../components/ui/Button";
 import CardProdutos from "./ProdutoDisponiveis/Index";
 import { useRestauranteDisponiveisDetalhes } from "../../hooks/useRestauranteDisDetalhes";
 import { FaAngleLeft } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
-import ModalDetalhamentoRestaurante from "./Modal/Index";
+import { Loading } from "../../components/shared/Loading";
+import VerMaisRestaurante from "./VerMais/Index";
 
 
 export default function DetalhesRestaurante() {
   const {
     restaurante,
     loading,
+    navigate,
     isModalOpen,
     setIsModalOpen,
     jsonProdutos
   } = useRestauranteDisponiveisDetalhes();
-  const navigate = useNavigate();
-
+  
   if (loading) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <p>Carregando detalhes do restaurante...</p>
-      </div>
-    );
-  }
-
-  if (!restaurante) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <p>Não foi possível carregar os detalhes do restaurante.</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
+    
     <div className="mx-auto pb-10">
       <button
         onClick={() => navigate("/")}
@@ -70,7 +59,7 @@ export default function DetalhesRestaurante() {
 
           <Button
             className="flex w-28 items-center rounded-md px-4 py-2"
-            onClick={() => { console.log("Modal aberto"); setIsModalOpen(true) }}
+            onClick={() =>  setIsModalOpen(true) }
           >
             Ver mais
             <ChevronRight className="ml-1 h-4 w-4" />
@@ -91,7 +80,8 @@ export default function DetalhesRestaurante() {
         ))}
       </div>
       {isModalOpen && (
-        <ModalDetalhamentoRestaurante />
+        <VerMaisRestaurante
+        onClose={() => setIsModalOpen(false)} />
       )}
 
     </div>

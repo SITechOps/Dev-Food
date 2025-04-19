@@ -3,13 +3,12 @@ import { IoClose } from "react-icons/io5";
 import { useRestauranteDisponiveisDetalhes } from "../../../hooks/useRestauranteDisDetalhes";
 import { Loading } from "../../../components/shared/Loading";
 
-export default function ModalDetalhamentoRestaurante({ onClose }: any) {
+export default function VerMaisRestaurante({ onClose }: any) {
 	const {
 		restaurante,
 		loading,
 	} = useRestauranteDisponiveisDetalhes();
 	
-
 	return (
 		<div className="fixed inset-0 z-50 flex justify-end bg-black/70">
 			<div className="h-full w-full max-w-md overflow-y-auto bg-white p-6 relative">
