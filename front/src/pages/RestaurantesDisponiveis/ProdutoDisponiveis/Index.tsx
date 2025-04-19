@@ -4,8 +4,8 @@ import Button from "../../../components/ui/Button";
 import { IProduto } from "../../../interface/IProduct";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 
-
 export default function CardProdutos({
+	id,
 	nome,
 	descricao,
 	imageUrl,
@@ -50,8 +50,10 @@ export default function CardProdutos({
 
 					{/* Botão Adicionar */}
 					<Button className="p-2 flex items-center justify-between">
-					{/* <AiOutlineShoppingCart className="text-2xl"/> */}
-					<p>Clique para adicionar</p>
+						<div className="flex items-center gap-2">
+							<AiOutlineShoppingCart className="text-2xl" />
+							<p>Adicionar</p>
+						</div>
 
 						<span>
 							R${" "}

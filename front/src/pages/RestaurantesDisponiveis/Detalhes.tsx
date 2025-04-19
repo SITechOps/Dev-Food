@@ -1,17 +1,21 @@
-import { Star, Clock, MapPin, ChevronRight } from "lucide-react";
-import { IoClose } from "react-icons/io5";
+import { Star, ChevronRight } from "lucide-react";
 import Button from "../../components/ui/Button";
 import CardProdutos from "./ProdutoDisponiveis/Index";
 import { useRestauranteDisponiveisDetalhes } from "../../hooks/useRestauranteDisDetalhes";
+import { FaAngleLeft } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import ModalDetalhamentoRestaurante from "./Modal/Index";
+
 
 export default function DetalhesRestaurante() {
-    const {
-      restaurante,
-      loading,
-      isModalOpen,
-      setIsModalOpen,
-      jsonProdutos
-    } = useRestauranteDisponiveisDetalhes();
+  const {
+    restaurante,
+    loading,
+    isModalOpen,
+    setIsModalOpen,
+    jsonProdutos
+  } = useRestauranteDisponiveisDetalhes();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -31,7 +35,13 @@ export default function DetalhesRestaurante() {
 
   return (
     <div className="mx-auto pb-10">
-      <div className="relative mt-[5rem] h-48 w-full rounded-md md:h-64">
+      <button
+        onClick={() => navigate("/")}
+        className="mt-[5rem] self-start flex items-center justify-center gap-3 hover:bg-brown-light-active p-2 rounded-md cursor-pointer"
+      >
+        <FaAngleLeft className="icon" /> <p className="text-2xl">Voltar</p>
+      </button>
+      <div className="relative mt-[2rem] h-48 w-full rounded-md md:h-64">
         <img
           src={
             "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -60,7 +70,7 @@ export default function DetalhesRestaurante() {
 
           <Button
             className="flex w-28 items-center rounded-md px-4 py-2"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => { console.log("Modal aberto"); setIsModalOpen(true) }}
           >
             Ver mais
             <ChevronRight className="ml-1 h-4 w-4" />
@@ -77,62 +87,13 @@ export default function DetalhesRestaurante() {
             imageUrl={produto.imageUrl}
             valor_unitario={produto.valor_unitario}
           />
+
         ))}
       </div>
-
-
-      {/* Modal lateral */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/70">
-          <div className="h-full w-full max-w-md overflow-y-auto bg-white">
-            <div className="p-6">
-              <div className="mb-6 flex items-center justify-between">
-                <h2 className="mt-8 text-xl font-bold">
-                  Informações do Restaurante
-                </h2>
-                <IoClose
-                  className="icon absolute top-3 right-4"
-                  size={26}
-                  onClick={() => setIsModalOpen(false)}
-                />
-              </div>
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="mb-2 font-semibold">Descrição</h3>
-                  <p className="text-gray-600">{restaurante.descricao}</p>
-                </div>
-
-                <hr className="text-gray-normal" />
-
-                <div>
-                  <h3 className="mb-2 flex items-center font-semibold">
-                    <MapPin className="text-brown-normal mr-2 h-4 w-4" />
-                    Endereço
-                  </h3>
-                  <p className="text-gray-600">
-                    {restaurante.endereco.logradouro},{" "}
-                    {restaurante.endereco.bairro}, {restaurante.endereco.cidade}
-                    , {restaurante.endereco.estado}, {restaurante.endereco.pais}
-                  </p>
-                </div>
-
-                <hr className="text-gray-normal" />
-
-                <div>
-                  <h3 className="mb-2 flex items-center font-semibold">
-                    <Clock className="text-brown-normal mr-2 h-4 w-4" />
-                    Horário de Funcionamento
-                  </h3>
-                  <p className="text-gray-600">
-                    {restaurante.horario_funcionamento}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ModalDetalhamentoRestaurante />
       )}
+
     </div>
   );
 }
