@@ -21,8 +21,7 @@ class IUsuariosRepository(ABC):
 
 
     @abstractmethod
-    def update(self, id_usuario: str, info_usuario: dict) -> None: pass
-
+    def update(self, usuario_atual: Usuario, dados_atualizados: dict) -> None: pass
 
     @abstractmethod
-    def delete(self, id_usuario: str) -> None: pass
+    def delete(self, usuario: Usuario) -> None: pass

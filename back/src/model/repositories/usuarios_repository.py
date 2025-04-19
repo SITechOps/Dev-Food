@@ -43,21 +43,14 @@ class UsuariosRepository:
 
 
     @db_scope
-    def update(self, db, id_usuario: str, info_usuario: dict) -> None:
-        user = (
-            db.session
-            .query(Usuario)
-            .filter_by(id=id_usuario)
-            .one_or_none()
-        )       
-        user.nome = info_usuario.get("nome")
-        user.telefone = info_usuario.get("telefone")
-        db.session.add(user)
+    def update(self, db, usuario_atual: Usuario, dados_atualizados: dict) -> None:
+        usuario_atual.nome = dados_atualizados.get("nome")
+        usuario_atual.telefone = dados_atualizados.get("telefone")
+        db.session.add(usuario_atual)
         db.session.commit()
 
 
     @db_scope
-    def delete(self, db, id_usuario: str) -> None:
-        user = self.find_by_id(id_usuario)
-        db.session.delete(user)
+    def delete(self, db, usuario: Usuario) -> None:
+        db.session.delete(usuario)
         db.session.commit()

@@ -11,83 +11,77 @@ class UsuariosManager:
 
     def __init__(self, users_repo: IUsuariosRepository) -> None:
         self.__users_repo = users_repo
-        self.class_name = "Usuário"
+        self.display_name = "Usuário"
 
 
     def create_new_user(self, http_request: HttpRequest) -> HttpResponse:
         dados_usuario = http_request.body.get("data")
         email = dados_usuario.get("email")
 
-        usuario = self.__users_repo.find_by_email(email)
-        self.__raise_if_user_exists(usuario)
-        
+        self.__check_duplicate_user(email)
         self.__fill_missing_name(dados_usuario)
         id_usuario = self.__users_repo.insert(dados_usuario)
-        token = generate_token(id_usuario, "usuario")
 
-        return ResponseFormatter.display_operation(self.class_name, "criado", token)
+        token = generate_token(id_usuario, "usuario")
+        return ResponseFormatter.display_operation(self.display_name, "criado", token)
        
         
     def login_user(self, http_request: HttpRequest) -> HttpResponse:
         email = http_request.body.get("email")
-        usuario = self.__users_repo.find_by_email(email)
-        self.__raise_if_not_found(usuario)
+        usuario = self.__ensure_user_found(email, "email")
 
-        token = generate_token(usuario.id, usuario.role)
-        return  ResponseFormatter.display_operation(self.class_name, "logado", token)
+        role = usuario.role
+        token = generate_token(usuario.id, role)
+        display_role = role.capitalize() if role.startswith("r") else self.display_name
+        return  ResponseFormatter.display_operation(display_role, "logado", token)
     
 
     def get_user_by_id(self, http_request: HttpRequest) -> HttpResponse:
         id_usuario = http_request.params.get("id")
-        usuario = self.__users_repo.find_by_id(id_usuario)
-
-        self.__raise_if_not_found(usuario)
+        usuario = self.__ensure_user_found(id_usuario)
         return ResponseFormatter.display_single_obj(usuario)
 
 
     def get_all_users(self) -> HttpResponse:
         lista_usuarios = self.__users_repo.find_all_users()
-        return ResponseFormatter.display_obj_list(self.class_name, lista_usuarios)
+        return ResponseFormatter.display_obj_list(self.display_name, lista_usuarios)
     
 
     def update(self, http_request: HttpRequest) -> HttpResponse:
         id_usuario = http_request.params.get("id")
-        dados_usuario = http_request.body.get("data")
+        dados_atualizados = http_request.body.get("data")
 
-        self.__check_user(id_usuario, dados_usuario.get("email"))
-        self.__users_repo.update(id_usuario, dados_usuario)
-        return ResponseFormatter.display_operation(self.class_name, "alterado")   
+        usuario_atual = self.__ensure_user_found(id_usuario)
+        self.__prevent_email_update(usuario_atual.email, dados_atualizados.get("email"))
+
+        self.__users_repo.update(usuario_atual, dados_atualizados)
+        return ResponseFormatter.display_operation(self.display_name, "alterado")   
     
 
     def delete(self, http_request: HttpRequest) -> HttpResponse:   
         id_usuario = http_request.params.get("id")
-        self.__check_user(id_usuario)
+        usuario = self.__ensure_user_found(id_usuario)
 
-        self.__users_repo.delete(id_usuario)
-        return ResponseFormatter.display_operation(self.class_name, "deletado")
+        self.__users_repo.delete(usuario)
+        return ResponseFormatter.display_operation(self.display_name, "deletado")
 
 
-    def __raise_if_not_found(self, usuario: Usuario | None) -> None:
+    def __ensure_user_found(self, termo_busca: str, tipo_busca: str = "id") -> Usuario:
+        buscar_usuario = getattr(self.__users_repo, f"find_by_{tipo_busca}")
+        usuario = buscar_usuario(termo_busca)
         if not usuario:
-            raise NotFound(self.class_name)
+            raise NotFound(self.display_name)
+        return usuario
         
 
-    def __raise_if_user_exists(self, usuario: Usuario | None) -> None:
-        if usuario:
-            raise AlreadyExists(self.class_name)
+    def __check_duplicate_user(self, email: str) -> None:
+        if self.__users_repo.find_by_email(email):
+            raise AlreadyExists(self.display_name)
         
         
-    def __raise_if_email_changed(self, email_informado: str, email_atual: str) -> None:
-        if email_informado != email_atual:
-            raise EmailChangeNotAllowed()
-        
-
-    def __check_user(self, id_usuario: str, email_informado: str = None) -> None:
-        usuario = self.__users_repo.find_by_id(id_usuario)
-        self.__raise_if_not_found(usuario)
-        
-        if email_informado:
-            self.__raise_if_email_changed(email_informado, usuario.email)
+    def __prevent_email_update(self, email_atual: str, email_informado: str) -> None:
+        if email_atual != email_informado:
+            raise EmailChangeNotAllowed()         
 
 
     def __fill_missing_name(self, dados_usuario: dict) -> None:
