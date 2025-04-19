@@ -39,6 +39,14 @@ export const useRestauranteDisponiveisDetalhes = () => {
 					"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 				valor_unitario: 19.99,
 			},
+			{
+				id: "2",
+				nome: "Fricassê de Frango (Festival) 2",
+				descricao: "Frango desfiado ao molho branco (bechamel e Catupiry) finalizado com milho verde. Acompanha batata palha e arroz soltinho saboroso.",
+				imageUrl:
+					"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+				valor_unitario: 19.99,
+			},
 		],
 	}
 

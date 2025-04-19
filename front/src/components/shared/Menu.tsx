@@ -5,7 +5,7 @@ import { CiUser } from "react-icons/ci";
 import Button from "../ui/Button";
 import ListagemEndereco from "../Endereco/ListagemEndereco";
 import { useAuth } from "../../contexts/AuthContext";
-import { HiShoppingCart } from "react-icons/hi";
+import { TbShoppingBag } from "react-icons/tb";
 import Carrinho from "../Carrinho/Index";
 import { CarrinhoContext } from "../../contexts/CarrinhoContext";
 
@@ -76,7 +76,7 @@ export default function Menu() {
             )}
 
             <div className="relative w-fit cursor-pointer" onClick={() => {setIsCarrinhoOpen(true); atualizarQuantidadeTotal() }}>
-              <HiShoppingCart className="text-brown-normal hover:text-brown-dark text-4xl self-center" />
+              <TbShoppingBag className="text-brown-normal hover:text-brown-dark text-4xl self-center" />
               <div className="bg-brown-light-active text-brown-normal font-bold rounded-full w-5 h-5 flex items-center justify-center absolute -top-2 -right-2">                  
                   {quantidadeTotal}
               </div>
