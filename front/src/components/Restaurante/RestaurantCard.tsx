@@ -11,10 +11,15 @@ const RestauranteCard = ({ restaurante }) => {
       />
       <h3 className="mt-2 font-semibold">{restaurante.nome}</h3>
       <p className="text-sm text-gray-600">
-        {restaurante.tipo_cozinha} • {restaurante.distancia} km
+        {restaurante.tipo_cozinha} • {restaurante.distancia ?? "??"} km
       </p>
       <p className="text-sm text-gray-500">
-        35-45 min • <span className="text-green-500">Grátis</span>
+        35-45 min •{" "}
+        <span className="text-green-500">
+          {restaurante.taxaEntrega === 0 || "undefined"
+            ? "Grátis"
+            : `R$ ${restaurante.taxaEntrega?.toFixed(2)}`}
+        </span>
       </p>
     </div>
   );
