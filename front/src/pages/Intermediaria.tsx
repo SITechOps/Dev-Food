@@ -39,17 +39,18 @@ export default function Intermediaria() {
             Cadastre seu restaurante ou acesse sua conta se já for um de nossos
             parceiros.
           </p>
+          <div className="flex flex-col">
+            <Button
+              onClick={() => navigate("/cadastro-restaurante")}
+              className="mt-4 w-48 p-3.5"
+            >
+              Cadastrar restaurante
+            </Button>
 
-          <Button
-            onClick={() => navigate("/cadastro-restaurante")}
-            className="mt-4 w-48 p-3.5"
-          >
-            Cadastrar restaurante
-          </Button>
-
-          <Button onClick={() => navigate("/auth")} className="mt-4 w-48 p-3.5">
-            Já sou parceiro
-          </Button>
+            <Button onClick={() => navigate("/auth")} className="mt-4 w-48 p-3.5">
+              Já sou parceiro
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -25,25 +25,31 @@ const [quantidade, setQuantidade] = useState(0);
 		const storedCarrinho = localStorage.getItem("carrinho");
 		let carrinho = storedCarrinho ? JSON.parse(storedCarrinho) : [];
 
+		if (carrinho.length > 0) {
+		const cnpjNoCarrinho = carrinho[0].restaurante.cnpj;
+
+		if (cnpjNoCarrinho !== restaurante?.cnpj) {
+			alert("Opa! Já existe um pedido de outro restaurante. Finalize ou limpe o carrinho para adicionar novos itens.");
+			return;
+		}
+	}
+
 		const itemIndex = carrinho.findIndex((item: any) => item.id === addItem.id);
 
 		if (itemIndex !== -1) {
 			const itemExistente = carrinho[itemIndex];
-
+		
 			if (itemExistente.quantidade === addItem.quantidade) {
-				console.log("A quantidade não foi alterada, mantendo a mesma.");
+				console.log("A quantidade permanece a mesma. Nenhuma alteração feita.");
 				return;
 			}
-
-			if (addItem.quantidade > itemExistente.quantidade) {
-				const diff = addItem.quantidade - itemExistente.quantidade;
-				itemExistente.quantidade = addItem.quantidade;
-				itemExistente.subtotal += diff * itemExistente.valor_unitario;
-			} else {
-				const diff = itemExistente.quantidade - addItem.quantidade;
-				itemExistente.quantidade = addItem.quantidade;
-				itemExistente.subtotal -= diff * itemExistente.valor_unitario;
-			}
+		
+			const novaQuantidade = addItem.quantidade;
+			const diferenca = novaQuantidade - itemExistente.quantidade;
+		
+			itemExistente.quantidade = novaQuantidade;
+			itemExistente.subtotal += diferenca * itemExistente.valor_unitario;
+		
 		} else {
 			carrinho.push(addItem);
 		}

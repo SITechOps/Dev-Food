@@ -27,15 +27,15 @@ export default function VerMaisRestaurante({ onClose }: any) {
 					<Loading />
 				) : (
 					<div className="space-y-6">
-						<h3 className="mb-2 font-semibold">Descrição</h3>
+						<p className="mb-2 font-bold">Descrição</p>
 						<p className="text-gray-600">{restaurante.descricao}</p>
 
 						<hr className="text-gray-normal" />
 
-						<h3 className="mb-2 flex items-center font-semibold">
+						<p className="mb-2 flex items-center font-bold">
 							<MapPin className="text-brown-normal mr-2 h-4 w-4" />
 							Endereço
-						</h3>
+						</p>
 						<p className="text-gray-600">
 							{restaurante.endereco?.logradouro},{" "}
 							{restaurante.endereco?.bairro},{" "}
@@ -46,10 +46,10 @@ export default function VerMaisRestaurante({ onClose }: any) {
 
 						<hr className="text-gray-normal" />
 
-						<h3 className="mb-2 flex items-center font-semibold">
+						<p className="mb-2 flex items-center font-bold">
 							<Clock className="text-brown-normal mr-2 h-4 w-4" />
 							Horário de Funcionamento
-						</h3>
+						</p>
 						<p className="text-gray-600">
 							{restaurante.horario_funcionamento}
 						</p>
