@@ -14,6 +14,20 @@ export default function Home() {
   const [produtos, setProdutos] = useState([]);
 
   useEffect(() => {
+    async function listarRestaurantes() {
+      try {
+        const response = await api.get("/restaurantes");
+        const data = response?.data?.data?.attributes || [];
+        setRestaurantes(data);
+      } catch (error) {
+        console.error("Erro ao buscar restaurantes:", error);
+      }
+    }
+
+    listarRestaurantes();
+  }, []);
+
+  useEffect(() => {
     async function listarProdutosPorRestaurante() {
       try {
         const allProdutos: any[] = [];
