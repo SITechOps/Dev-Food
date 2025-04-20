@@ -39,6 +39,7 @@ const AppRoutes = () => {
           path="/alterar-endereco"
           element={<AlterarEnderecoRestaurante />}
         />
+        <Route path="/pagamento" element={<Pagamento />} />
       </Route>
 
       {/* Rotas neutras — ambos podem acessar */}
@@ -50,7 +51,6 @@ const AppRoutes = () => {
         <Route path="/auth" element={<AuthUser />} />
         <Route path="/intermediaria" element={<Intermediaria />} />
         <Route path="/cadastro-restaurante" element={<CadastroRestaurante />} />
-        <Route path="/pagamento" element={<Pagamento />} />
       </Route>
     </Routes>
   );

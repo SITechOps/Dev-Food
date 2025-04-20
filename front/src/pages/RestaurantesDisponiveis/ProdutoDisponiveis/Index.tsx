@@ -29,7 +29,7 @@ export default function CardProdutos(props: CardProdutosProps) {
 		<div
 			className="w-full max-w-full rounded-md border border-gray-medium bg-gray-light p-4 transition-all duration-300 cursor-pointer"
 		>
-			<div className="flex gap-8  items-center">
+			<div className="flex gap-4">
 				<img
 					className="ml-2 mr-2 w-15 h-15 object-cover rounded-full mb-4 mx-auto"
 					src={imageUrl}
@@ -39,10 +39,10 @@ export default function CardProdutos(props: CardProdutosProps) {
 			</div>
 
 			<div className="w-full">
-				<p className="mt-3 font-light">{descricao}</p>
-				<p className="mt-3 text-3x1 font-semibold">R$ {valor_unitario}</p>
+				<p className="mt-2 font-light">{descricao}</p>
+				<p className="mt-3 text-[1.5rem] font-semibold">R$ {valor_unitario}</p>
 
-				<div className="mt-2">
+				<div className="">
 					<div className="flex flex-row gap-4 items-center w-full justify-end">
 						<div className="flex gap-6 p-2 items-center justify-between rounded-lg border border-gray-medium bg-white">
 							<Button color="plain" onClick={decrementar} className="p-1">
@@ -55,7 +55,7 @@ export default function CardProdutos(props: CardProdutosProps) {
 						</div>
 
 						<Button
-							className="p-2 flex gap-6 items-center justify-between w-full md:w-auto"
+							className="p-3 flex gap-6 items-center justify-between w-full md:w-auto"
 							disabled={quantidade === 0}
 							onClick={adicionarAoCarrinho}
 						>

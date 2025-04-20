@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export const useCarrinho = () => {
-const [dados, setDados] = useState<any>([]);
-const navigate = useNavigate();
+	const [dados, setDados] = useState<any>([]);
+	const navigate = useNavigate();
+	const { isAuthenticated } = useAuth();
+	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
+	const taxaEntrega = 5.0; // aplicar a logica para calcular a taxa de entrega
+	const total = subtotal + taxaEntrega;
 
 	useEffect(() => {
 		const storedCarrinho = localStorage.getItem("carrinho");
@@ -17,16 +22,16 @@ const navigate = useNavigate();
 				const carrinhoAgrupado = Object.values(
 					carrinho.reduce((acc: any, item: any) => {
 						if (!acc[item.id]) {
-							acc[item.id] = { ...item }; 
+							acc[item.id] = { ...item };
 						} else {
-							acc[item.id].quantidade += item.quantidade; 
-							acc[item.id].subtotal += item.subtotal; 
+							acc[item.id].quantidade += item.quantidade;
+							acc[item.id].subtotal += item.subtotal;
 						}
 						return acc;
 					}, {})
 				);
 
-				setDados(carrinhoAgrupado); 
+				setDados(carrinhoAgrupado);
 			} else {
 				console.log("Carrinho vazio ou inválido.");
 			}
@@ -35,7 +40,7 @@ const navigate = useNavigate();
 		}
 	}, []);
 
-	const incrementar = (id: number) => {
+	function incrementar(id: number) {
 		setDados((prevDados: any) =>
 			prevDados.map((item: any) =>
 				item.id === id
@@ -49,7 +54,7 @@ const navigate = useNavigate();
 		);
 	};
 
-	const decrementar = (id: number) => {
+	function decrementar(id: number) {
 		setDados((prevDados: any) =>
 			prevDados.map((item: any) =>
 				item.id === id && item.quantidade > 1
@@ -63,7 +68,7 @@ const navigate = useNavigate();
 		);
 	};
 
-	const removerItem = (id: string) => {
+	function removerItem(id: string) {
 		const novoCarrinho = dados.filter((item: any) => item.id !== id);
 		setDados(novoCarrinho);
 		localStorage.setItem("carrinho", JSON.stringify(novoCarrinho));
@@ -71,11 +76,31 @@ const navigate = useNavigate();
 
 	useEffect(() => {
 		localStorage.setItem("carrinho", JSON.stringify(dados));
-	}, [dados]);		
+	
+		const compra = {
+			itens: dados,
+			subtotal,
+			taxaEntrega,
+			total,
+		};
+	
+		localStorage.setItem("compraAtual", JSON.stringify(compra));
+	}, [dados, subtotal, taxaEntrega, total]);
 
-	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
-	const taxaEntrega = 5.0; // aplicar a logica para calcular a taxa de entrega
-	const total = subtotal + taxaEntrega;
+
+
+	function escolherFormaPagamento(setIsCarrinhoOpen: React.Dispatch<React.SetStateAction<boolean>>) {
+		if (!isAuthenticated) {
+			alert("Verificamos que você não está logado. Por favor, faça login para continuar.");
+			setIsCarrinhoOpen(false)
+			navigate("/auth");
+			return;
+		} else {
+			console.log("navegando para /pagamento");
+			setIsCarrinhoOpen(false);
+			navigate("/pagamento");
+		}
+	};
 
 	return {
 		navigate,
@@ -86,6 +111,7 @@ const navigate = useNavigate();
 		subtotal,
 		taxaEntrega,
 		total,
-		setDados, 
+		setDados,
+		escolherFormaPagamento,
 	};
 }
