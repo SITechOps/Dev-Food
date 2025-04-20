@@ -1,32 +1,70 @@
 import { useEffect, useState } from "react";
 import { api } from "../connection/axios";
-import RestauranteCardList from "../components/Restaurante/CardList";
 import RestauranteCard from "../components/Restaurante/RestaurantCard";
 import ProdutoCard from "../components/Produto/ProdutoCard";
 import MiniRestauranteCard from "../components/Restaurante/MiniCard";
 import { Link } from "react-router-dom";
 
+import { geocodeTexto } from "../utils/useGeocode";
+import { calcularDistancia } from "../utils/useDistanceMatrix";
+import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
+
 export default function Home() {
   const [restaurantes, setRestaurantes] = useState<any[]>([]);
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [produtos, setProdutos] = useState([]);
+  const [clienteCoords, setClienteCoords] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
+  // Obter endereço do cliente
+  useEffect(() => {
+    async function obterEnderecoCliente() {
+      try {
+        const userId = localStorage.getItem("id");
+        console.log("🔍 Buscando endereço do usuário com ID:", userId);
+
+        const response = await api.get(`/user/${userId}/enderecos`);
+        const endereco = response.data?.data?.attributes[0] || [];
+        console.log("📦 Endereço recebido:", endereco);
+
+        const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
+        console.log("📍 Endereço completo:", enderecoCompleto);
+
+        const coords = await geocodeTexto(enderecoCompleto);
+        console.log("📡 Coordenadas do cliente:", coords);
+
+        if (coords) setClienteCoords(coords);
+      } catch (error) {
+        console.error(
+          "❌ Erro ao buscar/geocodificar endereço do cliente:",
+          error,
+        );
+      }
+    }
+
+    obterEnderecoCliente();
+  }, []);
+
+  // Buscar restaurantes
   useEffect(() => {
     async function listarRestaurantes() {
       try {
         const response = await api.get("/restaurantes");
         const data = response?.data?.data?.attributes || [];
+        console.log("🍽️ Restaurantes recebidos:", data);
         setRestaurantes(data);
       } catch (error) {
-        console.error("Erro ao buscar restaurantes:", error);
+        console.error("❌ Erro ao buscar restaurantes:", error);
       }
     }
 
     listarRestaurantes();
   }, []);
 
+  // Buscar produtos por restaurante
   useEffect(() => {
     async function listarProdutosPorRestaurante() {
       try {
@@ -46,9 +84,10 @@ export default function Home() {
           allProdutos.push(...produtosComRestaurante);
         }
 
+        console.log("🧺 Produtos com restaurantes associados:", allProdutos);
         setProdutos(allProdutos);
       } catch (error) {
-        console.error("Erro ao buscar produtos por restaurante:", error);
+        console.error("❌ Erro ao buscar produtos por restaurante:", error);
       }
     }
 
@@ -57,22 +96,56 @@ export default function Home() {
     }
   }, [restaurantes]);
 
+  // Processar distância e taxa de entrega
   useEffect(() => {
-    async function listarProdutos() {
-      try {
-        const response = await api.get("/produtos");
-        const data = response?.data?.data?.attributes || [];
-        setProdutos(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
-        setLoading(false);
+    async function processarRestaurantes() {
+      if (!clienteCoords) {
+        console.log("⏳ Aguardando coordenadas do cliente...");
+        return;
       }
+
+      console.log("🚀 Processando distância/taxa para restaurantes...");
+
+      const atualizados = await Promise.all(
+        restaurantes.map(async (rest) => {
+          console.log(
+            `📌 Geocodificando endereço do restaurante ${rest.nome}:`,
+            rest.endereco,
+          );
+
+          const destino = await geocodeTexto(rest.endereco);
+          if (!destino) {
+            console.warn(
+              "⚠️ Falha ao geocodificar endereço do restaurante:",
+              rest.endereco,
+            );
+            return rest;
+          }
+
+          const distancia = await calcularDistancia(clienteCoords, destino);
+          console.log(`📏 Distância até ${rest.nome}:`, distancia);
+
+          const taxaEntrega =
+            distancia != null ? calcularTaxaEntrega(distancia) : null;
+          console.log(`💰 Taxa de entrega para ${rest.nome}:`, taxaEntrega);
+
+          return {
+            ...rest,
+            distancia: distancia?.toFixed(1),
+            taxaEntrega,
+          };
+        }),
+      );
+
+      setRestaurantes(atualizados);
     }
 
-    listarProdutos();
-  }, []);
+    if (restaurantes.length > 0 && clienteCoords) {
+      processarRestaurantes();
+    }
+  }, [restaurantes, clienteCoords]);
 
+  // Filtragem por busca
   const filteredRestaurantes = restaurantes.filter((restaurante) => {
     const nomeMatch = restaurante.nome
       ?.toLowerCase()
@@ -89,6 +162,7 @@ export default function Home() {
     return nomeMatch || produtoMatch;
   });
 
+  // Agrupamento por categoria
   const grupoCategoria = filteredRestaurantes.reduce(
     (acc: any, item: any) => {
       const categoria = item.especialidade || "Outros";
@@ -99,6 +173,7 @@ export default function Home() {
     {} as Record<string, typeof restaurantes>,
   );
 
+  // Produtos filtrados
   const produtosFiltrados = produtos
     .filter((produto) =>
       produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -151,8 +226,8 @@ export default function Home() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {abaAtiva === "restaurantes" &&
           filteredRestaurantes.map((restaurante) => (
-            <Link to={`/restaurante/${restaurante.id}`}>
-              <RestauranteCard key={restaurante.id} restaurante={restaurante} />
+            <Link to={`/restaurante/${restaurante.id}`} key={restaurante.id}>
+              <RestauranteCard restaurante={restaurante} />
             </Link>
           ))}
 
