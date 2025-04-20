@@ -6,7 +6,7 @@ export async function postUser(
   setAuth: (token: string) => void,
 ): Promise<string | null> {
   try {
-    const resp = await api.post("/user", { data: { email, telefone } });
+    const resp = await api.post("/auth/create", { data: { email, telefone } });
     const token = resp?.data?.properties?.token;
 
     if (!token) {
