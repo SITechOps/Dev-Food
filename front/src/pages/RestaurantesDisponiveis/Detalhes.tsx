@@ -68,7 +68,7 @@ export default function DetalhesRestaurante() {
       </div>
       <div
         id="produtos"
-        className="grid grid-cols-1 max-[1500px]:grid-cols-1 min-[1100px]:grid-cols-2 gap-8 mt-5 mb-[5rem]"
+        className="grid grid-cols-1 max-[1500px]:grid-cols-1 min-[1100px]:grid-cols-2 gap-12 mt-5 mb-[5rem]"
       >
         {jsonProdutos.produtos.map((produto) => (
           <CardProdutos
