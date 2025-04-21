@@ -3,23 +3,28 @@ import { api } from "../connection/axios";
 export async function postUser(
   email: string,
   telefone: string,
-  setAuth: (token: string) => void,
+  setAuth: (token: string) => void
 ): Promise<string | null> {
   try {
-    const resp = await api.post("/auth/create", { data: { email, telefone } });
-    const token = resp?.data?.properties?.token;
-
-    if (!token) {
-      throw new Error("Token não recebido na resposta.");
+    const loginResp = await api.post("/auth/login", { email });
+    const token = loginResp?.data?.properties?.token;
+    if (token) {
+      setAuth(token);
+      return token;
     }
-    setAuth(token);
-
-    return token;
-  } catch (error) {
-    console.error(
-      "Ocorreu um erro ao tentar cadastrar. Tente novamente.",
-      error,
-    );
-    return null;
+  } catch (loginError: any) {
+    try {
+      const cadastroResp = await api.post("/auth/create", { data: { email, telefone } });
+      const token = cadastroResp?.data?.properties?.token;
+      if (token) {
+        setAuth(token);
+        return token;
+      }
+    } catch (cadastroError) {
+      console.error("Erro ao tentar cadastrar:", cadastroError);
+    }
   }
+
+  console.error("Não foi possível autenticar ou cadastrar.");
+  return null;
 }
