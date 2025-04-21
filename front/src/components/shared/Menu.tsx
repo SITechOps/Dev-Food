@@ -18,7 +18,6 @@ export default function Menu() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [isCarrinhoOpen, setIsCarrinhoOpen] = useState(false);
   const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
-  console.log("Quantidade total no carrinho:", quantidadeTotal);
 
   useEffect(() => {
     if (menuRef.current) {

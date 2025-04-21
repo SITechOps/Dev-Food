@@ -9,16 +9,14 @@ export const useCarrinho = () => {
 	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
 	const taxaEntrega = 5.0; // aplicar a logica para calcular a taxa de entrega
 	const total = subtotal + taxaEntrega;
+	const storedCarrinho = localStorage.getItem("carrinho");
 
 	useEffect(() => {
-		const storedCarrinho = localStorage.getItem("carrinho");
-
+	
 		if (storedCarrinho) {
 			const carrinho = JSON.parse(storedCarrinho);
-
+	
 			if (Array.isArray(carrinho) && carrinho.length > 0) {
-				console.log("Carrinho recuperado:", carrinho);
-
 				const carrinhoAgrupado = Object.values(
 					carrinho.reduce((acc: any, item: any) => {
 						if (!acc[item.id]) {
@@ -30,15 +28,28 @@ export const useCarrinho = () => {
 						return acc;
 					}, {})
 				);
-
+	
 				setDados(carrinhoAgrupado);
-			} else {
-				console.log("Carrinho vazio ou inválido.");
 			}
 		} else {
 			console.log("Carrinho não encontrado no localStorage.");
 		}
 	}, []);
+	
+	useEffect(() => {
+		if (dados.length > 0) {
+			const compra = {
+				itens: dados,
+				subtotal,
+				taxaEntrega,
+				total,
+			};
+	
+			localStorage.setItem("compraAtual", JSON.stringify(compra));
+			localStorage.setItem("carrinho", JSON.stringify(dados));
+		}
+	}, [dados, subtotal, taxaEntrega, total]);
+	
 
 	function incrementar(id: number) {
 		setDados((prevDados: any) =>
@@ -73,20 +84,6 @@ export const useCarrinho = () => {
 		setDados(novoCarrinho);
 		localStorage.setItem("carrinho", JSON.stringify(novoCarrinho));
 	};
-
-	useEffect(() => {
-		localStorage.setItem("carrinho", JSON.stringify(dados));
-	
-		const compra = {
-			itens: dados,
-			subtotal,
-			taxaEntrega,
-			total,
-		};
-	
-		localStorage.setItem("compraAtual", JSON.stringify(compra));
-	}, [dados, subtotal, taxaEntrega, total]);
-
 
 
 	function escolherFormaPagamento(setIsCarrinhoOpen: React.Dispatch<React.SetStateAction<boolean>>) {

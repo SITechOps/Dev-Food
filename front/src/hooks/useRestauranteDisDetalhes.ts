@@ -10,14 +10,24 @@ export const useRestauranteDisponiveisDetalhes = () => {
 		descricao: "",
 		especialidade: "",
 		endereco: {
-		  logradouro: "",
-		  bairro: "",
-		  cidade: "",
-		  estado: "",
-		  pais: "",
+			logradouro: "",
+			bairro: "",
+			cidade: "",
+			estado: "",
+			pais: "",
 		},
 		horario_funcionamento: "",
-	  });
+		gencia: "",
+		banco: "",
+		cnpj: "",
+		email: "",
+		id: "",
+		logo: "",
+		nro_conta: "",
+		razao_social: "",
+		telefone: "",
+		tipo_conta: "",
+	});
 	const [loading, setLoading] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const navigate = useNavigate();
@@ -63,7 +73,7 @@ export const useRestauranteDisponiveisDetalhes = () => {
 		}
 
 		getDetalhesRestaurante();
-	}, [id]); 
+	}, [id]);
 
 	return {
 		restaurante,

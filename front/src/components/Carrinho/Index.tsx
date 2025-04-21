@@ -48,11 +48,9 @@ export default function Carrinho({
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between">
-                <p className="">Seu pedido em:</p>
-              </div>
               <div className="w-full border-b border-gray-medium">
-                <p className="text-bold text-2xl font-sans border-gray-medium mb-4">
+                <p className="mb-2">Seu pedido em:</p>
+                <p className="font-bold text-2xl mb-4">
                   {dados[0]?.restaurante?.nome}
                 </p>
               </div>
@@ -108,8 +106,8 @@ export default function Carrinho({
                 </div>
               </div>
 
-              <div className="mt-5">
-                <p className="flex items-center justify-between">
+              <div className="mt-10">
+                <p className="flex items-center justify-between font-bold text-2xl">
                   Total
                   <span>R$ {total.toFixed(2)}</span>
                 </p>
