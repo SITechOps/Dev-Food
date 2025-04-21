@@ -9,10 +9,10 @@ servers:
 tags:
   - name: Usuários
     description: Operações relacionadas a usuários
-  - name: Endereços
-    description: Operações relacionadas a endereços
   - name: Login
     description: Operações relacionadas ao login
+  - name: Endereços
+    description: Operações relacionadas a endereços
   - name: Email
     description: Operações relacionadas a envio de emails
   - name: Restaurantes
@@ -21,12 +21,11 @@ tags:
     description: Operações relacionadas a produtos
 
 paths:
-  /user:
+  /auth/create:
     post:
       tags:
         - Usuários
-      summary: Cadastrar novo usuário
-      description: Cria um novo usuário no sistema
+      summary: Criar novo usuário
       requestBody:
         required: true
         content:
@@ -36,21 +35,16 @@ paths:
               properties:
                 data:
                   type: object
-                  required:
-                    - nome
-                    - email
-                    - telefone
                   properties:
                     nome:
                       type: string
-                      example: "Nome Exemplo"
+                      example: Ana Souza
                     email:
                       type: string
-                      format: email
-                      example: "exemplo@email.com"
+                      example: ana.souza@gmail.com
                     telefone:
                       type: string
-                      example: "11948307497"
+                      example: "11912345678"
       responses:
         "201":
           description: Usuário criado com sucesso
@@ -59,34 +53,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  data:
+                  message:
+                    type: string
+                    example: Usuário criado com sucesso!
+                  properties:
                     type: object
                     properties:
-                      id:
+                      token:
                         type: string
-                        format: uuid
-                        example: "550e8400-e29b-41d4-a716-446655440000"
-                      nome:
-                        type: string
-                        example: "Nome Exemplo"
-                      email:
-                        type: string
-                        format: email
-                        example: "exemplo@email.com"
-                      telefone:
-                        type: string
-                        format: phone
-                        example: "11948307497"
-        "400":
-          description: Dados inválidos
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_message:
-                    type: string
-                    example: "Ocorreu um erro ao processar seus dados!"
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0NTIwMzE2NywianRpIjoiZDU5MzRiZTQtZDE0ZS00OTU5LTg1NjMtZWRlOTAzYTdhNjc0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImQ0ZDdhNmYxLTZmM2QtNDZmYy1iYTFjLWVhODUwODk3YjNmMyIsIm5iZiI6MTc0NTIwMzE2NywiY3NyZiI6IjQzM2ZjM2UwLTljZWEtNGEyMS1iZDM5LTJkMTQyMmU2NjM4MiIsImV4cCI6MTc0NTIwNDA2Nywicm9sZSI6InVzdWFyaW8ifQ.k4eV7s6HUJswXYCbbW0vZU2FF5rE77xYfv9-ATpZasc
         "409":
           description: Usuário já existe
           content:
@@ -96,7 +71,74 @@ paths:
                 properties:
                   error_message:
                     type: string
-                    example: "Usuário já existe!"
+                    example: Este e-mail já existe!
+
+  /auth/login:
+    post:
+      tags:
+        - Login
+      summary: Login de usuário ou restaurante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+            example:
+              email: ana.souza@gmail.com
+
+      responses:
+        "200":
+          description: Login realizado com sucesso (usuário ou restaurante)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  properties:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+              examples:
+                usuario:
+                  summary: Login como usuário
+                  value:
+                    message: Usuário logado com sucesso!
+                    properties:
+                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0NTIwMzIyNywianRpIjoiNzVmN2Q4NTgtMDQ2OS00ODI2LThmNTgtNGM2ZjgzNThkN2VhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImQ0ZDdhNmYxLTZmM2QtNDZmYy1iYTFjLWVhODUwODk3YjNmMyIsIm5iZiI6MTc0NTIwMzIyNywiY3NyZiI6IjlhODBhNGU5LWYxMjktNGFkNy04YWI1LWNmMjQzYjI4ZmZiOCIsImV4cCI6MTc0NTIwNDEyNywicm9sZSI6InVzdWFyaW8ifQ.chl68bJ02VVl7dq5YDksO-P_HXI6K09tP8oLoKCEL-U
+                restaurante:
+                  summary: Login como restaurante
+                  value:
+                    message: Restaurante logado com sucesso!
+                    properties:
+                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0NTIwMzQxOSwianRpIjoiYzFhZWY5ODAtZWEwZC00OWEyLTlmYmMtZTg3ZWQ1ZjNhOTMwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYyYzFlODA4LTNjZjctNGM0NC05ODU2LTQ2NTQxYjIxZjRkNyIsIm5iZiI6MTc0NTIwMzQxOSwiY3NyZiI6ImRjMWJiNzhkLWM0MDEtNGNkMi1hZWYxLWM1NjZhYmY4NWE3YyIsImV4cCI6MTc0NTIwNDMxOSwicm9sZSI6InJlc3RhdXJhbnRlIn0.82kSSz2jWDnvkOfcFPQoW--GxhWYAq1iS_ww8VEajdA
+        "404":
+          description: Usuário ou restaurante não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: Usuário ou restaurante não encontrado!
+              examples:
+                usuario:
+                  summary: Erro ao tentar logar como usuário
+                  value:
+                    error_message: Usuário não encontrado!
+                restaurante:
+                  summary: Erro ao tentar logar como restaurante
+                  value:
+                    error_message: Restaurante não encontrado!
 
   /users:
     get:
@@ -710,70 +752,6 @@ paths:
                     type: string
                     example: "Email inválido"
 
-  /login:
-    post:
-      tags:
-        - Login
-      summary: Realizar login
-      description: Autentica um usuário no sistema
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  required:
-                    - email
-                    - senha
-                  properties:
-                    email:
-                      type: string
-                      format: email
-                      example: "usuario@email.com"
-                    senha:
-                      type: string
-                      example: "senha123"
-      responses:
-        "200":
-          description: Login realizado com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      token:
-                        type: string
-                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                      user:
-                        type: object
-                        properties:
-                          id:
-                            type: string
-                            format: uuid
-                            example: "550e8400-e29b-41d4-a716-446655440000"
-                          nome:
-                            type: string
-                            example: "Nome Exemplo"
-                          email:
-                            type: string
-                            format: email
-                            example: "usuario@email.com"
-        "401":
-          description: Credenciais inválidas
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_message:
-                    type: string
-                    example: "Senha incorreta!"
   /restaurantes:
     get:
       tags:
