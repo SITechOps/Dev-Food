@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { api } from "../connection/axios";
 import RestauranteCard from "../components/Restaurante/RestaurantCard";
 import ProdutoCard from "../components/Produto/ProdutoCard";
@@ -21,6 +21,7 @@ export default function Home() {
     lat: number;
     lng: number;
   } | null>(null);
+  const processamentoFeitoRef = useRef(false);
 
   // Obter endereço do cliente
   useEffect(() => {
@@ -36,8 +37,13 @@ export default function Home() {
             Authorization: `Bearer ${token}`,
           },
         });
-        const endereco = response.data?.data?.attributes[0] || [];
+        const endereco = response.data?.data?.attributes[0];
         console.log("📦 Endereço recebido:", endereco);
+
+        if (!endereco) {
+          console.error("❌ Endereço vazio ou inválido.");
+          return;
+        }
 
         const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
         console.log("📍 Endereço completo:", enderecoCompleto);
@@ -108,8 +114,8 @@ export default function Home() {
   // Processar distância e taxa de entrega
   useEffect(() => {
     async function processarRestaurantes() {
-      if (!clienteCoords || restaurantes.length === 0) {
-        console.log("⏳ Aguardando coordenadas do cliente e restaurantes...");
+      if (!clienteCoords || restaurantes.length === 0 || processamentoFeitoRef.current) {
+        console.log("⏳ Aguardando coordenadas do cliente e restaurantes ou processamento já feito...");
         return;
       }
 
@@ -147,6 +153,7 @@ export default function Home() {
       );
 
       setRestaurantes(atualizados);
+      processamentoFeitoRef.current = true; // Marca o processamento como feito
     }
 
     processarRestaurantes();
