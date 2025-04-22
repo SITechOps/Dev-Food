@@ -16,10 +16,12 @@ export const geocodeTexto = async (
         lat: coordenadas.lat,
         lng: coordenadas.lng,
       };
+    } else {
+      console.error("❌ Erro ao geocodificar endereço:", data.status, data.error_message);
+      return null;
     }
   } catch (error) {
-    console.error("Erro ao geocodificar o endereço:", error);
+    console.error("❌ Erro ao geocodificar o endereço:", error);
+    return null;
   }
-
-  return null;
 };

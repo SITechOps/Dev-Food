@@ -12,7 +12,7 @@ export async function calcularDistancia(
     const distance = response.data.rows[0]?.elements[0]?.distance?.value; // metros
     return distance ? distance / 1000 : null; // retorna em km
   } catch (err) {
-    console.error("Erro no cálculo de distância:", err);
+    console.error("❌ Erro no cálculo de distância:", err);
     return null;
   }
 }
