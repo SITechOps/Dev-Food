@@ -72,7 +72,7 @@ class EnderecosRepository(IEnderecosRepository):
             return [endereco for endereco, _ in enderecos]
         
 
-    def __find_by_id(self, id_endereco: str) -> Endereco:
+    def find_by_id(self, id_endereco: str) -> Endereco:
         with DBConnectionHandler() as db:
             enderecos = (
                 db.session
@@ -109,7 +109,7 @@ class EnderecosRepository(IEnderecosRepository):
 
                     # Se ninguém mais estiver usando o antigo endereço, podemos deletar
                     if self.__is_empty(db, id_endereco):
-                        endereco_antigo = self.__find_by_id(id_endereco)
+                        endereco_antigo = self.find_by_id(id_endereco)
                         db.session.delete(endereco_antigo)
 
                 else:
@@ -124,7 +124,7 @@ class EnderecosRepository(IEnderecosRepository):
 
                     # Deletamos o antigo endereço, se não estiver mais sendo usado
                     if self.__is_empty(db, id_endereco):
-                        endereco_antigo = self.__find_by_id(id_endereco)
+                        endereco_antigo = self.find_by_id(id_endereco)
                         db.session.delete(endereco_antigo)
 
                 db.session.commit()
@@ -167,7 +167,7 @@ class EnderecosRepository(IEnderecosRepository):
                 endereco_usado_por_mais_alguem = self.__is_address_used(db, id_endereco)
 
                 if not endereco_usado_por_mais_alguem:
-                    endereco = self.__find_by_id(id_endereco)
+                    endereco = self.find_by_id(id_endereco)
                     db.session.delete(endereco)
 
                 db.session.commit()
