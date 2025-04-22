@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { api } from "../connection/axios";
 import RestauranteCard from "../components/Restaurante/RestaurantCard";
 import ProdutoCard from "../components/Produto/ProdutoCard";
@@ -8,12 +8,15 @@ import { Link } from "react-router-dom";
 import { geocodeTexto } from "../utils/useGeocode";
 import { calcularDistancia } from "../utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Home() {
   const [restaurantes, setRestaurantes] = useState<any[]>([]);
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
   const [produtos, setProdutos] = useState([]);
+  const { userData, token } = useAuth();
+  const idUsuario = userData?.sub;
   const [clienteCoords, setClienteCoords] = useState<{
     lat: number;
     lng: number;
@@ -23,10 +26,16 @@ export default function Home() {
   useEffect(() => {
     async function obterEnderecoCliente() {
       try {
-        const userId = localStorage.getItem("id");
-        console.log("🔍 Buscando endereço do usuário com ID:", userId);
+        if (!idUsuario || !token) {
+          console.error("❌ ID do usuário ou token não encontrado.");
+          return;
+        }
 
-        const response = await api.get(`/user/${userId}/enderecos`);
+        const response = await api.get(`/user/${idUsuario}/enderecos`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const endereco = response.data?.data?.attributes[0] || [];
         console.log("📦 Endereço recebido:", endereco);
 
@@ -46,7 +55,7 @@ export default function Home() {
     }
 
     obterEnderecoCliente();
-  }, []);
+  }, [idUsuario, token]);
 
   // Buscar restaurantes
   useEffect(() => {
@@ -99,8 +108,8 @@ export default function Home() {
   // Processar distância e taxa de entrega
   useEffect(() => {
     async function processarRestaurantes() {
-      if (!clienteCoords) {
-        console.log("⏳ Aguardando coordenadas do cliente...");
+      if (!clienteCoords || restaurantes.length === 0) {
+        console.log("⏳ Aguardando coordenadas do cliente e restaurantes...");
         return;
       }
 
@@ -140,50 +149,51 @@ export default function Home() {
       setRestaurantes(atualizados);
     }
 
-    if (restaurantes.length > 0 && clienteCoords) {
-      processarRestaurantes();
-    }
+    processarRestaurantes();
   }, [restaurantes, clienteCoords]);
 
   // Filtragem por busca
-  const filteredRestaurantes = restaurantes.filter((restaurante) => {
-    const nomeMatch = restaurante.nome
-      ?.toLowerCase()
-      .includes(searchTerm.toLowerCase());
+  const filteredRestaurantes = useMemo(() => {
+    return restaurantes.filter((restaurante) => {
+      const nomeMatch = restaurante.nome
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
 
-    const produtosDoRestaurante = produtos.filter(
-      (produto) => produto.id_restaurante === restaurante.id,
-    );
+      const produtosDoRestaurante = produtos.filter(
+        (produto) => produto.id_restaurante === restaurante.id,
+      );
 
-    const produtoMatch = produtosDoRestaurante.some((produto) =>
-      produto.nome.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
+      const produtoMatch = produtosDoRestaurante.some((produto) =>
+        produto.nome.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
 
-    return nomeMatch || produtoMatch;
-  });
+      return nomeMatch || produtoMatch;
+    });
+  }, [restaurantes, produtos, searchTerm]);
 
   // Agrupamento por categoria
-  const grupoCategoria = filteredRestaurantes.reduce(
-    (acc: any, item: any) => {
+  const grupoCategoria = useMemo(() => {
+    return filteredRestaurantes.reduce((acc: any, item: any) => {
       const categoria = item.especialidade || "Outros";
       if (!acc[categoria]) acc[categoria] = [];
       acc[categoria].push(item);
       return acc;
-    },
-    {} as Record<string, typeof restaurantes>,
-  );
+    }, {} as Record<string, typeof restaurantes>);
+  }, [filteredRestaurantes]);
 
   // Produtos filtrados
-  const produtosFiltrados = produtos
-    .filter((produto) =>
-      produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
-    .map((produto) => {
-      const restaurante = restaurantes.find(
-        (r) => r.id === produto.id_restaurante,
-      );
-      return { ...produto, restaurante };
-    });
+  const produtosFiltrados = useMemo(() => {
+    return produtos
+      .filter((produto) =>
+        produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+      .map((produto) => {
+        const restaurante = restaurantes.find(
+          (r) => r.id === produto.id_restaurante,
+        );
+        return { ...produto, restaurante };
+      });
+  }, [produtos, restaurantes, searchTerm]);
 
   return (
     <div className="mt-[5rem]">
@@ -201,9 +211,9 @@ export default function Home() {
       </div>
       <div className="mb-6 flex border-b border-gray-300">
         <button
-          className={`px-4 py-2 font-medium ${
+          className={`px-4 py-2 font-bold ${
             abaAtiva === "restaurantes"
-              ? "border-b-brown-normal border-b-2 text-red-500"
+              ? "border-b-brown-normal text-brown-normal font-extrabold border-b-2 "
               : ""
           }`}
           onClick={() => setAbaAtiva("restaurantes")}
@@ -211,9 +221,9 @@ export default function Home() {
           Restaurantes
         </button>
         <button
-          className={`px-4 py-2 font-medium ${
+          className={`px-4 py-2 font-bold ${
             abaAtiva === "itens"
-              ? "border-b-brown-normal border-b-2 text-red-500"
+              ? "border-b-brown-normal border-b-2  text-brown-normal font-extrabold"
               : ""
           }`}
           onClick={() => setAbaAtiva("itens")}
