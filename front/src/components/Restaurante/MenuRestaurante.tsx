@@ -56,7 +56,10 @@ const MenuRestaurante = () => {
     <>
       <button
         className="bg-brown-dark fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded text-white lg:hidden"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          (document.activeElement as HTMLElement)?.blur();
+        }}
         aria-label={isOpen ? "Fechar Menu" : "Abrir Menu"}
         aria-expanded={isOpen}
       >
@@ -74,6 +77,7 @@ const MenuRestaurante = () => {
               <li
                 key={i}
                 className={`group flex cursor-pointer items-center justify-between gap-2 rounded-md p-3 transition-colors ${isActive ? "bg-brown-light-active text-brown-dark" : "text-blue hover:bg-brown-light-active hover:text-brown-dark"}`}
+                onClick={() => setIsOpen(false)}
               >
                 {item.action ? (
                   <button

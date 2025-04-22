@@ -16,21 +16,22 @@ interface CategoriasProps {
 export default function Categorias({ onCategoryClick }: CategoriasProps) {
   return (
     <Carousel>
-      <CarouselContent>
-        {categories.map((category, index) => (
-          <CarouselItem key={index} className="basis-auto">
-            <CategoryCard
-              image={category.image}
-              label={category.label}
-              color={category.color}
-              // Passando a categoria selecionada para o onClick
-              onClick={() => onCategoryClick(category.label)}
-            />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="text-brown-normal" />
-      <CarouselNext className="text-brown-normal" />
+      <div className="flex items-center gap-2">
+        <CarouselPrevious className="text-brown-normal static" />
+        <CarouselContent>
+          {categories.map((category, index) => (
+            <CarouselItem key={index} className="basis-auto">
+              <CategoryCard
+                image={category.image}
+                label={category.label}
+                color={category.color}
+                onClick={() => onCategoryClick(category.label)}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselNext className="text-brown-normal static" />
+      </div>
     </Carousel>
   );
 }

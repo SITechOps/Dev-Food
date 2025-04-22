@@ -13,7 +13,6 @@ export default function Home() {
       nome: "",
       img: "",
       avaliacao: 0,
-      categoria: "",
     },
   ]);
   const [loading, setLoading] = useState(true);
@@ -43,8 +42,8 @@ export default function Home() {
           nome: restaurante.nome,
           especialidade: restaurante.especialidade,
           img: restaurante.imagemUrl,
-          avaliacao: restaurante.avaliacao || 4.0,
-          categoria: restaurante.categoria || "Sem Categoria",
+          avaliacao: restaurante.avaliacao,
+          categoria: restaurante.especialidade,
         }));
 
         setRestaurantes(formattedData);
@@ -69,10 +68,10 @@ export default function Home() {
   return (
     <>
       <div className="mt-[5rem]">
-        <h1 className="my-8 text-center font-medium">
+        <h1 className="text-blue my-8 text-center font-medium">
           Conheça os restaurantes disponíveis
         </h1>
-        <div className="mt-[5rem]">
+        <div>
           <div className="mx-auto max-w-7xl space-y-8 px-4 py-6">
             <div className="relative w-full max-w-sm">
               <Search
@@ -118,7 +117,7 @@ export default function Home() {
                       nome: restaurante.nome,
                       img: restaurante.img,
                       avaliacao: restaurante.avaliacao,
-                      categoria: restaurante.categoria,
+                      categoria: restaurante.especialidade,
                     }}
                   />
                 ))}
