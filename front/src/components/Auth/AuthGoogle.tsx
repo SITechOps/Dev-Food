@@ -3,12 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
-import { postUser } from "../../connection/AuthUserController";
 import { useAuth } from "../../contexts/AuthContext";
+import { useAuthUserComponent } from "../../hooks/useAuthUser";
 import Button from "../ui/Button";
 
-export default function AuthGoogle() {
+interface AuthGoogleProps {
+  setEtapa: React.Dispatch<React.SetStateAction<"telefone" | "email">>;
+  setFormList: React.Dispatch<
+    React.SetStateAction<{ email: string; telefone: string }>
+  >;
+}
+
+export default function AuthGoogle({ setEtapa, setFormList }: AuthGoogleProps) {
   const navigate = useNavigate();
+  const { loginUser } = useAuthUserComponent();
   const { setAuth } = useAuth();
   const [user, setUser] = useState<TokenResponse | null>(null);
 
@@ -31,20 +39,12 @@ export default function AuthGoogle() {
         },
       )
       .then(async (res) => {
-        const { email, telefone } = res.data;
-
+        const { email } = res.data;
         try {
-          const token = await postUser(email, telefone, setAuth);
-
-          if (!token) {
-            throw new Error("Token não encontrado na resposta da API.");
-          }
-
-          alert("Login realizado com sucesso!");
-          navigate("/");
-        } catch (error: any) {
-          console.error("Erro no login:", error);
-          alert(error.response?.data?.message || "Erro ao fazer login.");
+          await loginUser(email);
+        } catch {
+          setFormList((prev) => ({ ...prev, email }));
+          setEtapa("telefone");
         }
       })
       .catch((err) => {

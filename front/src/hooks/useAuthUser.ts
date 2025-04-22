@@ -1,6 +1,5 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { api } from "../connection/axios";
-import { postUser } from "../connection/AuthUserController";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -45,23 +44,31 @@ export const useAuthUserComponent = () => {
     }
   }
 
-  async function loginUser(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function createUser(email: string, telefone: string) {
     try {
-      const token = await postUser(formList.email, formList.telefone, setAuth);
-
-      if (!token) {
-        throw new Error("Token não encontrado na resposta da API.");
+      const cadastroResp = await api.post("/auth/create", {
+        data: { email, telefone },
+      });
+      const token = cadastroResp?.data?.properties?.token;
+      if (token) {
+        setAuth(token);
+        navigate("/");
+        alert("Cadastro realizado com sucesso!");
       }
-      setAuth(token);
-      navigate("/");
-      alert("Login realizado com sucesso!");
-    } catch (error: any) {
-      console.error("Erro no login:", error);
-      alert(error.response?.data?.message || "Erro ao fazer login.");
+    } catch (cadastroError) {
+      console.error("Erro ao tentar cadastrar:", cadastroError);
     }
   }
 
+  async function loginUser(email: string) {
+    const loginResp = await api.post("/auth/login", {
+      email,
+    });
+    const token = loginResp?.data?.properties?.token;
+    setAuth(token);
+    alert("Login realizado com sucesso!");
+    navigate("/");
+  }
   return {
     validarEmail,
     validarTelefone,
@@ -73,5 +80,6 @@ export const useAuthUserComponent = () => {
     etapa,
     setEtapa,
     loginUser,
+    createUser,
   };
 };

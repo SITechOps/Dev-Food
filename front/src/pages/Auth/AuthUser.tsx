@@ -6,6 +6,7 @@ import AuthFacebook from "../../components/Auth/AuthFacebook";
 import ModalCodigoVerificacao from "../../components/shared/ModalCodigoVerificacao";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function AuthUser() {
   const {
@@ -19,6 +20,7 @@ export default function AuthUser() {
     etapa,
     setEtapa,
     loginUser,
+    createUser,
   } = useAuthUserComponent();
 
   return (
@@ -31,8 +33,12 @@ export default function AuthUser() {
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
               tipoEnvioCodigo={etapa}
-              onSuccess={() => {
-                if (etapa === "email") setEtapa("telefone");
+              onSuccess={async () => {
+                try {
+                  await loginUser(formList.email);
+                } catch {
+                  setEtapa("telefone");
+                }
               }}
             />
           )}
@@ -55,7 +61,7 @@ export default function AuthUser() {
           {etapa === "email" && (
             <div className="text-center">
               <div className="mb-4 flex gap-4">
-                <AuthGoogle />
+                <AuthGoogle setEtapa={setEtapa} setFormList={setFormList} />
                 <AuthFacebook />
               </div>
               <span className="text-gray-medium">
@@ -64,7 +70,14 @@ export default function AuthUser() {
             </div>
           )}
 
-          <form onSubmit={etapa === "telefone" ? loginUser : undefined}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (etapa === "telefone") {
+                createUser(formList.email, formList.telefone);
+              }
+            }}
+          >
             {etapa === "email" && (
               <>
                 <Input
@@ -106,7 +119,7 @@ export default function AuthUser() {
                 />
                 <p className="mb-4">
                   Preencha o telefone apenas se preferir, esse meio de validação
-                  (não obrigatório)!
+                  não é obrigatório!
                 </p>
                 <div className="flex gap-4">
                   <Button
