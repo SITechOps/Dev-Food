@@ -118,44 +118,52 @@ export default function Home() {
         console.log("⏳ Aguardando coordenadas do cliente e restaurantes ou processamento já feito...");
         return;
       }
-
+  
       console.log("🚀 Processando distância/taxa para restaurantes...");
-
+  
       const atualizados = await Promise.all(
         restaurantes.map(async (rest) => {
+          const enderecoCompletoRestaurante = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
+  
           console.log(
             `📌 Geocodificando endereço do restaurante ${rest.nome}:`,
-            rest.endereco,
+            enderecoCompletoRestaurante,
           );
-
-          const destino = await geocodeTexto(rest.endereco);
+  
+          const destino = await geocodeTexto(enderecoCompletoRestaurante);
           if (!destino) {
             console.warn(
               "⚠️ Falha ao geocodificar endereço do restaurante:",
-              rest.endereco,
+              enderecoCompletoRestaurante,
             );
             return rest;
           }
-
-          const distancia = await calcularDistancia(clienteCoords, destino);
-          console.log(`📏 Distância até ${rest.nome}:`, distancia);
-
-          const taxaEntrega =
-            distancia != null ? calcularTaxaEntrega(distancia) : null;
-          console.log(`💰 Taxa de entrega para ${rest.nome}:`, taxaEntrega);
-
-          return {
-            ...rest,
-            distancia: distancia?.toFixed(1),
-            taxaEntrega,
-          };
+  
+          try {
+            const distanciaInfo = await calcularDistancia(clienteCoords, destino);
+            console.log(`📏 Distância até ${rest.nome}:`, distanciaInfo.distance);
+            console.log(`🕒 Duração até ${rest.nome}:`, distanciaInfo.duration);
+  
+            const taxaEntrega =
+              distanciaInfo.distance != null ? calcularTaxaEntrega(distanciaInfo.distance) : null;
+            console.log(`💰 Taxa de entrega para ${rest.nome}:`, taxaEntrega);
+  
+            return {
+              ...rest,
+              distancia: distanciaInfo.distance?.toFixed(1),
+              taxaEntrega,
+            };
+          } catch (err) {
+            console.error(`❌ Erro ao calcular distância para ${rest.nome}:`, err);
+            return rest;
+          }
         }),
       );
-
+  
       setRestaurantes(atualizados);
       processamentoFeitoRef.current = true; // Marca o processamento como feito
     }
-
+  
     processarRestaurantes();
   }, [restaurantes, clienteCoords]);
 
