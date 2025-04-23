@@ -19,6 +19,8 @@ tags:
     description: Operações relacionadas a restaurantes
   - name: Produtos
     description: Operações relacionadas a produtos
+  - name: Pedidos
+    description: Operações relacionadas a pedidos
   - name: Pagamentos
     description: Operações relacionadas a pagamentos
 
@@ -1271,6 +1273,131 @@ paths:
                 type: object
               example:
                 error_message: "Produto não encontrado!"
+
+  /pedido:
+    post:
+      summary: Criar um novo pedido
+      description: Cria um novo pedido com seus respectivos itens
+      tags:
+        - Pedidos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pedido:
+                  type: object
+                  required:
+                    - id_usuario
+                    - id_restaurante
+                    - id_endereco
+                    - valor_total
+                    - forma_pagamento
+                    - itens
+                  properties:
+                    id_usuario:
+                      type: string
+                      format: uuid
+                      description: ID do usuário que está realizando o pedido
+                    id_restaurante:
+                      type: string
+                      format: uuid
+                      description: ID do restaurante onde o pedido está sendo feito
+                    id_endereco:
+                      type: string
+                      format: uuid
+                      description: ID do endereço de entrega
+                    valor_total:
+                      type: number
+                      format: float
+                      description: Valor total do pedido
+                    forma_pagamento:
+                      type: string
+                      description: Forma de pagamento escolhida
+                    itens:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - id_produto
+                          - qtd_itens
+                          - valor_calculado
+                        properties:
+                          id_produto:
+                            type: string
+                            format: uuid
+                            description: ID do produto
+                          qtd_itens:
+                            type: integer
+                            description: Quantidade de itens
+                          valor_calculado:
+                            type: number
+                            format: float
+                            description: Valor calculado para o item
+            example:
+              pedido:
+                id_usuario: "550e8400-e29b-41d4-a716-446655440000"
+                id_restaurante: "550e8400-e29b-41d4-a716-446655440001"
+                id_endereco: "550e8400-e29b-41d4-a716-446655440002"
+                valor_total: 59.90
+                forma_pagamento: "pix"
+                itens:
+                  - id_produto: "550e8400-e29b-41d4-a716-446655440003"
+                    qtd_itens: 2
+                    valor_calculado: 39.90
+                  - id_produto: "550e8400-e29b-41d4-a716-446655440004"
+      responses:
+        "200":
+          description: Pedido criado com sucesso
+          content:
+            application/json:
+              example:
+                message: "Pedido criado com sucesso!"
+
+  /usuario/{id_usuario}/pedidos:
+    get:
+      summary: Listar pedidos de um usuário
+      description: Retorna todos os pedidos realizados por um usuário específico
+      tags:
+        - Pedidos
+      parameters:
+        - name: id_usuario
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de pedidos do usuário
+          content:
+            application/json:
+              example:
+                pedidos:
+                  - Id: "550e8400-e29b-41d4-a716-446655440005"
+                    valor_total: 59.90
+                    data_pedido: "2023-11-15T14:30:00Z"
+                    forma_pagamento: "cartão de crédito"
+                    restaurante:
+                      nome: "Restaurante Exemplo"
+                      logo: "https://exemplo.com/logo.png"
+                    endereco:
+                      logradouro: "Rua das Flores"
+                      bairro: "Centro"
+                      cidade: "São Paulo"
+                      estado: "SP"
+                      numero: "123"
+                      complemento: "Apto 45"
+                    itens:
+                      - produto: "X-Tudo"
+                        qtd_itens: 2
+                        valor_calculado: 39.90
+                      - produto: "Refrigerante"
+                        qtd_itens: 1
+                        valor_calculado: 20.00
 
   /pix/qr-code:
     post:
