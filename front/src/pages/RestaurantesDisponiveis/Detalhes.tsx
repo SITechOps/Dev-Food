@@ -7,6 +7,7 @@ import { Loading } from "../../components/shared/Loading";
 import VerMaisRestaurante from "./VerMais/Index";
 
 
+
 export default function DetalhesRestaurante() {
   const {
     restaurante,
@@ -14,19 +15,19 @@ export default function DetalhesRestaurante() {
     navigate,
     isModalOpen,
     setIsModalOpen,
-    jsonProdutos
+    dadosProdutos,
   } = useRestauranteDisponiveisDetalhes();
 
   if (loading) {
     return <Loading />;
   }
 
-  return (
 
+  return (
     <div className="mx-auto pb-10">
       <button
         onClick={() => navigate("/")}
-        className="mt-[5rem] self-start flex items-center justify-center gap-3 hover:bg-brown-light-active p-2 rounded-md cursor-pointer"
+        className="hover:bg-brown-light-active mt-[5rem] flex cursor-pointer items-center justify-center gap-3 self-start rounded-md p-2"
       >
         <FaAngleLeft className="icon" /> <p className="text-2xl">Voltar</p>
       </button>
@@ -68,11 +69,11 @@ export default function DetalhesRestaurante() {
       </div>
       <div
         id="produtos"
-        className="grid grid-cols-1 max-[1500px]:grid-cols-1 min-[1100px]:grid-cols-2 gap-12 mt-5 mb-[5rem]"
+        className="mt-5 mb-[5rem] grid grid-cols-1 gap-12 max-[1500px]:grid-cols-1 min-[1100px]:grid-cols-2"
       >
-        {jsonProdutos.produtos.map((produto) => (
+        {dadosProdutos.map((produto, index) => (
           <CardProdutos
-            key={produto.id}
+            key={index}
             id={produto.id}
             nome={produto.nome}
             descricao={produto.descricao}
@@ -83,12 +84,9 @@ export default function DetalhesRestaurante() {
         ))}
       </div>
 
-
       {isModalOpen && (
-        <VerMaisRestaurante
-          onClose={() => setIsModalOpen(false)} />
+        <VerMaisRestaurante onClose={() => setIsModalOpen(false)} />
       )}
-
     </div>
   );
 }
