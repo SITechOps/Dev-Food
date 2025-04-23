@@ -8,16 +8,18 @@ from src.main.routes.endereco_route import endereco_route_bp
 from src.main.routes.restaurante_route import restaurante_route_bp
 from src.main.routes.produto_route import produto_route_bp
 from src.main.routes.pedido_route import pedido_route_bp
+from src.main.routes.pagamento_route import pagamento_route_bp
 from src.main.routes.sms_route import sms_route_bp
 from src.main.handlers.error_handlers import handlers_bp
 from src.main.server.configs import *
 
 def create_app():
     app = Flask(__name__, static_url_path="/")
-    CORS(app)
+    CORS(app, resources={"/pix/qr-code": {"origins": "*"}})
 
     configure_jwt(app)
     configure_mail(app)
+    configure_payment(app)
     configure_swagger(app)
     configure_twilio(app)
 
@@ -26,6 +28,7 @@ def create_app():
     app.register_blueprint(restaurante_route_bp)
     app.register_blueprint(produto_route_bp)
     app.register_blueprint(pedido_route_bp)
+    app.register_blueprint(pagamento_route_bp)
     app.register_blueprint(email_route_bp)
     app.register_blueprint(sms_route_bp)
     app.register_blueprint(handlers_bp)

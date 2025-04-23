@@ -20,7 +20,6 @@ class EmailChangeNotAllowed(BaseCustomException):
         super().__init__(message, 403)
 
 
-
 class UsuarioAlreadyExists(BaseCustomException):
     def __init__(self, message="Usuário já existe!"):
         super().__init__(message, 409)
