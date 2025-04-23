@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+import RestrictRestauranteRoute from "./RestrictRestauranteRoute";
 
 const Home = lazy(() => import("../pages/Home"));
 const AuthUser = lazy(() => import("../pages/Auth/AuthUser"));
@@ -22,9 +23,7 @@ const DetalhesRestaurante = lazy(
 const AlterarEnderecoRestaurante = lazy(
   () => import("../components/Endereco/EnderecoModal"),
 );
-const Pagamento = lazy(
-  () => import("../pages/Pagamento/Index"),
-);
+const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
 
 const AppRoutes = () => {
   return (
@@ -42,8 +41,11 @@ const AppRoutes = () => {
         <Route path="/pagamento" element={<Pagamento />} />
       </Route>
 
+      <Route element={<RestrictRestauranteRoute />}>
+        <Route path="/" element={<Home />} />
+      </Route>
+
       {/* Rotas neutras — ambos podem acessar */}
-      <Route path="/" element={<Home />} />
       <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
 
       {/* Rotas públicas — bloqueia se já estiver logado */}
