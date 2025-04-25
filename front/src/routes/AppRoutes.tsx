@@ -10,6 +10,7 @@ const Intermediaria = lazy(() => import("../pages/Intermediaria"));
 const Account = lazy(() => import("../pages/Account"));
 const Cardapio = lazy(() => import("../components/Restaurante/Cardapios"));
 const Financeiro = lazy(() => import("../components/Restaurante/Financeiro"));
+const StatusPedido = lazy(() => import("../pages/StatusPedido/StatusPedido"));
 const CadastroEndereco = lazy(
   () => import("../components/Endereco/CadastroEndereco"),
 );
@@ -47,6 +48,7 @@ const AppRoutes = () => {
 
       {/* Rotas neutras — ambos podem acessar */}
       <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
+      <Route path="/status-pedido" element={<StatusPedido />} />
 
       {/* Rotas públicas — bloqueia se já estiver logado */}
       <Route element={<PublicRoute />}>
