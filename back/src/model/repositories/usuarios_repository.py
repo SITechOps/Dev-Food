@@ -1,5 +1,6 @@
 from src.main.utils.db_scope import db_scope
 from src.model.entities.usuario import Usuario
+from sqlalchemy.orm import with_polymorphic
 
 class UsuariosRepository:
 
@@ -15,7 +16,7 @@ class UsuariosRepository:
     def find_by_id(self, db, id_usuario: str) -> Usuario | None:
         return (
             db.session
-            .query(Usuario)
+            .query(with_polymorphic(Usuario, "*"))
             .filter_by(id=id_usuario)
             .one_or_none()
         )

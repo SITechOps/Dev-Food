@@ -17,7 +17,7 @@ class Endereco(Base):
     tipo = None
 
     usuarios_associados = relationship("UsuarioEndereco", back_populates="endereco")
-    restaurante = relationship("Restaurante", back_populates="endereco", uselist=False)
+    restaurante = relationship("Restaurante", back_populates="endereco", uselist=False, lazy="joined")
 
     def to_dict(self) -> dict:
         return {

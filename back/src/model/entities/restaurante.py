@@ -18,7 +18,7 @@ class Restaurante(Usuario):
     logo = Column(Text, nullable=True)
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id", ondelete="CASCADE"), nullable=False)
 
-    endereco = relationship("Endereco", back_populates="restaurante", uselist=False)
+    endereco = relationship("Endereco", back_populates="restaurante", uselist=False, lazy="joined")
     produtos = relationship("Produto", back_populates="restaurante", cascade="all, delete-orphan")
 
     __mapper_args__ = {

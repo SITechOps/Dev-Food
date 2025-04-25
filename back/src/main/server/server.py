@@ -15,7 +15,7 @@ from src.main.server.configs import *
 
 def create_app():
     app = Flask(__name__, static_url_path="/")
-    CORS(app, resources={"/pix/qr-code": {"origins": "*"}})
+    CORS(app)
 
     configure_jwt(app)
     configure_mail(app)

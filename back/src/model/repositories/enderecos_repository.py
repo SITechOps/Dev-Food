@@ -88,7 +88,7 @@ class EnderecosRepository(IEnderecosRepository):
     def update(self, id_endereco: str, id_usuario: str, info_endereco: dict) -> None:
         with DBConnectionHandler() as db:
             try:
-                self.__check_existing_type(db, id_usuario, info_endereco.get("tipo"))
+                # self.__check_existing_type(db, id_usuario, info_endereco.get("tipo"))
 
                 novo_endereco_existente = self.__find_existing_address(db, info_endereco)
 
