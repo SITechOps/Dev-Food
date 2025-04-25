@@ -52,11 +52,13 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const restaurantesProximos = useMemo(() => {
-    return restaurantes.filter((restaurante) => {
-      if (!restaurante.distancia) return false;
-      const distanciaNum = parseFloat(restaurante.distancia);
-      return !isNaN(distanciaNum) && distanciaNum <= 10;
-    });
+    return restaurantes
+      .filter((restaurante) => {
+        if (!restaurante.distancia) return false;
+        const distanciaNum = parseFloat(restaurante.distancia);
+        return !isNaN(distanciaNum) && distanciaNum <= 10;
+      })
+      .sort((a, b) => parseFloat(a.distancia!) - parseFloat(b.distancia!));
   }, [restaurantes]);
 
   const handleCategoryClick = (category: string) => {
