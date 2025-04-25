@@ -1,7 +1,14 @@
-import { ClipboardList, User, LogOut, MapPin, DollarSign } from "lucide-react";
+import {
+  ClipboardList,
+  Home,
+  User,
+  LogOut,
+  MapPin,
+  DollarSign,
+} from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
 
 const MenuRestaurante = () => {
@@ -24,6 +31,7 @@ const MenuRestaurante = () => {
   };
 
   const menuItems: MenuItem[] = [
+    { name: "Início", icon: <Home size={20} />, link: "/" },
     { name: "Minha Conta", icon: <User size={20} />, link: "/account" },
     {
       name: "Endereço",
@@ -48,10 +56,7 @@ const MenuRestaurante = () => {
     <>
       <button
         className="bg-brown-dark fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded text-white lg:hidden"
-        onClick={() => {
-          setIsOpen(!isOpen);
-          (document.activeElement as HTMLElement)?.blur();
-        }}
+        onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? "Fechar Menu" : "Abrir Menu"}
         aria-expanded={isOpen}
       >
@@ -69,7 +74,6 @@ const MenuRestaurante = () => {
               <li
                 key={i}
                 className={`group flex cursor-pointer items-center justify-between gap-2 rounded-md p-3 transition-colors ${isActive ? "bg-brown-light-active text-brown-dark" : "text-blue hover:bg-brown-light-active hover:text-brown-dark"}`}
-                onClick={() => setIsOpen(false)}
               >
                 {item.action ? (
                   <button
