@@ -21,41 +21,41 @@ export default function Carrinho({
     subtotal,
     taxaEntrega,
     total,
-    escolherFormaPagamento
-  } = useCarrinho(); 
+    escolherFormaPagamento,
+  } = useCarrinho();
 
   return (
     <>
       <div className="fixed inset-0 z-50 flex justify-end bg-black/70">
-        <div className="h-full w-full max-w-md bg-white p-6 relative overflow-auto scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent">
-          <div className="mb-10 flex items-start justify-start h-fit self-start">
+        <div className="scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent relative h-full w-full max-w-md overflow-auto bg-white p-6">
+          <div className="mb-10 flex h-fit items-start justify-start self-start">
             <IoClose
-              className="icon absolute top-3 right-4 brown-normal cursor-pointer"
+              className="icon brown-normal absolute top-3 right-4 cursor-pointer"
               size={26}
               onClick={() => setIsCarrinhoOpen(false)}
             />
           </div>
 
           {dados.length === 0 ? (
-            <div className="flex flex-col justify-center items-center h-full">
+            <div className="flex h-full flex-col items-center justify-center">
               <img
                 src={ifoodLogo}
                 alt="Logo Ifood"
-                className="w-30 m-auto my-2"
+                className="m-auto my-2 w-30"
               />
-              <p className="mt-2 font-bold">Sua sacola está vazio</p>
+              <p className="mt-2 font-bold">Sua sacola está vazia!</p>
               <p className="mt-1 font-light">Adicione Itens</p>
             </div>
           ) : (
             <>
-              <div className="w-full border-b border-gray-medium">
+              <div className="border-gray-medium w-full border-b">
                 <p className="mb-2">Seu pedido em:</p>
-                <p className="font-bold text-2xl mb-4">
+                <p className="mb-4 text-2xl font-bold">
                   {dados[0]?.restaurante?.nome}
                 </p>
               </div>
 
-              <div className="space-y-4 border-b border-gray-medium mt-4">
+              <div className="border-gray-medium mt-4 space-y-4 border-b">
                 {dados.map((item: any) => (
                   <div key={item.id} className="p-4">
                     <div className="flex items-center justify-between">
@@ -66,8 +66,8 @@ export default function Carrinho({
                       <p>R$ {item.subtotal.toFixed(2)}</p>
                     </div>
                     <p className="mt-2 font-light">{item.descricao}</p>
-                    <div className="flex items-center mt-2 gap-2">
-                      <div className="flex gap-2 p-2 mt-2 items-center justify-between rounded-lg bg-gray-light">
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="bg-gray-light mt-2 flex items-center justify-between gap-2 rounded-lg p-2">
                         <Button
                           color="plain"
                           onClick={() => decrementar(item.id)}
@@ -75,7 +75,9 @@ export default function Carrinho({
                         >
                           <Minus size={20} className="stroke-2" />
                         </Button>
-                        <span className="text-lg font-bold">{item.quantidade}</span>
+                        <span className="text-lg font-bold">
+                          {item.quantidade}
+                        </span>
                         <Button
                           color="plain"
                           onClick={() => incrementar(item.id)}
@@ -86,7 +88,7 @@ export default function Carrinho({
                       </div>
                       <Button
                         color="plain"
-                        className="p-1 w-20"
+                        className="w-20 p-1"
                         onClick={() => removerItem(item.id)}
                       >
                         Remover
@@ -95,11 +97,11 @@ export default function Carrinho({
                   </div>
                 ))}
                 <div>
-                  <p className="flex items-center justify-between my-2">
+                  <p className="my-2 flex items-center justify-between">
                     Subtotal
                     <span>R$ {subtotal.toFixed(2)}</span>
                   </p>
-                  <p className="flex items-center justify-between my-2">
+                  <p className="my-2 flex items-center justify-between">
                     Taxa de entrega
                     <span>R$ {taxaEntrega.toFixed(2)}</span>
                   </p>
@@ -107,11 +109,14 @@ export default function Carrinho({
               </div>
 
               <div className="mt-10">
-                <p className="flex items-center justify-between font-bold text-2xl">
+                <p className="flex items-center justify-between text-2xl font-bold">
                   Total
                   <span>R$ {total.toFixed(2)}</span>
                 </p>
-                <Button className="p-2 w-full mt-4" onClick={() => escolherFormaPagamento(setIsCarrinhoOpen)}>
+                <Button
+                  className="mt-4 w-full p-2"
+                  onClick={() => escolherFormaPagamento(setIsCarrinhoOpen)}
+                >
                   Escolher a forma de pagamento
                 </Button>
               </div>

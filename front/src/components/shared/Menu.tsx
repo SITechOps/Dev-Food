@@ -13,11 +13,11 @@ export default function Menu() {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
-  const token = localStorage.getItem("token");
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [isCarrinhoOpen, setIsCarrinhoOpen] = useState(false);
-  const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+  const { quantidadeTotal, atualizarQuantidadeTotal } =
+    useContext(CarrinhoContext);
 
   useEffect(() => {
     if (menuRef.current) {
@@ -27,7 +27,7 @@ export default function Menu() {
 
   useEffect(() => {
     atualizarQuantidadeTotal();
-  }, [isCarrinhoOpen]); 
+  }, [isCarrinhoOpen]);
 
   return (
     <>
@@ -46,7 +46,7 @@ export default function Menu() {
             </>
           ) : null}
 
-          <div className="flex gap-3 align-center">
+          <div className="align-center flex gap-3">
             {idUsuario ? (
               <Button
                 color="plain"
@@ -56,7 +56,7 @@ export default function Menu() {
                 Faça seu pedido
               </Button>
             ) : null}
-            {token ? (
+            {idUsuario ? (
               <Button
                 color="secondary"
                 onClick={() => navigate("/account")}
@@ -74,23 +74,28 @@ export default function Menu() {
               </Button>
             )}
 
-            <div className="relative w-fit cursor-pointer" onClick={() => {setIsCarrinhoOpen(true); atualizarQuantidadeTotal() }}>
-              <TbShoppingBag className="text-brown-normal hover:text-brown-dark text-4xl self-center" />
-              <div className="bg-brown-light-active text-brown-normal font-bold rounded-full w-5 h-5 flex items-center justify-center absolute -top-2 -right-2">                  
-                  {quantidadeTotal}
+            <div
+              className="relative w-fit cursor-pointer"
+              onClick={() => {
+                setIsCarrinhoOpen(true);
+                atualizarQuantidadeTotal();
+              }}
+            >
+              <TbShoppingBag className="text-brown-normal hover:text-brown-dark self-center text-4xl" />
+              <div className="bg-brown-light-active text-brown-normal absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full font-bold">
+                {quantidadeTotal}
               </div>
             </div>
           </div>
         </div>
-      </header>\
+      </header>
+      \
       {isCarrinhoOpen && (
         <Carrinho
           isCarrinhoOpen={isCarrinhoOpen}
           setIsCarrinhoOpen={setIsCarrinhoOpen}
         />
       )}
-
-
       <div style={{ height: menuHeight }} />
     </>
   );

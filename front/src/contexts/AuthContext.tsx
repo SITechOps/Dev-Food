@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
+import { api } from "@/connection/axios";
 
 interface AuthContextType {
   userData: { role: string | undefined; sub: string | undefined } | null;
@@ -28,13 +29,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      const decoded = decodeToken(storedToken);
-      setUserData({ role: decoded?.role, sub: decoded?.sub });
-      setIsAuthenticated(true);
-      setToken(storedToken);
-    }
+    const checkAuth = async () => {
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) return logout();
+
+      try {
+        const { sub, role } = decodeToken(storedToken) || {};
+        if (!sub) return logout();
+
+        const { status } = await api.get(`/user/${sub}`);
+        if (status !== 200) return logout();
+
+        setUserData({ role, sub });
+        setIsAuthenticated(true);
+        setToken(storedToken);
+      } catch (error) {
+        console.error("Erro ao verificar usuário:", error);
+        logout();
+      }
+    };
+
+    checkAuth();
   }, []);
 
   const setAuth = (newToken: string) => {
