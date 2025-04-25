@@ -1,5 +1,4 @@
 from src.main.utils.db_scope import db_scope
-from src.main.handlers.custom_exceptions import EmailChangeNotAllowed, NotFound, UsuarioNotFound
 from src.model.entities.usuario import Usuario
 
 class UsuariosRepository:

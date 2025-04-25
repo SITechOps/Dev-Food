@@ -19,6 +19,10 @@ tags:
     description: Operações relacionadas a restaurantes
   - name: Produtos
     description: Operações relacionadas a produtos
+  - name: Pedidos
+    description: Operações relacionadas a pedidos
+  - name: Pagamentos
+    description: Operações relacionadas a pagamentos
 
 paths:
   /auth/create:
@@ -1269,3 +1273,222 @@ paths:
                 type: object
               example:
                 error_message: "Produto não encontrado!"
+
+  /pedido:
+    post:
+      summary: Criar um novo pedido
+      description: Cria um novo pedido com seus respectivos itens
+      tags:
+        - Pedidos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pedido:
+                  type: object
+                  required:
+                    - id_usuario
+                    - id_restaurante
+                    - id_endereco
+                    - valor_total
+                    - forma_pagamento
+                    - itens
+                  properties:
+                    id_usuario:
+                      type: string
+                      format: uuid
+                      description: ID do usuário que está realizando o pedido
+                    id_restaurante:
+                      type: string
+                      format: uuid
+                      description: ID do restaurante onde o pedido está sendo feito
+                    id_endereco:
+                      type: string
+                      format: uuid
+                      description: ID do endereço de entrega
+                    valor_total:
+                      type: number
+                      format: float
+                      description: Valor total do pedido
+                    forma_pagamento:
+                      type: string
+                      description: Forma de pagamento escolhida
+                    itens:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - id_produto
+                          - qtd_itens
+                          - valor_calculado
+                        properties:
+                          id_produto:
+                            type: string
+                            format: uuid
+                            description: ID do produto
+                          qtd_itens:
+                            type: integer
+                            description: Quantidade de itens
+                          valor_calculado:
+                            type: number
+                            format: float
+                            description: Valor calculado para o item
+            example:
+              pedido:
+                id_usuario: "550e8400-e29b-41d4-a716-446655440000"
+                id_restaurante: "550e8400-e29b-41d4-a716-446655440001"
+                id_endereco: "550e8400-e29b-41d4-a716-446655440002"
+                valor_total: 59.90
+                forma_pagamento: "pix"
+                itens:
+                  - id_produto: "550e8400-e29b-41d4-a716-446655440003"
+                    qtd_itens: 2
+                    valor_calculado: 39.90
+                  - id_produto: "550e8400-e29b-41d4-a716-446655440004"
+      responses:
+        "200":
+          description: Pedido criado com sucesso
+          content:
+            application/json:
+              example:
+                message: "Pedido criado com sucesso!"
+
+  /usuario/{id_usuario}/pedidos:
+    get:
+      summary: Listar pedidos de um usuário
+      description: Retorna todos os pedidos realizados por um usuário específico
+      tags:
+        - Pedidos
+      parameters:
+        - name: id_usuario
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de pedidos do usuário
+          content:
+            application/json:
+              example:
+                pedidos:
+                  - Id: "550e8400-e29b-41d4-a716-446655440005"
+                    valor_total: 59.90
+                    data_pedido: "2023-11-15T14:30:00Z"
+                    forma_pagamento: "cartão de crédito"
+                    restaurante:
+                      nome: "Restaurante Exemplo"
+                      logo: "https://exemplo.com/logo.png"
+                    endereco:
+                      logradouro: "Rua das Flores"
+                      bairro: "Centro"
+                      cidade: "São Paulo"
+                      estado: "SP"
+                      numero: "123"
+                      complemento: "Apto 45"
+                    itens:
+                      - produto: "X-Tudo"
+                        qtd_itens: 2
+                        valor_calculado: 39.90
+                      - produto: "Refrigerante"
+                        qtd_itens: 1
+                        valor_calculado: 20.00
+
+  /pix/qr-code:
+    post:
+      tags:
+        - Pagamentos
+      summary: Gerar QR Code para pagamento PIX
+      description: Cria um QR Code para pagamento via PIX usando Mercado Pago
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - pix
+              properties:
+                pix:
+                  type: object
+                  required:
+                    - email_comprador
+                    - nome_comprador
+                    - valor_pagamento
+                  properties:
+                    email_comprador:
+                      type: string
+                      description: Email do comprador
+                    nome_comprador:
+                      type: string
+                      description: Nome do comprador
+                    valor_pagamento:
+                      type: number
+                      format: float
+                      description: Valor do pagamento
+            example:
+              pix:
+                email_comprador: "ana.souza@gmail.com"
+                nome_comprador: "Ana Souza"
+                valor_pagamento: 25.90
+      responses:
+        "201":
+          description: QR Code gerado com sucesso
+          content:
+            application/json:
+              example:
+                id: 123456789
+                status: "pending"
+                qr_code: "00020101021226870014br.gov.bcb.pix2565qrcodes.mercadopago.com/pix/v2/123456789"
+                qr_code_base64: "iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAIAAAAP3aGbAAAACXBIWXMAAAsTAAALEwEAmpwYAAAIHklEQVR4nO3dwW4bORRFQcfI/3+yMYsBZmfCYWxL5LtVteSNwTpBs3kp6fX9/f0P0Pf39wMAqf/+9QAAHidYQIJgAQmCBSQIFpAgWECCYAEJggUkCBaQIFhAgmABCYIFJAgWkCBYQIJgAQmCBSQIFpAgWECCYAE..."
+                ticket_url: "https://www.mercadopago.com.br/payments/123456789/ticket"
+        "400":
+          description: Erro ao processar pagamento
+          content:
+            application/json:
+              example:
+                message_error: "Erro ao processar pagamento!"
+
+  /pix/status/{id_pagamento}:
+    get:
+      tags:
+        - Pagamentos
+      summary: Verificar status de pagamento PIX
+      description: Consulta o status de um pagamento PIX pelo ID
+      parameters:
+        - name: id_pagamento
+          in: path
+          required: true
+          description: ID do pagamento a ser consultado
+          schema:
+            type: string
+          example: "123456789"
+      responses:
+        "200":
+          description: Status do pagamento obtido com sucesso
+          content:
+            application/json:
+              examples:
+                pagamento_aprovado:
+                  summary: Pagamento aprovado
+                  value:
+                    id: 123456789
+                    status: "approved"
+                    status_detail: "accredited"
+                pagamento_pendente:
+                  summary: Pagamento pendente
+                  value:
+                    id: 123456879
+                    status: "pending"
+                    status_detail: "pending_waiting_transfer"
+        "400":
+          description: Erro ao consultar status do pagamento
+          content:
+            application/json:
+              example:
+                messagae_error: "ID de pagamento não fornecido!"
