@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { api } from "../connection/axios";
 import RestauranteCard from "../components/Restaurante/RestaurantCard";
 import ProdutoCard from "../components/Produto/ProdutoCard";
-import MiniRestauranteCard from "../components/Restaurante/MiniCard";
 import { Link } from "react-router-dom";
 
 import { geocodeTexto } from "../utils/useGeocode";
@@ -11,11 +10,38 @@ import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
 import { useAuth } from "../contexts/AuthContext";
 import Categorias from "./RestaurantesDisponiveis/Categorias";
 
+// Tipagens explícitas
+interface Endereco {
+  logradouro: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  pais: string;
+}
+
+interface Restaurante {
+  id: string;
+  nome: string;
+  especialidade?: string;
+  endereco: Endereco;
+  distancia?: string;
+  taxaEntrega?: number;
+}
+
+interface Produto {
+  id: string;
+  nome: string;
+  id_restaurante: string;
+  restaurante?: Restaurante;
+  [key: string]: any;
+}
+
 export default function Home() {
-  const [restaurantes, setRestaurantes] = useState<any[]>([]);
+  const [restaurantes, setRestaurantes] = useState<Restaurante[]>([]);
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
-  const [produtos, setProdutos] = useState([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const { userData, token } = useAuth();
   const idUsuario = userData?.sub;
   const [clienteCoords, setClienteCoords] = useState<{
@@ -25,18 +51,22 @@ export default function Home() {
   const processamentoFeitoRef = useRef(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const restaurantesProximos = useMemo(() => {
+    return restaurantes.filter((restaurante) => {
+      if (!restaurante.distancia) return false;
+      const distanciaNum = parseFloat(restaurante.distancia);
+      return !isNaN(distanciaNum) && distanciaNum <= 10;
+    });
+  }, [restaurantes]);
+
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
 
-  // Obter endereço do cliente
   useEffect(() => {
     async function obterEnderecoCliente() {
       try {
-        if (!idUsuario || !token) {
-          console.error("❌ ID do usuário ou token não encontrado.");
-          return;
-        }
+        if (!idUsuario || !token) return;
 
         const response = await api.get(`/user/${idUsuario}/enderecos`, {
           headers: {
@@ -44,23 +74,16 @@ export default function Home() {
           },
         });
         const endereco = response.data?.data?.attributes[0];
-        console.log("📦 Endereço recebido:", endereco);
 
-        if (!endereco) {
-          console.error("❌ Endereço vazio ou inválido.");
-          return;
-        }
+        if (!endereco) return;
 
         const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
-        console.log("📍 Endereço completo:", enderecoCompleto);
-
         const coords = await geocodeTexto(enderecoCompleto);
-        console.log("📡 Coordenadas do cliente:", coords);
 
         if (coords) setClienteCoords(coords);
       } catch (error) {
         console.error(
-          "❌ Erro ao buscar/geocodificar endereço do cliente:",
+          "Erro ao buscar/geocodificar endereço do cliente:",
           error,
         );
       }
@@ -69,46 +92,43 @@ export default function Home() {
     obterEnderecoCliente();
   }, [idUsuario, token]);
 
-  // Buscar restaurantes
   useEffect(() => {
     async function listarRestaurantes() {
       try {
         const response = await api.get("/restaurantes");
-        const data = response?.data?.data?.attributes || [];
-        console.log("🍽️ Restaurantes recebidos:", data);
+        const data: Restaurante[] = response?.data?.data?.attributes || [];
         setRestaurantes(data);
       } catch (error) {
-        console.error("❌ Erro ao buscar restaurantes:", error);
+        console.error("Erro ao buscar restaurantes:", error);
       }
     }
 
     listarRestaurantes();
   }, []);
 
-  // Buscar produtos por restaurante
   useEffect(() => {
     async function listarProdutosPorRestaurante() {
       try {
-        const allProdutos: any[] = [];
+        const allProdutos: Produto[] = [];
 
         for (const restaurante of restaurantes) {
           const response = await api.get(
             `/restaurante/${restaurante.id}/produtos`,
           );
-          const produtos = response?.data?.data?.attributes || [];
+          const produtos: Produto[] = response?.data?.data?.attributes || [];
 
-          const produtosComRestaurante = produtos.map((produto: any) => ({
+          const produtosComRestaurante = produtos.map((produto) => ({
             ...produto,
+            id_restaurante: restaurante.id,
             restaurante,
           }));
 
           allProdutos.push(...produtosComRestaurante);
         }
 
-        console.log("🧺 Produtos com restaurantes associados:", allProdutos);
         setProdutos(allProdutos);
       } catch (error) {
-        console.error("❌ Erro ao buscar produtos por restaurante:", error);
+        console.error("Erro ao buscar produtos por restaurante:", error);
       }
     }
 
@@ -117,56 +137,32 @@ export default function Home() {
     }
   }, [restaurantes]);
 
-  // Processar distância e taxa de entrega
   useEffect(() => {
     async function processarRestaurantes() {
       if (
         !clienteCoords ||
         restaurantes.length === 0 ||
         processamentoFeitoRef.current
-      ) {
-        console.log(
-          "⏳ Aguardando coordenadas do cliente e restaurantes ou processamento já feito...",
-        );
+      )
         return;
-      }
 
-      console.log("🚀 Processando distância/taxa para restaurantes...");
-
-      const atualizados = await Promise.all(
+      const atualizados: Restaurante[] = await Promise.all(
         restaurantes.map(async (rest) => {
           const enderecoCompletoRestaurante = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
 
-          console.log(
-            `📌 Geocodificando endereço do restaurante ${rest.nome}:`,
-            enderecoCompletoRestaurante,
-          );
-
           const destino = await geocodeTexto(enderecoCompletoRestaurante);
-          if (!destino) {
-            console.warn(
-              "⚠️ Falha ao geocodificar endereço do restaurante:",
-              enderecoCompletoRestaurante,
-            );
-            return rest;
-          }
+          if (!destino) return rest;
 
           try {
             const distanciaInfo = await calcularDistancia(
               clienteCoords,
               destino,
             );
-            console.log(
-              `📏 Distância até ${rest.nome}:`,
-              distanciaInfo.distance,
-            );
-            console.log(`🕒 Duração até ${rest.nome}:`, distanciaInfo.duration);
 
             const taxaEntrega =
               distanciaInfo.distance != null
                 ? calcularTaxaEntrega(distanciaInfo.distance)
-                : null;
-            console.log(`💰 Taxa de entrega para ${rest.nome}:`, taxaEntrega);
+                : undefined;
 
             return {
               ...rest,
@@ -174,60 +170,39 @@ export default function Home() {
               taxaEntrega,
             };
           } catch (err) {
-            console.error(
-              `❌ Erro ao calcular distância para ${rest.nome}:`,
-              err,
-            );
+            console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
             return rest;
           }
         }),
       );
 
       setRestaurantes(atualizados);
-      processamentoFeitoRef.current = true; // Marca o processamento como feito
+
+      processamentoFeitoRef.current = true;
     }
 
     processarRestaurantes();
   }, [restaurantes, clienteCoords]);
 
-  // Filtragem por busca
   const filteredRestaurantes = useMemo(() => {
     return restaurantes.filter((restaurante) => {
       const nomeMatch = restaurante.nome
         ?.toLowerCase()
         .includes(searchTerm.toLowerCase());
-
       const produtosDoRestaurante = produtos.filter(
         (produto) => produto.id_restaurante === restaurante.id,
       );
-
       const produtoMatch = produtosDoRestaurante.some((produto) =>
-        produto.nome.toLowerCase().includes(searchTerm.toLowerCase()),
+        produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
-
       const categoriaMatch =
         !selectedCategory ||
         selectedCategory === "Todos" ||
         restaurante.especialidade === selectedCategory;
-
       return (nomeMatch || produtoMatch) && categoriaMatch;
     });
   }, [restaurantes, produtos, searchTerm, selectedCategory]);
 
-  // Agrupamento por categoria
-  const grupoCategoria = useMemo(() => {
-    return filteredRestaurantes.reduce(
-      (acc: any, item: any) => {
-        const categoria = item.especialidade || "Outros";
-        if (!acc[categoria]) acc[categoria] = [];
-        acc[categoria].push(item);
-        return acc;
-      },
-      {} as Record<string, typeof restaurantes>,
-    );
-  }, [filteredRestaurantes]);
-
-  // Produtos filtrados
   const produtosFiltrados = useMemo(() => {
     return produtos
       .map((produto) => {
@@ -240,12 +215,10 @@ export default function Home() {
         const nomeMatch = produto.nome
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
-
         const categoriaMatch =
           !selectedCategory ||
           selectedCategory === "Todos" ||
           produto.restaurante?.especialidade === selectedCategory;
-
         return nomeMatch && categoriaMatch;
       });
   }, [produtos, restaurantes, searchTerm, selectedCategory]);
@@ -268,23 +241,31 @@ export default function Home() {
         Pedir seu delivery no iFood é rápido e prático! Conheça as categorias
       </h2>
       <Categorias onCategoryClick={handleCategoryClick} />
+      {abaAtiva === "restaurantes" && restaurantesProximos.length > 0 && (
+        <div className="mb-10">
+          <h2 className="text-blue mt-6 mb-4 text-xl font-semibold">
+            Restaurantes Próximos (até 10km)
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {restaurantesProximos.map((restaurante) => (
+              <Link to={`/restaurante/${restaurante.id}`} key={restaurante.id}>
+                <RestauranteCard restaurante={restaurante} />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Aba de seleção */}
       <div className="mt-6 mb-6 flex border-b border-gray-300">
         <button
-          className={`px-4 py-2 font-bold ${
-            abaAtiva === "restaurantes"
-              ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold"
-              : ""
-          }`}
+          className={`px-4 py-2 font-bold ${abaAtiva === "restaurantes" ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold" : ""}`}
           onClick={() => setAbaAtiva("restaurantes")}
         >
           Restaurantes
         </button>
         <button
-          className={`px-4 py-2 font-bold ${
-            abaAtiva === "itens"
-              ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold"
-              : ""
-          }`}
+          className={`px-4 py-2 font-bold ${abaAtiva === "itens" ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold" : ""}`}
           onClick={() => setAbaAtiva("itens")}
         >
           Itens
@@ -302,14 +283,7 @@ export default function Home() {
 
         {abaAtiva === "itens" &&
           produtosFiltrados.map((produto) => (
-            <div key={produto.id} className="space-y-2">
-              {produto.restaurante && (
-                <Link to={`/restaurante/${produto.id_restaurante}`}>
-                  <MiniRestauranteCard restaurante={produto.restaurante} />
-                </Link>
-              )}
-              <ProdutoCard produto={produto} />
-            </div>
+            <ProdutoCard key={produto.id} produto={produto} />
           ))}
       </div>
     </div>
