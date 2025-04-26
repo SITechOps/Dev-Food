@@ -1348,6 +1348,8 @@ paths:
                     qtd_itens: 2
                     valor_calculado: 39.90
                   - id_produto: "550e8400-e29b-41d4-a716-446655440004"
+                    qtd_itens: 3
+                    valor_calculado: 49.90
       responses:
         "200":
           description: Pedido criado com sucesso
@@ -1356,7 +1358,7 @@ paths:
               example:
                 message: "Pedido criado com sucesso!"
 
-  /usuario/{id_usuario}/pedidos:
+  /pedidos/usuario/{id_usuario}:
     get:
       summary: Listar pedidos de um usuário
       description: Retorna todos os pedidos realizados por um usuário específico
@@ -1398,6 +1400,61 @@ paths:
                       - produto: "Refrigerante"
                         qtd_itens: 1
                         valor_calculado: 20.00
+        "404":
+          description: ID do restaurante não encontrado
+          content:
+            application/json:
+              example:
+                message_error: "ID não informado!"
+
+  /pedidos/restaurante/{id_restaurante}:
+    get:
+      summary: Listar pedidos de um restaurante
+      description: Retorna todos os pedidos realizados para um restaurante específico
+      tags:
+        - Pedidos
+      parameters:
+        - name: id_restaurante
+          in: path
+          required: true
+          description: ID do restaurante
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de pedidos do restaurante
+          content:
+            application/json:
+              example:
+                pedidos:
+                  - Id: "550e8400-e29b-41d4-a716-446655440005"
+                    valor_total: 59.90
+                    data_pedido: "2023-11-15T14:30:00Z"
+                    forma_pagamento: "cartão de crédito"
+                    restaurante:
+                      nome: "Restaurante Exemplo"
+                      logo: "https://exemplo.com/logo.png"
+                    endereco:
+                      logradouro: "Rua das Flores"
+                      bairro: "Centro"
+                      cidade: "São Paulo"
+                      estado: "SP"
+                      numero: "123"
+                      complemento: "Apto 45"
+                    itens:
+                      - produto: "X-Tudo"
+                        qtd_itens: 2
+                        valor_calculado: 39.90
+                      - produto: "Refrigerante"
+                        qtd_itens: 1
+                        valor_calculado: 20.00
+        "404":
+          description: ID do restaurante não encontrado
+          content:
+            application/json:
+              example:
+                message_error: "ID não informado!"
 
   /pix/qr-code:
     post:

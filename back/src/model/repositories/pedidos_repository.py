@@ -12,10 +12,20 @@ class PedidosRepository:
 
 
     @db_scope
-    def list_products_by_user(self, db, id_usuario: str) -> list[Pedido]:
+    def list_pedidos_by_usuario(self, db, id_usuario: str) -> list[Pedido]:
         return (
             db.session
             .query(Pedido)
             .filter_by(id_usuario=id_usuario)
+            .all()
+        )
+    
+
+    @db_scope
+    def list_pedidos_by_restaurante(self, db, id_restaurante: str) -> list[Pedido]:
+        return (
+            db.session
+            .query(Pedido)
+            .filter_by(id_restaurante=id_restaurante)
             .all()
         )

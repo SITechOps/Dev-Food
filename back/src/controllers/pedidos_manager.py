@@ -1,3 +1,4 @@
+from src.model.entities.pedido import Pedido
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
 from src.main.handlers.custom_exceptions import NotFound
@@ -24,11 +25,24 @@ class PedidosManager:
         return ResponseFormatter.display_operation("Pedido", "criado")
     
 
-    def get_pedidos_by_user(self, http_request: HttpRequest):
+    def get_pedidos(self, http_request: HttpRequest):
         id_usuario = http_request.params.get("id_usuario")
-        pedidos = self.__pedidos_repo.list_products_by_user(id_usuario)
-        
+        id_restaurante = http_request.params.get("id_restaurante")
+
+        if id_usuario:
+            pedidos = self.__pedidos_repo.list_pedidos_by_usuario(id_usuario)
+        elif id_restaurante:
+            pedidos = self.__pedidos_repo.list_pedidos_by_restaurante(id_restaurante)
+        else:
+            return ResponseFormatter.format_error("Id não informado", 400)
+                
+        pedidos_formatados = self.__format_response(pedidos)
+        return HttpResponse(body=pedidos_formatados, status_code=200)
+
+
+    def __format_response(self, pedidos: list[Pedido]) -> dict[list]:
         pedidos_formatados = []
+        
         for pedido in pedidos:
             restaurante = self.__restaurantes_repo.find_by_id(pedido.id_restaurante)
             endereco = self.__enderecos_repo.find_by_id(pedido.id_endereco)
@@ -48,6 +62,7 @@ class PedidosManager:
                 "valor_total": pedido.valor_total,
                 "data_pedido": pedido.created_at,
                 "forma_pagamento": pedido.forma_pagamento,
+                "status": pedido.status,
                 "restaurante": {
                     "nome": restaurante.nome or "",
                     "logo": restaurante.logo or "",
@@ -63,4 +78,4 @@ class PedidosManager:
                 "itens": itens_formatados,
             })
 
-        return HttpResponse(body={"pedidos": pedidos_formatados}, status_code=200)
+        return {"pedidos": pedidos_formatados}

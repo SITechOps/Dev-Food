@@ -21,9 +21,11 @@ def create_new_pedido():
     return jsonify(http_response.body), http_response.status_code
 
 
-@pedido_route_bp.get('/usuario/<id_usuario>/pedidos')
-def get_pedidos_by_user(id_usuario):
-    http_request = HttpRequest(params={"id_usuario": id_usuario})
+@pedido_route_bp.get('/pedidos/usuario/<id>')
+@pedido_route_bp.get('/pedidos/restaurante/<id>')
+def get_pedidos(id):
+    tipo = "id_usuario" if "usuario" in request.path else "id_restaurante"
+    http_request = HttpRequest(params={tipo: id})
     
     pedidos_repo = PedidosRepository()
     itens_repo = ItensRepository()
@@ -32,5 +34,5 @@ def get_pedidos_by_user(id_usuario):
     produtos_repo = ProdutosRepository()
     pedidos_manager = PedidosManager(pedidos_repo, itens_repo, restaurantes_repo, enderecos_repo, produtos_repo)
 
-    http_response = pedidos_manager.get_pedidos_by_user(http_request)
+    http_response = pedidos_manager.get_pedidos(http_request)
     return jsonify(http_response.body), http_response.status_code
