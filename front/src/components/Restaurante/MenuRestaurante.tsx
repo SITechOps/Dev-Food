@@ -1,4 +1,11 @@
-import { ClipboardList, User, LogOut, MapPin, DollarSign } from "lucide-react";
+import {
+  ClipboardList,
+  User,
+  LogOut,
+  MapPin,
+  DollarSign,
+  Package,
+} from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -25,6 +32,7 @@ const MenuRestaurante = () => {
 
   const menuItems: MenuItem[] = [
     { name: "Minha Conta", icon: <User size={20} />, link: "/account" },
+    { name: "Pedidos", icon: <Package size={20} />, link: "/pedidos" },
     {
       name: "Endereço",
       icon: <MapPin size={20} />,

@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 import { api } from "../connection/axios";
 import { useAuth } from "../contexts/AuthContext";
-import { IProduto } from "../interface/IProduct";
+import { ProductProps } from "../interface/IProduct";
 
 const useProdutos = () => {
   const { userData } = useAuth();
   const idRestaurante = userData?.sub;
-  const [Produtos, setProdutos] = useState<IProduto[]>([]);
+  const [Produtos, setProdutos] = useState<ProductProps[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [produtoSelecionado, setProdutoSelecionado] = useState<IProduto | null>(
-    null,
-  );
+  const [produtoSelecionado, setProdutoSelecionado] =
+    useState<ProductProps | null>(null);
 
   const filteredProducts = Produtos.filter((product) =>
     product.nome.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -28,7 +27,7 @@ const useProdutos = () => {
     }
   }
 
-  async function criarProduto(produto: Omit<IProduto, "id">) {
+  async function criarProduto(produto: Omit<ProductProps, "id">) {
     try {
       await api.post(`/produto`, {
         id_restaurante: idRestaurante,
@@ -47,7 +46,7 @@ const useProdutos = () => {
     }
   }
 
-  async function editarProduto(id: string, produto: Omit<IProduto, "id">) {
+  async function editarProduto(id: string, produto: Omit<ProductProps, "id">) {
     try {
       await api.put(`/produto/${id}`, {
         data: {
@@ -85,7 +84,7 @@ const useProdutos = () => {
     setIsModalOpen(true);
   };
 
-  const abrirModalEditar = (produto: IProduto) => {
+  const abrirModalEditar = (produto: ProductProps) => {
     setProdutoSelecionado(produto);
     setIsModalOpen(true);
   };

@@ -25,6 +25,7 @@ const AlterarEnderecoRestaurante = lazy(
   () => import("../components/Endereco/EnderecoModal"),
 );
 const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
+const Pedidos = lazy(() => import("../pages/Restaurante/Account/Pedidos"));
 
 const AppRoutes = () => {
   return (
@@ -49,6 +50,7 @@ const AppRoutes = () => {
       {/* Rotas neutras — ambos podem acessar */}
       <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
       <Route path="/status-pedido" element={<StatusPedido />} />
+      <Route path="/pedidos" element={<Pedidos />} />
 
       {/* Rotas públicas — bloqueia se já estiver logado */}
       <Route element={<PublicRoute />}>
