@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { api } from "@/connection/axios";
 import { useAuth } from "@/contexts/AuthContext";
-import { usePagamento } from "@/hooks/usePagamento";  // Assumindo que o hook esteja exportado
+import { usePagamento } from "@/hooks/usePagamento"; 
 
 export default function PagePix() {
 	const { userData } = useAuth();
-	const { valoresCarrinho } = usePagamento();  // Pega o total do hook usePagamento
+	const { valoresCarrinho } = usePagamento();  
 
 	useEffect(() => {
 		if (!userData?.sub) return;

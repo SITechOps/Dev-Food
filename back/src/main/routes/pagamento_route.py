@@ -10,6 +10,7 @@ def send_pix():
 
     pagamento = PaymentService(current_app)
     http_response = pagamento.create_pix_qr_code(http_request)
+    print(http_response.body)
     
     return jsonify(http_response.body), http_response.status_code
 
