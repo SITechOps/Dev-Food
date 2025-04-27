@@ -75,15 +75,15 @@ export default function Menu() {
             )}
 
             <div
-              className="relative w-fit cursor-pointer"
+              className="flex cursor-pointer w-30 rounded-sm hover:bg-brown-light-active"
               onClick={() => {
                 setIsCarrinhoOpen(true);
                 atualizarQuantidadeTotal();
               }}
             >
-              <TbShoppingBag className="text-brown-normal hover:text-brown-dark self-center text-4xl" />
-              <div className="bg-brown-light-active text-brown-normal absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full font-bold">
-                {quantidadeTotal}
+              <div className="pl-2 text-brown-normal flex justify-center items-center">
+              <TbShoppingBag className="self-center text-4xl" />
+                <p className="font-bold p-1 text-blue">{quantidadeTotal} <span className="font-light">Itens</span></p> 
               </div>
             </div>
           </div>
