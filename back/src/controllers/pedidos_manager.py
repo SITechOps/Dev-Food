@@ -77,6 +77,7 @@ class PedidosManager:
                 "data_pedido": pedido.created_at,
                 "forma_pagamento": pedido.forma_pagamento,
                 "status": pedido.status,
+                "tipo_entrega": pedido.tipo_entrega,
                 "restaurante": {
                     "nome": restaurante.nome or "",
                     "logo": restaurante.logo or "",

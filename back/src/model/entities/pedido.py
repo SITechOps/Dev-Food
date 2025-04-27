@@ -11,7 +11,8 @@ class Pedido(Base):
     id_restaurante = Column(CHAR(36), ForeignKey("Restaurante.id"), nullable=False)
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id"), nullable=False)
     forma_pagamento = Column(String(20), nullable=False)
-    status = Column(String(20), default="pendente")
+    status = Column(String(20), default="Pendente")
+    tipo_entrega = Column(String(10), default="Agora")   
 
     def to_dict(self):
         return {
@@ -21,5 +22,6 @@ class Pedido(Base):
             "id_usuario": self.id_usuario,
             "id_restaurante": self.id_restaurante,
             "forma_pagamento": self.forma_pagamento,
-            "status": self.status
+            "status": self.status,
+            "tipo_entrega": self.tipo_entrega
         }

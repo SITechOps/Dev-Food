@@ -1,11 +1,11 @@
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import Button from "../ui/Button";
-import Padrao from "../../assets/prato-padrao.png";
-import Input from "../ui/Input";
-import ModalProduto from "../Produto/ModalProduto";
+import Button from "@/components/ui/Button";
+import Padrao from "@/assets/prato-padrao.png";
+import Input from "@/components/ui/Input";
+import ModalProduto from "@/components/Produto/ModalProduto";
 import { Search } from "lucide-react";
-import useProdutos from "../../hooks/useProducts";
+import useProdutos from "@/hooks/useProducts";
 
 const Cardapios = () => {
   const iconStyle =
@@ -25,7 +25,7 @@ const Cardapios = () => {
   } = useProdutos();
 
   return (
-    <div className="mt-10 bg-white p-6">
+    <div className="bg-white p-6">
       <div className="h-w-auto mb-6 flex items-center gap-10">
         <Button className="w-3xs" onClick={abrirModalAdicionar}>
           Adicionar Produto
