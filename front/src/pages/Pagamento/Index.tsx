@@ -11,16 +11,17 @@ import { usePagamento } from "../../hooks/usePagamento";
 export default function Pagamento() {
 	const {
 		restaurante,
-		subtotal,
-		taxaEntrega,
-		total,
+		valoresCarrinho,
+		setValoresCarrinho,
 		selecionado,
 		setSelecionado,
 		styleOptions,
 		endereco,
 		etapa,
-		setEtapa
-	 } = usePagamento();
+		setEtapa,
+		modeloPagamento,
+		setModeloPagamento
+	} = usePagamento();
 
 	return (
 		<div className="flex flex-col xl:flex-row items-center gap-8 justify-center min-h-screen">
@@ -47,96 +48,109 @@ export default function Pagamento() {
 				<div>
 					<div className="flex justify-between items-center w-100 mb-10">
 						<Button
-							onClick={() => setSelecionado("site")}
+							onClick={() => {
+								setSelecionado("site");
+								setModeloPagamento("site");
+							}}
 							color="plain"
 							className={`pb-2 border-b-2 transition-all ${selecionado === "site"
 								? "text-brown-normal border-brown-normal"
-								: "text-gray-400 border-transparent"
-								}`}>Pague pelo site</Button>
-
-						{/* <Button
-				onClick={() => setSelecionado("entrega")}
-				color="plain"
-				className={`pb-2 border-b-2 transition-all ${
-					selecionado === "site"
-						? "text-gray-light hover:text-gray-medium border-transparent"
-						: "text-brown-normal border-brown-normal"
-				}`}
-			>
-				Pague na entrega
-			</Button> */}
+								: " hover:text-blue-dark border-transparent"
+								}`}>Pague pelo site
+						</Button>
+						<Button
+							onClick={() => {
+								setSelecionado("entrega");
+								setModeloPagamento("entrega");
+							}}
+							color="plain"
+							className={`pb-2 border-b-2 transition-all ${selecionado === "site"
+								? "text-blue hover:text-blue-dark border-transparent"
+								: "text-brown-normal border-brown-normal"
+								}`}
+						>
+							Pague na entrega
+						</Button>
 					</div>
-					<div id="pagamento">
-						{etapa === "opcaoPagamento" && (
-							<>
-								<button className={styleOptions} onClick={() => setEtapa("pagePix")}>
-									<SiPix className="text-2xl" />
-									<div className="">
-										<p className="font-semibold">Pague com Pix</p>
-										<p className="font-light">Use o QR Code ou copie e cole o código</p>
+					{modeloPagamento === "site" && (
+						<div id="pagamento">
+							{etapa === "opcaoPagamento" && (
+								<>
+									<button className={styleOptions} onClick={() => setEtapa("pagePix")}>
+										<SiPix className="text-2xl" />
+										<div className="">
+											<p className="font-semibold">Pague com Pix</p>
+											<p className="font-light">Use o QR Code ou copie e cole o código</p>
+										</div>
+									</button>
+
+
+									<button className={styleOptions} onClick={() => setEtapa("pageCartao")}>
+										<BsCreditCardFill className="text-2xl" />
+										<div className="">
+											<p className="font-semibold">Pague com cartão</p>
+											<p className="font-light">Cadastre-se seu cartao ou Escolha seu cartão</p>
+										</div>
+									</button>
+								</>
+							)}
+
+							{etapa === "pagePix" && (
+								<>
+									<button
+										onClick={() => setEtapa("opcaoPagamento")}
+										className="mb-5 self-start flex"
+									>
+										<FaAngleLeft className="icon" />
+										<p className="ml-1">Forma de pagamento escolhida Pix</p>
+									</button>
+
+									<div className="mt-3">
+										<PagePix />
 									</div>
-								</button>
-
-
-								<button className={styleOptions} onClick={() => setEtapa("pageCartao")}>
-									<BsCreditCardFill className="text-2xl" />
-									<div className="">
-										<p className="font-semibold">Pague com cartão</p>
-										<p className="font-light">Cadastre-se seu cartao ou Escolha seu cartão</p>
+								</>
+							)}
+							{etapa === "pageCartao" && (
+								<>
+									<button
+										onClick={() => setEtapa("opcaoPagamento")}
+										className="mb-5 self-start flex"
+									>
+										<FaAngleLeft className="icon" />
+										<p className="ml-1">Forma de pagamento escolhida Cartão</p>
+									</button>
+									<div className="mt-3">
+										<PageCartao />
 									</div>
-								</button>
-							</>
-						)}
-
-						{etapa === "pagePix" && (
-							<>
-								<button
-									onClick={() => setEtapa("opcaoPagamento")}
-									className="mb-5 self-start"
-								>
-									<FaAngleLeft className="icon" />
-								</button>
-
-								<div className="mt-3">
-									<PagePix />
-								</div>
-							</>
-						)}
-						{etapa === "pageCartao" && (
-							<>
-								<button
-									onClick={() => setEtapa("opcaoPagamento")}
-									className="mb-5 self-start"
-								>
-									<FaAngleLeft className="icon" />
-								</button>
-								<div className="mt-3">
-									<PageCartao />
-								</div>
-							</>
-						)}
-					</div>
+								</>
+							)}
+						</div>
+					)}
+					{modeloPagamento === "entrega" && (
+						<p className="text-center font-bold">
+							Tela em construção....
+						</p>
+					)}
 				</div>
 			</div>
-			<div className="card mt-[5rem] p-4 m-auto border border-gray-light">
-				<p></p>
+			<div id="cardLateral" className="card mt-[5rem] w-100 p-4 m-auto border border-gray-light">
 				<p className="flex gap-8 items-center justify-between my-2 ">
 					Compra realizado no restaurante:
-                    <span className="font-bold">{restaurante}</span>
-                  </p>
-				  <hr className="border-b border-gray-medium my-4"/>
+				</p>
+				<span className="font-bold">{restaurante}</span>
+				<hr className="border-b border-gray-medium my-4" />
 				<p className="flex gap-8 items-center justify-between my-2">
-                    Subtotal
-                    <span>R$  {subtotal.toFixed(2)}</span>
-                  </p>
-                  <p className="flex gap-8 items-center justify-between my-2">
-                    Taxa de entrega
-                    <span>R$ {taxaEntrega.toFixed(2)}</span>
-                  </p>
-				  <p className="flex gap-8 items-center justify-between font-bold">
-                  Total
-                  <span>R$ {total.toFixed(2)}</span>
-                </p>
+					Subtotal
+					<span>R$  {Number(valoresCarrinho.subtotal).toFixed(2)}</span>
+				</p>
+				<p className="flex gap-8 items-center justify-between my-2">
+					Taxa de entrega
+					<span>R$ {Number(valoresCarrinho.taxaEntrega).toFixed(2)}</span>
+				</p>
+				<p className="flex gap-8 items-center justify-between font-bold mt-10">
+					Total
+					<span>R$ {Number(valoresCarrinho.total).toFixed(2)}</span>
+				</p>
 			</div>
 		</div>
 

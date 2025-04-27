@@ -6,7 +6,6 @@ import AuthFacebook from "../../components/Auth/AuthFacebook";
 import ModalCodigoVerificacao from "../../components/shared/ModalCodigoVerificacao";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
-import { useAuth } from "../../contexts/AuthContext";
 
 export default function AuthUser() {
   const {
