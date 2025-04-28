@@ -4,9 +4,9 @@ import { TfiMapAlt } from "react-icons/tfi";
 import { BsCreditCardFill } from "react-icons/bs";
 import PagePix from "./FormasPagamento/Pix";
 import PageCartao from "./FormasPagamento/Cartao";
-import { usePagamento } from "../../hooks/usePagamento";
 import CardsOpcoes from "./components/CardsOpcoes";
 import IconAction from "@/components/ui/IconAction";
+import { usePagamento } from "@/hooks/Pagamento/usePagamento";
 
 
 export default function Pagamento() {

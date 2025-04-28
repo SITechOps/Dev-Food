@@ -6,8 +6,9 @@ import { FaCheckCircle } from "react-icons/fa";
 import { BiSolidHandDown } from "react-icons/bi";
 import { GoCopy } from "react-icons/go";
 import { Loading } from "@/components/shared/Loading";
-import { usePixComponent } from '@/hooks/FormasPagamento/usePix';
+import { usePixComponent } from '@/hooks/Pagamento/usePix';
 import VisualizacaoConometro from "../components/VisualizacaoConometro";
+import { usePagamento } from "@/hooks/Pagamento/usePagamento";
 
 export default function PagePix() {
 	const {
@@ -21,16 +22,18 @@ export default function PagePix() {
 		stausPagamentoPix,
 		handleCopy,
 		tempoDeProcessamento,
+		setTempoDeProcessamento,
 	} = usePixComponent();
+	const { navigate } = usePagamento();
 
 	return (
 		<>
-			{respPagamento.qrCode ? (
+			{respPagamento.qr_code_base64 ? (
 				<>
 					{tempoDeProcessamento === "andamento" && (
 						<>
 							<div className="flex justify-center items-cente">
-								<img key={key}  className="w-50" src={`data:image/svg;base64,${respPagamento.qrCode}`} alt="QR Code de Pagamento" />
+								<img key={key} className="w-50" src={`data:image/svg;base64,${respPagamento.qr_code_base64}`} alt="QR Code de Pagamento" />
 							</div>
 							<p className="w-100 text-center my-3">Abra um aplicativo em que você tenha o Pix habilitado e escolha a opção Pagar, em seguida Ler QR Code</p>
 
@@ -44,7 +47,7 @@ export default function PagePix() {
 									className="my-2 px-3 py-1 rounded hover:bg-brown-light-active bg-brown-light text-gray-medium border hover:border-brown-normal cursor-pointer w-100"
 								>
 									<div className='flex items-center  justify-between gap-2'>
-										<p className="bg-transparent truncate w-80">{respPagamento.pixCode}
+										<p className="bg-transparent truncate w-80">{respPagamento.qr_code}
 										</p>
 										<GoCopy className='icon' />
 
@@ -55,15 +58,27 @@ export default function PagePix() {
 								)}
 
 							</div>
-							<VisualizacaoConometro />
+
+							<VisualizacaoConometro
+								onExpire={() => {
+									setTempoDeProcessamento("expirou");
+									setShowModal(false);
+								}}
+							/>
 
 							<Button className="my-6 p-2 bg-brown-light-active text-brown-normal hover:text-white" onClick={stausPagamentoPix}>Confirmar pagamento</Button>
 
-							<Modal isOpen={showModal} onClose={() => setShowModal(false)} >
+							<Modal isOpen={showModal} onClose={() => { setShowModal(false); navigate("/") }} >
 								<div className="my-2">
 									{eventStaus === "andamento" && (
 										<>
-											<VisualizacaoConometro />
+											<VisualizacaoConometro
+												onExpire={() => {
+													setTempoDeProcessamento("expirou");
+													setShowModal(false);
+												}}
+											/>
+
 											<p className='mt-3 text-center'>O status do seu pagamento : <span className='font-bold'>{statusPagamento}</span></p>
 										</>
 									)}
@@ -73,9 +88,9 @@ export default function PagePix() {
 											<p className="flex justify-center items-center text-[2rem] text-green">
 												<FaCheckCircle />
 											</p>
-											<p className="text-center mt-3">Pagamento processado com sucesso! <br/> <span className="font-bold">Pedido em andamento</span></p>
+											<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
 
-											<Button className="mt-5 p-2">Acompanhe seu pedido</Button>
+											<Button className="mt-5 p-2" onClick={() => navigate("/historico")} >Acompanhe seu pedido</Button>
 										</>
 									)}
 								</div>
@@ -83,7 +98,7 @@ export default function PagePix() {
 						</>
 					)}
 
-					{tempoDeProcessamento === "concluido" && (
+					{tempoDeProcessamento === "expirou" && (
 						<>
 							<p className='mb-5'>
 								<div className='flex items-center justify-center text-2xl'>
