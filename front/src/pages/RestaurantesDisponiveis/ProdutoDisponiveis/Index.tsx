@@ -14,7 +14,7 @@ export default function CardProdutos(props: CardProdutosProps) {
     useCardProdutos(props, dadosRestaurante);
 
   return (
-    <div className="border-gray-medium bg-gray-light w-full max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300">
+    <div className="border-gray-medium bg-gray-light w-100 max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300 m-auto">
       <div className="flex gap-4">
         <img
           className="mx-auto mr-2 mb-4 ml-2 h-15 w-15 rounded-full object-cover"
@@ -32,7 +32,7 @@ export default function CardProdutos(props: CardProdutosProps) {
         <p className="mt-3 text-[1.5rem] font-semibold">R$ {valor_unitario}</p>
 
         <div className="">
-          <div className="flex w-full flex-row items-center justify-end gap-4">
+          <div className="flex w-full flex-row items-center justify-center gap-4 mt-5">
             <div className="border-gray-medium flex items-center justify-between gap-6 rounded-lg border bg-white p-2">
               <Button color="plain" onClick={decrementar} className="p-1">
                 <Minus size={20} className="stroke-2" />

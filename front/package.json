@@ -22,6 +22,7 @@
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.479.0",
     "msw": "^2.7.3",
+    "rc-progress": "^4.0.0",
     "react": "^19.0.0",
     "react-code-input": "^3.10.1",
     "react-dom": "^19.0.0",

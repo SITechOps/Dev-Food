@@ -1,9 +1,9 @@
 import Input from "../../../../components/ui/Input";
 import Button from "../../../../components/ui/Button";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
-import { FaAngleLeft } from "react-icons/fa6";
 import { useCadastroRestaurante } from "./useCadastroRestaurante";
 import ModalCodigoVerificacao from "../../../../components/shared/ModalCodigoVerificacao";
+import IconAction from "@/components/ui/IconAction";
 
 export default function CadastroRestaurante() {
   const {
@@ -103,12 +103,8 @@ export default function CadastroRestaurante() {
 
           {etapa === "enderecoLoja" && (
             <>
-              <button
-                onClick={() => setEtapa("dadosLoja")}
-                className="mb-5 self-start"
-              >
-                <FaAngleLeft className="icon" />
-              </button>
+              <IconAction className="mb-3" onClick={() => setEtapa("dadosLoja")} />
+
               <h1 className="text-center font-bold">Infomações da Loja</h1>
               <p className="my-4 text-center">
                 Digite o CEP e complete as informações
@@ -230,12 +226,7 @@ export default function CadastroRestaurante() {
 
           {etapa === "complementoLoja" && (
             <>
-              <button
-                onClick={() => setEtapa("enderecoLoja")}
-                className="mb-5 self-start"
-              >
-                <FaAngleLeft className="icon" />
-              </button>
+              <IconAction className="mb-3" onClick={() => setEtapa("enderecoLoja")} />
 
               <h1 className="text-center font-bold">Negócio e Responsável</h1>
               <h3 className="my-5 font-bold">
@@ -325,12 +316,7 @@ export default function CadastroRestaurante() {
 
           {etapa === "dadosBancarioLoja" && (
             <>
-              <button
-                onClick={() => setEtapa("complementoLoja")}
-                className="mb-5 self-start"
-              >
-                <FaAngleLeft className="icon" />
-              </button>
+              <IconAction className="mb-3" onClick={() => setEtapa("complementoLoja")} />
 
               <h1 className="my-5 text-center font-bold">
                 Agora, nos informe seu dados bancários

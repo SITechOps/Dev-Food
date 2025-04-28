@@ -47,9 +47,11 @@ export const useCarrinho = () => {
 	
 			localStorage.setItem("compraAtual", JSON.stringify(compra));
 			localStorage.setItem("carrinho", JSON.stringify(dados));
+		} else {
+			localStorage.removeItem("compraAtual");
+			localStorage.removeItem("carrinho");
 		}
 	}, [dados, subtotal, taxaEntrega, total]);
-	
 
 	function incrementar(id: number) {
 		setDados((prevDados: any) =>
@@ -93,7 +95,6 @@ export const useCarrinho = () => {
 			navigate("/auth");
 			return;
 		} else {
-			console.log("navegando para /pagamento");
 			setIsCarrinhoOpen(false);
 			navigate("/pagamento");
 		}
