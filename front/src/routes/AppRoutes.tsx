@@ -10,6 +10,7 @@ const Intermediaria = lazy(() => import("../pages/Intermediaria"));
 const Account = lazy(() => import("../pages/Account"));
 const Cardapio = lazy(() => import("../components/Restaurante/Cardapios"));
 const Financeiro = lazy(() => import("../components/Restaurante/Financeiro"));
+
 const CadastroEndereco = lazy(
   () => import("../components/Endereco/CadastroEndereco"),
 );
@@ -24,6 +25,8 @@ const AlterarEnderecoRestaurante = lazy(
   () => import("../components/Endereco/EnderecoModal"),
 );
 const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
+
+const MeusPedidos = lazy(() => import("../pages/MeusPedidos/index"));
 
 const AppRoutes = () => {
   return (
@@ -44,6 +47,7 @@ const AppRoutes = () => {
       <Route element={<RestrictRestauranteRoute />}>
         <Route path="/" element={<Home />} />
       </Route>
+      <Route path="/historico" element={<MeusPedidos />} />
 
       {/* Rotas neutras — ambos podem acessar */}
       <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
