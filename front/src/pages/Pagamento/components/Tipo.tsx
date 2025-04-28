@@ -1,4 +1,4 @@
-import { ITipoProps } from "@/interface/IPagePix";
+import { ITipoProps } from "@/interface/IPagamento";
 
 export default function Tipo({ icon, descricao, tipo, tipoSelecionado, onClick }: ITipoProps) {
   const isSelected = tipo === tipoSelecionado;

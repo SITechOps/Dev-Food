@@ -1,7 +1,5 @@
 export const useCartaoComponent = () => {
-
 	return {
-	  
 	};
   };
   

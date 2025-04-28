@@ -1,45 +1,38 @@
 import { api } from "@/connection/axios";
 import { useEffect, useState } from "react";
-import { usePagamento } from "../usePagamento";
-import { useAuth } from "@/contexts/AuthContext";
-import { IPagePix } from "@/interface/IPagePix";
+import { IPagePix, IResponsePagePix } from "@/interface/IPagamento";
+import { usePagamento } from "./usePagamento";
 
 export const usePixComponent = () => {
-	const { userData } = useAuth();
 	const [key, setKey] = useState(0);
 	const [copied, setCopied] = useState(false);
-	const [loading, setLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
-	const { valoresCarrinho, setEtapa } = usePagamento();
+	const { valoresCarrinho, userData, postPedido, setLoading } = usePagamento();
 	const [statusPagamento, setStatusPagamento] = useState(false);
 	const [eventStaus, setEventStatus] = useState<"andamento" | "concluido">("andamento");
-	const [tempoDeProcessamento, setTempoDeProcessamento] = useState<"andamento" | "concluido">("andamento");
-	const [conometro, setConometro] = useState({
-		totalTime: 10 * 60,
-		timeLeft: 10 * 60,
-	});
-	const time = (conometro.timeLeft / conometro.totalTime) * 100;
-	const [respPagamento, setRespPagamento] = useState({
+	const [tempoDeProcessamento, setTempoDeProcessamento] = useState<"andamento" | "expirou">("andamento");
+	const [respPagamento, setRespPagamento] = useState<IResponsePagePix>({
 		id: "",
-		qrCode: "",
-		pixCode: "",
-	})
+		qr_code: "",
+		qr_code_base64: "",
+	  });
+	  
 
 	useEffect(() => {
 		if (!userData?.sub || valoresCarrinho.total === 0) return;
 	
 		(async () => {
 			try {
-				const { data } = await api.get(`/user/${userData.sub}`);
+				const { data } = await api.get(`/user/${userData?.sub}`);
 				const dados = data?.data?.attributes || [];
 	
-				const pixPayload = {
+				const pixPayload: IPagePix = {
 					email_comprador: dados.email,
 					nome_comprador: dados.nome,
 					valor_pagamento: 0.15,
 				};
 		
-				const response = await api.post<IPagePix>("/pix/qr-code", {
+				const response = await api.post<IResponsePagePix>("/pix/qr-code", {
 					pix: pixPayload,
 				});
 	
@@ -48,8 +41,8 @@ export const usePixComponent = () => {
 				if (dadosPix) {
 					setRespPagamento({
 						id: dadosPix.id,
-						qrCode: dadosPix.qr_code_base64,
-						pixCode: dadosPix.qr_code,
+						qr_code: dadosPix.qr_code,
+						qr_code_base64: dadosPix.qr_code_base64,
 					});
 					setKey(prevKey => prevKey + 1);
 				}
@@ -61,33 +54,33 @@ export const usePixComponent = () => {
 		})();
 	}, [userData?.sub, valoresCarrinho.total]);
 
-	useEffect(() => {
-		if (!respPagamento.qrCode) return;
+	// useEffect(() => {
+	// 	if (!respPagamento.qr_code_base64) return;
 	
-		const interval = setInterval(() => {
-		  setConometro((prev) => {
-			if (prev.timeLeft <= 1) {
-			  clearInterval(interval);
-			  setTempoDeProcessamento("concluido");
-			  setShowModal(false);
-			  return { ...prev, timeLeft: 0 }; 
-			}
-			return { ...prev, timeLeft: prev.timeLeft - 1 }; 
-		  });
-		}, 1000); 
+	// 	const interval = setInterval(() => {
+	// 	  setConometro((prev) => {
+	// 		if (prev.timeLeft <= 1) {
+	// 		  clearInterval(interval);
+	// 		  setTempoDeProcessamento("concluido");
+	// 		  setShowModal(false);
+	// 		  return { ...prev, timeLeft: 0 }; 
+	// 		}
+	// 		return { ...prev, timeLeft: prev.timeLeft - 1 }; 
+	// 	  });
+	// 	}, 1000); 
 	
-		return () => clearInterval(interval); 
-	  }, [respPagamento.qrCode]);
+	// 	return () => clearInterval(interval); 
+	//   }, [respPagamento.qr_code_base64]);
 	
-	  function formatTime(seconds: number) {
-		const min = Math.floor(seconds / 60);
-		const sec = seconds % 60;
-		return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-	  }
+	//   function formatTime(seconds: number) {
+	// 	const min = Math.floor(seconds / 60);
+	// 	const sec = seconds % 60;
+	// 	return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+	//   }
 
 	function handleCopy() {
-		if (respPagamento.pixCode) {
-			navigator.clipboard.writeText(respPagamento.pixCode).then(() => {
+		if (respPagamento.qr_code) {
+			navigator.clipboard.writeText(respPagamento.qr_code).then(() => {
 				setCopied(true);
 				setTimeout(() => setCopied(false), 3000);
 			});
@@ -106,10 +99,11 @@ export const usePixComponent = () => {
 			switch (status) {
 				case "approved":
 					setEventStatus("concluido");
+					await postPedido();
 					break;
 				case "expired":
 				case "rejected":
-					setTempoDeProcessamento("concluido");
+					setTempoDeProcessamento("expirou");
 					break;
 				default:
 					setEventStatus("andamento");
@@ -121,7 +115,7 @@ export const usePixComponent = () => {
 	}
 	
 	return {
-		time,
+		// time,
 		key,
 		userData,
 		valoresCarrinho,
@@ -134,12 +128,12 @@ export const usePixComponent = () => {
 		setStatusPagamento,
 		eventStaus,
 		setEventStatus,
-		conometro, 
-		setConometro,
+		// conometro, 
+		// setConometro,
 		respPagamento,
 		setRespPagamento,
 		stausPagamentoPix,
-		formatTime,
+		// formatTime,
 		handleCopy,
 		tempoDeProcessamento,
 		setTempoDeProcessamento

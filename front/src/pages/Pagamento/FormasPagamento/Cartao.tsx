@@ -29,12 +29,14 @@ export default function PageCartao() {
 
 	return (
 		<div className="mt-5">
+			<p className="mb-3 font-bold">Cartões Cadastrados:</p>
 			<CardsOpcoes
 				icon={<FaCcMastercard />}
-				title="Ifood Refeição"
+				title="Maria - Mastercard"
 				subtitle="**** 2546"
 				onClick={() => console.log("um cartão")}
 			/>
+			<hr className="my-5"/>
 			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
 
 			<Modal isOpen={showModal} onClose={() => setShowModal(false)} >
@@ -52,7 +54,7 @@ export default function PageCartao() {
 							<div className="my-5 flex itens-center justify-center space-x-4">
 								<Tipo
 									tipo="credito"
-									tipoSelecionado={formList.tipo} // variável dinâmica
+									tipoSelecionado={formList.tipo} 
 									onClick={() => setFormList(prev => ({ ...prev, tipo: "credito" }))}
 									icon={<BsCreditCardFill className="text-2xl" />}
 									descricao="Crédito"
