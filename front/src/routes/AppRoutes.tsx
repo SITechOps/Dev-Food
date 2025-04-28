@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import PublicRoute from "./PublicRoute";
-import RestrictRestauranteRoute from "./RestrictRestauranteRoute";
+import RoleBasedRoute from "./RoleBasedRoute";
 
+const Error404 = lazy(() => import("@/components/Error404"));
 const Home = lazy(() => import("../pages/Home"));
 const AuthUser = lazy(() => import("../pages/Auth/AuthUser"));
 const Intermediaria = lazy(() => import("../pages/Intermediaria"));
@@ -30,34 +30,36 @@ const Pedidos = lazy(() => import("../pages/Restaurante/Account/Pedidos"));
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Rotas privadas — só acessa se estiver logado */}
+      {/* Acesso público */}
+      <Route path="/auth" element={<AuthUser />} />
+      <Route path="/intermediaria" element={<Intermediaria />} />
+      <Route path="/cadastro-restaurante" element={<CadastroRestaurante />} />
+
+      {/* Proteção geral para rotas privadas */}
       <Route element={<ProtectedRoute />}>
         <Route path="/account" element={<Account />} />
-        <Route path="/cardapios" element={<Cardapio />} />
-        <Route path="/financeiro" element={<Financeiro />} />
         <Route path="/c-endereco" element={<CadastroEndereco />} />
         <Route
           path="/alterar-endereco"
           element={<AlterarEnderecoRestaurante />}
         />
-        <Route path="/pagamento" element={<Pagamento />} />
       </Route>
 
-      <Route element={<RestrictRestauranteRoute />}>
+      {/* Apenas para CLIENTE */}
+      <Route element={<RoleBasedRoute allowedRoles={["usuario"]} />}>
+        <Route path="/pagamento" element={<Pagamento />} />
+        <Route path="/status-pedido" element={<StatusPedido />} />
+        <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
         <Route path="/" element={<Home />} />
       </Route>
 
-      {/* Rotas neutras — ambos podem acessar */}
-      <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
-      <Route path="/status-pedido" element={<StatusPedido />} />
-      <Route path="/pedidos" element={<Pedidos />} />
-
-      {/* Rotas públicas — bloqueia se já estiver logado */}
-      <Route element={<PublicRoute />}>
-        <Route path="/auth" element={<AuthUser />} />
-        <Route path="/intermediaria" element={<Intermediaria />} />
-        <Route path="/cadastro-restaurante" element={<CadastroRestaurante />} />
+      {/* Apenas para RESTAURANTE */}
+      <Route element={<RoleBasedRoute allowedRoles={["restaurante"]} />}>
+        <Route path="/pedidos" element={<Pedidos />} />
+        <Route path="/cardapios" element={<Cardapio />} />
+        <Route path="/financeiro" element={<Financeiro />} />
       </Route>
+      <Route path="*" element={<Error404 />} />
     </Routes>
   );
 };

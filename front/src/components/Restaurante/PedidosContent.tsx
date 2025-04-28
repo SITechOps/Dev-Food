@@ -12,7 +12,13 @@ export default function PedidosContent() {
   );
 
   const pedidosAgora = useMemo(
-    () => pedidos.filter((pedido) => pedido.tipoEntrega !== "Agendado"),
+    () =>
+      pedidos.filter(
+        (pedido) =>
+          pedido.tipoEntrega !== "Agendado" &&
+          pedido.status !== "Cancelado" &&
+          pedido.status !== "Entregue",
+      ),
     [pedidos],
   );
 
@@ -20,7 +26,9 @@ export default function PedidosContent() {
     () =>
       pedidos.filter(
         (pedido) =>
-          pedido.tipoEntrega === "Agendado" && pedido.status !== "Cancelado",
+          pedido.tipoEntrega === "Agendado" &&
+          pedido.status !== "Cancelado" &&
+          pedido.status !== "Entregue",
       ),
     [pedidos],
   );

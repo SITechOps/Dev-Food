@@ -29,7 +29,12 @@ export default function PainelPedidos({
     (pedido: IPedido) => pedido.status === "Despachado",
   );
 
-  const handleStatusChange = async (pedidoId: string, newStatus: string) => {
+  const handleStatusChange = async (
+    pedidoId: string,
+    newStatus: string,
+    e: React.MouseEvent,
+  ) => {
+    e.stopPropagation();
     try {
       await alterarStatus(pedidoId, newStatus);
     } catch (error) {
@@ -75,7 +80,7 @@ export default function PainelPedidos({
                   <div className="mb-2 flex w-full items-center justify-between">
                     <span>#{pedido.id?.slice(0, 4)}</span>
                     <div className="bg-gray-light flex items-center rounded-2xl p-3">
-                      <span className="text-blue text-sm">
+                      <span className="text-blue text-sm font-semibold">
                         {calcularDiferencaTempo(pedido.dataPedido)}
                       </span>
                     </div>
@@ -85,8 +90,8 @@ export default function PainelPedidos({
                     <Button
                       color="default"
                       className="bg-brown-normal hover:bg-brown-dark text-white"
-                      onClick={() =>
-                        pedido.id && handleStatusChange(pedido.id, "Em preparo")
+                      onClick={(e) =>
+                        handleStatusChange(pedido.id!, "Em preparo", e)
                       }
                     >
                       Aceitar pedido
@@ -96,8 +101,8 @@ export default function PainelPedidos({
                     <Button
                       color="default"
                       className="bg-green-dark hover:bg-green text-white"
-                      onClick={() =>
-                        pedido.id && handleStatusChange(pedido.id, "Despachado")
+                      onClick={(e) =>
+                        handleStatusChange(pedido.id!, "Despachado", e)
                       }
                     >
                       Despachar pedido

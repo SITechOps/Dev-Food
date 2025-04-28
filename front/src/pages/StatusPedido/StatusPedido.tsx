@@ -1,48 +1,125 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "../../connection/axios";
+import { useAuth } from "../../contexts/AuthContext";
+import Button from "@/components/ui/Button";
+import { pedidosUtils } from "../../utils/pedidosUtils";
+import { Loading } from "@/components/shared/Loading";
 
-const statuses = [
-  "Aguardando a confirmação do restaurante.",
-  "Pedido aceito pelo restaurante.",
-  "O pedido está sendo preparado e logo sairá para entrega.",
-  "O pedido saiu para entrega.",
-  "O pedido foi entregue.",
-];
+const statusMessages: { [key: string]: string } = {
+  Pendente: "Aguardando a confirmação do restaurante.",
+  "Em preparo": "O pedido está sendo preparado.",
+  Despachado: "O pedido saiu para entrega.",
+  Entregue: "Pedido entregue!",
+  Cancelado: "Seu pedido foi cancelado pelo restaurante.",
+};
+
+const statusSteps: { [key: string]: number } = {
+  Pendente: 0,
+  "Em preparo": 1,
+  Despachado: 2,
+  Entregue: 3,
+};
 
 export default function OrderStatusTracker() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [pedidos, setPedidos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { formatarData } = pedidosUtils();
+  const { userData } = useAuth();
+  const idUsuario = userData?.sub;
 
-  const handleNextStep = () => {
-    if (currentStep < statuses.length - 1) {
-      setCurrentStep((prev) => prev + 1);
+  useEffect(() => {
+    const fetchPedidosUsuario = async () => {
+      if (!idUsuario) return;
+      try {
+        const response = await api.get(`/pedidos/usuario/${idUsuario}`);
+        setPedidos(response.data.pedidos || []);
+      } catch (error) {
+        console.error("Erro ao buscar pedidos do usuário:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPedidosUsuario();
+  }, [idUsuario]);
+
+  const marcarComoEntregue = async (idPedido: string) => {
+    try {
+      await api.patch(`/pedido/status/${idPedido}`, { status: "Entregue" });
+
+      setPedidos((prevPedidos) =>
+        prevPedidos.map((pedido) =>
+          pedido.Id === idPedido ? { ...pedido, status: "Entregue" } : pedido,
+        ),
+      );
+      alert("Pedido marcado como entregue!");
+    } catch (error) {
+      alert("Erro ao marcar pedido como entregue.");
     }
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  const pedidosEmAberto = pedidos.filter((p) => p.status !== "Entregue");
+
   return (
-    <div className="mx-auto mt-10 max-w-md rounded-2xl border bg-white p-6 shadow-md">
-      <h2 className="mb-4 text-lg font-semibold text-gray-800">
-        Acompanhamento do pedido
+    <div className="mx-auto mt-10 max-w-2xl rounded-2xl border bg-white p-6 shadow-md">
+      <h2 className="text-blue mb-6 text-center text-2xl font-bold">
+        Seus pedidos
       </h2>
 
-      <div className="mb-4 flex items-center justify-between">
-        {statuses.map((_, index) => (
-          <div
-            key={index}
-            className={`mx-1 h-1 flex-1 rounded-full ${
-              index <= currentStep ? "bg-green" : "bg-gray-medium"
-            }`}
-          />
-        ))}
-      </div>
+      {pedidosEmAberto.length === 0 ? (
+        <p className="text-center text-gray-500">Nenhum pedido em andamento.</p>
+      ) : (
+        pedidosEmAberto.map((pedido) => {
+          const step = statusSteps[pedido.status] ?? 0;
+          const steps = 4;
 
-      <p className="text-blue mb-6 text-center">{statuses[currentStep]}</p>
+          return (
+            <div
+              key={pedido.Id}
+              className="mb-8 rounded-xl border bg-gray-50 p-4 shadow-sm"
+            >
+              <h3 className="text-blue text-lg font-semibold">
+                Acompanhamento do pedido
+              </h3>
 
-      <button
-        onClick={handleNextStep}
-        disabled={currentStep === statuses.length - 1}
-        className="bg-brown-normal hover:bg-brown-light-active disabled:bg-gray-medium w-full rounded-lg py-2 font-semibold text-white transition"
-      >
-        Próxima etapa
-      </button>
+              <p className="text-gray-medium mb-2 text-sm">
+                {formatarData(pedido.data_pedido)}
+              </p>
+
+              <div className="mb-2 flex items-center justify-between">
+                {[...Array(steps)].map((_, index) => (
+                  <div
+                    key={index}
+                    className={`mx-1 h-1 flex-1 rounded-full ${index <= step ? "bg-green" : "bg-gray-medium"}`}
+                  />
+                ))}
+              </div>
+
+              <p className="text-blue mt-4 mb-4 text-center">
+                {statusMessages[pedido.status] ?? "Status desconhecido"}
+              </p>
+
+              <div className="mb-4 text-center text-xs text-gray-500">
+                Código do pedido: <strong>{pedido.Id}</strong>
+              </div>
+
+              {pedido.status === "Despachado" && (
+                <Button
+                  color="default"
+                  className="bg-green-dark hover:bg-green text-white"
+                  onClick={() => marcarComoEntregue(pedido.Id)}
+                >
+                  Marcar como entregue
+                </Button>
+              )}
+            </div>
+          );
+        })
+      )}
     </div>
   );
 }

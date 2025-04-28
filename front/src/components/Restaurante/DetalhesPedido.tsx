@@ -131,7 +131,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
 
         <Button
           color="default"
-          className={`${buttonClass} border-2`}
+          className={`${buttonClass}`}
           onClick={() => {
             if (buttonText === "Confirmar") {
               handleStatusChange("Em preparo");

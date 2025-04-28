@@ -1,21 +1,26 @@
 export interface IPedido {
   id?: string;
-  valorTotal: number;
   dataPedido: string;
   status: string;
-  formaPagamento: string;
   tipoEntrega: string;
   atualizadoEm: string;
   endereco: {
+    bairro: string;
     logradouro: string;
     cidade: string;
     estado: string;
     numero: string;
     complemento?: string;
   };
-  itens: {
+  formaPagamento: string;
+  itens: Array<{
     produto: string;
     qtdItens: number;
     valorCalculado: number;
-  }[];
+  }>;
+  restaurante: {
+    logo: string;
+    nome: string;
+  };
+  valorTotal: number;
 }
