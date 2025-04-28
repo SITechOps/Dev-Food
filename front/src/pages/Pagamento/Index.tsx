@@ -2,20 +2,19 @@ import Button from "../../components/ui/Button";
 import { SiPix } from "react-icons/si";
 import { TfiMapAlt } from "react-icons/tfi";
 import { BsCreditCardFill } from "react-icons/bs";
-import { FaAngleLeft } from "react-icons/fa6";
 import PagePix from "./FormasPagamento/Pix";
 import PageCartao from "./FormasPagamento/Cartao";
 import { usePagamento } from "../../hooks/usePagamento";
+import CardsOpcoes from "./components/CardsOpcoes";
+import IconAction from "@/components/ui/IconAction";
 
 
 export default function Pagamento() {
 	const {
 		restaurante,
 		valoresCarrinho,
-		setValoresCarrinho,
 		selecionado,
 		setSelecionado,
-		styleOptions,
 		endereco,
 		etapa,
 		setEtapa,
@@ -73,55 +72,41 @@ export default function Pagamento() {
 						</Button>
 					</div>
 					{modeloPagamento === "site" && (
-						<div id="pagamento">
+						<>
 							{etapa === "opcaoPagamento" && (
 								<>
-									<button className={styleOptions} onClick={() => setEtapa("pagePix")}>
-										<SiPix className="text-2xl" />
-										<div className="">
-											<p className="font-semibold">Pague com Pix</p>
-											<p className="font-light">Use o QR Code ou copie e cole o código</p>
-										</div>
-									</button>
-
-
-									<button className={styleOptions} onClick={() => setEtapa("pageCartao")}>
-										<BsCreditCardFill className="text-2xl" />
-										<div className="">
-											<p className="font-semibold">Pague com cartão</p>
-											<p className="font-light">Cadastre-se seu cartao ou Escolha seu cartão</p>
-										</div>
-									</button>
+									<CardsOpcoes
+										icon={<SiPix />}
+										title="Pague com Pix"
+										subtitle="Use o QR Code ou copie e cole o código"
+										onClick={() => setEtapa("pagePix")}
+									/>
+									<CardsOpcoes
+										icon={<BsCreditCardFill />}
+										title="Pague com cartão"
+										subtitle="Cadastre-se seu cartao ou Escolha seu cartão"
+										onClick={() => setEtapa("pageCartao")}
+									/>
 								</>
 							)}
 
 							{etapa === "pagePix" && (
 								<>
-									<button
-										onClick={() => setEtapa("opcaoPagamento")}
-										className="self-start flex"
-									>
-										<FaAngleLeft className="icon" />
-									</button>
+									<IconAction onClick={() => setEtapa("opcaoPagamento")}>
+										Pix
+									</IconAction>
 									<PagePix />
 								</>
 							)}
 							{etapa === "pageCartao" && (
 								<>
-									<button
-										onClick={() => setEtapa("opcaoPagamento")}
-										className="mb-5 self-start flex"
-									>
-										<FaAngleLeft className="icon" />
-										<p className="ml-1">Forma de pagamento escolhida Cartão</p>
-									</button>
-									<div className="mt-3">
-										<PageCartao />
-									</div>
-									<Button className="my-5">Continuar</Button>
+									<IconAction onClick={() => setEtapa("opcaoPagamento")}>
+										Cartão
+									</IconAction>
+									<PageCartao />
 								</>
 							)}
-						</div>
+						</>
 					)}
 					{modeloPagamento === "entrega" && (
 						<p className="text-center font-bold">

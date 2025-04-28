@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 export const usePagamento = () => {
-	const styleOptions = "text-left hover:bg-brown-light hover:text-brown-normal text-blue cursor-pointer flex gap-6 items-center mb-5 border border-gray-medium hover:border-brown-light-active rounded-sm p-3 w-[25rem]";
 	const endereco = {
 		ruaENumero: "Rua das Laranjeiras, 123",
 		complemento: "Apto 45, Bloco B - São Paulo - SP"
@@ -39,7 +38,6 @@ export const usePagamento = () => {
 		setValoresCarrinho,
 		selecionado,
 		setSelecionado,
-		styleOptions,
 		endereco,
 		etapa,
 		setEtapa,

@@ -1,11 +1,11 @@
 import Input from "../../components/ui/Input";
-import { FaAngleLeft } from "react-icons/fa6";
 import Button from "../../components/ui/Button";
 import AuthGoogle from "../../components/Auth/AuthGoogle";
 import AuthFacebook from "../../components/Auth/AuthFacebook";
 import ModalCodigoVerificacao from "../../components/shared/ModalCodigoVerificacao";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
+import IconAction from "@/components/ui/IconAction";
 
 export default function AuthUser() {
   const {
@@ -43,12 +43,7 @@ export default function AuthUser() {
           )}
 
           {etapa === "telefone" && (
-            <button
-              onClick={() => setEtapa("email")}
-              className="mb-5 self-start"
-            >
-              <FaAngleLeft className="icon" />
-            </button>
+            <IconAction className="mb-5" onClick={() => setEtapa("email")} />
           )}
 
           <div className="text-center">

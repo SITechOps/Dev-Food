@@ -38,15 +38,12 @@ export const usePixComponent = () => {
 					nome_comprador: dados.nome,
 					valor_pagamento: 0.15,
 				};
-	
-				console.log("Pix Payload:", pixPayload);
-	
+		
 				const response = await api.post<IPagePix>("/pix/qr-code", {
 					pix: pixPayload,
 				});
 	
 				const dadosPix = response.data;
-				console.log("QR Code Base64:", dadosPix);
 	
 				if (dadosPix) {
 					setRespPagamento({
@@ -98,17 +95,31 @@ export const usePixComponent = () => {
 	};
 
 	async function stausPagamentoPix() {
-		const response = await api.get(`/pix/status/${respPagamento.id}`);
-		const status = response.data.status 
-		if (status === "approved") {
-			setEventStatus("concluido");
-		}else if (status === "expired" || "rejected"){
-			setTempoDeProcessamento("concluido")
+		try {
+			const response = await api.get(`/pix/status/${respPagamento.id}`);
+			const status = response.data.status;
+			console.log(status);
+	
+			setShowModal(true);
+			setStatusPagamento(status);
+	
+			switch (status) {
+				case "approved":
+					setEventStatus("concluido");
+					break;
+				case "expired":
+				case "rejected":
+					setTempoDeProcessamento("concluido");
+					break;
+				default:
+					setEventStatus("andamento");
+					break;
+			}
+		} catch (error) {
+			console.error("Erro ao verificar status do pagamento:", error);
 		}
-		setShowModal(true);
-		setStatusPagamento(response.data.status);
 	}
-
+	
 	return {
 		time,
 		key,
