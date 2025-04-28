@@ -26,7 +26,7 @@ const AlterarEnderecoRestaurante = lazy(
 );
 const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
 
-const MeusPedidos = lazy(() => import("../pages/MeusPedidos/index"));
+const MeusPedidos = lazy(() => import("../pages/MeusPedidos/Index"));
 
 const AppRoutes = () => {
   return (
@@ -47,7 +47,7 @@ const AppRoutes = () => {
       <Route element={<RestrictRestauranteRoute />}>
         <Route path="/" element={<Home />} />
       </Route>
-      <Route path="/historico" element={<MeusPedidos />} />
+      <Route path="meus-pedidos" element={<MeusPedidos />} />
 
       {/* Rotas neutras — ambos podem acessar */}
       <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />

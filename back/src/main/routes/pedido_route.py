@@ -36,3 +36,14 @@ def get_pedidos(id):
 
     http_response = pedidos_manager.get_pedidos(http_request)
     return jsonify(http_response.body), http_response.status_code
+
+
+@pedido_route_bp.patch('/pedido/status/<id>')
+def update_pedido_status(id: str):
+    http_request = HttpRequest(body=request.json, params={"id_pedido":id})
+    
+    pedidos_repo = PedidosRepository()
+    pedidos_manager = PedidosManager(pedidos_repo)
+    
+    http_response = pedidos_manager.update_pedido_status(http_request)
+    return jsonify(http_response.body), http_response.status_code

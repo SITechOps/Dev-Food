@@ -5,7 +5,7 @@ from src.main.handlers.custom_exceptions import NotFound
 from src.main.utils.response_formatter import ResponseFormatter
 
 class PedidosManager:
-    def __init__(self, pedidos_repo, itens_repo, restaurantes_repo = None, enderecos_repo = None, produtos_repo = None) -> None:
+    def __init__(self, pedidos_repo, itens_repo = None, restaurantes_repo = None, enderecos_repo = None, produtos_repo = None) -> None:
         self.__pedidos_repo = pedidos_repo
         self.__itens_repo = itens_repo
         self.__restaurantes_repo = restaurantes_repo
@@ -39,6 +39,20 @@ class PedidosManager:
         pedidos_formatados = self.__format_response(pedidos)
         return HttpResponse(body=pedidos_formatados, status_code=200)
 
+
+    def update_pedido_status(self, http_request: HttpRequest):
+        id_pedido = http_request.params.get('id_pedido')
+        novo_status = http_request.body.get('status')
+
+        if not id_pedido or not novo_status:
+            return HttpResponse(body={"error": "id_pedido e status são obrigatórios"}, status_code=400)
+
+        if not self.__pedidos_repo.get_by_id(id_pedido):
+            raise NotFound("Pedido")
+
+        self.__pedidos_repo.update_status(id_pedido, novo_status)
+        return ResponseFormatter.display_operation("Status do pedido", "alterado")
+        
 
     def __format_response(self, pedidos: list[Pedido]) -> dict[list]:
         pedidos_formatados = []
