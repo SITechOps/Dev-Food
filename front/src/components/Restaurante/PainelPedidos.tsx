@@ -1,30 +1,41 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { IPedido } from "../../interface/IPedidos";
 import Button from "@/components/ui/Button";
+import { usePedidosContext } from "@/contexts/usePedidosContext";
+import { IPedido } from "../../interface/IPedidos";
+import { pedidosUtils } from "../../utils/pedidosUtils";
 
 interface PainelPedidosProps {
   orders: IPedido[];
   selectedId: string | null;
-  setSelectedId: (id: string | null) => void;
-  calcularDiferencaTempo: (data: string | undefined) => string;
+  setSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export default function PainelPedidos({
   orders,
   selectedId,
   setSelectedId,
-  calcularDiferencaTempo,
 }: PainelPedidosProps) {
   const [showPendentes, setShowPendentes] = useState(true);
   const [showDespachados, setShowDespachados] = useState(true);
+  const { calcularDiferencaTempo } = pedidosUtils();
+  const { alterarStatus } = usePedidosContext();
 
   const pedidosPendentes = orders.filter(
-    (pedido) => pedido.status !== "Despachado",
+    (pedido: IPedido) =>
+      pedido.status === "Pendente" || pedido.status === "Em preparo",
   );
   const pedidosDespachados = orders.filter(
-    (pedido) => pedido.status === "Despachado",
+    (pedido: IPedido) => pedido.status === "Despachado",
   );
+
+  const handleStatusChange = async (pedidoId: string, newStatus: string) => {
+    try {
+      await alterarStatus(pedidoId, newStatus);
+    } catch (error) {
+      alert("Erro ao alterar status. Tente novamente.");
+    }
+  };
 
   return (
     <div className="flex h-auto flex-col gap-6">
@@ -40,9 +51,7 @@ export default function PainelPedidos({
             </div>
           </div>
           <ChevronRight
-            className={`text-blue h-6 w-6 transform transition-transform ${
-              showPendentes ? "rotate-90" : "rotate-0"
-            }`}
+            className={`text-blue h-6 w-6 transform transition-transform ${showPendentes ? "rotate-90" : "rotate-0"}`}
           />
         </div>
 
@@ -76,6 +85,9 @@ export default function PainelPedidos({
                     <Button
                       color="default"
                       className="bg-brown-normal hover:bg-brown-dark text-white"
+                      onClick={() =>
+                        pedido.id && handleStatusChange(pedido.id, "Em preparo")
+                      }
                     >
                       Aceitar pedido
                     </Button>
@@ -84,6 +96,9 @@ export default function PainelPedidos({
                     <Button
                       color="default"
                       className="bg-green-dark hover:bg-green text-white"
+                      onClick={() =>
+                        pedido.id && handleStatusChange(pedido.id, "Despachado")
+                      }
                     >
                       Despachar pedido
                     </Button>
@@ -107,9 +122,7 @@ export default function PainelPedidos({
             </div>
           </div>
           <ChevronRight
-            className={`text-blue h-6 w-6 transform transition-transform ${
-              showDespachados ? "rotate-90" : "rotate-0"
-            }`}
+            className={`text-blue h-6 w-6 transform transition-transform ${showDespachados ? "rotate-90" : "rotate-0"}`}
           />
         </div>
 
@@ -135,18 +148,9 @@ export default function PainelPedidos({
                   </div>
 
                   {pedido.status === "Despachado" && (
-                    <>
-                      <Button
-                        color="default"
-                        className="bg-blue-600 text-white hover:bg-blue-700"
-                      >
-                        Em entrega
-                      </Button>
-                      <p className="text-gray-medium mt-2 text-sm font-normal">
-                        Despachado há{" "}
-                        {calcularDiferencaTempo(pedido.dataPedido)}
-                      </p>
-                    </>
+                    <p className="text-gray-medium mt-2 text-sm font-normal">
+                      {calcularDiferencaTempo(pedido.atualizadoEm)}
+                    </p>
                   )}
                 </div>
               );

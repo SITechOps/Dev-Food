@@ -127,7 +127,7 @@ const MenuRestaurante = () => {
                   </Link>
                 )}
                 {item.badge && (
-                  <span className="bg-brown-dark flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
+                  <span className="bg-brown-normal flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
                     {item.badge}
                   </span>
                 )}

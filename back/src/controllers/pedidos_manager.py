@@ -78,6 +78,7 @@ class PedidosManager:
                 "forma_pagamento": pedido.forma_pagamento,
                 "status": pedido.status,
                 "tipo_entrega": pedido.tipo_entrega,
+                "atualizado_em": pedido.updated_at,
                 "restaurante": {
                     "nome": restaurante.nome or "",
                     "logo": restaurante.logo or "",

@@ -5,6 +5,7 @@ export interface IPedido {
   status: string;
   formaPagamento: string;
   tipoEntrega: string;
+  atualizadoEm: string;
   endereco: {
     logradouro: string;
     cidade: string;

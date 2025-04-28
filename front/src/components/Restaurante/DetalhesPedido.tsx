@@ -1,6 +1,7 @@
 import { IPedido } from "../../interface/IPedidos";
 import Button from "@/components/ui/Button";
-import { usePedidos } from "@/hooks/usePedidos";
+import { usePedidosContext } from "@/contexts/usePedidosContext";
+import { pedidosUtils } from "../../utils/pedidosUtils";
 import { Package, CreditCard, MapPin, ShoppingBag } from "lucide-react";
 
 interface DetalhesPedidoProps {
@@ -10,14 +11,19 @@ interface DetalhesPedidoProps {
 const iconStyle = "mr-2 text-gray-medium w-5 h-5";
 
 const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
-  const { formatarData } = usePedidos();
+  const { alterarStatus } = usePedidosContext();
+  const { formatarData } = pedidosUtils();
 
   const getStatusTextColor = (status: string) => {
     switch (status) {
       case "Pendente":
-        return "text-brown-dark";
+        return "text-brown-normal";
       case "Em preparo":
         return "text-orange";
+      case "Cancelado":
+        return "text-brown-dark";
+      case "Despachado":
+        return "text-green-dark";
       default:
         return "text-gray-medium";
     }
@@ -35,6 +41,12 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           buttonClass: "bg-green-dark hover:bg-green text-white",
           buttonText: "Despachar",
         };
+      case "Cancelado":
+      case "Despachado":
+        return {
+          buttonClass: "bg-gray-medium text-white cursor-not-allowed",
+          buttonText: "Não disponível",
+        };
       default:
         return {
           buttonClass: "bg-brown-normal hover:bg-brown-dark text-white",
@@ -44,6 +56,16 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
   };
 
   const { buttonClass, buttonText } = getButtonStyles(pedido.status);
+
+  const handleStatusChange = async (newStatus: string) => {
+    if (pedido.id) {
+      try {
+        await alterarStatus(pedido.id, newStatus);
+      } catch (error) {
+        alert("Erro ao alterar status. Tente novamente.");
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 rounded-lg bg-white p-8">
@@ -67,7 +89,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
 
       <div className="flex flex-col gap-1">
         <div className="flex items-center">
-          <CreditCard className={iconStyle} />{" "}
+          <CreditCard className={iconStyle} />
           <label className="text-gray-medium text-sm">Forma de Pagamento</label>
         </div>
         <span>
@@ -84,7 +106,6 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           {pedido.endereco.logradouro} {pedido.endereco.numero} -{" "}
           {pedido.endereco.cidade}
         </span>
-        <span>{pedido.tipoEntrega}</span>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -103,11 +124,22 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
         <Button
           color="outlined"
           className="border-brown-normal text-brown-normal hover:bg-brown-light-active mr-4 border-2"
+          onClick={() => handleStatusChange("Cancelado")}
         >
           Cancelar
         </Button>
 
-        <Button color="default" className={`${buttonClass} border-2`}>
+        <Button
+          color="default"
+          className={`${buttonClass} border-2`}
+          onClick={() => {
+            if (buttonText === "Confirmar") {
+              handleStatusChange("Em preparo");
+            } else if (buttonText === "Despachar") {
+              handleStatusChange("Despachado");
+            }
+          }}
+        >
           {buttonText}
         </Button>
       </div>
