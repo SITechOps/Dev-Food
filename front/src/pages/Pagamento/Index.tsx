@@ -99,15 +99,11 @@ export default function Pagamento() {
 								<>
 									<button
 										onClick={() => setEtapa("opcaoPagamento")}
-										className="mb-5 self-start flex"
+										className="self-start flex"
 									>
 										<FaAngleLeft className="icon" />
-										<p className="ml-1">Forma de pagamento escolhida Pix</p>
 									</button>
-
-									<div className="mt-3">
-										<PagePix />
-									</div>
+									<PagePix />
 								</>
 							)}
 							{etapa === "pageCartao" && (
@@ -122,6 +118,7 @@ export default function Pagamento() {
 									<div className="mt-3">
 										<PageCartao />
 									</div>
+									<Button className="my-5">Continuar</Button>
 								</>
 							)}
 						</div>
