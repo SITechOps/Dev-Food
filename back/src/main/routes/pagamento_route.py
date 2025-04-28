@@ -23,3 +23,13 @@ def verify_payment_status(id_pagamento: str):
     http_response = pagamento.get_pix_status(http_request)
     
     return jsonify(http_response.body), http_response.status_code
+
+
+@pagamento_route_bp.post('/cartao')
+def process_credit_card_payment():
+    http_request = HttpRequest(body=request.json)
+
+    pagamento = PaymentService(current_app)
+    http_response = pagamento.create_credit_card_payment(http_request)
+
+    return jsonify(http_response.body), http_response.status_code

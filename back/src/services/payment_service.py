@@ -27,7 +27,7 @@ class PaymentService:
             }
 
             result = self.sdk.payment().create(dados_pagamento, self.request_options)
-            return self.__format_transaction(result.get("response"))
+            return self.__format_pix_transaction(result.get("response"))
 
         except Exception as error:
             return ResponseFormatter.format_error("Erro ao processar pagamento!", 400, error)
@@ -52,8 +52,44 @@ class PaymentService:
         except Exception as error:
             return ResponseFormatter.format_error("Erro ao processar pagamento!", 400, error)
 
+
+    def create_credit_card_payment(self, http_request: HttpRequest) -> HttpResponse:
+        try:
+            info_card = http_request.body
+
+            token = info_card.get("token")
+            email = info_card.get("cardholderEmail")
+            amount = float(info_card.get("transaction_amount"))
+            installments = int(info_card.get("installments"))
+            doc_type = info_card.get("identification_type")
+            doc_number = info_card.get("identification_number")
+
+            if not token or not email:
+                return ResponseFormatter.format_error("Token ou email ausente!", 400)
+
+            payment_data = {
+                "transaction_amount": amount,
+                "token": token,
+                "description": "Compra com cartão",
+                "installments": installments,
+                "payment_method_id": info_card.get("payment_method_id"),  # exemplo: "visa"
+                "payer": {
+                    "email": email,
+                    "identification": {
+                        "type": doc_type,
+                        "number": doc_number
+                    }
+                }
+            }
+
+            result = self.sdk.payment().create(payment_data, self.request_options)
+            return self.__format_credit_card_transaction(result.get("response"))
+
+        except Exception as error:
+            return ResponseFormatter.format_error("Erro ao processar pagamento com cartão!", 400, error)
+
         
-    def __format_transaction(self, payment: dict) -> HttpResponse:
+    def __format_pix_transaction(self, payment: dict) -> HttpResponse:
         transaction_data = payment.get('point_of_interaction', {}).get('transaction_data', {})
         return HttpResponse(
             body={
@@ -63,4 +99,18 @@ class PaymentService:
                 "qr_code_base64": transaction_data.get('qr_code_base64'),
                 "ticket_url": transaction_data.get('ticket_url')
             }, status_code=201
+        )
+    
+
+    def __format_credit_card_transaction(self, payment: dict) -> HttpResponse:
+        return HttpResponse(
+            body={
+                "id": payment.get("id"),
+                "status": payment.get("status"),
+                "status_detail": payment.get("status_detail"),
+                "description": payment.get("description"),
+                "installments": payment.get("installments"),
+                "payment_type_id": payment.get("payment_type_id")
+            },
+            status_code=201
         )
