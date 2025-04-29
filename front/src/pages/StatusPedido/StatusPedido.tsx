@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../connection/axios";
 import { useAuth } from "../../contexts/AuthContext";
+import { useUserAccount } from "../../hooks/useUserAccount";
 import Button from "@/components/ui/Button";
 import { pedidosUtils } from "../../utils/pedidosUtils";
 import { Loading } from "@/components/shared/Loading";
@@ -25,6 +26,7 @@ export default function OrderStatusTracker() {
   const [loading, setLoading] = useState(true);
   const { formatarData } = pedidosUtils();
   const { userData } = useAuth();
+  const { userFormList } = useUserAccount();
   const idUsuario = userData?.sub;
 
   useEffect(() => {
@@ -58,6 +60,16 @@ export default function OrderStatusTracker() {
     }
   };
 
+  const getCodigoPedido = (pedidoId: string) => {
+    if (userFormList?.telefone) {
+      const numeros = userFormList.telefone.replace(/\D/g, "");
+      if (numeros.length >= 4) {
+        return numeros.slice(-4);
+      }
+    }
+    return pedidoId.slice(0, 4);
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -71,7 +83,9 @@ export default function OrderStatusTracker() {
       </h2>
 
       {pedidosEmAberto.length === 0 ? (
-        <p className="text-center text-gray-500">Nenhum pedido em andamento.</p>
+        <p className="text-gray-medium text-center">
+          Nenhum pedido em andamento.
+        </p>
       ) : (
         pedidosEmAberto.map((pedido) => {
           const step = statusSteps[pedido.status] ?? 0;
@@ -94,7 +108,9 @@ export default function OrderStatusTracker() {
                 {[...Array(steps)].map((_, index) => (
                   <div
                     key={index}
-                    className={`mx-1 h-1 flex-1 rounded-full ${index <= step ? "bg-green" : "bg-gray-medium"}`}
+                    className={`mx-1 h-1 flex-1 rounded-full ${
+                      index <= step ? "bg-green" : "bg-gray-medium"
+                    }`}
                   />
                 ))}
               </div>
@@ -104,7 +120,7 @@ export default function OrderStatusTracker() {
               </p>
 
               <div className="mb-4 text-center text-xs text-gray-500">
-                Código do pedido: <strong>{pedido.Id}</strong>
+                Código do pedido: <strong>{getCodigoPedido(pedido.Id)}</strong>
               </div>
 
               {pedido.status === "Despachado" && (
