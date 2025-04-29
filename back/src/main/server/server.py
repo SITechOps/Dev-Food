@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from src.main.server.configs import socketio
 from src.model.configs.connection import DBConnectionHandler
 from src.main.utils.load_restaurants import load_sample_restaurants
 from src.main.utils.load_pedidos import load_pedidos_exemplo
@@ -35,7 +36,8 @@ def create_app():
 
     DBConnectionHandler()
     load_sample_restaurants()
-    load_pedidos_exemplo()
+
+    socketio.init_app(app)
     return app
 
 app = create_app()

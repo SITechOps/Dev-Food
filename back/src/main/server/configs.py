@@ -1,11 +1,16 @@
 import os
 import secrets
-from flask_jwt_extended import JWTManager
-from flask_swagger_ui import get_swaggerui_blueprint
+import mercadopago
+from uuid import uuid4
 from dotenv import load_dotenv
+from flask_jwt_extended import JWTManager
+from flask_socketio import SocketIO
+from flask_swagger_ui import get_swaggerui_blueprint
+from mercadopago.config import RequestOptions
 
 load_dotenv()
 
+socketio = SocketIO(cors_allowed_origins="*")
 BASE_URL = "/docs"
 FILE_URL = "/swagger.yaml"
 

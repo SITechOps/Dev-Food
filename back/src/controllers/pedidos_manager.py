@@ -1,3 +1,4 @@
+from src.main.server.configs import socketio
 from src.model.entities.pedido import Pedido
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
@@ -22,6 +23,7 @@ class PedidosManager:
         for info_item in itens:
             self.__itens_repo.insert_item_pedido(id_pedido, info_item)
 
+        socketio.emit("pedido_criado")
         return ResponseFormatter.display_operation("Pedido", "criado")
     
 
@@ -35,7 +37,7 @@ class PedidosManager:
             pedidos = self.__pedidos_repo.list_pedidos_by_restaurante(id_restaurante)
         else:
             return ResponseFormatter.format_error("Id não informado", 400)
-                
+            
         pedidos_formatados = self.__format_response(pedidos)
         return HttpResponse(body=pedidos_formatados, status_code=200)
 
@@ -51,6 +53,7 @@ class PedidosManager:
             raise NotFound("Pedido")
 
         self.__pedidos_repo.update_status(id_pedido, novo_status)
+        socketio.emit("atualizar_status")
         return ResponseFormatter.display_operation("Status do pedido", "alterado")
         
 
