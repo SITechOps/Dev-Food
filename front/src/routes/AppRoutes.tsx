@@ -50,17 +50,12 @@ const AppRoutes = () => {
       <Route element={<RoleBasedRoute allowedRoles={["usuario"]} />}>
         <Route path="/pagamento" element={<Pagamento />} />
         <Route path="/status-pedido" element={<StatusPedido />} />
-        <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
       </Route>
 
-      <Route
-        path="/"
-        element={
-          <RestrictRestauranteOnly>
-            <Home />
-          </RestrictRestauranteOnly>
-        }
-      />
+      <Route element={<RestrictRestauranteOnly />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
+      </Route>
 
       {/* Apenas para RESTAURANTE */}
       <Route element={<RoleBasedRoute allowedRoles={["restaurante"]} />}>

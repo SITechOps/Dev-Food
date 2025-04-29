@@ -1,17 +1,14 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
-export default function RestrictRestauranteOnly({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RestrictRestauranteOnly() {
   const { isAuthenticated, userData } = useAuth();
+  const location = useLocation();
   const userRole = userData?.role;
 
   if (isAuthenticated && userRole === "restaurante") {
-    return <Navigate to="/account" replace />;
+    return <Navigate to="/account" state={{ from: location }} replace />;
   }
 
-  return children;
+  return <Outlet />;
 }
