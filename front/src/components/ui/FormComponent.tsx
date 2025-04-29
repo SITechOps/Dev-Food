@@ -46,7 +46,7 @@ const FormComponent: React.FC<FormProps> = ({
   title = "Título",
 }) => {
   return (
-    <section className="m-auto mt-10 flex w-2/3 flex-col justify-center rounded-md bg-white p-5 shadow">
+    <section className="m-auto flex w-2/3 flex-col justify-center rounded-md bg-white p-5 shadow">
       <div className="flex w-full items-center justify-between">
         <IconAction onClick={() => navigate("/")}>Voltar</IconAction>
 

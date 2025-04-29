@@ -1,14 +1,42 @@
-import { ClipboardList, User, LogOut, MapPin, DollarSign } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  ClipboardList,
+  User,
+  LogOut,
+  MapPin,
+  DollarSign,
+  Package,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
+import { api } from "../../connection/axios";
 
 const MenuRestaurante = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { logout } = useAuth();
+  const [totalPedidos, setTotalPedidos] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
+  const { userData, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const idRestaurante = userData?.sub;
+
+  const fetchTotalPedidos = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get(`/pedidos/restaurante/${idRestaurante}`);
+      const pedidos = response.data.pedidos || [];
+      setTotalPedidos(pedidos.length);
+    } catch (err) {
+      console.error("Erro ao buscar pedidos:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTotalPedidos();
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -19,12 +47,18 @@ const MenuRestaurante = () => {
     name: string;
     icon: React.ReactNode;
     link: string;
-    badge?: number;
+    badge?: number | React.ReactNode;
     action?: () => void;
   };
 
   const menuItems: MenuItem[] = [
     { name: "Minha Conta", icon: <User size={20} />, link: "/account" },
+    {
+      name: "Pedidos",
+      icon: <Package size={20} />,
+      link: "/pedidos",
+      badge: !loading ? totalPedidos : null,
+    },
     {
       name: "Endereço",
       icon: <MapPin size={20} />,
@@ -59,7 +93,7 @@ const MenuRestaurante = () => {
       </button>
 
       <div
-        className={`border-t-gray-light border-r-gray-light z-10 mt-14 w-64 border-t border-r bg-white p-4 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:block lg:translate-x-0`}
+        className={`border-t-gray-light border-r-gray-light z-10 w-64 border-t border-r bg-white p-4 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:block lg:translate-x-0`}
       >
         <ul className="space-y-4">
           {menuItems.map((item, i) => {
@@ -93,7 +127,7 @@ const MenuRestaurante = () => {
                   </Link>
                 )}
                 {item.badge && (
-                  <span className="bg-brown-dark flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
+                  <span className="bg-brown-normal flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
                     {item.badge}
                   </span>
                 )}
