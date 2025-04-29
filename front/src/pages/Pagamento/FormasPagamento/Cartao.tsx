@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState } from "react";
 import { FaCcMastercard } from "react-icons/fa";
 import CardsOpcoes from "../components/CardsOpcoes";
 import Button from "@/components/ui/Button";
@@ -8,8 +8,17 @@ import Input from "@/components/ui/Input";
 import IconAction from "@/components/ui/IconAction";
 import Tipo from "../components/Tipo";
 import { BsCreditCardFill } from "react-icons/bs";
+import { api } from "@/connection/axios";
+import { loadMercadoPago} from '@mercadopago/sdk-js';
+
+// src/global.d.ts
+export interface Window {
+	MercadoPago: any;
+  }
+  
 
 export default function PageCartao() {
+	loadMercadoPago();
 	const [showModal, setShowModal] = useState(false);
 	const [formList, setFormList] = useState({
 		nCartao: "",
@@ -21,10 +30,52 @@ export default function PageCartao() {
 		tipo: "",
 	});
 	const [etapa, setEtapa] = useState<"dadosCartao" | "dadosPessoal">("dadosCartao");
-
-
 	function adicionarCartao() {
 		setShowModal(true)
+	}
+
+
+	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+	
+		try {
+			// Instância do MercadoPago
+			const mp =  new (window as any).MercadoPago('APP_USR-f987084c-b5e3-4a41-b459-556ca6dcbbb4');
+			// loadMercadoPago('APP_USR-f987084c-b5e3-4a41-b459-556ca6dcbbb4');
+	
+			// Criação do token do cartão
+			const cardToken = await mp.cardToken.create({
+				cardNumber: formList.nCartao,
+				cardExpirationMonth: formList.validade.split("/")[0],
+				cardExpirationYear: `20${formList.validade.split("/")[1]}`,
+				securityCode: formList.cvv,
+				cardholder: {
+					name: formList.nome,
+					identification: {
+						type: "CPF",
+						number: formList.cpf.replace(/\D/g, ""),
+					},
+				},
+			});
+	
+			console.log("Token criado com sucesso:", cardToken.id);
+	
+			// Envio para o backend (ajuste o endpoint e valores reais)
+			const response = await api.post("/process_payment", {
+				token: cardToken.id,
+				payment_method_id: "master", // ou defina via regex no número do cartão
+				email: "usuario@teste.com", // capture do usuário logado
+				transaction_amount: 100.00, // ajuste para valor real da compra
+				installments: 1,
+				identification_type: "CPF",
+				identification_number: formList.cpf.replace(/\D/g, ""),
+			});
+	
+			console.log("Pagamento realizado com sucesso:", response.data);
+			setShowModal(false);
+		} catch (error) {
+			console.error("Erro ao processar pagamento:", error);
+		}
 	}
 
 	return (
@@ -36,11 +87,11 @@ export default function PageCartao() {
 				subtitle="**** 2546"
 				onClick={() => console.log("um cartão")}
 			/>
-			<hr className="my-5"/>
+			<hr className="my-5" />
 			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
 
 			<Modal isOpen={showModal} onClose={() => setShowModal(false)} >
-				<form action="">
+				<form onSubmit={handleSubmit}>
 
 					{etapa === "dadosPessoal" && (
 						<>
@@ -54,7 +105,7 @@ export default function PageCartao() {
 							<div className="my-5 flex itens-center justify-center space-x-4">
 								<Tipo
 									tipo="credito"
-									tipoSelecionado={formList.tipo} 
+									tipoSelecionado={formList.tipo}
 									onClick={() => setFormList(prev => ({ ...prev, tipo: "credito" }))}
 									icon={<BsCreditCardFill className="text-2xl" />}
 									descricao="Crédito"
@@ -163,10 +214,10 @@ export default function PageCartao() {
 								id="cpf"
 							/>
 
-							<Button className="mt-3">Salvar</Button>
+							<Button type="submit" className="mt-3">Salvar</Button>
 						</>
 					)}
-				</form> 
+				</form>
 			</Modal>
 		</div>
 	)

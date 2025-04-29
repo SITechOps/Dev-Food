@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mercadopago/sdk-js": "^0.0.3",
+    "@mercadopago/sdk-react": "^1.0.2",
     "@radix-ui/react-slot": "^1.2.0",
     "@react-google-maps/api": "^2.20.6",
     "@react-oauth/google": "^0.12.1",
