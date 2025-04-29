@@ -47,7 +47,7 @@ const AppRoutes = () => {
       <Route element={<RestrictRestauranteRoute />}>
         <Route path="/" element={<Home />} />
       </Route>
-      <Route path="meus-pedidos" element={<MeusPedidos />} />
+      <Route path="/historico" element={<MeusPedidos />} />
 
       {/* Rotas neutras — ambos podem acessar */}
       <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />

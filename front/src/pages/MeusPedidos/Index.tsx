@@ -1,4 +1,4 @@
-import HistoricoDePedido from "../../components/Usuario/HistoricoDePedido";
+import HistoricoDePedido from "@/components/Usuario/HistoricoDePedido";
 
 export default function MeusPedidos() {
   return (
