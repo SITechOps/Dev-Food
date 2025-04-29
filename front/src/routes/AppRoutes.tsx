@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import RoleBasedRoute from "./RoleBasedRoute";
+import RestrictRestauranteOnly from "./RestrictRestaurant";
 
 const Error404 = lazy(() => import("@/components/Error404"));
 const Home = lazy(() => import("../pages/Home"));
@@ -50,8 +51,16 @@ const AppRoutes = () => {
         <Route path="/pagamento" element={<Pagamento />} />
         <Route path="/status-pedido" element={<StatusPedido />} />
         <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
-        <Route path="/" element={<Home />} />
       </Route>
+
+      <Route
+        path="/"
+        element={
+          <RestrictRestauranteOnly>
+            <Home />
+          </RestrictRestauranteOnly>
+        }
+      />
 
       {/* Apenas para RESTAURANTE */}
       <Route element={<RoleBasedRoute allowedRoles={["restaurante"]} />}>
