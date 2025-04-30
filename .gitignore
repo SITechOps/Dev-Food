@@ -23,3 +23,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env
+
+# Virtual environment
+.venv
+
+# Test files
+.pytest_cache
+**/__pycache__
+devfood.db
