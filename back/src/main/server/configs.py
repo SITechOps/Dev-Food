@@ -29,6 +29,18 @@ def configure_mail(app):
     app.template_folder = '../../services/templates'
 
 
+def configure_payment(app):
+    mercado_pago_sdk = mercadopago.SDK(os.getenv("MERCADO_PAGO_ACCESS_TOKEN") or "")
+    request_options = RequestOptions(
+        custom_headers={
+            "x-idempotency-key": str(uuid4())
+        }
+    )
+    app.config["MERCADO_PAGO_SDK"] = mercado_pago_sdk
+    app.config["REQUEST_OPTIONS"] = request_options
+
+
+
 def configure_swagger(app):
     app.static_folder = "../../../"
     swagger_bp = get_swaggerui_blueprint(BASE_URL, FILE_URL)

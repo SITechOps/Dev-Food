@@ -38,6 +38,7 @@ def create_app():
     load_sample_restaurants()
 
     socketio.init_app(app)
+    load_pedidos_exemplo()
     return app
 
 app = create_app()
