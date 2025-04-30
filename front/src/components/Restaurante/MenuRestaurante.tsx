@@ -7,10 +7,11 @@ import {
   DollarSign,
   Package,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { useLocation } from "react-router-dom";
 import { api } from "../../connection/axios";
+import { socket } from "../../utils/socket";
+import { IPedido } from "@/interface/IPedidos";
 
 const MenuRestaurante = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +27,10 @@ const MenuRestaurante = () => {
     try {
       const response = await api.get(`/pedidos/restaurante/${idRestaurante}`);
       const pedidos = response.data.pedidos || [];
-      setTotalPedidos(pedidos.length);
+      const pedidosNaoEntregues = pedidos.filter(
+        (p: IPedido) => p.status !== "Entregue",
+      );
+      setTotalPedidos(pedidosNaoEntregues.length);
     } catch (err) {
       console.error("Erro ao buscar pedidos:", err);
     } finally {
@@ -35,8 +39,18 @@ const MenuRestaurante = () => {
   };
 
   useEffect(() => {
-    fetchTotalPedidos();
-  }, []);
+    if (idRestaurante) {
+      fetchTotalPedidos();
+
+      socket.on("pedido_criado", fetchTotalPedidos);
+      socket.on("atualizar_status", fetchTotalPedidos);
+
+      return () => {
+        socket.off("pedido_criado", fetchTotalPedidos);
+        socket.off("atualizar_status", fetchTotalPedidos);
+      };
+    }
+  }, [idRestaurante]);
 
   const handleLogout = () => {
     logout();
@@ -108,14 +122,10 @@ const MenuRestaurante = () => {
                 {item.action ? (
                   <button
                     onClick={item.action}
-                    className="flex w-full cursor-pointer items-center gap-3"
+                    className="flex w-full items-center gap-3"
                   >
                     {item.icon}
-                    <span
-                      className={item.name === "Sair" ? "text-brown-dark" : ""}
-                    >
-                      {item.name}
-                    </span>
+                    <span>{item.name}</span>
                   </button>
                 ) : (
                   <Link

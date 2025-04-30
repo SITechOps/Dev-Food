@@ -18,6 +18,7 @@ export default function PainelPedidos({
 }: PainelPedidosProps) {
   const [showPendentes, setShowPendentes] = useState(true);
   const [showDespachados, setShowDespachados] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { calcularDiferencaTempo } = pedidosUtils();
   const { alterarStatus } = usePedidosContext();
 
@@ -35,10 +36,13 @@ export default function PainelPedidos({
     e: React.MouseEvent,
   ) => {
     e.stopPropagation();
+    setIsLoading(true);
     try {
       await alterarStatus(pedidoId, newStatus);
     } catch (error) {
       alert("Erro ao alterar status. Tente novamente.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -93,6 +97,7 @@ export default function PainelPedidos({
                       onClick={(e) =>
                         handleStatusChange(pedido.id!, "Em preparo", e)
                       }
+                      isLoading={isLoading}
                     >
                       Aceitar pedido
                     </Button>
@@ -104,6 +109,7 @@ export default function PainelPedidos({
                       onClick={(e) =>
                         handleStatusChange(pedido.id!, "Despachado", e)
                       }
+                      isLoading={isLoading}
                     >
                       Despachar pedido
                     </Button>

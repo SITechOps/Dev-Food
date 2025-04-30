@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { api } from "../../connection/axios";
+import { socket } from "../../utils/socket";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserAccount } from "../../hooks/useUserAccount";
 import Button from "@/components/ui/Button";
 import { pedidosUtils } from "../../utils/pedidosUtils";
-import { Loading } from "@/components/shared/Loading";
 
 const statusMessages: { [key: string]: string } = {
   Pendente: "Aguardando a confirmação do restaurante.",
@@ -23,29 +23,36 @@ const statusSteps: { [key: string]: number } = {
 
 export default function OrderStatusTracker() {
   const [pedidos, setPedidos] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { formatarData } = pedidosUtils();
   const { userData } = useAuth();
   const { userFormList } = useUserAccount();
   const idUsuario = userData?.sub;
 
-  useEffect(() => {
-    const fetchPedidosUsuario = async () => {
-      if (!idUsuario) return;
-      try {
-        const response = await api.get(`/pedidos/usuario/${idUsuario}`);
-        setPedidos(response.data.pedidos || []);
-      } catch (error) {
-        console.error("Erro ao buscar pedidos do usuário:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchPedidosUsuario = async () => {
+    if (!idUsuario) return;
+    try {
+      const response = await api.get(`/pedidos/usuario/${idUsuario}`);
+      setPedidos(response.data.pedidos || []);
+    } catch (error) {
+      console.error("Erro ao buscar pedidos do usuário:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchPedidosUsuario();
+
+    socket.on("pedido_criado", fetchPedidosUsuario);
+    socket.on("atualizar_status", fetchPedidosUsuario);
+
+    return () => {
+      socket.off("pedido_criado", fetchPedidosUsuario);
+      socket.off("atualizar_status", fetchPedidosUsuario);
+    };
   }, [idUsuario]);
 
   const marcarComoEntregue = async (idPedido: string) => {
+    setIsLoading(true);
     try {
       await api.patch(`/pedido/status/${idPedido}`, { status: "Entregue" });
 
@@ -57,6 +64,8 @@ export default function OrderStatusTracker() {
       alert("Pedido marcado como entregue!");
     } catch (error) {
       alert("Erro ao marcar pedido como entregue.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,10 +78,6 @@ export default function OrderStatusTracker() {
     }
     return pedidoId.slice(0, 4);
   };
-
-  if (loading) {
-    return <Loading />;
-  }
 
   const pedidosEmAberto = pedidos.filter((p) => p.status !== "Entregue");
 
@@ -128,8 +133,9 @@ export default function OrderStatusTracker() {
                   color="default"
                   className="bg-green-dark hover:bg-green text-white"
                   onClick={() => marcarComoEntregue(pedido.Id)}
+                  disabled={isLoading}
                 >
-                  Marcar como entregue
+                  {isLoading ? "Carregando..." : "Marcar como entregue"}
                 </Button>
               )}
             </div>

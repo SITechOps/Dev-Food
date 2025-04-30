@@ -65,7 +65,7 @@ export function usePedidosFetch() {
           pedido.id === idPedido ? { ...pedido, status: novoStatus } : pedido,
         ),
       );
-      alert("Status do pedido alterado com sucesso!");
+      // alert("Status do pedido alterado com sucesso!");
     } catch (error) {
       alert("Erro ao alterar status do pedido. Tente novamente.");
     }

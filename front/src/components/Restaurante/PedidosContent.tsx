@@ -2,10 +2,9 @@ import { useState, useMemo } from "react";
 import { usePedidosContext } from "@/contexts/usePedidosContext";
 import DetalhesPedido from "@/components/Restaurante/DetalhesPedido";
 import PainelPedidos from "@/components/Restaurante/PainelPedidos";
-import { Loading } from "@/components/shared/Loading";
 
 export default function PedidosContent() {
-  const { pedidos, loading, error } = usePedidosContext();
+  const { pedidos, error } = usePedidosContext();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [abaSelecionada, setAbaSelecionada] = useState<"agora" | "agendado">(
     "agora",
@@ -38,9 +37,8 @@ export default function PedidosContent() {
   }, [abaSelecionada, pedidosAgora, pedidosAgendado]);
 
   const selectedPedido =
-    pedidos.find((pedido) => pedido.id === selectedId) || null;
+    pedidosFiltrados.find((pedido) => pedido.id === selectedId) || null;
 
-  if (loading) return <Loading />;
   if (error)
     return <div className="text-brown-dark p-4">Erro ao carregar pedidos.</div>;
 

@@ -3,6 +3,7 @@ import Button from "@/components/ui/Button";
 import { usePedidosContext } from "@/contexts/usePedidosContext";
 import { pedidosUtils } from "../../utils/pedidosUtils";
 import { Package, CreditCard, MapPin, ShoppingBag } from "lucide-react";
+import { useState } from "react";
 
 interface DetalhesPedidoProps {
   pedido: IPedido;
@@ -13,6 +14,7 @@ const iconStyle = "mr-2 text-gray-medium w-5 h-5";
 const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
   const { alterarStatus } = usePedidosContext();
   const { formatarData } = pedidosUtils();
+  const [isLoading, setIsLoading] = useState(false);
 
   const getStatusTextColor = (status: string) => {
     switch (status) {
@@ -59,10 +61,13 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
 
   const handleStatusChange = async (newStatus: string) => {
     if (pedido.id) {
+      setIsLoading(true);
       try {
         await alterarStatus(pedido.id, newStatus);
       } catch (error) {
         alert("Erro ao alterar status. Tente novamente.");
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -125,6 +130,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           color="outlined"
           className="border-brown-normal text-brown-normal hover:bg-brown-light-active mr-4 border-2"
           onClick={() => handleStatusChange("Cancelado")}
+          isLoading={isLoading}
         >
           Cancelar
         </Button>
@@ -139,6 +145,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
               handleStatusChange("Despachado");
             }
           }}
+          isLoading={isLoading}
         >
           {buttonText}
         </Button>
