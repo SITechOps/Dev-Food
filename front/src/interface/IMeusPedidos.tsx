@@ -24,3 +24,6 @@ export interface IMeusPedidos {
   tipo_entrega: string;
   valor_total: string;
 }
+export interface Props {
+  tipo: "meuPedido" | "historico";
+}
