@@ -33,7 +33,7 @@ export default function PagePix() {
 					{tempoDeProcessamento === "andamento" && (
 						<>
 							<div className="flex justify-center items-cente">
-								<img key={key} className="w-50" src={`data:image/svg;base64,${respPagamento.qr_code_base64}`} alt="QR Code de Pagamento" />
+								<img key={key} className="w-50" src={respPagamento.qr_code_base64} alt="QR Code de Pagamento" />
 							</div>
 							<p className="w-100 text-center my-3">Abra um aplicativo em que você tenha o Pix habilitado e escolha a opção Pagar, em seguida Ler QR Code</p>
 
@@ -116,7 +116,7 @@ export default function PagePix() {
 					)}
 
 				</>
-			) : (
+			 ) : (
 				<>
 					<Loading />
 				</>
