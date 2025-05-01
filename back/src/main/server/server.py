@@ -20,7 +20,6 @@ def create_app():
 
     configure_jwt(app)
     configure_mail(app)
-    configure_payment(app)
     configure_swagger(app)
     configure_twilio(app)
 
