@@ -3,7 +3,6 @@ import { api } from "../connection/axios";
 import RestauranteCard from "../components/Restaurante/RestaurantCard";
 import ProdutoCard from "../components/Produto/ProdutoCard";
 import { Link } from "react-router-dom";
-
 import { geocodeTexto } from "../utils/useGeocode";
 import { calcularDistancia } from "../utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
@@ -94,16 +93,16 @@ export default function Home() {
     obterEnderecoCliente();
   }, [idUsuario, token]);
 
-  useEffect(() => {
-    async function listarRestaurantes() {
-      try {
-        const response = await api.get("/restaurantes");
-        const data: Restaurante[] = response?.data?.data?.attributes || [];
-        setRestaurantes(data);
-      } catch (error) {
-        console.error("Erro ao buscar restaurantes:", error);
-      }
-    }
+      useEffect(() => {
+        async function listarRestaurantes() {
+            try {
+                const response = await api.get("/restaurantes");
+                const data: Restaurante[] = response?.data?.data?.attributes || [];
+                        setRestaurantes(data);
+            } catch (error) {
+                console.error("Erro ao buscar restaurantes:", error);
+            }
+        }
 
     listarRestaurantes();
   }, []);
@@ -139,6 +138,7 @@ export default function Home() {
     }
   }, [restaurantes]);
 
+  // Processar distância e taxa de entrega
   useEffect(() => {
     async function processarRestaurantes() {
       if (
@@ -169,6 +169,7 @@ export default function Home() {
             return {
               ...rest,
               distancia: distanciaInfo.distance?.toFixed(1),
+              duration: distanciaInfo.duration,
               taxaEntrega,
             };
           } catch (err) {
@@ -274,14 +275,23 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Grid principal */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {abaAtiva === "restaurantes" &&
-          filteredRestaurantes.map((restaurante) => (
-            <Link to={`/restaurante/${restaurante.id}`} key={restaurante.id}>
-              <RestauranteCard restaurante={restaurante} />
-            </Link>
-          ))}
+            {/* Grid principal */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                {abaAtiva === "restaurantes" &&
+                    filteredRestaurantes.map((restaurante) => (
+                        <Link to={`/restaurante/${restaurante.id}`} key={restaurante.id} onClick={() => {
+                            const restauranteComFrete = {
+                              ...restaurante,
+                              distancia: restaurante.distancia,
+                              duration: restaurante.duration,
+                              taxaEntrega: restaurante.taxaEntrega,
+                            };
+                        
+                            localStorage.setItem("restauranteSelecionado", JSON.stringify(restauranteComFrete));
+                          }}>
+                            <RestauranteCard restaurante={restaurante} />
+                        </Link>
+                    ))}
 
         {abaAtiva === "itens" &&
           produtosFiltrados.map((produto) => (

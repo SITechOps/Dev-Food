@@ -7,11 +7,13 @@ import PageCartao from "./FormasPagamento/Cartao";
 import CardsOpcoes from "./components/CardsOpcoes";
 import IconAction from "@/components/ui/IconAction";
 import { usePagamento } from "@/hooks/Pagamento/usePagamento";
+import { useEffect, useState } from "react";
 
 
 export default function Pagamento() {
 	const {
 		restaurante,
+		subtotal,
 		valoresCarrinho,
 		selecionado,
 		setSelecionado,
@@ -21,6 +23,38 @@ export default function Pagamento() {
 		modeloPagamento,
 		setModeloPagamento
 	} = usePagamento();
+
+	const [taxaEntregaSelecionada, setTaxaEntregaSelecionada] = useState(0.00);
+    const [duracaoPadrao, setDuracaoPadrao] = useState<string | null>(null);
+    const [duracaoRapida, setDuracaoRapida] = useState<string | null>(null);
+    const [taxaEntregaPadrao, setTaxaEntregaPadrao] = useState(0.00);
+    const [taxaEntregaRapida, setTaxaEntregaRapida] = useState(0.00);
+
+	// setando a taxa de entrega para padrão quando entrar na tela de pagamento
+	useEffect(() => {
+		setTaxaEntregaSelecionada(taxaEntregaPadrao);
+	}
+	,[taxaEntregaPadrao]);
+
+	useEffect(() => {
+        const storedFrete = JSON.parse(localStorage.getItem("restauranteSelecionado") || "null");
+        if (storedFrete) {
+            setTaxaEntregaPadrao(storedFrete.taxaEntrega || 0);
+            setTaxaEntregaRapida(storedFrete.taxaEntrega * 1.15 || 0);
+            setDuracaoPadrao(storedFrete.duration ? `${Math.floor(storedFrete.duration / 60)}-${Math.floor(storedFrete.duration / 60) + 10} min` : null);
+            setDuracaoRapida(storedFrete.duration ? `${Math.floor((storedFrete.duration /60 ) * 0.8)}-${Math.floor((storedFrete.duration /60 )* 0.8) + 10} min` : null);
+        }
+        handleSelecionado("padrão");
+    }, []);
+
+	const handleSelecionado = (value: "padrão" | "rápida") => {
+        setSelecionado(value);
+        if (value === "padrão") {
+            setTaxaEntregaSelecionada(taxaEntregaPadrao);
+        } else if (value === "rápida") {
+            setTaxaEntregaSelecionada(taxaEntregaRapida);
+        }
+    };
 
 	return (
 		<div className="flex flex-col xl:flex-row items-center gap-8 justify-center min-h-screen">
@@ -35,15 +69,39 @@ export default function Pagamento() {
 						<TfiMapAlt className="text-3xl" />
 						<div className="flex gap-4 items-center justify-between w-full my-4">
 							<div>
-
-								<p className="font-semibold">{endereco.complemento}</p>
-								<p>{endereco.ruaENumero}</p>
+								<p className="font-semibold">{endereco}</p>
 							</div>
 							<Button color="plain" className="p-2 m-0 w-12">Trocar</Button>
 						</div>
 					</div>
 					<hr className="text-gray-light my-2" />
 				</div>
+				<div className="mt-5 text-center">
+                    <h2 className="text-xl font-semibold mb-4">Escolha o tipo de entrega</h2>
+                    <p className="text-sm text-gray-600">Selecione a forma de entrega para ver o valor da taxa e o tempo estimado.</p>
+                </div>
+                <div className="mt-5 flex gap-5">
+                    <div
+                        onClick={() => handleSelecionado("padrão")}
+                        className={`w-full rounded-lg border-2 p-4 cursor-pointer ${
+                            selecionado === "padrão" ? 'border-brown-normal text-brown-dark' : 'border-gray-300'
+                        }`}
+                    >
+                        <p className="font-semibold">Padrão</p>
+						<p className="text-sm font-semibold">Hoje, {duracaoPadrao}</p>
+                        <p className="font-semibold text-black mt-2">R$ {taxaEntregaPadrao.toFixed(2)}</p>
+                    </div>
+                    <div
+                        onClick={() => handleSelecionado("rápida")}
+                        className={`w-full rounded-lg border-2 p-4 cursor-pointer ${
+                            selecionado === "rápida" ? 'border-brown-normal text-brown-dark' : 'border-gray-300'
+                        }`}
+                    >
+                        <p className="font-semibold">Rápida</p>
+						<p className="text-sm font-semibold">Hoje, {duracaoRapida}</p>
+                        <p className="font-semibold text-black mt-2">R$ {taxaEntregaRapida.toFixed(2)}</p>
+                    </div>
+                </div>
 				<div>
 					<div className="flex justify-between items-center w-100 mb-10">
 						<Button
@@ -123,15 +181,15 @@ export default function Pagamento() {
 				<hr className="border-b border-gray-medium my-4" />
 				<p className="flex gap-8 items-center justify-between my-2">
 					Subtotal
-					<span>R$  {Number(valoresCarrinho.subtotal).toFixed(2)}</span>
+					<span>R$  {valoresCarrinho.subtotal}</span>
 				</p>
 				<p className="flex gap-8 items-center justify-between my-2">
 					Taxa de entrega
-					<span>R$ {Number(valoresCarrinho.taxaEntrega).toFixed(2)}</span>
+					<span>R$ {taxaEntregaSelecionada.toFixed(2)}</span>
 				</p>
 				<p className="flex gap-8 items-center justify-between font-bold mt-10">
 					Total
-					<span>R$ {Number(valoresCarrinho.total).toFixed(2)}</span>
+					<span>R$ {(valoresCarrinho.subtotal + taxaEntregaSelecionada).toFixed(2)}</span>
 				</p>
 			</div>
 		</div>
