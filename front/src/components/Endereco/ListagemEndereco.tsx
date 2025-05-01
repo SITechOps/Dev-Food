@@ -66,7 +66,7 @@ export default function ListagemEndereco() {
         onClick={mostrarEnderecoSalvo}
       >
         <span className="text-blue text-lg font-semibold">
-          Endereço já salvo
+          {enderecos[0]?.logradouro || "Adicionar endereço"}
         </span>
         <IoIosArrowDown
           className={`icon transition-transform ${isExpanded ? "rotate-180" : ""}`}
