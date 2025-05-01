@@ -18,3 +18,6 @@ export interface IMeusPedidos {
   item2_qtd?: number;
   item2_valor?: number;
 }
+export interface Props {
+  tipo: "meuPedido" | "historico";
+}
