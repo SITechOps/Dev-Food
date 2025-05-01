@@ -2,50 +2,66 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
 import { api } from "@/connection/axios";
 
+interface UserData {
+  role: string;
+  sub: string;
+}
+
 interface AuthContextType {
   userData: { role: string | undefined; sub: string | undefined } | null;
   isAuthenticated: boolean;
+  loading: boolean; // <- novo
   setAuth: (token: string) => void;
   logout: () => void;
   token: string | null;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  userData: null,
-  isAuthenticated: false,
-  setAuth: () => {},
-  logout: () => {},
-  token: null,
-});
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [userData, setUserData] = useState<{
-    role: string | undefined;
-    sub: string | undefined;
-  } | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
+      setLoading(true);
       const storedToken = localStorage.getItem("token");
-      if (!storedToken) return logout();
+      if (!storedToken) {
+        logout();
+        setLoading(false);
+        return;
+      }
 
       try {
-        const { sub, role } = decodeToken(storedToken) || {};
-        if (!sub) return logout();
+        const decoded = decodeToken(storedToken);
 
-        const { status } = await api.get(`/user/${sub}`);
-        if (status !== 200) return logout();
+        if (!decoded?.sub || !decoded?.role) {
+          console.error("Token inválido ou sem informações necessárias.");
+          logout();
+          setLoading(false);
+          return;
+        }
 
-        setUserData({ role, sub });
+        const { status } = await api.get(`/user/${decoded.sub}`);
+        if (status !== 200) {
+          console.error("Usuário não encontrado ou erro de autenticação.");
+          logout();
+          setLoading(false);
+          return;
+        }
+
+        setUserData({ role: decoded.role, sub: decoded.sub });
         setIsAuthenticated(true);
         setToken(storedToken);
       } catch (error) {
         console.error("Erro ao verificar usuário:", error);
         logout();
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -55,9 +71,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const setAuth = (newToken: string) => {
     localStorage.setItem("token", newToken);
     const decoded = decodeToken(newToken);
-    setUserData({ role: decoded?.role, sub: decoded?.sub });
-    setIsAuthenticated(true);
-    setToken(newToken);
+
+    if (decoded?.sub && decoded?.role) {
+      setUserData({ role: decoded.role, sub: decoded.sub });
+      setIsAuthenticated(true);
+      setToken(newToken);
+    } else {
+      console.error("Token inválido ao tentar autenticar.");
+    }
   };
 
   const logout = () => {
@@ -69,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ userData, isAuthenticated, setAuth, logout, token }}
+      value={{ userData, isAuthenticated, setAuth, logout, token, loading }}
     >
       {children}
     </AuthContext.Provider>

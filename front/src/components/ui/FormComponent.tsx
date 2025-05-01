@@ -4,6 +4,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import Button from "./Button";
 import Input from "./Input";
+import IconAction from "./IconAction";
 
 interface FieldProps {
   label: string;
@@ -45,11 +46,9 @@ const FormComponent: React.FC<FormProps> = ({
   title = "Título",
 }) => {
   return (
-    <section className="m-auto mt-10 flex w-2/3 flex-col justify-center rounded-md bg-white p-5 shadow">
+    <section className="m-auto flex w-2/3 flex-col justify-center rounded-md bg-white p-5 shadow">
       <div className="flex w-full items-center justify-between">
-        <button onClick={() => navigate("/")} className="self-start">
-          <FaAngleLeft className="icon h-10 w-10" />
-        </button>
+        <IconAction onClick={() => navigate("/")}>Voltar</IconAction>
 
         <div id="icones-de-acao" className="flex justify-end gap-4">
           <div

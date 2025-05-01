@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from src.model.configs.connection import DBConnectionHandler
 from src.main.utils.load_restaurants import load_sample_restaurants
+from src.main.utils.load_pedidos import load_pedidos_exemplo
 from src.main.routes.usuario_route import usuario_route_bp
 from src.main.routes.email_route import email_route_bp
 from src.main.routes.endereco_route import endereco_route_bp
@@ -19,7 +20,6 @@ def create_app():
 
     configure_jwt(app)
     configure_mail(app)
-    configure_payment(app)
     configure_swagger(app)
     configure_twilio(app)
 
@@ -35,6 +35,7 @@ def create_app():
 
     DBConnectionHandler()
     load_sample_restaurants()
+    load_pedidos_exemplo()
     return app
 
 app = create_app()

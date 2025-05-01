@@ -14,7 +14,7 @@ export default function CardProdutos(props: CardProdutosProps) {
     useCardProdutos(props, dadosRestaurante);
 
   return (
-    <div className="border-gray-medium bg-gray-light w-full max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300">
+    <div className="border-gray-medium bg-gray-light max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300 m-auto">
       <div className="flex gap-4">
         <img
           className="mx-auto mr-2 mb-4 ml-2 h-15 w-15 rounded-full object-cover"
@@ -31,9 +31,9 @@ export default function CardProdutos(props: CardProdutosProps) {
         <p className="mt-2 font-light">{descricao}</p>
         <p className="mt-3 text-[1.5rem] font-semibold">R$ {valor_unitario}</p>
 
-        <div className="">
-          <div className="flex w-full flex-row items-center justify-end gap-4">
-            <div className="border-gray-medium flex items-center justify-between gap-6 rounded-lg border bg-white p-2">
+        <div>
+          <div className="flex w-full flex-row items-center justify-center gap-4 mt-5 max-[700px]:block">
+            <div className="border-gray-medium flex items-center justify-between gap-2 rounded-lg border bg-white p-2 w-25">
               <Button color="plain" onClick={decrementar} className="p-1">
                 <Minus size={20} className="stroke-2" />
               </Button>
@@ -44,15 +44,15 @@ export default function CardProdutos(props: CardProdutosProps) {
             </div>
 
             <Button
-              className="flex w-full items-center justify-between gap-6 p-3 md:w-auto"
+              className="flex w-full items-center justify-between gap-6 p-3 max-[700px]:mt-5"
               disabled={quantidade === 0}
               onClick={adicionarAoCarrinho}
             >
               <div className="flex items-center gap-2">
                 <AiOutlineShoppingCart className="text-2x1" />
-                <p className="text-sm md:text-base">Adicionar</p>
+                {/* <p className="text-sm md:text-base">Adicionar</p> */}
               </div>
-              <span className="text-sm md:text-base">
+              <span className="text-sm md:text-base whitespace-nowrap">
                 R${" "}
                 {quantidade > 0
                   ? (num * quantidade).toFixed(2)

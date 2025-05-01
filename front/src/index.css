@@ -16,6 +16,8 @@
   --color-gray-light: #f1f1f1;
   --color-gray-medium: #a9a9a9;
   --color-green: #b5c865;
+  --color-green-dark: #69aa71;
+  --color-orange: #ff9800;
 
   --color-white: #fff;
   --color-black: #000;
@@ -23,7 +25,7 @@
 
 @layer base {
   body {
-    @apply text-blue relative mx-auto w-4/5 bg-white;
+    @apply !text-blue relative mx-auto w-4/5 bg-white;
   }
 
   body::before {

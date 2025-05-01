@@ -1,71 +1,90 @@
-// pages/teste/ver-pedidos.tsx
 import { api } from "@/connection/axios";
 import { useEffect, useState } from "react";
 import { IMeusPedidos } from "@/interface/IMeusPedidos";
+import { useParams } from "react-router-dom";
 
-export default function VerPedidos() {
+export default function HistoricoDePedido() {
+  const { id_usuario } = useParams();
   const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
 
   useEffect(() => {
     async function buscarPedidos() {
+      if (!id_usuario) return;
+
       try {
-        const { data } = await api.get("/pedidos");
-        setPedidos(data);
+        const { data } = await api.get(`/pedidos/usuario/${id_usuario}`);
+        setPedidos(data.pedidos);
+        console.log(data);
       } catch (error) {
         console.error("Erro ao buscar pedidos:", error);
       }
     }
 
     buscarPedidos();
-  }, []);
+  }, [id_usuario]);
 
   return (
-    <div className="mx-auto max-w-4xl p-6">
+    <div className="max-w-2xl p-4">
       {pedidos.map((pedido) => (
         <div
-          key={pedido.id}
-          className="mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-md"
+          key={pedido.Id}
+          className="mb-3 flex min-h-[11.25rem] flex-col justify-between rounded-md bg-white px-[0.75rem] py-[0.75rem] shadow-sm"
+          style={{ border: "1px solid #A9A9A9" }}
         >
-          <div className="mb-4">
-            <p className="text-sm text-gray-600">
-              <strong className="text-gray-800">Usuário:</strong>{" "}
-              {pedido.id_usuario}
+          <div>
+            {/* Restaurante */}
+            <div className="mb-[0.5rem] flex items-center gap-[0.75rem]">
+              <img
+                src={pedido.restaurante.logo || "/logo-placeholder.png"}
+                alt="Logo restaurante"
+                className="h-[2rem] w-[2rem] rounded-full border object-cover"
+              />
+              <div>
+                <p className="text-sm font-semibold text-gray-800">
+                  {pedido.restaurante.nome}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Pedido {pedido.status.toLowerCase()} • Nº {pedido.Id}
+                </p>
+              </div>
+            </div>
+
+            {/* Itens */}
+            <div className="mb-[0.5rem] ml-[1.25rem] border-l-2 border-gray-200 pl-[0.75rem] text-xs text-gray-500">
+              {pedido.itens.slice(0, 2).map((item, index) => (
+                <p key={index}>
+                  {item.qtd_itens} {item.produto}
+                </p>
+              ))}
+              {pedido.itens.length > 2 && (
+                <p className="text-gray-400">
+                  +{pedido.itens.length - 2} itens
+                </p>
+              )}
+            </div>
+
+            {/* Endereço */}
+            <p className="mb-[0.25rem] truncate text-xs text-gray-600">
+              <strong className="text-gray-800">Endereço:</strong>{" "}
+              {pedido.endereco.logradouro}, {pedido.endereco.numero}
             </p>
-            <p className="text-sm text-gray-600">
-              <strong className="text-gray-800">Valor Total:</strong> R${" "}
-              {pedido.valor_total.toFixed(2)}
-            </p>
-            <p className="text-sm text-gray-600">
-              <strong className="text-gray-800">Forma de Pagamento:</strong>{" "}
-              {pedido.forma_pagamento}
+
+            {/* Pagamento */}
+            <p className="text-xs text-gray-600">
+              <strong className="text-gray-800">Pagamento:</strong>{" "}
+              {pedido.forma_pagamento} • <strong>Total:</strong> R${" "}
+              {pedido.valor_total}
             </p>
           </div>
 
-          <div className="mb-4 flex items-center gap-4">
-            <img
-              src={pedido.restaurante_logo}
-              alt="Logo restaurante"
-              className="h-16 w-16 rounded object-contain"
-            />
-            <p className="text-lg font-semibold">{pedido.restaurante_nome}</p>
-          </div>
-
-          <p className="mb-4 text-sm text-gray-700">
-            <strong>Endereço:</strong>{" "}
-            {`${pedido.endereco_logradouro}, ${pedido.endereco_numero} - ${pedido.endereco_bairro}, ${pedido.endereco_cidade} - ${pedido.endereco_estado} (${pedido.endereco_complemento})`}
-          </p>
-
-          <div className="text-sm text-gray-700">
-            <p>
-              <strong>Item 1:</strong> {pedido.item1_produto} -{" "}
-              {pedido.item1_qtd}x (R$ {pedido.item1_valor.toFixed(2)})
-            </p>
-            {pedido.item2_produto && (
-              <p>
-                <strong>Item 2:</strong> {pedido.item2_produto} -{" "}
-                {pedido.item2_qtd}x (R$ {pedido.item2_valor?.toFixed(2)})
-              </p>
-            )}
+          {/* Botões */}
+          <div className="mt-[0.5rem] flex justify-between">
+            <button className="text-xs font-semibold text-red-500 hover:underline">
+              Ajuda
+            </button>
+            <button className="rounded-full border border-red-600 bg-red-500 px-[0.75rem] py-[0.375rem] text-xs font-semibold text-white hover:bg-red-600">
+              Acompanhar pedido
+            </button>
           </div>
         </div>
       ))}

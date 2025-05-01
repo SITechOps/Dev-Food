@@ -1549,3 +1549,95 @@ paths:
             application/json:
               example:
                 messagae_error: "ID de pagamento não fornecido!"
+
+  /cartao:
+    post:
+      tags:
+        - Pagamentos
+      summary: Processar pagamento com cartão de crédito
+      description: Endpoint para processar um pagamento com cartão de crédito.
+      requestBody:
+        description: Dados do cartão e informações do pagamento
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Token do cartão gerado pela plataforma de pagamento.
+                  example: "tok_abc123xyz"
+                cardholderEmail:
+                  type: string
+                  description: E-mail do titular do cartão.
+                  example: "cliente@exemplo.com"
+                transaction_amount:
+                  type: number
+                  format: float
+                  description: Valor da transação.
+                  example: 150.75
+                installments:
+                  type: integer
+                  description: Número de parcelas para o pagamento.
+                  example: 3
+                identification_type:
+                  type: string
+                  description: Tipo de identificação do titular do cartão.
+                  example: "CPF"
+                identification_number:
+                  type: string
+                  description: Número do documento de identificação do titular.
+                  example: "123.456.789-00"
+                payment_method_id:
+                  type: string
+                  description: Método de pagamento (e.g., "visa" ou "mastercard").
+                  example: "visa"
+              required:
+                - token
+                - cardholderEmail
+                - transaction_amount
+                - installments
+                - payment_method_id
+      responses:
+        "201":
+          description: Pagamento realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID da transação de pagamento.
+                    example: "12345abcde"
+                  status:
+                    type: string
+                    description: Status do pagamento.
+                    example: "approved"
+                  status_detail:
+                    type: string
+                    description: Detalhes do status do pagamento.
+                    example: "Pagamento aprovado com sucesso"
+                  description:
+                    type: string
+                    description: Descrição da transação.
+                    example: "Compra com cartão"
+                  installments:
+                    type: integer
+                    description: Número de parcelas do pagamento.
+                    example: 3
+                  payment_type_id:
+                    type: string
+                    description: Tipo de pagamento.
+                    example: "credit_card"
+        "400":
+          description: Erro no processamento do pagamento com cartão
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    description: Mensagem de erro.
+                    example: "Token ou email ausente!"

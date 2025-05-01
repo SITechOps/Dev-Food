@@ -7,13 +7,16 @@ import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";
 
 export default function App() {
-  const { userData, isAuthenticated } = useAuth();
+  const { userData, isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Suspense fallback={<Loading />}>
       <CarrinhoProvider>
         <Menu />
-
         {isAuthenticated && userData?.role === "restaurante" ? (
           <LayoutRestaurante>
             <AppRoutes />
@@ -25,4 +28,3 @@ export default function App() {
     </Suspense>
   );
 }
-

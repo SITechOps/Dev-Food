@@ -2,9 +2,9 @@ import { Star, ChevronRight } from "lucide-react";
 import Button from "../../components/ui/Button";
 import CardProdutos from "./ProdutoDisponiveis/Index";
 import { useRestauranteDisponiveisDetalhes } from "../../hooks/useRestauranteDisDetalhes";
-import { FaAngleLeft } from "react-icons/fa6";
 import { Loading } from "../../components/shared/Loading";
 import VerMaisRestaurante from "./VerMais/Index";
+import IconAction from "@/components/ui/IconAction";
 
 
 
@@ -25,12 +25,10 @@ export default function DetalhesRestaurante() {
 
   return (
     <div className="mx-auto pb-10">
-      <button
-        onClick={() => navigate("/")}
-        className="hover:bg-brown-light-active mt-[5rem] flex cursor-pointer items-center justify-center gap-3 self-start rounded-md p-2"
-      >
-        <FaAngleLeft className="icon" /> <p className="text-2xl">Voltar</p>
-      </button>
+      <IconAction className="hover:bg-brown-light-active mt-[5rem] flex cursor-pointer items-center justify-center gap-3 self-start rounded-md p-2"  onClick={() => navigate("/")} >
+        <p className="text-2xl">Voltar</p>
+      </IconAction>
+
       <div className="relative mt-[2rem] h-48 w-full rounded-md md:h-64">
         <img
           src={
@@ -69,7 +67,7 @@ export default function DetalhesRestaurante() {
       </div>
       <div
         id="produtos"
-        className="mt-5 mb-[5rem] grid grid-cols-1 gap-12 max-[1500px]:grid-cols-1 min-[1100px]:grid-cols-2"
+        className="mt-5 mb-[5rem] grid gap-12 min-[600px]:grid-cols-1 min-[601px]:grid-cols-2 min-[1100px]:grid-cols-3 min-[2000px]:grid-cols-5"
       >
         {dadosProdutos.map((produto, index) => (
           <CardProdutos
