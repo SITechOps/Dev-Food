@@ -47,6 +47,7 @@ class EnderecosRepository(IEnderecosRepository):
                 )
                 db.session.add(user_endereco)
                 db.session.commit()
+                return endereco_id
 
             except Exception as exception:
                 db.session.rollback()

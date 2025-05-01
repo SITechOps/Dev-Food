@@ -28,7 +28,7 @@ def configure_mail(app):
 
 
 def configure_payment(app):
-    mercado_pago_sdk = mercadopago.SDK(os.getenv("MERCADO_PAGO_ACCESS_TOKEN"))
+    mercado_pago_sdk = mercadopago.SDK(os.getenv("MERCADO_PAGO_ACCESS_TOKEN") or "")
     request_options = RequestOptions(
         custom_headers={
             "x-idempotency-key": str(uuid4())
