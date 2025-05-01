@@ -29,6 +29,18 @@ export interface ITipoProps {
 	icon: ReactNode;
 	descricao: string;
 	tipo: string;
-	tipoSelecionado: string; 
+	tipoSelecionado: string;
 	onClick?: () => void;
-  }
+}
+
+export const statusTipo = {
+	pendente: "Pagamento pendente",
+	processando: "Em processamento",
+	aprovado: "Pagamento aprovado",
+	rejeitado: "Pagamento rejeitado",
+	cancelado: "Pagamento cancelado",
+	expirou: "Tempo Finalizado para pagamento",
+  } as const;
+  
+  export type StatusChave = keyof typeof statusTipo;
+  

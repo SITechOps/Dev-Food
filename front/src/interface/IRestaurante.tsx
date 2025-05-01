@@ -1,10 +1,4 @@
-export interface IEndereco {
-	logradouro: string;
-	bairro: string;
-	cidade: string;
-	estado: string;
-	pais: string;
-}
+import { IEndereco } from "./IEndereco";
 
 export interface IRestaurante {
 	nome: string;

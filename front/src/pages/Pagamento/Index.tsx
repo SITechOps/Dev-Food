@@ -35,9 +35,12 @@ export default function Pagamento() {
 						<TfiMapAlt className="text-3xl" />
 						<div className="flex gap-4 items-center justify-between w-full my-4">
 							<div>
-
-								<p className="font-semibold">{endereco.complemento}</p>
-								<p>{endereco.ruaENumero}</p>
+								{endereco && endereco.length > 0 && (
+									<>
+										<p className="font-semibold">{endereco[0].complemento}</p>
+										<p>{endereco[0].logradouro}</p>
+									</>
+								)}
 							</div>
 							<Button color="plain" className="p-2 m-0 w-12">Trocar</Button>
 						</div>

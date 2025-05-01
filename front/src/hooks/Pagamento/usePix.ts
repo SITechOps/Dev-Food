@@ -1,6 +1,6 @@
 import { api } from "@/connection/axios";
 import { useEffect, useState } from "react";
-import { IPagePix, IResponsePagePix } from "@/interface/IPagamento";
+import { IPagePix, IResponsePagePix, StatusChave, statusTipo } from "@/interface/IPagamento";
 import { usePagamento } from "./usePagamento";
 import QRCode from 'qrcode';
 
@@ -8,10 +8,9 @@ export const usePixComponent = () => {
 	const [key, setKey] = useState(0);
 	const [copied, setCopied] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-	const { valoresCarrinho, userData, postPedido, setLoading } = usePagamento();
-	const [statusPagamento, setStatusPagamento] = useState(false);
-	const [eventStaus, setEventStatus] = useState<"andamento" | "concluido">("andamento");
-	const [tempoDeProcessamento, setTempoDeProcessamento] = useState<"andamento" | "expirou">("andamento");
+	const { valoresCarrinho, userData, setLoading, postPedido, navigate } = usePagamento();
+	const [statusPagamento, setStatusPagamento] = useState<StatusChave>("pendente");
+	const sequencia: StatusChave[] = ["pendente", "processando", "aprovado"];
 	const idGenerico = Math.random().toString(36).substring(2, 10);
 	const [respPagamento, setRespPagamento] = useState<IResponsePagePix>({
 		id: "",
@@ -22,16 +21,44 @@ export const usePixComponent = () => {
 
 	useEffect(() => {
 		if (!userData?.sub || valoresCarrinho.total === 0) return;
-		qrCodeMercadoPago();
 
-	}, [userData?.sub, valoresCarrinho.total]);
+		if (!respPagamento.qr_code || !respPagamento.qr_code_base64) {
+			qrCodeMercadoPago();
+			processamentoPagamento();
+		}
+		verificarStatus();
 
+	}, [userData?.sub, valoresCarrinho.total, statusPagamento]);
+
+
+	function processamentoPagamento() {
+		let index = 0;
+
+		const interval = setInterval(() => {
+			if (index < sequencia.length - 1) {
+				index++;
+				setStatusPagamento(sequencia[index]);
+			} else {
+				clearInterval(interval);
+			}
+		}, 10000);
+		return () => clearInterval(interval);
+	}
+
+	async function verificarStatus() {
+		if (statusPagamento === "aprovado") {
+			setShowModal(true);
+		}
+	};
+
+	async function acompanharPedido() {
+		await postPedido();
+		navigate("/historico")
+	};
 
 	async function qrCodeGenerico(valor: string) {
-		console.log("cheuguei aqui")
 		try {
 			const resp = await QRCode.toDataURL(valor);
-			console.log("cheguei aqui", resp);
 
 			if (resp) {
 				setRespPagamento({
@@ -39,7 +66,6 @@ export const usePixComponent = () => {
 					qr_code: resp.replace(/^data:image\/[a-zA-Z]+;base64,/, ''),
 					qr_code_base64: resp,
 				});
-				// setKey(prevKey => prevKey + 1);
 			}
 			setLoading(false);
 
@@ -79,7 +105,7 @@ export const usePixComponent = () => {
 						qr_code_base64: `data:image/svg;base64,${dadosPix.qr_code_base64}`,
 					});
 					setKey(prevKey => prevKey + 1);
-					// qr_code_base64: dadosPix.qr_code_base64 `data:image/svg;base64,${dadosPix.qr_code_base64}`,
+					await stausPagamentoPix()
 				} else {
 					qrCodeGenerico(valoresCarrinho.total.toString(2))
 				}
@@ -107,21 +133,8 @@ export const usePixComponent = () => {
 			console.log(status);
 
 			setShowModal(true);
-			setStatusPagamento(status);
+			// setStatusPagamento(status);
 
-			switch (status) {
-				case "approved":
-					setEventStatus("concluido");
-					await postPedido();
-					break;
-				case "expired":
-				case "rejected":
-					setTempoDeProcessamento("expirou");
-					break;
-				default:
-					setEventStatus("andamento");
-					break;
-			}
 		} catch (error) {
 			console.error("Erro ao verificar status do pagamento:", error);
 		}
@@ -130,6 +143,7 @@ export const usePixComponent = () => {
 	return {
 		key,
 		userData,
+		statusTipo,
 		valoresCarrinho,
 		copied,
 		setCopied,
@@ -138,13 +152,9 @@ export const usePixComponent = () => {
 		setShowModal,
 		statusPagamento,
 		setStatusPagamento,
-		eventStaus,
-		setEventStatus,
+		acompanharPedido,
 		respPagamento,
 		setRespPagamento,
-		stausPagamentoPix,
 		handleCopy,
-		tempoDeProcessamento,
-		setTempoDeProcessamento
 	};
 };

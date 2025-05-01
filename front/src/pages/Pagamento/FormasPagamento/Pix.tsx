@@ -17,20 +17,20 @@ export default function PagePix() {
 		showModal,
 		setShowModal,
 		statusPagamento,
-		eventStaus,
 		respPagamento,
-		stausPagamentoPix,
+		acompanharPedido,
+		setStatusPagamento,
 		handleCopy,
-		tempoDeProcessamento,
-		setTempoDeProcessamento,
+		statusTipo,
 	} = usePixComponent();
 	const { navigate } = usePagamento();
+
 
 	return (
 		<>
 			{respPagamento.qr_code_base64 ? (
 				<>
-					{tempoDeProcessamento === "andamento" && (
+					{(statusPagamento === "pendente" || statusPagamento === "processando") && (
 						<>
 							<div className="flex justify-center items-cente">
 								<img key={key} className="w-50" src={respPagamento.qr_code_base64} alt="QR Code de Pagamento" />
@@ -56,49 +56,38 @@ export default function PagePix() {
 								{copied && (
 									<p className="mt-2">Código copiado!</p>
 								)}
-
 							</div>
 
 							<VisualizacaoConometro
 								onExpire={() => {
-									setTempoDeProcessamento("expirou");
+									setStatusPagamento("expirou");
 									setShowModal(false);
 								}}
 							/>
 
-							<Button className="my-6 p-2 bg-brown-light-active text-brown-normal hover:text-white" onClick={stausPagamentoPix}>Confirmar pagamento</Button>
+							<div className="flex items-center justify-center mt-3">
+								<span ></span>
 
-							<Modal isOpen={showModal} onClose={() => { setShowModal(false); navigate("/") }} >
-								<div className="my-2">
-									{eventStaus === "andamento" && (
-										<>
-											<VisualizacaoConometro
-												onExpire={() => {
-													setTempoDeProcessamento("expirou");
-													setShowModal(false);
-												}}
-											/>
+								<p className="">
+									O status: <span className="font-bold">{statusTipo[statusPagamento]}</span>
+								</p>
+							</div>
 
-											<p className='mt-3 text-center'>O status do seu pagamento : <span className='font-bold'>{statusPagamento}</span></p>
-										</>
-									)}
-
-									{eventStaus === "concluido" && (
-										<>
-											<p className="flex justify-center items-center text-[2rem] text-green">
-												<FaCheckCircle />
-											</p>
-											<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
-
-											<Button className="mt-5 p-2" onClick={() => navigate("/historico")} >Acompanhe seu pedido</Button>
-										</>
-									)}
-								</div>
-							</Modal>
+							{/* <Button className="my-6 p-2 bg-brown-light-active text-brown-normal hover:text-white" onClick={() => { }}>Confirmar pagamento</Button> */}
 						</>
 					)}
+{/* navigate("/")  */}
+						<Modal isOpen={showModal} onClose={() => { setShowModal(false); acompanharPedido; navigate("/") }} className="py-2" >
+							<p className="flex justify-center items-center text-[2rem] text-green">
+								<FaCheckCircle />
+							</p>
+							<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
 
-					{tempoDeProcessamento === "expirou" && (
+							<Button className="mt-5 p-2" onClick={acompanharPedido} >Acompanhe seu pedido</Button>
+						</Modal>
+
+
+					{statusPagamento === "expirou" && (
 						<>
 							<p className='mb-5'>
 								<div className='flex items-center justify-center text-2xl'>
@@ -116,7 +105,7 @@ export default function PagePix() {
 					)}
 
 				</>
-			 ) : (
+			) : (
 				<>
 					<Loading />
 				</>

@@ -1,18 +1,15 @@
 import { api } from "@/connection/axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
+import { IEndereco, IResponseEndereco } from "@/interface/IEndereco";
 import { IItens, IPedido } from "@/interface/IPagamento";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const usePagamento = () => {
 	const { userData } = useAuth();
-	const endereco = {
-		id: "84c9db1c-a578-48e0-a723-78e3b2c6b70d",
-		ruaENumero: "Rua das Laranjeiras, 123",
-		complemento: "Apto 45, Bloco B - São Paulo - SP"
-	}
 	const navigate = useNavigate();
+	const [endereco, setEndereco] = useState<IEndereco[] | null>(null);
 	const [loading, setLoading] = useState(true);
 	const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
 	const [selecionado, setSelecionado] = useState<"site" | "entrega">("site");
@@ -27,31 +24,50 @@ export const usePagamento = () => {
 	});
 
 	useEffect(() => {
-		if (storedCompra) {
+		const fetchData = async () => {
+		  if (storedCompra) {
 			const compra = JSON.parse(storedCompra);
 			setRestaurante(compra.itens[0]?.restaurante.nome);
 			setValoresCarrinho({
-				subtotal: compra.subtotal,
-				taxaEntrega: compra.taxaEntrega,
-				total: compra.total,
+			  subtotal: compra.subtotal,
+			  taxaEntrega: compra.taxaEntrega,
+			  total: compra.total,
 			});
-		} else {
+	  
+			await getEndereco(); 
+		  } else {
 			// console.log("Carrinho não encontrado no localStorage.");
+		  }
+		};
+	  
+		fetchData(); 
+	  }, [storedCompra]); 
+	  
+	async function getEndereco() {
+		try {
+			const resp = await api.get<{ data: IResponseEndereco }>(`/user/${userData?.sub}/enderecos`);
+			const attributes = resp.data.data.attributes 
+			setEndereco(attributes);
+			console.log("id  endereco",attributes[0].id);
+		} catch (error) {
+			console.error("Erro ao buscar endereço:", error);
 		}
-	}, [valoresCarrinho.total]);
-
-	//   console.log("storedCompra",storedCompra)
+	}
 
 	async function postPedido() {
 		try {
 			if (storedCompra) {
 				const compra = JSON.parse(storedCompra);
-				console.log(compra.itens[0]?.restaurante.id)
+				const idEndereco = endereco && endereco.length > 0 ? endereco[0].id : "";
+				if (!idEndereco) {
+				  console.error("Endereço não encontrado.");
+				  return;
+				}
 
 				const pedidoPayload: IPedido = {
 					id_usuario: userData?.sub,
 					id_restaurante: compra.itens[0]?.restaurante.id,
-					id_endereco: endereco.id,
+					id_endereco: idEndereco, 
 					valor_total: compra.total,
 					forma_pagamento: "pix",
 					itens: compra.itens.map((item: any): IItens => ({
@@ -70,7 +86,7 @@ export const usePagamento = () => {
 					localStorage.removeItem('carrinho');
 					atualizarQuantidadeTotal();
 				}
-				console.log("pedido", resp)
+				alert('seu pedido foi gerado com sucesso')
 			}
 		} catch (error) {
 			console.error("Erro ao verificar status do pagamento:", error);

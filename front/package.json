@@ -25,6 +25,7 @@
     "lucide-react": "^0.479.0",
     "msw": "^2.7.3",
     "qrcode": "^1.5.4",
+    "qrcode.react": "^4.2.0",
     "rc-progress": "^4.0.0",
     "react": "^19.0.0",
     "react-code-input": "^3.10.1",
