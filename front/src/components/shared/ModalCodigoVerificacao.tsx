@@ -6,6 +6,7 @@ import { IoClose } from "react-icons/io5";
 interface ModalCodigoVerificacaoPros {
   tipoEnvioCodigo: string;
   codigoEnviado: string;
+  idPedido?: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSuccess: () => void;
@@ -65,10 +66,10 @@ export default function ModalCodigoVerificacao({
           <CodeInput
             className="[&_input::-moz-appearance]:none selection:bg-transparent [&_input::-webkit-inner-spin-button]:hidden"
             type="number"
-            fields={6}
+            fields={4}
             onChange={(code) => {
               setCodigoDigitado(code);
-              code.length === 6 && buttonRef.current?.focus();
+              code.length === 4 && buttonRef.current?.focus();
             }}
             inputStyle={{
               width: "48px",
@@ -85,10 +86,11 @@ export default function ModalCodigoVerificacao({
           />
         </div>
         <p className="text-lg">
-          {" "}
-          Insira o código enviado por{" "}
-          {tipoEnvioCodigo === "email" ? "email" : "SMS"}!
+          {tipoEnvioCodigo === "Entregador"
+            ? "Informe o código da entrega"
+            : `Insira o código enviado por ${tipoEnvioCodigo === "email" ? "email" : "SMS"}!`}
         </p>
+
         <Button ref={buttonRef} onClick={() => validarCodigo()} className="p-2">
           Confirmar
         </Button>

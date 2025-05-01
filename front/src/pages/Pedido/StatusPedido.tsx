@@ -24,7 +24,7 @@ const statusSteps: { [key: string]: number } = {
 export default function OrderStatusTracker() {
   const [pedidos, setPedidos] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { formatarData } = pedidosUtils();
+  const { formatarData, acrescentarHora } = pedidosUtils();
   const { userData } = useAuth();
   const { userFormList } = useUserAccount();
   const idUsuario = userData?.sub;
@@ -34,11 +34,12 @@ export default function OrderStatusTracker() {
     try {
       const response = await api.get(`/pedidos/usuario/${idUsuario}`);
       setPedidos(response.data.pedidos || []);
+      console.log(pedidos);
     } catch (error) {
       console.error("Erro ao buscar pedidos do usuário:", error);
     }
   };
-
+  console.log(pedidos);
   useEffect(() => {
     fetchPedidosUsuario();
 
@@ -99,33 +100,55 @@ export default function OrderStatusTracker() {
           return (
             <div
               key={pedido.Id}
-              className="mb-8 rounded-xl border bg-gray-50 p-4 shadow-sm"
+              className="border-gray-lightmb-8 rounded-xl border bg-white p-4 shadow-sm"
             >
               <h3 className="text-blue text-lg font-semibold">
                 Acompanhamento do pedido
               </h3>
-
-              <p className="text-gray-medium mb-2 text-sm">
-                {formatarData(pedido.data_pedido)}
-              </p>
+              <div className="my-3 flex w-full items-center justify-between">
+                <div>
+                  <span className="text-gray-medium">Previsão de entrega:</span>
+                  <p className="text-blue text-md mb-2 font-bold">
+                    {formatarData(
+                      acrescentarHora(pedido.data_pedido).toISOString(),
+                    )}
+                  </p>
+                </div>
+                <span className="text-gray-medium font-medium">
+                  Atualização em tempo real
+                </span>
+              </div>
 
               <div className="mb-2 flex items-center justify-between">
                 {[...Array(steps)].map((_, index) => (
                   <div
                     key={index}
                     className={`mx-1 h-1 flex-1 rounded-full ${
-                      index <= step ? "bg-green" : "bg-gray-medium"
+                      index <= step ? "bg-blue" : "bg-gray-medium"
                     }`}
                   />
                 ))}
               </div>
 
-              <p className="text-blue mt-4 mb-4 text-center">
-                {statusMessages[pedido.status] ?? "Status desconhecido"}
-              </p>
-
-              <div className="mb-4 text-center text-xs text-gray-500">
-                Código do pedido: <strong>{getCodigoPedido(pedido.Id)}</strong>
+              <div className="text-blue mt-4 mb-4 ml-1 flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="bg-brown-normal absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+                  <span className="bg-brown-normal relative inline-flex h-2 w-2 rounded-full"></span>
+                </span>
+                <p>{statusMessages[pedido.status] ?? "Status desconhecido"}</p>
+              </div>
+              <div className="flex w-full justify-center">
+                <div
+                  className="border-brown-normal mb-4 flex w-fit flex-col gap-2 border px-10 py-3 text-center"
+                  style={{ borderRadius: "10px" }}
+                >
+                  <span className="text-gray-medium">
+                    Código de confirmação de entrega
+                  </span>
+                  <span className="text-blue text-2xl font-semibold">
+                    {getCodigoPedido(pedido.Id)}
+                  </span>
+                </div>
               </div>
 
               {pedido.status === "Despachado" && (

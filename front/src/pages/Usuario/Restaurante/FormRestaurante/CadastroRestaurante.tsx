@@ -50,7 +50,7 @@ export default function CadastroRestaurante() {
                 <Input
                   id="nome"
                   name="nome"
-                  textLabel="Infome o seu nome completo:"
+                  textLabel="Nome fantasia do restaurante:"
                   value={formList.nome}
                   onChange={(value) =>
                     setFormList({ ...formList, nome: value })
@@ -103,7 +103,10 @@ export default function CadastroRestaurante() {
 
           {etapa === "enderecoLoja" && (
             <>
-              <IconAction className="mb-3" onClick={() => setEtapa("dadosLoja")} />
+              <IconAction
+                className="mb-3"
+                onClick={() => setEtapa("dadosLoja")}
+              />
 
               <h1 className="text-center font-bold">Infomações da Loja</h1>
               <p className="my-4 text-center">
@@ -226,7 +229,10 @@ export default function CadastroRestaurante() {
 
           {etapa === "complementoLoja" && (
             <>
-              <IconAction className="mb-3" onClick={() => setEtapa("enderecoLoja")} />
+              <IconAction
+                className="mb-3"
+                onClick={() => setEtapa("enderecoLoja")}
+              />
 
               <h1 className="text-center font-bold">Negócio e Responsável</h1>
               <h3 className="my-5 font-bold">
@@ -316,7 +322,10 @@ export default function CadastroRestaurante() {
 
           {etapa === "dadosBancarioLoja" && (
             <>
-              <IconAction className="mb-3" onClick={() => setEtapa("complementoLoja")} />
+              <IconAction
+                className="mb-3"
+                onClick={() => setEtapa("complementoLoja")}
+              />
 
               <h1 className="my-5 text-center font-bold">
                 Agora, nos informe seu dados bancários

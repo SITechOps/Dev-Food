@@ -13,10 +13,12 @@ class Pedido(Base):
     forma_pagamento = Column(String(20), nullable=False)
     status = Column(String(20), default="Pendente")
     tipo_entrega = Column(String(10), default="Agora")   
+    codigo = Column(String(4))
 
     def to_dict(self):
         return {
             "id": self.id,
+            "codigo": self.codigo,
             "valor_total": self.valor_total,
             "data_pedido": self.created_at,
             "id_usuario": self.id_usuario,

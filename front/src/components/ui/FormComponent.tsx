@@ -1,10 +1,10 @@
-import { FaAngleLeft } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import Button from "./Button";
 import Input from "./Input";
 import IconAction from "./IconAction";
+import { DotLoader } from "react-spinners";
 
 interface FieldProps {
   label: string;
@@ -19,6 +19,7 @@ interface FormProps {
   formList: any;
   setFormList: (value: any) => void;
   isEditing: boolean;
+  isLoading?: boolean;
   setIsEditing: (value: boolean) => void;
   navigate: (path: string) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -35,6 +36,7 @@ const FormComponent: React.FC<FormProps> = ({
   formList,
   setFormList,
   isEditing,
+  isLoading = false,
   setIsEditing,
   navigate,
   onSubmit,
@@ -45,6 +47,13 @@ const FormComponent: React.FC<FormProps> = ({
   labelStyle,
   title = "Título",
 }) => {
+  if (isLoading) {
+    return (
+      <section className="m-auto flex h-96 w-2/3 items-center justify-center rounded-md bg-white shadow">
+        <DotLoader color="var(--color-brown-normal" />
+      </section>
+    );
+  }
   return (
     <section className="m-auto flex w-2/3 flex-col justify-center rounded-md bg-white p-5 shadow">
       <div className="flex w-full items-center justify-between">

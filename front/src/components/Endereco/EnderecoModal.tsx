@@ -9,6 +9,7 @@ export default function EnderecoModal() {
     restaurantEnderecoFields,
     isEditing,
     setIsEditing,
+    isLoading,
     alterarEnderecoRestaurante,
   } = useRestaurantAccount();
 
@@ -28,6 +29,7 @@ export default function EnderecoModal() {
         setFormList={setFormListEndereco}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isLoading={isLoading}
         navigate={navigate}
         onSubmit={alterarEnderecoRestaurante}
         iconStyle={iconStyle}
