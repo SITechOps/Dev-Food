@@ -1,19 +1,20 @@
 import os
 import mercadopago
 from uuid import uuid4
+import os
+import mercadopago
+from uuid import uuid4
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
 from src.main.handlers.custom_exceptions import NotFound
 from src.main.utils.response_formatter import ResponseFormatter
 from mercadopago.config.request_options import RequestOptions
+from mercadopago.config.request_options import RequestOptions
 
 class PaymentService:
     def __init__(self) -> None:
         self.sdk = mercadopago.SDK(os.getenv("MERCADO_PAGO_ACCESS_TOKEN") or "")
-        self.request_options = RequestOptions(
-            custom_headers={"x-idempotency-key": str(uuid4())}
-        )
-
+        
 
     def create_pix_qr_code(self, http_request: HttpRequest) -> HttpResponse:
         try:
@@ -32,7 +33,11 @@ class PaymentService:
                 "description": "Pedido DevFood"
             }
 
-            result = self.sdk.payment().create(dados_pagamento, self.request_options)
+            request_options = RequestOptions(
+                custom_headers={"x-idempotency-key": str(uuid4())}
+            )
+
+            result = self.sdk.payment().create(dados_pagamento, request_options)
             return self.__format_pix_transaction(result.get("response"))
 
         except Exception as error:
