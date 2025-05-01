@@ -28,6 +28,8 @@ const AlterarEnderecoRestaurante = lazy(
 const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
 const Pedidos = lazy(() => import("../pages/Restaurante/Account/Pedidos"));
 
+const MeusPedidos = lazy(() => import("../pages/MeusPedidos/Index"));
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -56,6 +58,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
       </Route>
+      <Route path="/historico/:id_usuario" element={<MeusPedidos />} />
 
       {/* Apenas para RESTAURANTE */}
       <Route element={<RoleBasedRoute allowedRoles={["restaurante"]} />}>
