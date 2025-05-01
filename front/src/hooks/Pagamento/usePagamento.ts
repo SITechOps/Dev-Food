@@ -6,12 +6,8 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const usePagamento = () => {
-  const { userData } = useAuth();
-  const endereco = {
-    id: "84c9db1c-a578-48e0-a723-78e3b2c6b70d",
-    ruaENumero: "Rua das Laranjeiras, 123",
-    complemento: "Apto 45, Bloco B - São Paulo - SP",
-  };
+  const { userData, token } = useAuth();
+  const [endereco, setEndereco] = useState("");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const { quantidadeTotal, atualizarQuantidadeTotal } =
@@ -30,6 +26,37 @@ export const usePagamento = () => {
     taxaEntrega: 0,
     total: 0,
   });
+  const idUsuario = userData?.sub;
+
+  //pegar o endereço do cliente
+  useEffect(() => {
+    async function obterEnderecoCliente() {
+      try {
+        if (!idUsuario || !token) {
+          return;
+        }
+
+        const response = await api.get(`/user/${idUsuario}/enderecos`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const endereco = response.data?.data?.attributes[0];
+
+        if (!endereco) {
+          return;
+        }
+
+        const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
+
+        setEndereco(enderecoCompleto);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    obterEnderecoCliente();
+  }, [idUsuario, token]);
 
   useEffect(() => {
     if (storedCompra) {
@@ -45,7 +72,7 @@ export const usePagamento = () => {
     }
   }, [valoresCarrinho.total]);
 
-  //   console.log("storedCompra",storedCompra)
+  //console.log("storedCompra",storedCompra)
 
   async function postPedido() {
     try {
