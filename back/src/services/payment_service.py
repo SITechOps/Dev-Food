@@ -10,7 +10,10 @@ from mercadopago.config.request_options import RequestOptions
 class PaymentService:
     def __init__(self) -> None:
         self.sdk = mercadopago.SDK(os.getenv("MERCADO_PAGO_ACCESS_TOKEN") or "")
-        
+        self.request_options = RequestOptions(
+            custom_headers={"x-idempotency-key": str(uuid4())}
+        )
+
 
     def create_pix_qr_code(self, http_request: HttpRequest) -> HttpResponse:
         try:
@@ -29,11 +32,7 @@ class PaymentService:
                 "description": "Pedido DevFood"
             }
 
-            request_options = RequestOptions(
-                custom_headers={"x-idempotency-key": str(uuid4())}
-            )
-
-            result = self.sdk.payment().create(dados_pagamento, request_options)
+            result = self.sdk.payment().create(dados_pagamento, self.request_options)
             return self.__format_pix_transaction(result.get("response"))
 
         except Exception as error:
