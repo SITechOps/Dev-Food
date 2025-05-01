@@ -191,7 +191,7 @@ export const usePixComponent = () => {
           setTempoDeProcessamento("expirou");
           break;
         default:
-          setEventStatus("concluido");
+          setEventStatus("andamento");
           break;
       }
     } catch (error) {

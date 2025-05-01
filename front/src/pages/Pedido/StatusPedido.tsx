@@ -37,7 +37,6 @@ export default function OrderStatusTracker() {
       console.error("Erro ao buscar pedidos do usuário:", error);
     }
   };
-
   useEffect(() => {
     fetchPedidosUsuario();
 

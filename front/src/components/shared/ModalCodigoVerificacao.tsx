@@ -8,6 +8,7 @@ interface ModalCodigoVerificacaoPros {
   qtd_digitos: number;
   tipoEnvioCodigo: string;
   codigoEnviado: string;
+  idPedido?: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSuccess: () => void;
@@ -93,6 +94,7 @@ export default function ModalCodigoVerificacao({
             ? "Informe o código da entrega"
             : `Insira o código enviado por ${tipoEnvioCodigo === "email" ? "email" : "SMS"}!`}
         </p>
+
         <Button ref={buttonRef} onClick={() => validarCodigo()} className="p-2">
           Confirmar
         </Button>
