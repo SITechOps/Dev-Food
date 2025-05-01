@@ -65,26 +65,27 @@ export default function PagePix() {
 								}}
 							/>
 
-							<div className="flex items-center justify-center mt-3">
-								<span ></span>
+							<div className="flex items-center gap-2 mt-3 mb-5">
+								<div className="relative flex h-2 w-2">
+									<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue opacity-75"></span>
+									<span className="relative inline-flex h-2 w-2 rounded-full bg-blue"></span>
+								</div>
 
-								<p className="">
-									O status: <span className="font-bold">{statusTipo[statusPagamento]}</span>
-								</p>
+								<p>O status: <span className="font-bold">{statusTipo[statusPagamento]}</span></p>
 							</div>
 
 							{/* <Button className="my-6 p-2 bg-brown-light-active text-brown-normal hover:text-white" onClick={() => { }}>Confirmar pagamento</Button> */}
 						</>
 					)}
-{/* navigate("/")  */}
-						<Modal isOpen={showModal} onClose={() => { setShowModal(false); acompanharPedido; navigate("/") }} className="py-2" >
-							<p className="flex justify-center items-center text-[2rem] text-green">
-								<FaCheckCircle />
-							</p>
-							<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
+					
+					<Modal isOpen={showModal} onClose={() => { acompanharPedido; navigate("/")  }} className="py-2" >
+						<p className="flex justify-center items-center text-[2rem] text-green">
+							<FaCheckCircle />
+						</p>
+						<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
 
-							<Button className="mt-5 p-2" onClick={acompanharPedido} >Acompanhe seu pedido</Button>
-						</Modal>
+						<Button className="mt-5 p-2" onClick={acompanharPedido} >Acompanhe seu pedido</Button>
+					</Modal>
 
 
 					{statusPagamento === "expirou" && (

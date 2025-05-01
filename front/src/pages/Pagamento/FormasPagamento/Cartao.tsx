@@ -1,4 +1,4 @@
-import {useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCcMastercard } from "react-icons/fa";
 import CardsOpcoes from "../components/CardsOpcoes";
 import Button from "@/components/ui/Button";
@@ -9,16 +9,18 @@ import IconAction from "@/components/ui/IconAction";
 import Tipo from "../components/Tipo";
 import { BsCreditCardFill } from "react-icons/bs";
 import { api } from "@/connection/axios";
-import { loadMercadoPago} from '@mercadopago/sdk-js';
 
-// src/global.d.ts
-export interface Window {
-	MercadoPago: any;
-  }
-  
+export { };
+
+declare global {
+	interface Window {
+		MercadoPago: any;
+	}
+}
+
 
 export default function PageCartao() {
-	loadMercadoPago();
+	const [mp, setMp] = useState<any>(null)
 	const [showModal, setShowModal] = useState(false);
 	const [formList, setFormList] = useState({
 		nCartao: "",
@@ -35,15 +37,53 @@ export default function PageCartao() {
 	}
 
 
+	useEffect(() => {
+		const checkMercadoPago = () => {
+			if (window.MercadoPago) {
+				const mpInstance = new window.MercadoPago('APP_USR-f987084c-b5e3-4a41-b459-556ca6dcbbb4');
+				setMp(mpInstance);
+			} else {
+				console.error("SDK do Mercado Pago não carregado corretamente.");
+			}
+		};
+
+		// Verifica se o SDK foi carregado assim que o componente for montado
+		if (typeof window !== 'undefined') {
+			// Tente verificar o MercadoPago após o tempo de espera
+			setTimeout(() => {
+				checkMercadoPago();
+			}, 3000); // Aguardar 3 segundos para garantir que o SDK foi carregado
+		}
+
+	}, []);
+
+
+
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-	
+		// event.preventDefault();
+
+		// 	async function loadMP() {
+		// 		try {
+		// 			const mpInstance = await loadMercadoPago({ 
+		// 				publicKey: 'APP_USR-f987084c-b5e3-4a41-b459-556ca6dcbbb4', 
+		// 				locale: 'pt-BR' 
+		// 			});
+		// 			setMp(mpInstance);
+		// 		} catch (error) {
+		// 			console.error("Erro ao carregar Mercado Pago:", error);
+		// 		}
+		// 	}
+		// 	loadMP();
+
+
 		try {
 			// Instância do MercadoPago
-			const mp =  new (window as any).MercadoPago('APP_USR-f987084c-b5e3-4a41-b459-556ca6dcbbb4');
+			const mp = new (window as any).MercadoPago('APP_USR-f987084c-b5e3-4a41-b459-556ca6dcbbb4');
 			// loadMercadoPago('APP_USR-f987084c-b5e3-4a41-b459-556ca6dcbbb4');
-	
-			// Criação do token do cartão
+
+			if (!mp || !mp.cardToken || typeof mp.cardToken.create !== 'function') {
+				throw new Error("SDK MercadoPago não carregado corretamente.");
+			}
 			const cardToken = await mp.cardToken.create({
 				cardNumber: formList.nCartao,
 				cardExpirationMonth: formList.validade.split("/")[0],
@@ -57,9 +97,9 @@ export default function PageCartao() {
 					},
 				},
 			});
-	
+
 			console.log("Token criado com sucesso:", cardToken.id);
-	
+
 			// Envio para o backend (ajuste o endpoint e valores reais)
 			const response = await api.post("/process_payment", {
 				token: cardToken.id,
@@ -70,7 +110,7 @@ export default function PageCartao() {
 				identification_type: "CPF",
 				identification_number: formList.cpf.replace(/\D/g, ""),
 			});
-	
+
 			console.log("Pagamento realizado com sucesso:", response.data);
 			setShowModal(false);
 		} catch (error) {
@@ -91,7 +131,8 @@ export default function PageCartao() {
 			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
 
 			<Modal isOpen={showModal} onClose={() => setShowModal(false)} >
-				<form onSubmit={handleSubmit}>
+
+				<form>
 
 					{etapa === "dadosPessoal" && (
 						<>

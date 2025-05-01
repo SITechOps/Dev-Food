@@ -3,10 +3,11 @@ import { SiPix } from "react-icons/si";
 import { TfiMapAlt } from "react-icons/tfi";
 import { BsCreditCardFill } from "react-icons/bs";
 import PagePix from "./FormasPagamento/Pix";
-import PageCartao from "./FormasPagamento/Cartao";
+// import PageCartao from "./FormasPagamento/Cartao";
 import CardsOpcoes from "./components/CardsOpcoes";
 import IconAction from "@/components/ui/IconAction";
 import { usePagamento } from "@/hooks/Pagamento/usePagamento";
+import TesteCartao from "./FormasPagamento/teste";
 
 
 export default function Pagamento() {
@@ -35,11 +36,13 @@ export default function Pagamento() {
 						<TfiMapAlt className="text-3xl" />
 						<div className="flex gap-4 items-center justify-between w-full my-4">
 							<div>
-								{endereco && endereco.length > 0 && (
-									<>
-										<p className="font-semibold">{endereco[0].complemento}</p>
-										<p>{endereco[0].logradouro}</p>
-									</>
+								{endereco.length > 0 ? (
+									<div>
+										<p className="font-semibold">Endereço Selecionado:</p>
+										<p>{endereco[0].logradouro}, {endereco[0].bairro}-{endereco[0].estado}</p>
+									</div>
+								) : (
+									<p>Carregando endereço...</p>
 								)}
 							</div>
 							<Button color="plain" className="p-2 m-0 w-12">Trocar</Button>
@@ -106,7 +109,8 @@ export default function Pagamento() {
 									<IconAction onClick={() => setEtapa("opcaoPagamento")}>
 										Cartão
 									</IconAction>
-									<PageCartao />
+									{/* <PageCartao /> */}
+									<TesteCartao />
 								</>
 							)}
 						</>
