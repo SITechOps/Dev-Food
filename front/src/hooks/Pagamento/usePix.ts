@@ -17,17 +17,16 @@ export const usePixComponent = () => {
 		qr_code: "",
 		qr_code_base64: "",
 	});
+	const [pagoComMP, setPagoComMP] = useState(false);
+	const [loadingMP, setLoadingMP] = useState(false);
+	const [metodoPagamento, setmetodoPagamento] = useState("");
+	const [loadingGenerico, setLoadingGenerico] = useState(false);
+	const [pagamentoIniciado, setPagamentoIniciado] = useState(false);
+
 
 
 	useEffect(() => {
 		if (!userData?.sub || valoresCarrinho.total === 0) return;
-
-		if (!respPagamento.qr_code || !respPagamento.qr_code_base64) {
-			qrCodeMercadoPago();
-			processamentoPagamento();
-		}
-		verificarStatus();
-
 	}, [userData?.sub, valoresCarrinho.total, statusPagamento]);
 
 
@@ -37,53 +36,64 @@ export const usePixComponent = () => {
 		const interval = setInterval(() => {
 			if (index < sequencia.length - 1) {
 				index++;
-				setStatusPagamento(sequencia[index]);
+				const novoStatus = sequencia[index];
+
+				setStatusPagamento((_prev) => novoStatus);
+				console.log(sequencia[index])
+
+				if (novoStatus === "aprovado") {
+					setShowModal(true);
+				}
 			} else {
 				clearInterval(interval);
 			}
 		}, 10000);
+
 		return () => clearInterval(interval);
 	}
 
-	async function verificarStatus() {
-		if (statusPagamento === "aprovado") {
-			setShowModal(true);
-		}
-	};
 
 	async function acompanharPedido() {
+		setmetodoPagamento("pix")
 		await postPedido();
-		navigate("/historico")
+		setShowModal(false);
+		// navigate("/historico")
 	};
 
-	async function qrCodeGenerico(valor: string) {
+	async function qrCodeGenerico() {
+		setLoadingGenerico(true);
+
 		try {
-			const resp = await QRCode.toDataURL(valor);
+			const resp = await QRCode.toDataURL(valoresCarrinho.total.toString(2));
 
 			if (resp) {
 				setRespPagamento({
 					id: idGenerico,
-					qr_code: resp.replace(/^data:image\/[a-zA-Z]+;base64,/, ''),
+					qr_code: resp.replace(/^data:image\/[a-zA-Z]+;base64,/, ""),
 					qr_code_base64: resp,
 				});
 			}
-			setLoading(false);
-
+			processamentoPagamento();
 		} catch (err) {
-			console.error('Erro ao gerar QR Code:', err);
+			console.error("Erro ao gerar QR Code:", err);
+		} finally {
+			setLoadingGenerico(false);
 		}
-	}
+	};
 
 	function qrCodeMercadoPago() {
+		setLoadingMP(true);
+
 		(async () => {
 			try {
+				setPagoComMP(true)
 				const { data } = await api.get(`/user/${userData?.sub}`);
 				const dados = data?.data?.attributes || [];
 
 				const pixPayload: IPagePix = {
 					email_comprador: dados.email,
 					nome_comprador: dados.nome,
-					valor_pagamento: 0.35,
+					valor_pagamento: 0.15,
 				};
 
 				const response = await api.post<IResponsePagePix>("/pix/qr-code", {
@@ -107,15 +117,16 @@ export const usePixComponent = () => {
 					setKey(prevKey => prevKey + 1);
 					await stausPagamentoPix()
 				} else {
-					qrCodeGenerico(valoresCarrinho.total.toString(2))
+					alert('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
 				}
-				setLoading(false);
 			} catch (error) {
-				setLoading(false);
 				console.error("Erro ao buscar usuário:", error);
+			} finally {
+				setLoadingMP(false);
 			}
 		})();
 	}
+
 
 	function handleCopy() {
 		if (respPagamento.qr_code) {
@@ -132,8 +143,12 @@ export const usePixComponent = () => {
 			const status = response.data.status;
 			console.log(status);
 
-			setShowModal(true);
-			// setStatusPagamento(status);
+			// if (status === "approved") {
+			// 	setStatusPagamento("aprovado");
+			// 	// setShowModal(true)
+			// } else {
+			// 	setStatusPagamento("pendente");
+			// }
 
 		} catch (error) {
 			console.error("Erro ao verificar status do pagamento:", error);
@@ -156,5 +171,15 @@ export const usePixComponent = () => {
 		respPagamento,
 		setRespPagamento,
 		handleCopy,
+		qrCodeGenerico,
+		loadingGenerico,
+		qrCodeMercadoPago,
+		loadingMP,
+		pagamentoIniciado,
+		setPagamentoIniciado,
+		pagoComMP,
+		setPagoComMP,
+		stausPagamentoPix
+
 	};
 };

@@ -9,6 +9,8 @@ import { Loading } from "@/components/shared/Loading";
 import { usePixComponent } from '@/hooks/Pagamento/usePix';
 import VisualizacaoConometro from "../components/VisualizacaoConometro";
 import { usePagamento } from "@/hooks/Pagamento/usePagamento";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export default function PagePix() {
 	const {
@@ -22,13 +24,63 @@ export default function PagePix() {
 		setStatusPagamento,
 		handleCopy,
 		statusTipo,
+		qrCodeGenerico,
+		loadingGenerico,
+		qrCodeMercadoPago,
+		loadingMP,
+		pagamentoIniciado,
+		setPagamentoIniciado,
+		pagoComMP,
+		stausPagamentoPix
 	} = usePixComponent();
 	const { navigate } = usePagamento();
 
-
 	return (
 		<>
-			{respPagamento.qr_code_base64 ? (
+			<>
+				{!pagamentoIniciado && (
+					<>
+						<p className="mt-8 font-bold text-center">Escolha uma opção para o pagamento:</p>
+						<div className="flex gap-4 mt-4">
+							<Button
+								onClick={() => {
+									setPagamentoIniciado(true);
+									qrCodeGenerico();
+								}}
+								disabled={loadingGenerico}
+								color="secondary"
+								className="p-2 whitespace-nowrap flex justify-center gap-3 items-center"
+							>
+								{loadingGenerico && <Loader2 className="h-4 w-4 animate-spin" />}
+								<span>{loadingGenerico ? "Processando..." : "Simule Pagamento"}</span>
+							</Button>
+
+							<Button
+								onClick={() => {
+									setPagamentoIniciado(true);
+									qrCodeMercadoPago();
+								}}
+								disabled={loadingMP}
+								className="p-2 whitespace-nowrap flex justify-center gap-3 items-center"
+							>
+								{loadingMP && <Loader2 className="h-4 w-4 animate-spin" />}
+								<span>{loadingMP ? "Processando..." : "Pague com Mercado Pago"}</span>
+							</Button>
+						</div>
+					</>
+				)}
+
+			</>
+
+			{(loadingGenerico || loadingMP) && !respPagamento.qr_code_base64 && (
+				<div className="text-center mt-5 flex justify-center items-center gap-3 text-brown-normal">
+					<Loader2 className="h-4 w-4 animate-spin" />
+					<span>Gerando QR Code...</span>
+				</div>
+			)}
+
+
+			{respPagamento.qr_code_base64 && (
 				<>
 					{(statusPagamento === "pendente" || statusPagamento === "processando") && (
 						<>
@@ -74,42 +126,42 @@ export default function PagePix() {
 								<p>O status: <span className="font-bold">{statusTipo[statusPagamento]}</span></p>
 							</div>
 
-							{/* <Button className="my-6 p-2 bg-brown-light-active text-brown-normal hover:text-white" onClick={() => { }}>Confirmar pagamento</Button> */}
-						</>
-					)}
-					
-					<Modal isOpen={showModal} onClose={() => { acompanharPedido; navigate("/")  }} className="py-2" >
-						<p className="flex justify-center items-center text-[2rem] text-green">
-							<FaCheckCircle />
-						</p>
-						<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
-
-						<Button className="mt-5 p-2" onClick={acompanharPedido} >Acompanhe seu pedido</Button>
-					</Modal>
-
-
-					{statusPagamento === "expirou" && (
-						<>
-							<p className='mb-5'>
-								<div className='flex items-center justify-center text-2xl'>
-									<GoClockFill />
-								</div>
-								<p className='text-center mt-2'>
-									<span className='font-bold'>O tempo para pagamento expirou. </span>
-									<br />
-								</p>
-								<p className='flex items-center justify-center mt-1'>
-									Clique em volta (<FaAngleLeft />) para iniciar sua compra novamente!
-								</p>
-							</p>
+							{pagoComMP && (
+								<Button
+									className="my-6 p-2 bg-brown-light-active text-brown-normal hover:text-white"
+									onClick={stausPagamentoPix}
+								>
+									Confirmar pagamento
+								</Button>
+							)}
 						</>
 					)}
 
 				</>
-			) : (
-				<>
-					<Loading />
-				</>
+			)}
+
+			<Modal isOpen={showModal} onClose={acompanharPedido} className="py-2" >
+				<p className="flex justify-center items-center text-[2rem] text-green">
+					<FaCheckCircle />
+				</p>
+				<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
+
+				<Button className="mt-5 p-2" onClick={acompanharPedido} >Acompanhe seu pedido</Button>
+			</Modal>
+
+			{statusPagamento === "expirou" && (
+				<div className='mb-5'>
+					<div className='flex items-center justify-center text-2xl'>
+						<GoClockFill />
+					</div>
+					<p className='text-center mt-2'>
+						<span className='font-bold'>O tempo para pagamento expirou. </span>
+						<br />
+					</p>
+					<p className='flex items-center justify-center mt-1'>
+						Clique em volta (<FaAngleLeft />) para iniciar sua compra novamente!
+					</p>
+				</div>
 			)}
 		</>
 	);

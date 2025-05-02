@@ -34,11 +34,11 @@ export interface ITipoProps {
 }
 
 export const statusTipo = {
-	pendente: "Pagamento pendente",
-	processando: "Em processamento",
-	aprovado: "Pagamento aprovado",
-	rejeitado: "Pagamento rejeitado",
-	cancelado: "Pagamento cancelado",
+	pendente: "pendente.",
+	processando: "em processamento.",
+	aprovado: "aprovado.",
+	rejeitado: "rejeitado.",
+	cancelado: "cancelado.",
 	expirou: "Tempo Finalizado para pagamento",
 } as const;
 
