@@ -15,4 +15,8 @@ export default defineConfig({
       "@contexts": path.resolve(__dirname, "./src/contexts"),
     },
   },
+  server: {
+    host: true, // Permite acesso externo
+    allowedHosts: ['ec9e-177-198-140-44.ngrok-free.app'],
+  },
 });
