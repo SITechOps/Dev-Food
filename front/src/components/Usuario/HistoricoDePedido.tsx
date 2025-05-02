@@ -1,19 +1,28 @@
-// pages/teste/ver-pedidos.tsx
 import { api } from "@/connection/axios";
 import { useEffect, useState } from "react";
 import { IMeusPedidos } from "@/interface/IMeusPedidos";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";  PARA ENZO: NÃO É ASSIM QUE PEGA O ID DO USUÁRIO
 import { Props } from "@/interface/IMeusPedidos";
 
-export default function HistoricoDePedido({ tipo }: Props) {
-  const { id_usuario } = useParams();
-  const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
+export default function HistoricoDePedido({ tipo }: Props) {
+  // const { id_usuario } = useParams(); PARA ENZO: NÃO É ASSIM QUE PEGA O ID DO USUÁRIO
+  const { userData } = useAuth();
+  const id_usuario = userData?.sub;
+  const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
+  const navigate = useNavigate();
+
+  console.log(id_usuario);
   useEffect(() => {
     async function buscarPedidos() {
+      if (!id_usuario) return;
+
       try {
-        const { data } = await api.get("/pedidos");
-        setPedidos(data);
+        const { data } = await api.get(`/pedidos/usuario/${id_usuario}`);
+        setPedidos(data.pedidos);
+        console.log(data);
       } catch (error) {
         console.error("Erro ao buscar pedidos:", error);
       }
@@ -88,7 +97,13 @@ export default function HistoricoDePedido({ tipo }: Props) {
               Ajuda
             </button>
             {tipo === "meuPedido" ? (
-              <button className="h-[2.5rem] w-[12rem] cursor-pointer rounded-3xl border bg-[#EE4C58] text-xl font-semibold text-white hover:bg-red-600">
+              <button
+                className="h-[2.5rem] w-[12rem] cursor-pointer rounded-3xl border bg-[#EE4C58] text-xl font-semibold text-white hover:bg-red-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/status-pedido");
+                }}
+              >
                 Acompanhar pedido
               </button>
             ) : (
