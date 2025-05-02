@@ -4,7 +4,6 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useCardProdutos } from "../../../hooks/useCardProduto";
 import { CardProdutosProps } from "../../../interface/IProduct";
 
-
 export default function CardProdutos(props: CardProdutosProps) {
   const { nome, descricao, imageUrl, valor_unitario, dadosRestaurante } = props;
 
@@ -12,6 +11,9 @@ export default function CardProdutos(props: CardProdutosProps) {
 
   const { quantidade, incrementar, decrementar, adicionarAoCarrinho } =
     useCardProdutos(props, dadosRestaurante);
+
+  // Agora você pode acessar dadosRestaurante para pegar a taxa de entrega
+  const taxaEntrega = dadosRestaurante?.taxaEntrega;
 
   return (
     <div className="border-gray-medium bg-gray-light max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300 m-auto">
@@ -31,18 +33,17 @@ export default function CardProdutos(props: CardProdutosProps) {
         <p className="mt-2 font-light">{descricao}</p>
         <p className="mt-3 text-[1.5rem] font-semibold">R$ {valor_unitario}</p>
 
-        <div>
-          <div className="flex w-full flex-row items-center justify-center gap-4 mt-5 max-[700px]:block">
-            <div className="border-gray-medium flex items-center justify-between gap-2 rounded-lg border bg-white p-2 w-25">
-              <Button color="plain" onClick={decrementar} className="p-1">
-                <Minus size={20} className="stroke-2" />
-              </Button>
-              <span className="text-lg font-bold">{quantidade}</span>
-              <Button color="plain" onClick={incrementar} className="p-1">
-                <Plus size={20} className="stroke-2" />
-              </Button>
-            </div>
-
+       
+        <div className="flex w-full flex-row items-center justify-end gap-4">
+          <div className="border-gray-medium flex items-center justify-between gap-6 rounded-lg border bg-white p-2">
+            <Button color="plain" onClick={decrementar} className="p-1">
+              <Minus size={20} className="stroke-2" />
+            </Button>
+            <span className="text-lg font-bold">{quantidade}</span>
+            <Button color="plain" onClick={incrementar} className="p-1">
+              <Plus size={20} className="stroke-2" />
+            </Button>
+          </div>
             <Button
               className="flex w-full items-center justify-between gap-6 p-3 max-[700px]:mt-5"
               disabled={quantidade === 0}
@@ -62,6 +63,5 @@ export default function CardProdutos(props: CardProdutosProps) {
           </div>
         </div>
       </div>
-    </div>
   );
 }

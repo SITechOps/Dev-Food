@@ -3,7 +3,6 @@ import { api } from "../connection/axios";
 import RestauranteCard from "../components/Restaurante/RestaurantCard";
 import ProdutoCard from "../components/Produto/ProdutoCard";
 import { Link } from "react-router-dom";
-
 import { geocodeTexto } from "../utils/useGeocode";
 import { calcularDistancia } from "../utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
@@ -25,6 +24,7 @@ interface Restaurante {
   nome: string;
   especialidade?: string;
   endereco: Endereco;
+  duration?: number | null;
   distancia?: string;
   taxaEntrega?: number;
 }
@@ -139,6 +139,7 @@ export default function Home() {
     }
   }, [restaurantes]);
 
+  // Processar distância e taxa de entrega
   useEffect(() => {
     async function processarRestaurantes() {
       if (
@@ -169,6 +170,7 @@ export default function Home() {
             return {
               ...rest,
               distancia: distanciaInfo.distance?.toFixed(1),
+              duration: distanciaInfo.duration,
               taxaEntrega,
             };
           } catch (err) {
@@ -278,7 +280,23 @@ export default function Home() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {abaAtiva === "restaurantes" &&
           filteredRestaurantes.map((restaurante) => (
-            <Link to={`/restaurante/${restaurante.id}`} key={restaurante.id}>
+            <Link
+              to={`/restaurante/${restaurante.id}`}
+              key={restaurante.id}
+              onClick={() => {
+                const restauranteComFrete = {
+                  ...restaurante,
+                  distancia: restaurante.distancia,
+                  duration: restaurante.duration,
+                  taxaEntrega: restaurante.taxaEntrega,
+                };
+
+                localStorage.setItem(
+                  "restauranteSelecionado",
+                  JSON.stringify(restauranteComFrete),
+                );
+              }}
+            >
               <RestauranteCard restaurante={restaurante} />
             </Link>
           ))}
