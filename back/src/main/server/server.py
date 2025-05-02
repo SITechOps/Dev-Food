@@ -36,6 +36,7 @@ def create_app():
 
     DBConnectionHandler()
     load_sample_restaurants()
+    load_pedidos_exemplo()
 
     socketio.init_app(app)
     return app
