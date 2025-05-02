@@ -1,14 +1,12 @@
 import { api } from "@/connection/axios";
 import { useEffect, useState } from "react";
 import { IMeusPedidos } from "@/interface/IMeusPedidos";
-// import { useParams } from "react-router-dom";  PARA ENZO: NÃO É ASSIM QUE PEGA O ID DO USUÁRIO
 import { Props } from "@/interface/IMeusPedidos";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function HistoricoDePedido({ tipo }: Props) {
-  // const { id_usuario } = useParams(); PARA ENZO: NÃO É ASSIM QUE PEGA O ID DO USUÁRIO
   const { userData } = useAuth();
   const id_usuario = userData?.sub;
   const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
@@ -22,7 +20,6 @@ export default function HistoricoDePedido({ tipo }: Props) {
       try {
         const { data } = await api.get(`/pedidos/usuario/${id_usuario}`);
         setPedidos(data.pedidos);
-        console.log(data);
       } catch (error) {
         console.error("Erro ao buscar pedidos:", error);
       }
