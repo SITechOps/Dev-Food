@@ -40,7 +40,30 @@ export const statusTipo = {
 	rejeitado: "Pagamento rejeitado",
 	cancelado: "Pagamento cancelado",
 	expirou: "Tempo Finalizado para pagamento",
-  } as const;
-  
-  export type StatusChave = keyof typeof statusTipo;
-  
+} as const;
+
+export type StatusChave = keyof typeof statusTipo;
+
+
+export interface ICreatFormCartao{
+	amount: string;
+	cardholderEmail: string;
+	identificationNumber: number;
+	identificationType: number;
+	installments: string;
+	issuerId: string;
+	merchantAccountId: string;
+	paymentMethodId: string;
+	processingMode: string;
+	token: string;
+} 
+export interface ITokenCartao {
+	token: string;
+	cardholderEmail: string;
+	transaction_amount: number;
+	installments: number;
+	identification_type: string;
+	identification_number: string;
+	payment_method_id: string;
+} 
+

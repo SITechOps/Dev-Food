@@ -70,6 +70,7 @@ export default function Carrinho({
                       <div className="bg-gray-light mt-2 flex items-center justify-between gap-2 rounded-lg p-2">
                         <Button
                           color="plain"
+                          type="button"
                           onClick={() => decrementar(item.id)}
                           className="p-1"
                         >
@@ -80,6 +81,7 @@ export default function Carrinho({
                         </span>
                         <Button
                           color="plain"
+                          type="button"
                           onClick={() => incrementar(item.id)}
                           className="p-1"
                         >
@@ -89,6 +91,7 @@ export default function Carrinho({
                       <Button
                         color="plain"
                         className="w-20 p-1"
+                        type="button"
                         onClick={() => removerItem(item.id)}
                       >
                         Remover

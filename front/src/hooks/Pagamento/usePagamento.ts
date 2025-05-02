@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { IEndereco, IResponseEndereco } from "@/interface/IEndereco";
 import { IItens, IPedido } from "@/interface/IPagamento";
+import { IUsuarioCliente } from "@/interface/IUser";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +11,7 @@ export const usePagamento = () => {
 	const { userData } = useAuth();
 	const navigate = useNavigate();
 	const [endereco, setEndereco] = useState<IEndereco[]>([]);
+	const [user, setUser] = useState<IUsuarioCliente>();
 	const [loading, setLoading] = useState(true);
 	const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
 	const [showModal, setShowModal] = useState(false);
@@ -51,6 +53,17 @@ export const usePagamento = () => {
 			setEndereco(attributes);
 		} catch (error) {
 			console.error("Erro ao buscar endereço:", error);
+		}
+	}
+
+	async function getDadosUser() {
+		try {
+			const { data } = await api.get(`/user/${userData?.sub}`);
+			const dados = data?.data?.attributes || [];
+			setUser(dados);
+			return dados;
+		} catch (error) {
+			console.error("Erro ao buscar dados:", error);
 		}
 	}
 
@@ -109,5 +122,6 @@ export const usePagamento = () => {
 		modeloPagamento,
 		setModeloPagamento,
 		postPedido,
+		getDadosUser,
 	}
 }

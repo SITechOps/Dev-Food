@@ -56,11 +56,11 @@ export const useCarrinho = () => {
 	function incrementar(id: number) {
 		setDados((prevDados: any) =>
 			prevDados.map((item: any) =>
-				item.id === id
+				item.id === id 
 					? {
 						...item,
 						quantidade: item.quantidade + 1,
-						subtotal: item.subtotal + item.valor_unitario,
+						subtotal: item.subtotal + parseFloat(item.valor_unitario),
 					}
 					: item
 			)
@@ -74,7 +74,7 @@ export const useCarrinho = () => {
 					? {
 						...item,
 						quantidade: item.quantidade - 1,
-						subtotal: item.subtotal - item.valor_unitario,
+						subtotal: item.subtotal - parseFloat(item.valor_unitario),
 					}
 					: item
 			)
