@@ -38,7 +38,10 @@ def create_app():
     load_sample_restaurants()
 
     socketio.init_app(app)
+<<<<<<< HEAD
     load_pedidos_exemplo()
+=======
+>>>>>>> 4e3a4ea (feat: integrar socket.io para emitir eventos de notificação)
     return app
 
 app = create_app()
