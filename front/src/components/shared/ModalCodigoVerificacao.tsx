@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 interface ModalCodigoVerificacaoPros {
-  idPedido: string;
   qtd_digitos: number;
   tipoEnvioCodigo: string;
   codigoEnviado: string;
