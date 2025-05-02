@@ -3,7 +3,6 @@ import { api } from "../../connection/axios";
 import { socket } from "../../utils/socket";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserAccount } from "../../hooks/useUserAccount";
-import Button from "@/components/ui/Button";
 import { pedidosUtils } from "../../utils/pedidosUtils";
 
 const statusMessages: { [key: string]: string } = {
@@ -23,7 +22,6 @@ const statusSteps: { [key: string]: number } = {
 
 export default function OrderStatusTracker() {
   const [pedidos, setPedidos] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { formatarData, acrescentarHora } = pedidosUtils();
   const { userData } = useAuth();
   const { userFormList } = useUserAccount();
@@ -39,7 +37,7 @@ export default function OrderStatusTracker() {
       console.error("Erro ao buscar pedidos do usuário:", error);
     }
   };
-  console.log(pedidos);
+
   useEffect(() => {
     fetchPedidosUsuario();
 
@@ -51,24 +49,6 @@ export default function OrderStatusTracker() {
       socket.off("atualizar_status", fetchPedidosUsuario);
     };
   }, [idUsuario]);
-
-  const marcarComoEntregue = async (idPedido: string) => {
-    setIsLoading(true);
-    try {
-      await api.patch(`/pedido/status/${idPedido}`, { status: "Entregue" });
-
-      setPedidos((prevPedidos) =>
-        prevPedidos.map((pedido) =>
-          pedido.Id === idPedido ? { ...pedido, status: "Entregue" } : pedido,
-        ),
-      );
-      alert("Pedido marcado como entregue!");
-    } catch (error) {
-      alert("Erro ao marcar pedido como entregue.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const getCodigoPedido = (pedidoId: string) => {
     if (userFormList?.telefone) {
@@ -150,17 +130,6 @@ export default function OrderStatusTracker() {
                   </span>
                 </div>
               </div>
-
-              {pedido.status === "Despachado" && (
-                <Button
-                  color="default"
-                  className="bg-green-dark hover:bg-green text-white"
-                  onClick={() => marcarComoEntregue(pedido.Id)}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Carregando..." : "Marcar como entregue"}
-                </Button>
-              )}
             </div>
           );
         })

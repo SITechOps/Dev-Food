@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import { usePedidosContext } from "@/contexts/usePedidosContext";
 import { IPedido } from "../../interface/IPedidos";
 import { pedidosUtils } from "../../utils/pedidosUtils";
+import { useNavigate } from "react-router-dom";
 
 interface PainelPedidosProps {
   orders: IPedido[];
@@ -21,6 +22,7 @@ export default function PainelPedidos({
   const [isLoading, setIsLoading] = useState(false);
   const { calcularDiferencaTempo } = pedidosUtils();
   const { alterarStatus } = usePedidosContext();
+  const navigate = useNavigate();
 
   const pedidosPendentes = orders.filter(
     (pedido: IPedido) =>
@@ -148,7 +150,7 @@ export default function PainelPedidos({
                   onClick={() =>
                     setSelectedId(isSelected ? null : pedido.id || null)
                   }
-                  className={`flex cursor-pointer flex-col items-start justify-between rounded-lg p-4 font-bold ${
+                  className={`flex cursor-pointer flex-col items-start justify-between gap-2 rounded-lg p-4 font-bold ${
                     isSelected
                       ? "bg-brown-light border-brown-normal text-brown-normal border-2"
                       : "border-gray-medium text-blue border bg-white"
@@ -159,10 +161,19 @@ export default function PainelPedidos({
                   </div>
 
                   {pedido.status === "Despachado" && (
-                    <p className="text-gray-medium mt-2 text-sm font-normal">
+                    <p className="text-gray-medium text-sm font-normal">
                       {calcularDiferencaTempo(pedido.atualizadoEm)}
                     </p>
                   )}
+                  <button
+                    className="text-brown-normal font-medium"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate("/entregador");
+                    }}
+                  >
+                    Confirmar entrega
+                  </button>
                 </div>
               );
             })}

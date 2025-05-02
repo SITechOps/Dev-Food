@@ -4,15 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 interface ModalCodigoVerificacaoPros {
+  idPedido: string;
+  qtd_digitos: number;
   tipoEnvioCodigo: string;
   codigoEnviado: string;
-  idPedido?: string;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSuccess: () => void;
 }
 
 export default function ModalCodigoVerificacao({
+  qtd_digitos,
   codigoEnviado,
   isModalOpen,
   setIsModalOpen,
@@ -23,7 +25,6 @@ export default function ModalCodigoVerificacao({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Fechar o modal ao clicar fora dele
   useEffect(() => {
     if (!isModalOpen) return;
 
@@ -66,10 +67,11 @@ export default function ModalCodigoVerificacao({
           <CodeInput
             className="[&_input::-moz-appearance]:none selection:bg-transparent [&_input::-webkit-inner-spin-button]:hidden"
             type="number"
-            fields={4}
+            fields={qtd_digitos}
             onChange={(code) => {
               setCodigoDigitado(code);
-              code.length === 4 && buttonRef.current?.focus();
+
+              code.length === qtd_digitos && buttonRef.current?.focus();
             }}
             inputStyle={{
               width: "48px",
@@ -85,12 +87,12 @@ export default function ModalCodigoVerificacao({
             inputMode={"tel"}
           />
         </div>
+
         <p className="text-lg">
           {tipoEnvioCodigo === "Entregador"
             ? "Informe o código da entrega"
             : `Insira o código enviado por ${tipoEnvioCodigo === "email" ? "email" : "SMS"}!`}
         </p>
-
         <Button ref={buttonRef} onClick={() => validarCodigo()} className="p-2">
           Confirmar
         </Button>

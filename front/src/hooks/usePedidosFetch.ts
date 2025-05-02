@@ -78,6 +78,7 @@ export function usePedidosFetch() {
     tipoEntrega: pedido.tipo_entrega,
     atualizadoEm: pedido.atualizado_em,
     codigo: pedido.codigo,
+    cliente: pedido.cliente,
     endereco: {
       bairro: pedido.endereco.bairro,
       cidade: pedido.endereco.cidade,

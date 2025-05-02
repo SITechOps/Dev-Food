@@ -1,62 +1,20 @@
-import { useState } from "react";
-import ModalCodigoVerificacao from "@/components/shared/ModalCodigoVerificacao";
-import { api } from "@/connection/axios";
-import Button from "@/components/ui/Button";
+import EntregadorContent from "./EntregadorContent";
+import { useAuth } from "@/contexts/AuthContext";
+import { PedidosProvider } from "@/contexts/PedidosContext";
 
-const Entregador = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pedidoSelecionado, setPedidoSelecionado] = useState<{
-    id: string;
-    codigo: string;
-  } | null>(null);
+export default function Entregador() {
+  const { userData } = useAuth();
+  const idRestaurante = userData?.sub;
 
-  const abrirModalEntrega = (pedidoId: string, telefone: string) => {
-    const numeros = telefone.replace(/\D/g, "");
-    const codigo =
-      numeros.length >= 4 ? numeros.slice(-4) : pedidoId.slice(0, 4);
-    setPedidoSelecionado({ id: pedidoId, codigo });
-    setIsModalOpen(true);
-  };
-
-  const handleConfirmacaoEntrega = async () => {
-    if (!pedidoSelecionado) return;
-
-    try {
-      await api.patch(`/pedido/status/${pedidoSelecionado.id}`, {
-        status: "Entregue",
-      });
-      alert("Pedido confirmado como entregue!");
-    } catch (error) {
-      alert("Erro ao confirmar entrega do pedido.");
-    } finally {
-      setIsModalOpen(false);
-    }
-  };
+  if (!idRestaurante) {
+    return (
+      <div className="text-brown-dark p-4">Restaurante não encontrado.</div>
+    );
+  }
 
   return (
-    <>
-      <div className="flex w-fit flex-col items-center justify-center">
-        <Button
-          onClick={() =>
-            abrirModalEntrega("id-do-pedido-aqui", "telefone-do-cliente")
-          }
-          className="rounded px-4 py-2 text-white"
-        >
-          Confirmar entrega
-        </Button>
-        {pedidoSelecionado && isModalOpen && (
-          <ModalCodigoVerificacao
-            idPedido={pedidoSelecionado.id}
-            codigoEnviado={pedidoSelecionado.codigo}
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-            tipoEnvioCodigo="Entregador"
-            onSuccess={handleConfirmacaoEntrega}
-          />
-        )}
-      </div>
-    </>
+    <PedidosProvider idRestaurante={idRestaurante}>
+      <EntregadorContent />
+    </PedidosProvider>
   );
-};
-
-export default Entregador;
+}

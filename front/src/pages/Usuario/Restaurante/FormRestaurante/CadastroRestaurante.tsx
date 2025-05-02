@@ -24,6 +24,7 @@ export default function CadastroRestaurante() {
     <>
       {mostrarModal && (
         <ModalCodigoVerificacao
+          qtd_digitos={6}
           codigoEnviado={codigoEnviado}
           isModalOpen={mostrarModal}
           setIsModalOpen={setMostrarModal}

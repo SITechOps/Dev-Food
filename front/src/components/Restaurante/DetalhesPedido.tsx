@@ -98,7 +98,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           <label className="text-gray-medium text-sm">Forma de Pagamento</label>
         </div>
         <span>
-          {pedido.formaPagamento} - R$ {pedido.valorTotal}- {pedido.codigo}
+          {pedido.formaPagamento} - R$ {pedido.valorTotal}
         </span>
       </div>
 

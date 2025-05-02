@@ -82,6 +82,7 @@ class PedidosManager:
                 "data_pedido": pedido.created_at,
                 "forma_pagamento": pedido.forma_pagamento,
                 "status": pedido.status,
+                "cliente": usuario.nome,
                 "tipo_entrega": pedido.tipo_entrega,
                 "atualizado_em": pedido.updated_at,
                 "codigo": usuario.telefone[-4:],

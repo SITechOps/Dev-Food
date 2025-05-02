@@ -28,6 +28,7 @@ export default function AuthUser() {
         <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
           {isModalOpen && (
             <ModalCodigoVerificacao
+              qtd_digitos={6}
               codigoEnviado={codigoEnviado}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}

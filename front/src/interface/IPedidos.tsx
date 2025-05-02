@@ -5,6 +5,7 @@ export interface IPedido {
   tipoEntrega: string;
   atualizadoEm: string;
   codigo?: string;
+  cliente?: string;
   endereco: {
     bairro: string;
     logradouro: string;
