@@ -16,7 +16,6 @@ export interface IPedido {
   id_restaurante: string;
   id_endereco: string;
   valor_total: number;
-  codigo?: string;
   forma_pagamento: string;
   itens: IItens[];
 }

@@ -1,14 +1,10 @@
 import os
 import mercadopago
 from uuid import uuid4
-import os
-import mercadopago
-from uuid import uuid4
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
 from src.main.handlers.custom_exceptions import NotFound
 from src.main.utils.response_formatter import ResponseFormatter
-from mercadopago.config.request_options import RequestOptions
 from mercadopago.config.request_options import RequestOptions
 
 class PaymentService:
