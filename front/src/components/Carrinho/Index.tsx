@@ -24,7 +24,9 @@ export default function Carrinho({
   } = useCarrinho();
 
   const resSelecionado = localStorage.getItem("restauranteSelecionado");
-  const taxaEntregaRestaurante = resSelecionado? JSON.parse(resSelecionado).taxaEntrega : 0;
+  const taxaEntregaRestaurante = resSelecionado
+    ? JSON.parse(resSelecionado).taxaEntrega
+    : 0;
 
   return (
     <>
@@ -65,7 +67,7 @@ export default function Carrinho({
                         <p className="mt-1">{item.quantidade} x</p>
                         <p className="font-bold">{item.nome}</p>
                       </div>
-                      <p>R$ {(item.subtotal).toFixed(2)}</p>
+                      <p>R$ {item.subtotal.toFixed(2)}</p>
                     </div>
                     <p className="mt-2 font-light">{item.descricao}</p>
                     <div className="mt-2 flex items-center gap-2">
@@ -101,11 +103,11 @@ export default function Carrinho({
                 <div>
                   <p className="my-2 flex items-center justify-between">
                     Subtotal
-                    <span>R$ {(subtotal).toFixed(2)}</span>
+                    <span>R$ {subtotal.toFixed(2)}</span>
                   </p>
                   <p className="my-2 flex items-center justify-between">
                     Taxa de entrega
-                    <span>R$ {(taxaEntregaRestaurante).toFixed(2)}</span>
+                    <span>R$ {taxaEntregaRestaurante?.toFixed(2)}</span>
                   </p>
                 </div>
               </div>
