@@ -127,7 +127,6 @@ export const usePixComponent = () => {
 		})();
 	}
 
-
 	function handleCopy() {
 		if (respPagamento.qr_code) {
 			navigator.clipboard.writeText(respPagamento.qr_code).then(() => {

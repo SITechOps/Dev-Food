@@ -50,10 +50,10 @@ export default function Menu() {
             {idUsuario ? (
               <Button
                 color="plain"
-                onClick={() => navigate("/pedido")}
+                onClick={() => navigate("/historico")}
                 className="w-40 py-2"
               >
-                Faça seu pedido
+                Meus Pedidos
               </Button>
             ) : null}
             {idUsuario ? (
@@ -75,15 +75,17 @@ export default function Menu() {
             )}
 
             <div
-              className="flex cursor-pointer w-30 rounded-sm hover:bg-brown-light-active"
+              className="hover:bg-brown-light-active flex w-30 cursor-pointer rounded-sm"
               onClick={() => {
                 setIsCarrinhoOpen(true);
                 atualizarQuantidadeTotal();
               }}
             >
-              <div className="pl-2 text-brown-normal flex justify-center items-center">
-              <TbShoppingBag className="self-center text-4xl" />
-                <p className="font-bold p-1 text-blue">{quantidadeTotal} <span className="font-light">Itens</span></p> 
+              <div className="text-brown-normal flex items-center justify-center pl-2">
+                <TbShoppingBag className="self-center text-4xl" />
+                <p className="text-blue p-1 font-bold">
+                  {quantidadeTotal} <span className="font-light">Itens</span>
+                </p>
               </div>
             </div>
           </div>

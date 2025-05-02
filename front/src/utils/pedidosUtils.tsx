@@ -15,6 +15,12 @@ export function pedidosUtils() {
     }).format(date);
   }
 
+  function acrescentarHora(data: string) {
+    const date = new Date(data);
+    date.setUTCHours(date.getUTCHours() + 1);
+    return date;
+  }
+
   function calcularDiferencaTempo(data: string | undefined) {
     if (!data) return "";
 
@@ -59,5 +65,6 @@ export function pedidosUtils() {
   return {
     calcularDiferencaTempo,
     formatarData,
+    acrescentarHora,
   };
 }

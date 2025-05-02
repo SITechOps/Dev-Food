@@ -7,9 +7,12 @@ export const useCarrinho = () => {
 	const navigate = useNavigate();
 	const { isAuthenticated } = useAuth();
 	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
-	const taxaEntrega = 5.0; // aplicar a logica para calcular a taxa de entrega
+	const [taxaEntrega, setTaxaEntrega] = useState(0);
 	const total = subtotal + taxaEntrega;
 	const storedCarrinho = localStorage.getItem("carrinho");
+    const [distancia, setDistancia] = useState<number | null>(null);
+    const [tempoEntrega, setTempoEntrega] = useState<number | null>(null);
+    const [restauranteId, setRestauranteId] = useState<string | null>(null);
 
 	useEffect(() => {
 	
@@ -34,8 +37,16 @@ export const useCarrinho = () => {
 		} else {
 			console.log("Carrinho não encontrado no localStorage.");
 		}
+		const storedFrete = JSON.parse(localStorage.getItem("freteRestaurante") || "null");
+        if (storedFrete) {
+            setTaxaEntrega(storedFrete.taxaEntrega || 0); // Garantir que taxaEntrega seja atualizada
+            setDistancia(storedFrete.distancia || null);
+            setTempoEntrega(storedFrete.duracao || null);
+        }
 	}, []);
-	
+
+	// Recupera os dados de frete e taxa de entrega
+
 	useEffect(() => {
 		if (dados.length > 0) {
 			const compra = {
@@ -43,6 +54,9 @@ export const useCarrinho = () => {
 				subtotal,
 				taxaEntrega,
 				total,
+                distancia,
+                tempoEntrega,
+                restauranteId: dados[0].restauranteId,
 			};
 	
 			localStorage.setItem("compraAtual", JSON.stringify(compra));
@@ -65,6 +79,7 @@ export const useCarrinho = () => {
 					: item
 			)
 		);
+		console.log("dados", dados)
 	};
 
 	function decrementar(id: number) {
@@ -77,8 +92,10 @@ export const useCarrinho = () => {
 						subtotal: item.subtotal - parseFloat(item.valor_unitario),
 					}
 					: item
-			)
+			
+				)
 		);
+		console.log("dados", dados)
 	};
 
 	function removerItem(id: string) {
@@ -101,15 +118,18 @@ export const useCarrinho = () => {
 	};
 
 	return {
-		navigate,
-		dados,
-		incrementar,
-		decrementar,
-		removerItem,
-		subtotal,
-		taxaEntrega,
-		total,
-		setDados,
-		escolherFormaPagamento,
+        navigate,
+        dados,
+        incrementar,
+        decrementar,
+        removerItem,
+        subtotal,
+        taxaEntrega,
+        total,
+        distancia,
+        tempoEntrega,
+        restauranteId,
+        setDados,
+        escolherFormaPagamento,
 	};
 }

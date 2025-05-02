@@ -9,6 +9,7 @@ export default function UserForm() {
     userFormFields,
     isEditing,
     setIsEditing,
+    loading,
     handleLogout,
     deletarDados,
     alterarDados,
@@ -27,6 +28,7 @@ export default function UserForm() {
           setFormList={setUserFormList}
           isEditing={isEditing}
           setIsEditing={setIsEditing}
+          isLoading={loading}
           navigate={navigate}
           onSubmit={alterarDados}
           deletarDados={deletarDados}

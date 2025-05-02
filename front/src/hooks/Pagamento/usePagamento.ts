@@ -1,16 +1,15 @@
 import { api } from "@/connection/axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
-import { IEndereco, IResponseEndereco } from "@/interface/IEndereco";
 import { IItens, IPedido } from "@/interface/IPagamento";
 import { IUsuarioCliente } from "@/interface/IUser";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const usePagamento = () => {
-	const { userData } = useAuth();
+	const { userData,  token } = useAuth();
 	const navigate = useNavigate();
-	const [endereco, setEndereco] = useState<IEndereco[]>([]);
+	const [endereco, setEndereco] = useState("");
 	const [user, setUser] = useState<IUsuarioCliente>();
 	const [loading, setLoading] = useState(true);
 	const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
@@ -25,6 +24,40 @@ export const usePagamento = () => {
 		taxaEntrega: 0,
 		total: 0
 	});
+	const idUsuario = userData?.sub;
+
+	//pegar o endereço do cliente
+	useEffect(() => {
+		async function obterEnderecoCliente() {
+		  try {
+			if (!idUsuario || !token) {
+			  return;
+			}
+	
+			const response = await api.get(`/user/${idUsuario}/enderecos`, {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			const endereco = response.data?.data?.attributes[0];
+	
+			if (!endereco) {
+			  return;
+			}
+	
+			const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
+	
+			setEndereco(enderecoCompleto);
+	
+		  } catch (error) {
+			console.error(
+			  error,
+			);
+		  }
+		}
+	
+		obterEnderecoCliente();
+	}, [idUsuario, token]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -37,7 +70,7 @@ export const usePagamento = () => {
 					total: compra.total,
 				});
 				
-				await getEndereco();
+				// await getEndereco();
 			} else {
 				// console.log("Carrinho não encontrado no localStorage.");
 			}
@@ -46,15 +79,15 @@ export const usePagamento = () => {
 		fetchData();
 	}, [storedCompra]);
 
-	async function getEndereco() {
-		try {
-			const resp = await api.get<{ data: IResponseEndereco }>(`/user/${userData?.sub}/enderecos`);
-			const attributes = resp.data.data.attributes
-			setEndereco(attributes);
-		} catch (error) {
-			console.error("Erro ao buscar endereço:", error);
-		}
-	}
+	// async function getEndereco() {
+	// 	try {
+	// 		const resp = await api.get(`/user/${userData?.sub}/enderecos`);
+	// 		const attributes = resp.data.data.attributes
+	// 		setEndereco(attributes);
+	// 	} catch (error) {
+	// 		console.error("Erro ao buscar endereço:", error);
+	// 	}
+	// }
 
 	async function getDadosUser() {
 		try {
@@ -71,16 +104,16 @@ export const usePagamento = () => {
 		try {
 			if (storedCompra) {
 				const compra = JSON.parse(storedCompra);
-				const idEndereco = endereco && endereco.length > 0 ? endereco[0].id : "";
-				if (!idEndereco) {
-					console.error("Endereço não encontrado.");
-					return;
-				}
+				// const idEndereco = endereco && endereco.length > 0 ? endereco[0].id : "";
+				// if (!idEndereco) {
+				// 	console.error("Endereço não encontrado.");
+				// 	return;
+				// }
 
 				const pedidoPayload: IPedido = {
 					id_usuario: userData?.sub,
 					id_restaurante: compra.itens[0]?.restaurante.id,
-					id_endereco: idEndereco,
+					id_endereco: "",
 					valor_total: compra.total,
 					forma_pagamento: "pix",
 					itens: compra.itens.map((item: any): IItens => ({

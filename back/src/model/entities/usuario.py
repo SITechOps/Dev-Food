@@ -8,7 +8,7 @@ class Usuario(Base):
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid4()))
     nome = Column(String(50), nullable=False)
     email = Column(String(50), unique=True, nullable=False)
-    telefone = Column(String(15))
+    telefone = Column(String(15), nullable=False)
     role = Column(String(11))
 
     enderecos_associados = relationship("UsuarioEndereco", back_populates="usuario", cascade="all, delete-orphan")

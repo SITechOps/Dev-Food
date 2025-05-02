@@ -14,9 +14,10 @@ const RestauranteCard = ({ restaurante }) => {
         {restaurante.tipo_cozinha} • {restaurante.distancia ?? "??"} km
       </p>
       <p className="text-sm text-gray-500">
-        35-45 min •{" "}
+        {(restaurante.duration / 60).toFixed(0)} min •{" "}
         <span className="text-green-500">
-          {restaurante.taxaEntrega === 0 || restaurante.taxaEntrega === undefined
+          {restaurante.taxaEntrega === 0 ||
+          restaurante.taxaEntrega === undefined
             ? "Grátis"
             : `R$ ${restaurante.taxaEntrega?.toFixed(2)}`}
         </span>

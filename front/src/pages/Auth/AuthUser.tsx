@@ -28,6 +28,7 @@ export default function AuthUser() {
         <div className="card mt-12 flex max-w-96 flex-col gap-2 space-y-4 shadow">
           {isModalOpen && (
             <ModalCodigoVerificacao
+              qtd_digitos={6}
               codigoEnviado={codigoEnviado}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
@@ -110,10 +111,10 @@ export default function AuthUser() {
                   className="input mb-6"
                   type="tel"
                   id="telefone"
+                  required
                 />
                 <p className="mb-4">
-                  Preencha o telefone apenas se preferir, esse meio de validação
-                  não é obrigatório!
+                  Preencha o telefone, esse campo é obrigatório!
                 </p>
                 <div className="flex gap-4">
                   <Button
@@ -124,7 +125,13 @@ export default function AuthUser() {
                   >
                     Validar Telefone
                   </Button>
-                  <Button type="submit" className="p-2">
+                  <Button
+                    type="submit"
+                    className="p-2"
+                    disabled={
+                      !formList.telefone || formList.telefone.length < 11
+                    }
+                  >
                     Entrar
                   </Button>
                 </div>

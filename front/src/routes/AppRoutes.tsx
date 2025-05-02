@@ -4,6 +4,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import RoleBasedRoute from "./RoleBasedRoute";
 import RestrictRestauranteOnly from "./RestrictRestaurant";
 
+const Entregador = lazy(() => import("../pages/Pedido/Entregador"));
 const Error404 = lazy(() => import("@/components/Error404"));
 const Home = lazy(() => import("../pages/Home"));
 const AuthUser = lazy(() => import("../pages/Auth/AuthUser"));
@@ -11,7 +12,7 @@ const Intermediaria = lazy(() => import("../pages/Intermediaria"));
 const Account = lazy(() => import("../pages/Account"));
 const Cardapio = lazy(() => import("../components/Restaurante/Cardapios"));
 const Financeiro = lazy(() => import("../components/Restaurante/Financeiro"));
-const StatusPedido = lazy(() => import("../pages/StatusPedido/StatusPedido"));
+const StatusPedido = lazy(() => import("../pages/Pedido/StatusPedido"));
 const CadastroEndereco = lazy(
   () => import("../components/Endereco/CadastroEndereco"),
 );
@@ -27,6 +28,8 @@ const AlterarEnderecoRestaurante = lazy(
 );
 const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
 const Pedidos = lazy(() => import("../pages/Restaurante/Account/Pedidos"));
+
+const MeusPedidos = lazy(() => import("../pages/MeusPedidos/Index"));
 
 const AppRoutes = () => {
   return (
@@ -50,6 +53,7 @@ const AppRoutes = () => {
       <Route element={<RoleBasedRoute allowedRoles={["usuario"]} />}>
         <Route path="/pagamento" element={<Pagamento />} />
         <Route path="/status-pedido" element={<StatusPedido />} />
+        <Route path="/historico" element={<MeusPedidos />} />
       </Route>
 
       <Route element={<RestrictRestauranteOnly />}>
@@ -62,6 +66,7 @@ const AppRoutes = () => {
         <Route path="/pedidos" element={<Pedidos />} />
         <Route path="/cardapios" element={<Cardapio />} />
         <Route path="/financeiro" element={<Financeiro />} />
+        <Route path="/entregador" element={<Entregador />} />
       </Route>
       <Route path="*" element={<Error404 />} />
     </Routes>

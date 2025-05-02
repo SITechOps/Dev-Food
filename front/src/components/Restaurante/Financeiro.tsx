@@ -8,6 +8,7 @@ export default function Financeiro() {
     setFormListBancario,
     restaurantBankFields,
     isEditing,
+    isLoading,
     setIsEditing,
     alterarDadosBancarios,
   } = useRestaurantAccount();
@@ -28,6 +29,7 @@ export default function Financeiro() {
         setFormList={setFormListBancario}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isLoading={isLoading}
         navigate={navigate}
         onSubmit={alterarDadosBancarios}
         iconStyle={iconStyle}
