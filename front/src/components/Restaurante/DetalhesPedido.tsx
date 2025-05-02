@@ -43,12 +43,6 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           buttonClass: "bg-green-dark hover:bg-green text-white",
           buttonText: "Despachar",
         };
-      case "Cancelado":
-      case "Despachado":
-        return {
-          buttonClass: "bg-gray-medium w-[50%] text-white cursor-not-allowed",
-          buttonText: "Não disponível",
-        };
       default:
         return {
           buttonClass: "bg-brown-normal hover:bg-brown-dark text-white",
@@ -128,7 +122,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
       <div className="mt-8 flex justify-between">
         <Button
           color="outlined"
-          className="border-brown-normal text-brown-normal hover:bg-brown-light-active mr-4 border-2"
+          className={`border-brown-normal text-brown-normal hover:bg-brown-light-active mr-4 border-2 ${pedido.status === "Despachado" ? "w-1/2" : ""}`}
           onClick={() => handleStatusChange("Cancelado")}
           isLoading={isLoading}
         >

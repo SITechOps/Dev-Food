@@ -3,9 +3,11 @@ import secrets
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 from dotenv import load_dotenv
+from flask_socketio import SocketIO
 
 load_dotenv()
 
+socketio = SocketIO(cors_allowed_origins="*")
 BASE_URL = "/docs"
 FILE_URL = "/swagger.yaml"
 

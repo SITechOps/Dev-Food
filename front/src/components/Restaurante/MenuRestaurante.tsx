@@ -27,9 +27,10 @@ const MenuRestaurante = () => {
     try {
       const response = await api.get(`/pedidos/restaurante/${idRestaurante}`);
       const pedidos = response.data.pedidos || [];
-      const pedidosNaoEntregues = pedidos.filter(
-        (p: IPedido) => p.status !== "Entregue",
+      const pedidosNaoEntregues = pedidos.filter((p: IPedido) =>
+        ["Pendente", "Em preparo", "Despachado"].includes(p.status),
       );
+
       setTotalPedidos(pedidosNaoEntregues.length);
     } catch (err) {
       console.error("Erro ao buscar pedidos:", err);

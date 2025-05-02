@@ -42,13 +42,11 @@ export const PedidosProvider = ({
   useEffect(() => {
     if (!idRestaurante) return;
 
-    listarPedidos(); // fetch inicial
+    listarPedidos();
 
-    // Escuta os eventos do socket
     socket.on("pedido_criado", listarPedidos);
     socket.on("atualizar_status", listarPedidos);
 
-    // Cleanup para evitar múltiplas inscrições
     return () => {
       socket.off("pedido_criado", listarPedidos);
       socket.off("atualizar_status", listarPedidos);

@@ -6,26 +6,26 @@ import PainelPedidos from "@/components/Restaurante/PainelPedidos";
 export default function PedidosContent() {
   const { pedidos, error } = usePedidosContext();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [abaSelecionada, setAbaSelecionada] = useState<"agora" | "agendado">(
-    "agora",
+  const [abaSelecionada, setAbaSelecionada] = useState<"padrão" | "rápida">(
+    "padrão",
   );
 
-  const pedidosAgora = useMemo(
+  const pedidosPadrao = useMemo(
     () =>
       pedidos.filter(
         (pedido) =>
-          pedido.tipoEntrega !== "Agendado" &&
+          pedido.tipoEntrega !== "Rápida" &&
           pedido.status !== "Cancelado" &&
           pedido.status !== "Entregue",
       ),
     [pedidos],
   );
 
-  const pedidosAgendado = useMemo(
+  const pedidosRapida = useMemo(
     () =>
       pedidos.filter(
         (pedido) =>
-          pedido.tipoEntrega === "Agendado" &&
+          pedido.tipoEntrega === "Rápida" &&
           pedido.status !== "Cancelado" &&
           pedido.status !== "Entregue",
       ),
@@ -33,8 +33,8 @@ export default function PedidosContent() {
   );
 
   const pedidosFiltrados = useMemo(() => {
-    return abaSelecionada === "agora" ? pedidosAgora : pedidosAgendado;
-  }, [abaSelecionada, pedidosAgora, pedidosAgendado]);
+    return abaSelecionada === "padrão" ? pedidosPadrao : pedidosRapida;
+  }, [abaSelecionada, pedidosPadrao, pedidosRapida]);
 
   const selectedPedido =
     pedidosFiltrados.find((pedido) => pedido.id === selectedId) || null;
@@ -47,33 +47,33 @@ export default function PedidosContent() {
       <div className="w-1/3 overflow-y-auto rounded-[10px] bg-white p-4">
         <div className="mb-4 flex w-full justify-around">
           <button
-            onClick={() => setAbaSelecionada("agora")}
+            onClick={() => setAbaSelecionada("padrão")}
             className={`relative flex items-center gap-2 text-lg font-medium transition-all duration-300 ${
-              abaSelecionada === "agora"
+              abaSelecionada === "padrão"
                 ? "border-b-brown-normal text-brown-normal border-b-2"
                 : "text-gray-medium"
             }`}
           >
-            Agora
-            {pedidosAgora.length > 0 && (
+            Padrão
+            {pedidosPadrao.length > 0 && (
               <div className="bg-brown-normal flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white">
-                {pedidosAgora.length}
+                {pedidosPadrao.length}
               </div>
             )}
           </button>
 
           <button
-            onClick={() => setAbaSelecionada("agendado")}
+            onClick={() => setAbaSelecionada("rápida")}
             className={`relative flex items-center gap-2 text-lg font-medium transition-all duration-300 ${
-              abaSelecionada === "agendado"
+              abaSelecionada === "rápida"
                 ? "border-b-brown-normal text-brown-normal border-b-2"
                 : "text-gray-medium"
             }`}
           >
-            Agendado
-            {pedidosAgendado.length > 0 && (
+            Rápida
+            {pedidosRapida.length > 0 && (
               <div className="bg-brown-normal flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white">
-                {pedidosAgendado.length}
+                {pedidosRapida.length}
               </div>
             )}
           </button>

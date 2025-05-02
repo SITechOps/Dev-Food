@@ -51,7 +51,7 @@ def load_pedidos_exemplo():
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Cartão",
                 "status": "Concluído",
-                "tipo_entrega": "Agora",
+                "tipo_entrega": "Padrão",
                 "itens": [
                     {"id_produto": produtos[0].id, "qtd_itens": 2, "valor_calculado": 50.00},
                     {"id_produto": produtos[1].id, "qtd_itens": 1, "valor_calculado": 50.00},
@@ -64,7 +64,7 @@ def load_pedidos_exemplo():
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Pix",
                 "status": "Concluído",
-                "tipo_entrega": "Agendado",
+                "tipo_entrega": "Rápida",
                 "created_at": data_ontem,
                 "updated_at": data_ontem,
                 "itens": [
@@ -78,7 +78,7 @@ def load_pedidos_exemplo():
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Dinheiro",
                 "status": "Pendente",
-                "tipo_entrega": "Agora",
+                "tipo_entrega": "Padrão",
                 "created_at": data_3_dias_atras,
                 "updated_at": data_3_dias_atras,
                 "itens": [
