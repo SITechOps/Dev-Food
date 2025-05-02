@@ -8,7 +8,7 @@ const LayoutRestaurante = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="mt-10 flex min-h-screen">
       <div
-        className={`fixed top-0 left-0 h-full w-64 flex-shrink-0 bg-gray-800 text-white transition-all duration-300 lg:relative ${
+        className={`bg-gray-light fixed top-0 left-0 h-full w-64 flex-shrink-0 text-white transition-all duration-300 lg:relative ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
@@ -17,7 +17,7 @@ const LayoutRestaurante = ({ children }: { children: React.ReactNode }) => {
 
       <button
         onClick={toggleMenu}
-        className="absolute top-5 left-5 z-10 rounded bg-blue-500 p-2 text-white lg:hidden"
+        className="bg-brown-normal absolute top-5 left-5 z-10 rounded p-2 text-white lg:hidden"
       >
         ☰
       </button>

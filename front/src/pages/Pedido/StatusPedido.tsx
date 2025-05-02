@@ -27,16 +27,20 @@ export default function OrderStatusTracker() {
   const { userFormList } = useUserAccount();
   const idUsuario = userData?.sub;
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const fetchPedidosUsuario = async () => {
     if (!idUsuario) return;
     try {
       const response = await api.get(`/pedidos/usuario/${idUsuario}`);
       setPedidos(response.data.pedidos || []);
-      console.log(pedidos);
     } catch (error) {
       console.error("Erro ao buscar pedidos do usuário:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   useEffect(() => {
     fetchPedidosUsuario();
 
@@ -48,6 +52,10 @@ export default function OrderStatusTracker() {
       socket.off("atualizar_status", fetchPedidosUsuario);
     };
   }, [idUsuario]);
+
+  useEffect(() => {
+    console.log("Pedidos atualizados:", pedidos);
+  }, [pedidos]);
 
   const getCodigoPedido = (pedidoId: string) => {
     if (userFormList?.telefone) {
@@ -67,7 +75,9 @@ export default function OrderStatusTracker() {
         Seus pedidos
       </h2>
 
-      {pedidosEmAberto.length === 0 ? (
+      {isLoading ? (
+        <p className="text-gray-medium text-center">Carregando pedidos...</p>
+      ) : pedidosEmAberto.length === 0 ? (
         <p className="text-gray-medium text-center">
           Nenhum pedido em andamento.
         </p>

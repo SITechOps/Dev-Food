@@ -46,7 +46,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
       case "Cancelado":
       case "Despachado":
         return {
-          buttonClass: "bg-gray-medium text-white cursor-not-allowed",
+          buttonClass: "bg-gray-medium w-[50%] text-white cursor-not-allowed",
           buttonText: "Não disponível",
         };
       default:
@@ -98,7 +98,7 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           <label className="text-gray-medium text-sm">Forma de Pagamento</label>
         </div>
         <span>
-          {pedido.formaPagamento} - R$ {pedido.valorTotal}- {pedido.codigo}
+          {pedido.formaPagamento} - R$ {pedido.valorTotal}
         </span>
       </div>
 
@@ -135,20 +135,22 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           Cancelar
         </Button>
 
-        <Button
-          color="default"
-          className={`${buttonClass}`}
-          onClick={() => {
-            if (buttonText === "Confirmar") {
-              handleStatusChange("Em preparo");
-            } else if (buttonText === "Despachar") {
-              handleStatusChange("Despachado");
-            }
-          }}
-          isLoading={isLoading}
-        >
-          {buttonText}
-        </Button>
+        {pedido.status !== "Despachado" && pedido.status !== "Cancelado" && (
+          <Button
+            color="default"
+            className={`${buttonClass}`}
+            onClick={() => {
+              if (buttonText === "Confirmar") {
+                handleStatusChange("Em preparo");
+              } else if (buttonText === "Despachar") {
+                handleStatusChange("Despachado");
+              }
+            }}
+            isLoading={isLoading}
+          >
+            {buttonText}
+          </Button>
+        )}
       </div>
     </div>
   );

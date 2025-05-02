@@ -166,7 +166,7 @@ export default function PainelPedidos({
                     </p>
                   )}
                   <button
-                    className="text-brown-normal font-medium"
+                    className="text-brown-normal cursor-pointer font-medium"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate("/entregador");
