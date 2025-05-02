@@ -1,29 +1,20 @@
 export interface IMeusPedidos {
-  Id: string;
-  atualizado_em: string;
-  data_pedido: string;
-  endereco: {
-    bairro: string;
-    cidade: string;
-    complemento: string;
-    estado: string;
-    logradouro: string;
-    numero: number;
-  };
+  id: number;
+  id_usuario: string;
+  valor_total: number;
   forma_pagamento: string;
-  itens: {
-    produto: string;
-    qtd_itens: number;
-    valor_calculado: string;
-  }[];
-  restaurante: {
-    logo: string;
-    nome: string;
-  };
-  status: string;
-  tipo_entrega: string;
-  valor_total: string;
-}
-export interface Props {
-  tipo: "meuPedido" | "historico";
+  restaurante_nome: string;
+  restaurante_logo: string;
+  endereco_logradouro: string;
+  endereco_numero: string;
+  endereco_complemento: string;
+  endereco_bairro: string;
+  endereco_cidade: string;
+  endereco_estado: string;
+  item1_produto: string;
+  item1_qtd: number;
+  item1_valor: number;
+  item2_produto?: string;
+  item2_qtd?: number;
+  item2_valor?: number;
 }
