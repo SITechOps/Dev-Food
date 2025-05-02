@@ -8,6 +8,7 @@ import { calcularDistancia } from "../utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
 import { useAuth } from "../contexts/AuthContext";
 import Categorias from "./RestaurantesDisponiveis/Categorias";
+import Input from "@/components/ui/Input";
 
 // Tipagens explícitas
 interface Endereco {
@@ -229,15 +230,15 @@ export default function Home() {
 
   return (
     <div className="mt-[5rem]">
-      <h1 className="my-8 text-center font-medium">
+      <h1 className="text-blue my-8 text-center font-medium">
         Conheça os restaurantes disponíveis
       </h1>
       <div className="mx-auto mb-8 max-w-md">
-        <input
+        <Input
           type="text"
           placeholder="Buscar por restaurante ou item..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(value) => setSearchTerm(value)}
           className="bg-gray-medium w-full rounded-md px-4 py-2 shadow-sm"
         />
       </div>
