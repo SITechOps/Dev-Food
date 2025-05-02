@@ -7,6 +7,7 @@ export const useRestaurantAccount = () => {
   const { logout, userData } = useAuth();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const idRestaurante = userData?.sub;
 
   const restaurantEnderecoFields = [
@@ -83,6 +84,7 @@ export const useRestaurantAccount = () => {
   });
 
   async function fetchUserData() {
+    setIsLoading(true);
     try {
       const response = await api.get(`/restaurante/${idRestaurante}`);
       const respRestaurante = response.data?.data?.attributes || [];
@@ -118,6 +120,8 @@ export const useRestaurantAccount = () => {
       });
     } catch (error) {
       console.error("Erro ao buscar restaurante:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -214,6 +218,7 @@ export const useRestaurantAccount = () => {
     restaurantEnderecoFields,
     isEditing,
     setIsEditing,
+    isLoading,
     idRestaurante,
     handleLogout,
     deletarDados,

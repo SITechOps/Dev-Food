@@ -9,6 +9,7 @@ export default function RestaurantForm() {
     restaurantFormFields,
     isEditing,
     setIsEditing,
+    isLoading,
     handleLogout,
     deletarDados,
     alterarDadosRestaurante,
@@ -30,6 +31,7 @@ export default function RestaurantForm() {
         setFormList={setFormList}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isLoading={isLoading}
         navigate={navigate}
         onSubmit={alterarDadosRestaurante}
         deletarDados={deletarDados}

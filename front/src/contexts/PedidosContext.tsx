@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { IPedido } from "../interface/IPedidos";
 import { usePedidosFetch } from "@/hooks/usePedidosFetch";
+import { socket } from "../utils/socket";
 
 interface PedidosContextData {
   pedidos: IPedido[];
@@ -34,15 +35,23 @@ export const PedidosProvider = ({
     await fetchPedidos(idRestaurante, setPedidos, setLoading, setError);
   };
 
-  useEffect(() => {
-    if (idRestaurante) {
-      listarPedidos();
-    }
-  }, [idRestaurante]);
-
   const alterarStatus = async (idPedido: string, novoStatus: string) => {
     await updateStatus(idPedido, novoStatus, setPedidos);
   };
+
+  useEffect(() => {
+    if (!idRestaurante) return;
+
+    listarPedidos();
+
+    socket.on("pedido_criado", listarPedidos);
+    socket.on("atualizar_status", listarPedidos);
+
+    return () => {
+      socket.off("pedido_criado", listarPedidos);
+      socket.off("atualizar_status", listarPedidos);
+    };
+  }, [idRestaurante]);
 
   return (
     <PedidosContext.Provider

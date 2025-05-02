@@ -37,7 +37,6 @@ export const useUserAccount = () => {
     try {
       const response = await api.get(`/user/${idUsuario}`);
       const respUser = response.data?.data?.attributes || [];
-      console.log(respUser);
       setUserFormList({
         nome: respUser.nome || "",
         email: respUser.email || "",
@@ -73,7 +72,7 @@ export const useUserAccount = () => {
 
       localStorage.clear();
       setLoading(false);
-      navigate("/");
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
       setLoading(false);

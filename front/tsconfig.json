@@ -11,7 +11,10 @@
       "@/assets/*": ["src/assets/*"],
       "@/components/*": ["src/components/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/contexts/*": ["src/contexts/*"]
+      "@/contexts/*": ["src/contexts/*"],
+      "@/interface/*": ["src/interface/*"],
+      "@/connection/*": ["src/connection/*"],
+      "@/utils/*": ["src/utils/*"]
     }
   }
 }

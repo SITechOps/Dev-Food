@@ -3,6 +3,7 @@ import Button from "@/components/ui/Button";
 import { usePedidosContext } from "@/contexts/usePedidosContext";
 import { pedidosUtils } from "../../utils/pedidosUtils";
 import { Package, CreditCard, MapPin, ShoppingBag } from "lucide-react";
+import { useState } from "react";
 
 interface DetalhesPedidoProps {
   pedido: IPedido;
@@ -13,6 +14,7 @@ const iconStyle = "mr-2 text-gray-medium w-5 h-5";
 const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
   const { alterarStatus } = usePedidosContext();
   const { formatarData } = pedidosUtils();
+  const [isLoading, setIsLoading] = useState(false);
 
   const getStatusTextColor = (status: string) => {
     switch (status) {
@@ -41,12 +43,6 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
           buttonClass: "bg-green-dark hover:bg-green text-white",
           buttonText: "Despachar",
         };
-      case "Cancelado":
-      case "Despachado":
-        return {
-          buttonClass: "bg-gray-medium text-white cursor-not-allowed",
-          buttonText: "Não disponível",
-        };
       default:
         return {
           buttonClass: "bg-brown-normal hover:bg-brown-dark text-white",
@@ -59,10 +55,13 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
 
   const handleStatusChange = async (newStatus: string) => {
     if (pedido.id) {
+      setIsLoading(true);
       try {
         await alterarStatus(pedido.id, newStatus);
       } catch (error) {
         alert("Erro ao alterar status. Tente novamente.");
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -123,25 +122,29 @@ const DetalhesPedido: React.FC<DetalhesPedidoProps> = ({ pedido }) => {
       <div className="mt-8 flex justify-between">
         <Button
           color="outlined"
-          className="border-brown-normal text-brown-normal hover:bg-brown-light-active mr-4 border-2"
+          className={`border-brown-normal text-brown-normal hover:bg-brown-light-active mr-4 border-2 ${pedido.status === "Despachado" ? "w-1/2" : ""}`}
           onClick={() => handleStatusChange("Cancelado")}
+          isLoading={isLoading}
         >
           Cancelar
         </Button>
 
-        <Button
-          color="default"
-          className={`${buttonClass}`}
-          onClick={() => {
-            if (buttonText === "Confirmar") {
-              handleStatusChange("Em preparo");
-            } else if (buttonText === "Despachar") {
-              handleStatusChange("Despachado");
-            }
-          }}
-        >
-          {buttonText}
-        </Button>
+        {pedido.status !== "Despachado" && pedido.status !== "Cancelado" && (
+          <Button
+            color="default"
+            className={`${buttonClass}`}
+            onClick={() => {
+              if (buttonText === "Confirmar") {
+                handleStatusChange("Em preparo");
+              } else if (buttonText === "Despachar") {
+                handleStatusChange("Despachado");
+              }
+            }}
+            isLoading={isLoading}
+          >
+            {buttonText}
+          </Button>
+        )}
       </div>
     </div>
   );

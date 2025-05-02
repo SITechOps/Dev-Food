@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from src.model.repositories.usuarios_repository import UsuariosRepository
 from src.model.repositories.produtos_repository import ProdutosRepository
 from src.model.repositories.enderecos_repository import EnderecosRepository
 from src.model.repositories.restaurantes_repository import RestaurantesRepository
@@ -29,10 +30,11 @@ def get_pedidos(id):
     
     pedidos_repo = PedidosRepository()
     itens_repo = ItensRepository()
+    usuarios_repo = UsuariosRepository()
     restaurantes_repo = RestaurantesRepository()
     enderecos_repo = EnderecosRepository()
     produtos_repo = ProdutosRepository()
-    pedidos_manager = PedidosManager(pedidos_repo, itens_repo, restaurantes_repo, enderecos_repo, produtos_repo)
+    pedidos_manager = PedidosManager(pedidos_repo, itens_repo, usuarios_repo, restaurantes_repo, enderecos_repo, produtos_repo)
 
     http_response = pedidos_manager.get_pedidos(http_request)
     return jsonify(http_response.body), http_response.status_code

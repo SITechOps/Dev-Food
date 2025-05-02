@@ -12,7 +12,7 @@ class Pedido(Base):
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id"), nullable=False)
     forma_pagamento = Column(String(20), nullable=False)
     status = Column(String(20), default="Pendente")
-    tipo_entrega = Column(String(10), default="Agora")   
+    tipo_entrega = Column(String(10), default="Padrão")
 
     def to_dict(self):
         return {
