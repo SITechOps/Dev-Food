@@ -74,7 +74,7 @@ export const useCarrinho = () => {
 					? {
 						...item,
 						quantidade: item.quantidade + 1,
-						subtotal: item.subtotal + item.valor_unitario,
+						subtotal: item.subtotal + parseFloat(item.valor_unitario),
 					}
 					: item
 			)
