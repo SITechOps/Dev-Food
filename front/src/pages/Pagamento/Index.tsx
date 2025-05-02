@@ -181,7 +181,7 @@ export default function Pagamento() {
 				<hr className="border-b border-gray-medium my-4" />
 				<p className="flex gap-8 items-center justify-between my-2">
 					Subtotal
-					<span>R$  {valoresCarrinho.subtotal}</span>
+					<span>R$  {valoresCarrinho.subtotal.toFixed(2)}</span>
 				</p>
 				<p className="flex gap-8 items-center justify-between my-2">
 					Taxa de entrega
