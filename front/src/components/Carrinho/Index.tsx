@@ -121,7 +121,7 @@ export default function Carrinho({
                   className="mt-4 w-full p-2"
                   onClick={() => escolherFormaPagamento(setIsCarrinhoOpen)}
                 >
-                  Escolher a forma de pagamento
+                 Quero Comprar
                 </Button>
               </div>
             </>

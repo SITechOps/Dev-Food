@@ -1,174 +1,101 @@
-import { useState } from "react";
-import { FaCcMastercard } from "react-icons/fa";
-import CardsOpcoes from "../components/CardsOpcoes";
 import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
-import { NumberFormatValues, PatternFormat } from "react-number-format";
 import Input from "@/components/ui/Input";
-import IconAction from "@/components/ui/IconAction";
-import Tipo from "../components/Tipo";
-import { BsCreditCardFill } from "react-icons/bs";
-
-export default function PageCartao() {
-	const [showModal, setShowModal] = useState(false);
-	const [formList, setFormList] = useState({
-		nCartao: "",
-		nome: "",
-		validade: "",
-		cvv: "",
-		apelido: "",
-		cpf: "",
-		tipo: "",
-	});
-	const [etapa, setEtapa] = useState<"dadosCartao" | "dadosPessoal">("dadosCartao");
+import CardsOpcoes from "../components/CardsOpcoes";
+import { FaCcMastercard } from "react-icons/fa";
+import Modal from "@/components/ui/Modal";
+import { Loader2 } from "lucide-react";
+import { useCartaoComponent } from "@/hooks/Pagamento/useCartao";
 
 
-	function adicionarCartao() {
-		setShowModal(true)
-	}
-
+export default function PagueCartao() {
+	const {
+		isCardFormReady, 
+		formKey,
+		showModal, 
+		setShowModal,
+		loadingGenerico, 
+		adicionarCartao,
+		simulacaoGenerica,
+		handleSubmit
+	} = useCartaoComponent();
+	
 	return (
-		<div className="mt-5">
-			<p className="mb-3 font-bold">Cartões Cadastrados:</p>
+		<>
+			<p className="my-4 font-bold">Cartões Cadastrados:</p>
 			<CardsOpcoes
 				icon={<FaCcMastercard />}
 				title="Maria - Mastercard"
 				subtitle="**** 2546"
-				onClick={() => console.log("um cartão")}
+				loading={loadingGenerico && <Loader2 />}
+				onClick={simulacaoGenerica}
 			/>
-			<hr className="my-5"/>
+
+			<hr className="my-5" />
 			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
+			<Modal isOpen={showModal} onClose={() => setShowModal(false)} className="w-100">
 
-			<Modal isOpen={showModal} onClose={() => setShowModal(false)} >
-				<form action="">
+				<div key={formKey}>
+					<form id="form-checkout" onSubmit={handleSubmit}>
 
-					{etapa === "dadosPessoal" && (
-						<>
-							<IconAction className="mb-2" onClick={() => setEtapa("dadosCartao")} />
-						</>
-					)}
-					<p className="font-bold text-center mb-4">Pagamento com cartão</p>
-					{etapa === "dadosCartao" && (
-						<>
-							<p className="text-center">Selecione o meio de pagamento</p>
-							<div className="my-5 flex itens-center justify-center space-x-4">
-								<Tipo
-									tipo="credito"
-									tipoSelecionado={formList.tipo} 
-									onClick={() => setFormList(prev => ({ ...prev, tipo: "credito" }))}
-									icon={<BsCreditCardFill className="text-2xl" />}
-									descricao="Crédito"
-								/>
-								<Tipo
-									tipo="debito"
-									tipoSelecionado={formList.tipo}
-									onClick={() => setFormList(prev => ({ ...prev, tipo: "debito" }))}
-									icon={<BsCreditCardFill className="text-2xl" />}
-									descricao="Débito"
-								/>
-							</div>
-							<hr className="my-3" />
-							<label htmlFor="nCartao" className="font-medium">
-								Número do cartão
-							</label>
+						<Input
+							textLabel="Número do cartão"
+							id="form-checkout__cardNumber"
+							type="text"
+							className="mb-3"
+						/>
 
-							<PatternFormat
-								format="####.####.####.####"
-								mask="_"
-								allowEmptyFormatting
-								value={formList.nCartao}
-								onValueChange={(values: NumberFormatValues) =>
-									setFormList((prev) => ({ ...prev, nCartao: values.value }))
-								}
-								className="input mb-3"
-								type="text"
-								id="nCartao"
-							/>
+						<div className="flex items-center gap-4">
 
-							<div className="flex items-center gap-4">
-								<div>
-									<label htmlFor="validade" className="font-medium">
-										Validade
-									</label>
-									<PatternFormat
-										format="##/##"
-										mask="_"
-										allowEmptyFormatting
-										value={formList.validade}
-										onValueChange={(values: NumberFormatValues) =>
-											setFormList((prev) => ({ ...prev, validade: values.value }))
-										}
-										className="input mb-3"
-										type="text"
-										id="validade"
-									/>
-								</div>
-								<div>
-									<label htmlFor="cvv" className="font-medium">
-										CVV
-									</label>
-									<PatternFormat
-										format="####"
-										mask="_"
-										allowEmptyFormatting
-										value={formList.cvv}
-										onValueChange={(values: NumberFormatValues) =>
-											setFormList((prev) => ({ ...prev, cvv: values.value }))
-										}
-										placeholder="CVV"
-										className="input mb-3"
-										type="text"
-										id="cvv"
-									/>
-								</div>
-							</div>
-							<Button type="button" className="mt-3" onClick={() => setEtapa("dadosPessoal")}>Próximo</Button>
-						</>
-					)}
-					{etapa === "dadosPessoal" && (
-						<>
 							<Input
-								textLabel="Apelido do cartão"
-								id="apelido"
+								textLabel="Validade"
+								id="form-checkout__expirationDate"
 								type="text"
-								value={formList.apelido}
-								onChange={(value) =>
-									setFormList({ ...formList, apelido: value })
-								}
-								className="mb-3 mt-3"
-							/>
-							<Input
-								textLabel="Nome impresso no cartão"
-								id="nome"
-								type="text"
-								value={formList.nome}
-								onChange={(value) =>
-									setFormList({ ...formList, nome: value })
-								}
 								className="mb-3"
 							/>
-							<label htmlFor="cpf" className="font-medium">
-								CPF do titular
-							</label>
-							<PatternFormat
-								format="###.###.###-##"
-								mask="_"
-								allowEmptyFormatting
-								value={formList.cpf}
-								onValueChange={(values: NumberFormatValues) =>
-									setFormList((prev) => ({ ...prev, cpf: values.value }))
-								}
-								className="input mb-3"
+
+							<Input
+								textLabel="CVV"
+								id="form-checkout__securityCode"
 								type="text"
-								id="cpf"
+								className="mb-3"
+							/>
+						</div>
+						<div className="mb-3">
+							<label htmlFor="form-checkout__installments" className="font-medium">Quantidade de Parcelas</label>
+							<select className="input" id="form-checkout__installments"></select>
+						</div>
+						<div className="flex gap-4 mb-3">
+
+							<div>
+								<label htmlFor="form-checkout__identificationType" className="font-medium">Tipo de documento</label>
+								<select className="input" id="form-checkout__identificationType"></select>
+							</div>
+							<div>
+								<label htmlFor="form-checkout__issuer" className="font-medium">Tipo de Cartão</label>
+								<select className="input" id="form-checkout__issuer"></select>
+							</div>
+
+						</div>
+						<div className="flex gap-4 items-center">
+							<Input
+								textLabel="Nome impresso no cartão"
+								id="form-checkout__cardholderName"
+								type="text"
+								className="mb-3"
 							/>
 
-							<Button className="mt-3">Salvar</Button>
-						</>
-					)}
-				</form> 
-			</Modal>
-		</div>
-	)
+							<Input
+								textLabel="CPF do titular"
+								id="form-checkout__identificationNumber"
+								type="text"
+								className="mb-3"
+							/>
+						</div>
 
+						<Button type="submit" className="mt-5" disabled={!isCardFormReady}>Pagar</Button>
+					</form>
+				</div>
+			</Modal>
+		</>
+	)
 }

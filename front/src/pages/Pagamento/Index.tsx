@@ -12,10 +12,12 @@ import { useEffect, useState } from "react";
 export default function Pagamento() {
   const {
     restaurante,
-    subtotal,
+    // subtotal,
     valoresCarrinho,
-    selecionado,
-    setSelecionado,
+		meiosSelecao, 
+		setMeiosSelecao,
+    selecionado, 
+		setSelecionado,
     endereco,
     etapa,
     setEtapa,
@@ -70,14 +72,15 @@ export default function Pagamento() {
         <h1 className="my-8 text-center font-medium">Finalize seu pedido</h1>
 
         <div>
-          <p className="text-brown-normal border-brown-normal mb-5 w-30 rounded-sm border-b-2 pb-2 text-center transition-all">
+          <p className="text-brown-normal border-brown-normal mb-5 w-50 rounded-sm border-b-2 pb-2 text-center transition-all">
             Entrega
           </p>
           <div className="flex items-center gap-5">
             <TfiMapAlt className="text-3xl" />
             <div className="my-4 flex w-full items-center justify-between gap-4">
               <div>
-                <p className="font-semibold">{endereco}</p>
+                <p className="font-semibold break-words w-80">{endereco.rua}</p>
+                <p className="">{endereco.complemento}</p>
               </div>
             </div>
           </div>
@@ -122,16 +125,17 @@ export default function Pagamento() {
             </p>
           </div>
         </div>
+        <hr className="text-gray-light mb-2 mt-6" />
         <div>
           <div className="mb-10 flex w-100 items-center justify-between">
             <Button
               onClick={() => {
-                setSelecionado("site");
+                setMeiosSelecao("site");
                 setModeloPagamento("site");
               }}
               color="plain"
               className={`border-b-2 pb-2 transition-all ${
-                selecionado === "site"
+                meiosSelecao === "site"
                   ? "text-brown-normal border-brown-normal"
                   : "hover:text-blue-dark border-transparent"
               }`}
@@ -140,12 +144,12 @@ export default function Pagamento() {
             </Button>
             <Button
               onClick={() => {
-                setSelecionado("entrega");
+                setMeiosSelecao("entrega");
                 setModeloPagamento("entrega");
               }}
               color="plain"
               className={`border-b-2 pb-2 transition-all ${
-                selecionado === "site"
+                meiosSelecao === "site"
                   ? "text-blue hover:text-blue-dark border-transparent"
                   : "text-brown-normal border-brown-normal"
               }`}

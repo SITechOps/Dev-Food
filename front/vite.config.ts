@@ -18,4 +18,8 @@ export default defineConfig({
       "@utils": path.resolve(__dirname, "./src/utils"),
     },
   },
+  server: {
+    host: true, 
+    allowedHosts: ['caminho.ngrok-free.app'],
+  },
 });

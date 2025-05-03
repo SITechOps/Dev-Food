@@ -57,7 +57,7 @@ export default function DetalhesRestaurante() {
           </div>
 
           <Button
-            className="flex w-28 items-center rounded-md px-4 py-2"
+            className="flex w-30 items-center rounded-md px-4 py-2"
             onClick={() => setIsModalOpen(true)}
           >
             Ver mais
