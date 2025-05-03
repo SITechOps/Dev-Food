@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IPagePix, IResponsePagePix, StatusChave, statusTipo } from "@/interface/IPagamento";
 import { usePagamento } from "./usePagamento";
 import QRCode from 'qrcode';
+import { handleApiError } from "@/utils/errors";
 
 export const usePixComponent = () => {
 	const [key, setKey] = useState(0);
@@ -29,25 +30,18 @@ export const usePixComponent = () => {
 	}, [userData?.sub, valoresCarrinho.total, statusPagamento]);
 
 
-	function processamentoPagamento() {
-		let index = 0;
-
-		const interval = setInterval(() => {
-			if (index < sequencia.length - 1) {
-				index++;
-				const novoStatus = sequencia[index];
-
-				setStatusPagamento((_prev) => novoStatus);
-
-				if (novoStatus === "aprovado") {
-					setShowModal(true);
-				}
-			} else {
-				clearInterval(interval);
+	async function processamentoPagamento(sequencia: StatusChave[], intervaloMs: number = 10000) {
+		for (let index = 0; index < sequencia.length; index++) {
+			const novoStatus = sequencia[index];
+	
+			setStatusPagamento(novoStatus);
+	
+			if (novoStatus === "aprovado") {
+				setShowModal(true);
+				break;
 			}
-		}, 10000);
-
-		return () => clearInterval(interval);
+			await new Promise((resolve) => setTimeout(resolve, intervaloMs));
+		}
 	}
 
 
@@ -69,9 +63,10 @@ export const usePixComponent = () => {
 					qr_code_base64: resp,
 				});
 			}
-			processamentoPagamento();
-		} catch (err) {
-			console.error("Erro ao gerar QR Code:", err);
+			processamentoPagamento(sequencia, 8000);
+		} catch (error) {
+			const appError = handleApiError(error);
+			console.error(appError.message, appError.statusCode);
 		} finally {
 			setLoadingGenerico(false);
 		}
@@ -89,7 +84,7 @@ export const usePixComponent = () => {
 				const pixPayload: IPagePix = {
 					email_comprador: dados.email,
 					nome_comprador: dados.nome,
-					valor_pagamento: 0.15,
+					valor_pagamento: valoresCarrinho.total,
 				};
 
 				const response = await api.post<IResponsePagePix>("/pix/qr-code", {
@@ -115,7 +110,8 @@ export const usePixComponent = () => {
 					alert('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
 				}
 			} catch (error) {
-				console.error("Erro ao buscar usuário:", error);
+				const appError = handleApiError(error);
+				console.error(appError.message, appError.statusCode);
 			} finally {
 				setLoadingMP(false);
 			}
@@ -135,15 +131,33 @@ export const usePixComponent = () => {
 		try {
 			const response = await api.get(`/pix/status/${respPagamento.id}`);
 			const status = response.data.status;
-			if (status === "approved") {
-				setStatusPagamento("aprovado");
-				setShowModal(true)
-			} else {
-				setStatusPagamento("pendente");
+
+			switch (status) {
+				case "approved":
+					setStatusPagamento("aprovado");
+					setShowModal(true);
+					break;
+	
+				case "pending":
+					setStatusPagamento("pendente");
+					console.log("pedido pendente de pagamento")
+					break;
+	
+				case "rejected":
+					setStatusPagamento("rejeitado");
+					alert("Pagamento rejeitado. Por favor, tente novamente.");
+					navigate("/")
+					break;
+	
+				default:
+					navigate("/")
+					console.warn(`Status desconhecido recebido: ${status}`);
+					break;
 			}
 
 		} catch (error) {
-			console.error("Erro ao verificar status do pagamento:", error);
+			const appError = handleApiError(error);
+			console.error(appError.message, appError.statusCode);
 		}
 	}
 

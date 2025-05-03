@@ -3,11 +3,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { IItens, IPedido } from "@/interface/IPagamento";
 import { IUsuarioCliente } from "@/interface/IUser";
+import { AppError, handleApiError } from "@/utils/errors";
+import { AppSuccess } from "@/utils/success";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const usePagamento = () => {
-	const { userData,  token } = useAuth();
+	const { userData, token } = useAuth();
 	const navigate = useNavigate();
 	const [endereco, setEndereco] = useState({
 		rua: "",
@@ -31,61 +33,69 @@ export const usePagamento = () => {
 		total: 0
 	});
 
-	//pegar o endereço do cliente
 	useEffect(() => {
-		async function obterEnderecoCliente() {
-		  try {
-			if (!idUsuario || !token) {
-			  return;
-			}
-	
-			const response = await api.get(`/user/${idUsuario}/enderecos`, {
-			  headers: {
-				Authorization: `Bearer ${token}`,
-			  },
+		obterEnderecoCliente();
+		fetchData();
+	}, [idUsuario, token, storedCompra]);
+
+
+	async function fetchData() {
+
+		if (storedCompra) {
+			const compra = JSON.parse(storedCompra);
+			setRestaurante(compra.itens[0]?.restaurante.nome);
+			setValoresCarrinho({
+				subtotal: compra.subtotal,
+				taxaEntrega: compra.taxaEntrega,
+				total: compra.total,
 			});
-			const endereco = response.data?.data?.attributes[0];
-	
-			if (!endereco) {
-			  return;
+
+		} 
+	};
+
+	async function obterEnderecoCliente() {
+		try {
+			if (!idUsuario || !token) {
+				alert("Usuário ou token não encontrado. Não é possível buscar o endereço.")
+				console.warn("Usuário ou token não encontrado. Não é possível buscar o endereço.");
+				navigate("/")
+				return;
 			}
-	
+
+			const response = await api.get(`/user/${idUsuario}/enderecos`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const endereco = response.data?.data?.attributes?.[0];
+
+			if (!endereco) {
+				alert("Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro")
+				navigate("/")
+				return;
+			}
+
+			if (!endereco.logradouro || !endereco.numero || !endereco.bairro || !endereco.cidade || !endereco.estado || !endereco.pais) {
+				console.error("Endereço incompleto retornado pela API:", endereco);
+				throw new AppError("O endereço retornado está incompleto. Verifique os dados cadastrados.");
+			}
+
 			const rua = `${endereco.logradouro}, ${endereco.numero}`;
-			const complemento = ` ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
+			const complemento = `${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
+
 			setEndereco({
 				rua: rua,
 				complemento: complemento,
-				id: endereco.id
-			  });
-	
-		  } catch (error) {
-			console.error(
-			  error,
-			);
-		  }
+				id: endereco.id,
+			});
+
+			console.log("Endereço definido com sucesso:");
+		} catch (error) {
+			const appError = handleApiError(error);
+			console.error(appError.message, appError.statusCode);
 		}
-	
-		obterEnderecoCliente();
-	}, [idUsuario, token]);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			if (storedCompra) {
-				const compra = JSON.parse(storedCompra);
-				setRestaurante(compra.itens[0]?.restaurante.nome);
-				setValoresCarrinho({
-					subtotal: compra.subtotal,
-					taxaEntrega: compra.taxaEntrega,
-					total: compra.total,
-				});
-				
-			} else {
-				// console.log("Carrinho não encontrado no localStorage.");
-			}
-		};
-
-		fetchData();
-	}, [storedCompra]);
+	}
 
 	async function getDadosUser() {
 		try {
@@ -94,42 +104,49 @@ export const usePagamento = () => {
 			setUser(dados);
 			return dados;
 		} catch (error) {
-			console.error("Erro ao buscar dados:", error);
+			const appError = handleApiError(error);
+			console.error(appError.message, appError.statusCode);
 		}
 	}
 
 	async function postPedido(formaPagamento: "pix" | "cartao") {
 		try {
-			if (storedCompra) {
-				const compra = JSON.parse(storedCompra);
+			if (!storedCompra) {
+				throw new AppError("Carrinho não encontrado. Adicione itens antes de prosseguir.");
+			}
 
-				const pedidoPayload: IPedido = {
-					id_usuario: userData?.sub,
-					id_restaurante: compra.itens[0]?.restaurante.id,
-					id_endereco: endereco.id,
-					valor_total: compra.total,
-					forma_pagamento: formaPagamento,
-					itens: compra.itens.map((item: any): IItens => ({
-						id_produto: item.id,
-						qtd_itens: item.quantidade,
-						valor_calculado: item.subtotal
-					}))
-				};
+			const compra = JSON.parse(storedCompra);
+			const pedidoPayload: IPedido = construirPedidoPayload(compra, formaPagamento);
+			const resp = await api.post("/pedido", { pedido: pedidoPayload });
 
-				const resp = await api.post("/pedido", { pedido: pedidoPayload });
-				if (resp.status === 201) {
-					setLoading(false);
-					localStorage.removeItem('quantidadeTotal');
-					localStorage.removeItem('compraAtual');
-					localStorage.removeItem('carrinho');
-					navigate("/")
-					atualizarQuantidadeTotal();
-				}
-				alert('seu pedido foi gerado com sucesso')
+			if (resp.status === 201) {
+				setLoading(false);
+				atualizarQuantidadeTotal();
+				localStorage.removeItem("quantidadeTotal");
+				localStorage.removeItem("compraAtual");
+				localStorage.removeItem("carrinho");
+				navigate("/");
+				new AppSuccess("Pedido realizado com sucesso! Obrigado por comprar conosco.");
 			}
 		} catch (error) {
-			console.error("Erro ao verificar status do pagamento:", error);
+			const appError = handleApiError(error);
+			console.error(appError.message, appError.statusCode);
 		}
+	}
+
+	function construirPedidoPayload(compra: any, formaPagamento: "pix" | "cartao"): IPedido {
+		return {
+			id_usuario: userData?.sub,
+			id_restaurante: compra.itens[0]?.restaurante.id,
+			id_endereco: endereco.id,
+			valor_total: compra.total,
+			forma_pagamento: formaPagamento,
+			itens: compra.itens.map((item: any): IItens => ({
+				id_produto: item.id,
+				qtd_itens: item.quantidade,
+				valor_calculado: item.subtotal,
+			})),
+		};
 	}
 
 	return {
@@ -139,9 +156,9 @@ export const usePagamento = () => {
 		valoresCarrinho,
 		setLoading,
 		setValoresCarrinho,
-		meiosSelecao, 
+		meiosSelecao,
 		setMeiosSelecao,
-		selecionado, 
+		selecionado,
 		setSelecionado,
 		endereco,
 		etapa,

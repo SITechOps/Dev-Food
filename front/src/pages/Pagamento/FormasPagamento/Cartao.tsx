@@ -78,14 +78,14 @@ export default function PagueCartao() {
 						</div>
 						<div className="flex gap-4 items-center">
 							<Input
-								textLabel="Nome impresso no cartão"
+								textLabel="Nome do Titular"
 								id="form-checkout__cardholderName"
 								type="text"
 								className="mb-3"
 							/>
 
 							<Input
-								textLabel="CPF do titular"
+								textLabel="CPF do Titular"
 								id="form-checkout__identificationNumber"
 								type="text"
 								className="mb-3"

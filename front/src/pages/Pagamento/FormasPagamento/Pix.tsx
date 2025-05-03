@@ -5,12 +5,9 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
 import { BiSolidHandDown } from "react-icons/bi";
 import { GoCopy } from "react-icons/go";
-import { Loading } from "@/components/shared/Loading";
 import { usePixComponent } from "@/hooks/Pagamento/usePix";
 import VisualizacaoConometro from "../components/VisualizacaoConometro";
-import { usePagamento } from "@/hooks/Pagamento/usePagamento";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 
 export default function PagePix() {
 	const {
@@ -33,7 +30,6 @@ export default function PagePix() {
 		pagoComMP,
 		stausPagamentoPix
 	} = usePixComponent();
-	const { navigate } = usePagamento();
 
 	return (
 		<>
@@ -89,29 +85,30 @@ export default function PagePix() {
 							</div>
 							<p className="w-100 text-center my-3">Abra um aplicativo em que você tenha o Pix habilitado e escolha a opção Pagar, em seguida Ler QR Code</p>
 
-              <div className="text-center">
-                <p className="my-2 flex items-center justify-center gap-1">
-                  Pix copia e cola
-                  <BiSolidHandDown />
-                </p>
-                <button
-                  onClick={handleCopy}
-                  className="hover:bg-brown-light-active bg-brown-light text-gray-medium hover:border-brown-normal my-2 w-100 cursor-pointer rounded border px-3 py-1"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="w-80 truncate bg-transparent">
-                      {respPagamento.qr_code}
-                    </p>
-                    <GoCopy className="icon" />
-                  </div>
-                </button>
-                {copied && <p className="mt-2">Código copiado!</p>}
-              </div>
+							<div className="text-center">
+								<p className="my-2 flex items-center justify-center gap-1">
+									Pix copia e cola
+									<BiSolidHandDown />
+								</p>
+								<button
+									onClick={handleCopy}
+									className="hover:bg-brown-light-active bg-brown-light text-gray-medium hover:border-brown-normal my-2 w-100 cursor-pointer rounded border px-3 py-1"
+								>
+									<div className="flex items-center justify-between gap-2">
+										<p className="w-80 truncate bg-transparent">
+											{respPagamento.qr_code}
+										</p>
+										<GoCopy className="icon" />
+									</div>
+								</button>
+								{copied &&
+									<>
+										<p className="mt-2">Código copiado!</p>
 
-								{copied && (
-									<p className="mt-2">Código copiado!</p>
-								)}
-
+										<hr className="text-gray-light my-3" />
+									</>
+								}
+							</div>
 							<VisualizacaoConometro
 								onExpire={() => {
 									setStatusPagamento("expirou");

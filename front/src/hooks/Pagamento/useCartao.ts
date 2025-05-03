@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { usePagamento } from "./usePagamento";
 import { ICreatFormCartao, ITokenCartao } from "@/interface/IPagamento";
 import { api } from "@/connection/axios";
+import { AppError, handleApiError } from "@/utils/errors";
+import { AppSuccess } from "@/utils/success";
 export { };
 
 declare global {
@@ -31,8 +33,7 @@ export const useCartaoComponent = () => {
 		function emissaoCartaoMercadoPago() {
 	
 			if (!window.MercadoPago) {
-				console.error("SDK do Mercado Pago não carregado.");
-				return;
+				throw new AppError("SDK do Mercado Pago não carregado.");
 			}
 	
 			if (cardFormRef.current) {
@@ -64,7 +65,8 @@ export const useCartaoComponent = () => {
 						console.log("Formulário montado com sucesso");
 					},
 					onError: (error: any) => {
-						console.error("Erro no cardForm:", error);
+						const appError = handleApiError(error);
+						console.error(appError.message, appError.statusCode);
 					},
 				}
 			});
@@ -75,20 +77,21 @@ export const useCartaoComponent = () => {
 		async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 			event.preventDefault();
 			if (!isCardFormReady) {
-				console.error("O formulário ainda não foi montado.");
-				return;
+				throw new AppError("O formulário ainda não foi montado.");
 			}
 	
 			try {
 				const formData = cardFormInstanceRef.current?.getCardFormData?.();
 				if (!formData) {
-					console.error("Falha ao obter dados do cartão.");
-					return;
+					throw new AppError("Falha ao obter dados do cartão.");
 				}
 	
-				await postCartao(formData)
+				if(formData.token){
+					await postCartao(formData)
+				}
 			} catch (error) {
-				console.error("Erro ao processar o pagamento:", error);
+				const appError = handleApiError(error);
+				console.error(appError.message, appError.statusCode);
 			}
 		}
 	
@@ -96,11 +99,10 @@ export const useCartaoComponent = () => {
 		async function postCartao(dados: ICreatFormCartao) {
 			try {
 				const respUser = await getDadosUser();
-				const email = respUser.email
 	
 				const payload = {
 					token: dados.token,
-					cardholderEmail: email,
+					cardholderEmail: respUser.email,
 					transaction_amount: parseFloat(dados.amount),
 					installments: parseFloat(dados.installments),
 					identification_type: dados.identificationType,
@@ -109,15 +111,17 @@ export const useCartaoComponent = () => {
 				}
 	
 				const response = await api.post<ITokenCartao>("/cartao", payload);
-				alert("Pagamento aprovado!");
+				new AppSuccess("Pagamento realizado com sucesso");
+				console.log("Pagamento realizado com sucesso:", response.data);
+				
 				if(response){
 					setShowModal(false)
 					await postPedido("cartao");
 				}
-				console.log("Pagamento realizado com sucesso:", response.data);
 	
 			} catch (error) {
-				console.error("Erro ao processar pagamento:", error);
+				const appError = handleApiError(error);
+				console.error(appError.message, appError.statusCode);
 			}
 		}
 	
