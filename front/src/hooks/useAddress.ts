@@ -136,6 +136,7 @@ export const useEndereco = () => {
       setComplemento("");
       setTipo("");
       if (searchInput.current) searchInput.current.value = "";
+      navigate("/");
     } catch (error) {
       console.error("Erro ao cadastrar endereço:", error);
       alert("Erro ao cadastrar endereço. Tente novamente.");

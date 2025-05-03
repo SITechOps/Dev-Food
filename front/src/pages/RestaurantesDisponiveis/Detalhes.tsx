@@ -6,8 +6,6 @@ import { Loading } from "../../components/shared/Loading";
 import VerMaisRestaurante from "./VerMais/Index";
 import IconAction from "@/components/ui/IconAction";
 
-
-
 export default function DetalhesRestaurante() {
   const {
     restaurante,
@@ -22,10 +20,12 @@ export default function DetalhesRestaurante() {
     return <Loading />;
   }
 
-
   return (
     <div className="mx-auto pb-10">
-      <IconAction className="hover:bg-brown-light-active mt-[5rem] flex cursor-pointer items-center justify-center gap-3 self-start rounded-md p-2"  onClick={() => navigate("/")} >
+      <IconAction
+        className="hover:bg-brown-light-active mt-[5rem] flex cursor-pointer items-center justify-center gap-3 self-start rounded-md p-2"
+        onClick={() => navigate("/")}
+      >
         <p className="text-2xl">Voltar</p>
       </IconAction>
 
@@ -39,7 +39,7 @@ export default function DetalhesRestaurante() {
         />
       </div>
       <div className="px-4 py-6">
-        <div className="flex items-start justify-between">
+        <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-black">
               {restaurante.nome}
@@ -57,7 +57,7 @@ export default function DetalhesRestaurante() {
           </div>
 
           <Button
-            className="flex w-30 items-center rounded-md px-4 py-2"
+            className="flex w-32 items-center rounded-md px-4 py-2"
             onClick={() => setIsModalOpen(true)}
           >
             Ver mais
