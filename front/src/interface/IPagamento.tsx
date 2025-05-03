@@ -48,8 +48,8 @@ export type StatusChave = keyof typeof statusTipo;
 export interface ICreatFormCartao{
 	amount: string;
 	cardholderEmail: string;
-	identificationNumber: number;
-	identificationType: number;
+	identificationNumber: string;
+	identificationType: string;
 	installments: string;
 	issuerId: string;
 	merchantAccountId: string;

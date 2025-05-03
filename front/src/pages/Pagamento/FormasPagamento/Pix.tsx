@@ -40,8 +40,8 @@ export default function PagePix() {
 			<>
 				{!pagamentoIniciado && (
 					<>
-						<p className="mt-8 font-bold text-center">Escolha uma opção para o pagamento:</p>
-						<div className="flex gap-4 mt-4">
+						<p className="mt-5 font-bold text-center">Escolha uma opção para o pagamento:</p>
+						<div className="">
 							<Button
 								onClick={() => {
 									setPagamentoIniciado(true);
@@ -49,7 +49,7 @@ export default function PagePix() {
 								}}
 								disabled={loadingGenerico}
 								color="secondary"
-								className="p-2 whitespace-nowrap flex justify-center gap-3 items-center"
+								className="p-2 whitespace-nowrap flex justify-center gap-3 items-center mb-5 mt-5"
 							>
 								{loadingGenerico && <Loader2 className="h-4 w-4 animate-spin" />}
 								<span>{loadingGenerico ? "Processando..." : "Simule Pagamento"}</span>
@@ -61,7 +61,7 @@ export default function PagePix() {
 									qrCodeMercadoPago();
 								}}
 								disabled={loadingMP}
-								className="p-2 whitespace-nowrap flex justify-center gap-3 items-center"
+								className="p-2 whitespace-nowrap flex justify-center gap-3 items-center mb-5"
 							>
 								{loadingMP && <Loader2 className="h-4 w-4 animate-spin" />}
 								<span>{loadingMP ? "Processando..." : "Pague com Mercado Pago"}</span>

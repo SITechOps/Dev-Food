@@ -31,7 +31,7 @@ export default function CardProdutos(props: CardProdutosProps) {
 
       <div className="w-full">
         <p className="mt-2 font-light">{descricao}</p>
-        <p className="mt-3 text-[1.5rem] font-semibold">R$ {valor_unitario}</p>
+        <p className="mt-3 mb-3 text-[1.2rem] font-semibold">R$ {valor_unitario}</p>
 
        
         <div className="flex w-full flex-row items-center justify-end gap-4">

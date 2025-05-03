@@ -9,12 +9,18 @@ import { useNavigate } from "react-router-dom";
 export const usePagamento = () => {
 	const { userData,  token } = useAuth();
 	const navigate = useNavigate();
-	const [endereco, setEndereco] = useState("");
+	const [endereco, setEndereco] = useState({
+		rua: "",
+		complemento: "",
+		id: ""
+	});
+	const idUsuario = userData?.sub;
 	const [user, setUser] = useState<IUsuarioCliente>();
 	const [loading, setLoading] = useState(true);
 	const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
 	const [showModal, setShowModal] = useState(false);
-	const [selecionado, setSelecionado] = useState<"site" | "entrega">("site");
+	const [meiosSelecao, setMeiosSelecao] = useState<"site" | "entrega">("site");
+	const [selecionado, setSelecionado] = useState<"padrão" | "rápida">("padrão");
 	const [etapa, setEtapa] = useState<"opcaoPagamento" | "pagePix" | "pageCartao">("opcaoPagamento");
 	const [modeloPagamento, setModeloPagamento] = useState<"site" | "entrega">("site");
 	const [restaurante, setRestaurante] = useState("");
@@ -24,7 +30,6 @@ export const usePagamento = () => {
 		taxaEntrega: 0,
 		total: 0
 	});
-	const idUsuario = userData?.sub;
 
 	//pegar o endereço do cliente
 	useEffect(() => {
@@ -45,9 +50,13 @@ export const usePagamento = () => {
 			  return;
 			}
 	
-			const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
-	
-			setEndereco(enderecoCompleto);
+			const rua = `${endereco.logradouro}, ${endereco.numero}`;
+			const complemento = ` ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
+			setEndereco({
+				rua: rua,
+				complemento: complemento,
+				id: endereco.id
+			  });
 	
 		  } catch (error) {
 			console.error(
@@ -70,7 +79,6 @@ export const usePagamento = () => {
 					total: compra.total,
 				});
 				
-				// await getEndereco();
 			} else {
 				// console.log("Carrinho não encontrado no localStorage.");
 			}
@@ -79,19 +87,9 @@ export const usePagamento = () => {
 		fetchData();
 	}, [storedCompra]);
 
-	// async function getEndereco() {
-	// 	try {
-	// 		const resp = await api.get(`/user/${userData?.sub}/enderecos`);
-	// 		const attributes = resp.data.data.attributes
-	// 		setEndereco(attributes);
-	// 	} catch (error) {
-	// 		console.error("Erro ao buscar endereço:", error);
-	// 	}
-	// }
-
 	async function getDadosUser() {
 		try {
-			const { data } = await api.get(`/user/${userData?.sub}`);
+			const { data } = await api.get(`/user/${idUsuario}`);
 			const dados = data?.data?.attributes || [];
 			setUser(dados);
 			return dados;
@@ -100,22 +98,17 @@ export const usePagamento = () => {
 		}
 	}
 
-	async function postPedido() {
+	async function postPedido(formaPagamento: "pix" | "cartao") {
 		try {
 			if (storedCompra) {
 				const compra = JSON.parse(storedCompra);
-				// const idEndereco = endereco && endereco.length > 0 ? endereco[0].id : "";
-				// if (!idEndereco) {
-				// 	console.error("Endereço não encontrado.");
-				// 	return;
-				// }
 
 				const pedidoPayload: IPedido = {
 					id_usuario: userData?.sub,
 					id_restaurante: compra.itens[0]?.restaurante.id,
-					id_endereco: "",
+					id_endereco: endereco.id,
 					valor_total: compra.total,
-					forma_pagamento: "pix",
+					forma_pagamento: formaPagamento,
 					itens: compra.itens.map((item: any): IItens => ({
 						id_produto: item.id,
 						qtd_itens: item.quantidade,
@@ -123,14 +116,13 @@ export const usePagamento = () => {
 					}))
 				};
 
-				console.log("pedido", pedidoPayload)
 				const resp = await api.post("/pedido", { pedido: pedidoPayload });
 				if (resp.status === 201) {
 					setLoading(false);
-					setShowModal(false)
 					localStorage.removeItem('quantidadeTotal');
 					localStorage.removeItem('compraAtual');
 					localStorage.removeItem('carrinho');
+					navigate("/")
 					atualizarQuantidadeTotal();
 				}
 				alert('seu pedido foi gerado com sucesso')
@@ -147,7 +139,9 @@ export const usePagamento = () => {
 		valoresCarrinho,
 		setLoading,
 		setValoresCarrinho,
-		selecionado,
+		meiosSelecao, 
+		setMeiosSelecao,
+		selecionado, 
 		setSelecionado,
 		endereco,
 		etapa,

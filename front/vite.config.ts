@@ -19,7 +19,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: true, // Permite acesso externo
-    allowedHosts: ['ec9e-177-198-140-44.ngrok-free.app'],
+    host: true, 
+    allowedHosts: ['caminho.ngrok-free.app'],
   },
 });

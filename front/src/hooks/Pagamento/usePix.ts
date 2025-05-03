@@ -19,7 +19,6 @@ export const usePixComponent = () => {
 	});
 	const [pagoComMP, setPagoComMP] = useState(false);
 	const [loadingMP, setLoadingMP] = useState(false);
-	const [metodoPagamento, setmetodoPagamento] = useState("");
 	const [loadingGenerico, setLoadingGenerico] = useState(false);
 	const [pagamentoIniciado, setPagamentoIniciado] = useState(false);
 
@@ -39,7 +38,6 @@ export const usePixComponent = () => {
 				const novoStatus = sequencia[index];
 
 				setStatusPagamento((_prev) => novoStatus);
-				console.log(sequencia[index])
 
 				if (novoStatus === "aprovado") {
 					setShowModal(true);
@@ -54,10 +52,8 @@ export const usePixComponent = () => {
 
 
 	async function acompanharPedido() {
-		setmetodoPagamento("pix")
-		await postPedido();
+		await postPedido("pix");
 		setShowModal(false);
-		// navigate("/historico")
 	};
 
 	async function qrCodeGenerico() {
@@ -115,7 +111,6 @@ export const usePixComponent = () => {
 						qr_code_base64: `data:image/svg;base64,${dadosPix.qr_code_base64}`,
 					});
 					setKey(prevKey => prevKey + 1);
-					await stausPagamentoPix()
 				} else {
 					alert('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
 				}
@@ -140,14 +135,12 @@ export const usePixComponent = () => {
 		try {
 			const response = await api.get(`/pix/status/${respPagamento.id}`);
 			const status = response.data.status;
-			console.log(status);
-
-			// if (status === "approved") {
-			// 	setStatusPagamento("aprovado");
-			// 	// setShowModal(true)
-			// } else {
-			// 	setStatusPagamento("pendente");
-			// }
+			if (status === "approved") {
+				setStatusPagamento("aprovado");
+				setShowModal(true)
+			} else {
+				setStatusPagamento("pendente");
+			}
 
 		} catch (error) {
 			console.error("Erro ao verificar status do pagamento:", error);

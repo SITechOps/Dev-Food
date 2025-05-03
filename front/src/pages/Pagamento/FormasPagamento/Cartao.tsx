@@ -1,159 +1,101 @@
-// import { useEffect, useState } from "react";
-// import { FaCcMastercard } from "react-icons/fa";
-// import CardsOpcoes from "../components/CardsOpcoes";
-// import Button from "@/components/ui/Button";
-// import Modal from "@/components/ui/Modal";
-// import { NumberFormatValues, PatternFormat } from "react-number-format";
-// import Input from "@/components/ui/Input";
-// import IconAction from "@/components/ui/IconAction";
-// import Tipo from "../components/Tipo";
-// import { BsCreditCardFill } from "react-icons/bs";
-// import { api } from "@/connection/axios";
-
-// export { };
-
-// declare global {
-// 	interface Window {
-// 		MercadoPago: any;
-// 	}
-// }
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import CardsOpcoes from "../components/CardsOpcoes";
+import { FaCcMastercard } from "react-icons/fa";
+import Modal from "@/components/ui/Modal";
+import { Loader2 } from "lucide-react";
+import { useCartaoComponent } from "@/hooks/Pagamento/useCartao";
 
 
-// export default function PageCartao() {
-// 	const [mp, setMp] = useState<any>(null)
-// 	const [showModal, setShowModal] = useState(false);
-// 	const [formList, setFormList] = useState({
-// 		tipo: "",
-// 	});
-// 	const [etapa, setEtapa] = useState<"dadosCartao" | "dadosPessoal">("dadosCartao");
+export default function PagueCartao() {
+	const {
+		isCardFormReady, 
+		formKey,
+		showModal, 
+		setShowModal,
+		loadingGenerico, 
+		adicionarCartao,
+		simulacaoGenerica,
+		handleSubmit
+	} = useCartaoComponent();
 	
-// 	function adicionarCartao() {
-// 		setShowModal(true)
-// 	}
+	return (
+		<>
+			<p className="my-4 font-bold">Cartões Cadastrados:</p>
+			<CardsOpcoes
+				icon={<FaCcMastercard />}
+				title="Maria - Mastercard"
+				subtitle="**** 2546"
+				loading={loadingGenerico && <Loader2 />}
+				onClick={simulacaoGenerica}
+			/>
 
+			<hr className="my-5" />
+			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
+			<Modal isOpen={showModal} onClose={() => setShowModal(false)} className="w-100">
 
-// 	return (
-// 		<div className="mt-5">
-// 			<p className="mb-3 font-bold">Cartões Cadastrados:</p>
-// 			<CardsOpcoes
-// 				icon={<FaCcMastercard />}
-// 				title="Maria - Mastercard"
-// 				subtitle="**** 2546"
-// 				onClick={() => console.log("um cartão")}
-// 			/>
-// 			<hr className="my-5" />
-// 			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
+				<div key={formKey}>
+					<form id="form-checkout" onSubmit={handleSubmit}>
 
-// 			<Modal isOpen={showModal} onClose={() => setShowModal(false)} >
+						<Input
+							textLabel="Número do cartão"
+							id="form-checkout__cardNumber"
+							type="text"
+							className="mb-3"
+						/>
 
-// 				<form>
+						<div className="flex items-center gap-4">
 
-// 					<p className="font-bold text-center mb-4">Pagamento com cartão</p>
+							<Input
+								textLabel="Validade"
+								id="form-checkout__expirationDate"
+								type="text"
+								className="mb-3"
+							/>
 
-						
-// 							<p className="text-center">Selecione o meio de pagamento</p>
-// 							<div className="my-5 flex itens-center justify-center space-x-4">
-// 								<Tipo
-// 									tipo="credito"
-// 									tipoSelecionado={formList.tipo}
-// 									onClick={() => setFormList(prev => ({ ...prev, tipo: "credito" }))}
-// 									icon={<BsCreditCardFill className="text-2xl" />}
-// 									descricao="Crédito"
-// 								/>
-// 								<Tipo
-// 									tipo="debito"
-// 									tipoSelecionado={formList.tipo}
-// 									onClick={() => setFormList(prev => ({ ...prev, tipo: "debito" }))}
-// 									icon={<BsCreditCardFill className="text-2xl" />}
-// 									descricao="Débito"
-// 								/>
-// 							</div>
-							
-// 							<label htmlFor="nCartao" className="font-medium">
-// 								Número do cartão
-// 							</label>
+							<Input
+								textLabel="CVV"
+								id="form-checkout__securityCode"
+								type="text"
+								className="mb-3"
+							/>
+						</div>
+						<div className="mb-3">
+							<label htmlFor="form-checkout__installments" className="font-medium">Quantidade de Parcelas</label>
+							<select className="input" id="form-checkout__installments"></select>
+						</div>
+						<div className="flex gap-4 mb-3">
 
-// 							<PatternFormat
-// 								format="####.####.####.####"
-// 								mask="_"
-// 								allowEmptyFormatting
-// 								value={formList.nCartao}
-// 								onValueChange={(values: NumberFormatValues) =>
-// 									setFormList((prev) => ({ ...prev, nCartao: values.value }))
-// 								}
-// 								className="input mb-3"
-// 								type="text"
-// 								id="form-checkout__cardNumber"
-// 							/>
+							<div>
+								<label htmlFor="form-checkout__identificationType" className="font-medium">Tipo de documento</label>
+								<select className="input" id="form-checkout__identificationType"></select>
+							</div>
+							<div>
+								<label htmlFor="form-checkout__issuer" className="font-medium">Tipo de Cartão</label>
+								<select className="input" id="form-checkout__issuer"></select>
+							</div>
 
-// 							<div className="flex items-center gap-4">
-// 								<div>
-// 									<label htmlFor="validade" className="font-medium">
-// 										Validade
-// 									</label>
-// 									<PatternFormat
-// 										format="##/##"
-// 										mask="_"
-// 										allowEmptyFormatting
-// 										value={formList.validade}
-// 										onValueChange={(values: NumberFormatValues) =>
-// 											setFormList((prev) => ({ ...prev, validade: values.value }))
-// 										}
-// 										className="input mb-3"
-// 										type="text"
-// 										id="form-checkout__expirationDate"
-// 									/>
-// 								</div>
-// 								<div>
-// 									<label htmlFor="cvv" className="font-medium">
-// 										CVV
-// 									</label>
-// 									<PatternFormat
-// 										format="####"
-// 										mask="_"
-// 										allowEmptyFormatting
-// 										value={formList.cvv}
-// 										onValueChange={(values: NumberFormatValues) =>
-// 											setFormList((prev) => ({ ...prev, cvv: values.value }))
-// 										}
-// 										placeholder="CVV"
-// 										className="input mb-3"
-// 										type="text"
-// 										id="form-checkout__securityCode"
-// 									/>
-// 								</div>
-// 							</div>
+						</div>
+						<div className="flex gap-4 items-center">
+							<Input
+								textLabel="Nome impresso no cartão"
+								id="form-checkout__cardholderName"
+								type="text"
+								className="mb-3"
+							/>
 
-// 							<Input
-// 								textLabel="Nome impresso no cartão"
-// 								id="form-checkout__cardholderName"
-// 								type="text"
-// 								value={formList.nome}
-// 								onChange={(value) =>
-// 									setFormList({ ...formList, nome: value })
-// 								}
-// 								className="mb-3"
-// 							/>
-// 							<label htmlFor="cpf" className="font-medium">
-// 								CPF do titular
-// 							</label>
-// 							<PatternFormat
-// 								format="###.###.###-##"
-// 								mask="_"
-// 								allowEmptyFormatting
-// 								value={formList.cpf}
-// 								onValueChange={(values: NumberFormatValues) =>
-// 									setFormList((prev) => ({ ...prev, cpf: values.value }))
-// 								}
-// 								className="input mb-3"
-// 								type="text"
-// 								id="form-checkout__identificationNumber"
-// 							/>
+							<Input
+								textLabel="CPF do titular"
+								id="form-checkout__identificationNumber"
+								type="text"
+								className="mb-3"
+							/>
+						</div>
 
-
-// 				</form>
-// 			</Modal>
-// 		</div>
-// 	)
-
-// }
+						<Button type="submit" className="mt-5" disabled={!isCardFormReady}>Pagar</Button>
+					</form>
+				</div>
+			</Modal>
+		</>
+	)
+}
