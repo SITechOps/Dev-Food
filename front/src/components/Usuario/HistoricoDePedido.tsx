@@ -47,9 +47,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
           {/* Restaurante */}
           <div className="mb-[0.5rem] flex items-center gap-[0.75rem]">
             <img
-              src={
-                pedido.restaurante.logo || "../../../public/img/SushiRest.webp"
-              }
+              src={pedido.restaurante.logo || "img/SushiRest.webp"}
               alt="Logo restaurante"
               className="h-[2rem] w-[2rem] rounded-full border object-cover"
             />

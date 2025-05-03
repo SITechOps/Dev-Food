@@ -1,5 +1,4 @@
-from uuid import uuid4
-from sqlalchemy import Column, CHAR, ForeignKey, Numeric, Enum, String
+from sqlalchemy import Column, CHAR, ForeignKey, Numeric, String
 from src.model.configs.base import Base
 from random import randint
 
