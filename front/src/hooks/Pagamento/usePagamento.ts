@@ -9,163 +9,192 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const usePagamento = () => {
-	const { userData, token } = useAuth();
-	const navigate = useNavigate();
-	const [endereco, setEndereco] = useState({
-		rua: "",
-		complemento: "",
-		id: ""
-	});
-	const idUsuario = userData?.sub;
-	const [user, setUser] = useState<IUsuarioCliente>();
-	const [loading, setLoading] = useState(true);
-	const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
-	const [showModal, setShowModal] = useState(false);
-	const [meiosSelecao, setMeiosSelecao] = useState<"site" | "entrega">("site");
-	const [selecionado, setSelecionado] = useState<"padrão" | "rápida">("padrão");
-	const [etapa, setEtapa] = useState<"opcaoPagamento" | "pagePix" | "pageCartao">("opcaoPagamento");
-	const [modeloPagamento, setModeloPagamento] = useState<"site" | "entrega">("site");
-	const [restaurante, setRestaurante] = useState("");
-	const storedCompra = localStorage.getItem("compraAtual");
-	const [valoresCarrinho, setValoresCarrinho] = useState({
-		subtotal: 0,
-		taxaEntrega: 0,
-		total: 0
-	});
+  const { userData, token } = useAuth();
+  const navigate = useNavigate();
+  const [endereco, setEndereco] = useState({
+    rua: "",
+    complemento: "",
+    id: "",
+  });
+  const idUsuario = userData?.sub;
+  const [user, setUser] = useState<IUsuarioCliente>();
+  const [loading, setLoading] = useState(true);
+  const { quantidadeTotal, atualizarQuantidadeTotal } =
+    useContext(CarrinhoContext);
+  const [showModal, setShowModal] = useState(false);
+  const [meiosSelecao, setMeiosSelecao] = useState<"site" | "entrega">("site");
+  const [selecionado, setSelecionado] = useState<"padrão" | "rápida">("padrão");
+  const [etapa, setEtapa] = useState<
+    "opcaoPagamento" | "pagePix" | "pageCartao"
+  >("opcaoPagamento");
+  const [modeloPagamento, setModeloPagamento] = useState<"site" | "entrega">(
+    "site",
+  );
+  const [restaurante, setRestaurante] = useState("");
+  const storedCompra = localStorage.getItem("compraAtual");
+  const [valoresCarrinho, setValoresCarrinho] = useState({
+    subtotal: 0,
+    taxaEntrega: 0,
+    total: 0,
+  });
 
-	useEffect(() => {
-		obterEnderecoCliente();
-		fetchData();
-	}, [idUsuario, token, storedCompra]);
+  useEffect(() => {
+    obterEnderecoCliente();
+    fetchData();
+  }, [idUsuario, token, storedCompra]);
 
+  async function fetchData() {
+    if (storedCompra) {
+      const compra = JSON.parse(storedCompra);
+      setRestaurante(compra.itens[0]?.restaurante.nome);
+      setValoresCarrinho({
+        subtotal: compra.subtotal,
+        taxaEntrega: compra.taxaEntrega,
+        total: compra.total,
+      });
+    }
+  }
 
-	async function fetchData() {
+  async function obterEnderecoCliente() {
+    try {
+      if (!idUsuario || !token) {
+        alert(
+          "Usuário ou token não encontrado. Não é possível buscar o endereço.",
+        );
+        console.warn(
+          "Usuário ou token não encontrado. Não é possível buscar o endereço.",
+        );
+        navigate("/");
+        return;
+      }
 
-		if (storedCompra) {
-			const compra = JSON.parse(storedCompra);
-			setRestaurante(compra.itens[0]?.restaurante.nome);
-			setValoresCarrinho({
-				subtotal: compra.subtotal,
-				taxaEntrega: compra.taxaEntrega,
-				total: compra.total,
-			});
+      const response = await api.get(`/user/${idUsuario}/enderecos`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-		} 
-	};
+      const endereco = response.data?.data?.attributes?.[0];
 
-	async function obterEnderecoCliente() {
-		try {
-			if (!idUsuario || !token) {
-				alert("Usuário ou token não encontrado. Não é possível buscar o endereço.")
-				console.warn("Usuário ou token não encontrado. Não é possível buscar o endereço.");
-				navigate("/")
-				return;
-			}
+      if (!endereco) {
+        alert(
+          "Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro",
+        );
+        navigate("/");
+        return;
+      }
 
-			const response = await api.get(`/user/${idUsuario}/enderecos`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
+      if (
+        !endereco.logradouro ||
+        !endereco.numero ||
+        !endereco.bairro ||
+        !endereco.cidade ||
+        !endereco.estado ||
+        !endereco.pais
+      ) {
+        console.error("Endereço incompleto retornado pela API:", endereco);
+        throw new AppError(
+          "O endereço retornado está incompleto. Verifique os dados cadastrados.",
+        );
+      }
 
-			const endereco = response.data?.data?.attributes?.[0];
+      const rua = `${endereco.logradouro}, ${endereco.numero}`;
+      const complemento = `${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
 
-			if (!endereco) {
-				alert("Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro")
-				navigate("/")
-				return;
-			}
+      setEndereco({
+        rua: rua,
+        complemento: complemento,
+        id: endereco.id,
+      });
 
-			if (!endereco.logradouro || !endereco.numero || !endereco.bairro || !endereco.cidade || !endereco.estado || !endereco.pais) {
-				console.error("Endereço incompleto retornado pela API:", endereco);
-				throw new AppError("O endereço retornado está incompleto. Verifique os dados cadastrados.");
-			}
+      console.log("Endereço definido com sucesso:");
+    } catch (error) {
+      const appError = handleApiError(error);
+      console.error(appError.message, appError.statusCode);
+    }
+  }
 
-			const rua = `${endereco.logradouro}, ${endereco.numero}`;
-			const complemento = `${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
+  async function getDadosUser() {
+    try {
+      const { data } = await api.get(`/user/${idUsuario}`);
+      const dados = data?.data?.attributes || [];
+      setUser(dados);
+      return dados;
+    } catch (error) {
+      const appError = handleApiError(error);
+      console.error(appError.message, appError.statusCode);
+    }
+  }
 
-			setEndereco({
-				rua: rua,
-				complemento: complemento,
-				id: endereco.id,
-			});
+  async function postPedido(formaPagamento: "pix" | "cartao") {
+    try {
+      if (!storedCompra) {
+        throw new AppError(
+          "Carrinho não encontrado. Adicione itens antes de prosseguir.",
+        );
+      }
 
-			console.log("Endereço definido com sucesso:");
-		} catch (error) {
-			const appError = handleApiError(error);
-			console.error(appError.message, appError.statusCode);
-		}
-	}
+      const compra = JSON.parse(storedCompra);
+      const pedidoPayload: IPedido = construirPedidoPayload(
+        compra,
+        formaPagamento,
+      );
+      const resp = await api.post("/pedido", { pedido: pedidoPayload });
 
-	async function getDadosUser() {
-		try {
-			const { data } = await api.get(`/user/${idUsuario}`);
-			const dados = data?.data?.attributes || [];
-			setUser(dados);
-			return dados;
-		} catch (error) {
-			const appError = handleApiError(error);
-			console.error(appError.message, appError.statusCode);
-		}
-	}
+      if (resp.status === 201) {
+        setLoading(false);
+        atualizarQuantidadeTotal();
+        localStorage.removeItem("quantidadeTotal");
+        localStorage.removeItem("compraAtual");
+        localStorage.removeItem("carrinho");
+        navigate("/historico");
+        new AppSuccess(
+          "Pedido realizado com sucesso! Obrigado por comprar conosco.",
+        );
+      }
+    } catch (error) {
+      const appError = handleApiError(error);
+      console.error(appError.message, appError.statusCode);
+    }
+  }
 
-	async function postPedido(formaPagamento: "pix" | "cartao") {
-		try {
-			if (!storedCompra) {
-				throw new AppError("Carrinho não encontrado. Adicione itens antes de prosseguir.");
-			}
+  function construirPedidoPayload(
+    compra: any,
+    formaPagamento: "pix" | "cartao",
+  ): IPedido {
+    return {
+      id_usuario: userData?.sub,
+      id_restaurante: compra.itens[0]?.restaurante.id,
+      id_endereco: endereco.id,
+      valor_total: compra.total,
+      forma_pagamento: formaPagamento,
+      itens: compra.itens.map(
+        (item: any): IItens => ({
+          id_produto: item.id,
+          qtd_itens: item.quantidade,
+          valor_calculado: item.subtotal,
+        }),
+      ),
+    };
+  }
 
-			const compra = JSON.parse(storedCompra);
-			const pedidoPayload: IPedido = construirPedidoPayload(compra, formaPagamento);
-			const resp = await api.post("/pedido", { pedido: pedidoPayload });
-
-			if (resp.status === 201) {
-				setLoading(false);
-				atualizarQuantidadeTotal();
-				localStorage.removeItem("quantidadeTotal");
-				localStorage.removeItem("compraAtual");
-				localStorage.removeItem("carrinho");
-				navigate("/");
-				new AppSuccess("Pedido realizado com sucesso! Obrigado por comprar conosco.");
-			}
-		} catch (error) {
-			const appError = handleApiError(error);
-			console.error(appError.message, appError.statusCode);
-		}
-	}
-
-	function construirPedidoPayload(compra: any, formaPagamento: "pix" | "cartao"): IPedido {
-		return {
-			id_usuario: userData?.sub,
-			id_restaurante: compra.itens[0]?.restaurante.id,
-			id_endereco: endereco.id,
-			valor_total: compra.total,
-			forma_pagamento: formaPagamento,
-			itens: compra.itens.map((item: any): IItens => ({
-				id_produto: item.id,
-				qtd_itens: item.quantidade,
-				valor_calculado: item.subtotal,
-			})),
-		};
-	}
-
-	return {
-		userData,
-		navigate,
-		restaurante,
-		valoresCarrinho,
-		setLoading,
-		setValoresCarrinho,
-		meiosSelecao,
-		setMeiosSelecao,
-		selecionado,
-		setSelecionado,
-		endereco,
-		etapa,
-		setEtapa,
-		modeloPagamento,
-		setModeloPagamento,
-		postPedido,
-		getDadosUser,
-	}
-}
+  return {
+    userData,
+    navigate,
+    restaurante,
+    valoresCarrinho,
+    setLoading,
+    setValoresCarrinho,
+    meiosSelecao,
+    setMeiosSelecao,
+    selecionado,
+    setSelecionado,
+    endereco,
+    etapa,
+    setEtapa,
+    modeloPagamento,
+    setModeloPagamento,
+    postPedido,
+    getDadosUser,
+  };
+};

@@ -244,7 +244,7 @@ export default function CadastroRestaurante() {
                 id="razaoSocial"
                 name="razaoSocial"
                 className={`${styleInput}`}
-                textLabel="Infome o Razão Social:"
+                textLabel="Infome a Razão Social:"
                 value={formList.razaoSocial}
                 onChange={(value) =>
                   setFormList({ ...formList, razaoSocial: value })

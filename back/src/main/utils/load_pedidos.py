@@ -33,48 +33,57 @@ def load_pedidos_exemplo():
             "tipo": "casa"
         }
         id_endereco = enderecos_repo.create(id_usuario, endereco_data)
-        restaurante = restaurantes_repo.list_all()[0]
-        produtos = produtos_repo.list_products_by_restaurante(restaurante.id)
-
-        if not restaurante or not id_endereco or len(produtos) < 2:
-            print("Dados insuficientes para criar pedidos.")
+        
+        restaurantes = restaurantes_repo.list_all()
+        
+        if not restaurantes or len(restaurantes) < 3 or not id_endereco:
+            print("Dados insuficientes para criar pedidos. Necessário pelo menos 3 restaurantes.")
             return
         
         data_ontem = (datetime.now() - timedelta(days=1)).replace(hour=12, minute=30, second=10, microsecond=0)
         data_3_dias_atras = (datetime.now() - timedelta(days=3)).replace(hour=16, minute=45, second=20, microsecond=0)
-                
-        pedidos = [
-            {
+        
+        pedidos = []
+        
+        produtos_r1 = produtos_repo.list_products_by_restaurante(restaurantes[0].id)
+        if len(produtos_r1) >= 2:
+            pedidos.append({
                 "valor_total": 100.00,
                 "id_usuario": id_usuario,
-                "id_restaurante": restaurante.id,
+                "id_restaurante": restaurantes[0].id,
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Cartão",
-                "status": "Concluído",
+                "status": "Entregue",
                 "tipo_entrega": "Padrão",
                 "itens": [
-                    {"id_produto": produtos[0].id, "qtd_itens": 2, "valor_calculado": 50.00},
-                    {"id_produto": produtos[1].id, "qtd_itens": 1, "valor_calculado": 50.00},
+                    {"id_produto": produtos_r1[0].id, "qtd_itens": 2, "valor_calculado": 50.00},
+                    {"id_produto": produtos_r1[1].id, "qtd_itens": 1, "valor_calculado": 50.00},
                 ],
-            },
-            {
+            })
+        
+        produtos_r2 = produtos_repo.list_products_by_restaurante(restaurantes[1].id)
+        if len(produtos_r2) >= 1:
+            pedidos.append({
                 "valor_total": 200.00,
                 "id_usuario": id_usuario,
-                "id_restaurante": restaurante.id,
+                "id_restaurante": restaurantes[1].id,
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Pix",
-                "status": "Concluído",
+                "status": "Entregue",
                 "tipo_entrega": "Rápida",
                 "created_at": data_ontem,
                 "updated_at": data_ontem,
                 "itens": [
-                    {"id_produto": produtos[0].id, "qtd_itens": 4, "valor_calculado": 200.00},
+                    {"id_produto": produtos_r2[0].id, "qtd_itens": 4, "valor_calculado": 200.00},
                 ],
-            },
-            {
+            })
+        
+        produtos_r3 = produtos_repo.list_products_by_restaurante(restaurantes[2].id)
+        if len(produtos_r3) >= 1:
+            pedidos.append({
                 "valor_total": 150.00,
                 "id_usuario": id_usuario,
-                "id_restaurante": restaurante.id,
+                "id_restaurante": restaurantes[2].id,
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Dinheiro",
                 "status": "Pendente",
@@ -82,10 +91,9 @@ def load_pedidos_exemplo():
                 "created_at": data_3_dias_atras,
                 "updated_at": data_3_dias_atras,
                 "itens": [
-                    {"id_produto": produtos[1].id, "qtd_itens": 3, "valor_calculado": 150.00},
+                    {"id_produto": produtos_r3[0].id, "qtd_itens": 3, "valor_calculado": 150.00},
                 ],
-            },
-        ]
+            })
 
         for pedido_data in pedidos:
             pedido_info = {key: pedido_data[key] for key in pedido_data if key != "itens"}
