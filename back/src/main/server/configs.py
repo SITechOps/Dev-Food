@@ -1,10 +1,10 @@
-import os
-import secrets
-from flask_jwt_extended import JWTManager
-from flask_swagger_ui import get_swaggerui_blueprint
+import os, secrets, sys
 from dotenv import load_dotenv
+from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
-
+from flask_swagger_ui import get_swaggerui_blueprint
+from io import StringIO
+    
 load_dotenv()
 
 socketio = SocketIO(cors_allowed_origins="*")
@@ -36,3 +36,12 @@ def configure_twilio(app):
     app.config['TWILIO_ACCOUNT_SID'] = os.getenv("TWILIO_ACCOUNT_SID")
     app.config['TWILIO_AUTH_TOKEN'] = os.getenv("TWILIO_AUTH_TOKEN")
     app.config['TWILIO_PHONE_NUMBER'] = os.getenv("TWILIO_PHONE_NUMBER")
+
+
+def hide_socketio_logs():
+    def filter_stderr(message):
+        if not ("/socket.io/" in message or "accepted" in message):
+            sys.__stderr__.write(message)
+
+    sys.stderr = StringIO()
+    sys.stderr.write = filter_stderr
