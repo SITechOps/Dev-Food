@@ -1,8 +1,17 @@
 import { memo, useMemo } from "react";
+import { IRestaurante } from "@/interface/IRestaurante";
 
-const RestauranteCard = memo(({ restaurante }) => {
+type RestauranteProps = {
+  restaurante: IRestaurante & {
+    duration?: number;
+    distancia?: number;
+    taxaEntrega?: number;
+  };
+};
+
+const RestauranteCard = memo(({ restaurante }: RestauranteProps) => {
   const formattedDuration = useMemo(
-    () => (restaurante.duration / 60).toFixed(0),
+    () => ((restaurante.duration ?? 0) / 60).toFixed(0),
     [restaurante.duration],
   );
 
@@ -18,16 +27,16 @@ const RestauranteCard = memo(({ restaurante }) => {
         className="h-32 w-full rounded object-cover"
       />
       <h3 className="mt-2 font-semibold">{restaurante.nome}</h3>
-      <p className="text-sm text-gray-600">
-        {restaurante.tipo_cozinha} • {restaurante.distancia ?? "??"} km
+      <p className="text-blue text-sm">
+        {restaurante.especialidade} • {restaurante.distancia ?? ""} km
       </p>
-      <p className="text-sm text-gray-500">
+      <p className="text-blue text-sm">
         {formattedDuration} min •{" "}
-        <span className="text-green-500">
+        <span className="text-green-dark">
           {restaurante.taxaEntrega === 0 ||
           restaurante.taxaEntrega === undefined
             ? "Grátis"
-            : `R$ ${restaurante.taxaEntrega?.toFixed(2)}`}
+            : `R$ ${restaurante.taxaEntrega.toFixed(2)}`}
         </span>
       </p>
     </div>
