@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useEffect } from "react";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
 import Button from "../ui/Button";
 import { FaFacebook } from "react-icons/fa";
@@ -15,30 +14,14 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
   const { loginUser } = useAuthUserComponent();
 
   useEffect(() => {
-    if (!user) return; // Retorna se não houver usuário
-
-    const { email } = user;
-    (async () => {
-      try {
-        await loginUser(email);
-      } catch {
-        setFormList((prev) => ({ ...prev, email }));
-        setEtapa("telefone");
-      }
-    })();
-  }, [user, setAuth]);
-
-  useEffect(() => {
     (window as any).fbAsyncInit = function () {
       (window as any).FB.init({
         appId: import.meta.env.VITE_FACEBOOK_APP_ID,
         cookie: true,
         xfbml: true,
         version: "v22.0",
-        version: "v22.0",
       });
 
-      (window as any).FB.AppEvents.logPageView();
       (window as any).FB.AppEvents.logPageView();
     };
     (function (d, s, id) {
@@ -49,16 +32,7 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
       }
       js = d.createElement(s) as HTMLScriptElement;
       js.id = id;
-      var js,
-        fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s) as HTMLScriptElement;
-      js.id = id;
       js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode?.insertBefore(js, fjs);
-    })(document, "script", "facebook-jssdk");
       fjs.parentNode?.insertBefore(js, fjs);
     })(document, "script", "facebook-jssdk");
   }, []); // Executa apenas uma vez na montagem do componente
@@ -69,10 +43,21 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
         if (response.authResponse) {
           (window as any).FB.api(
             "/me",
-            { fields: "email" },
-            (userInfo: any) => {
+            { fields: "email, name" },
+            async (userInfo: any) => {
               console.log("Usuário logado:", userInfo.email);
-              setUser(userInfo); // Atualiza o estado 'user' com os dados do usuário
+
+              setFormList((prev) => ({
+                ...prev,
+                nome: userInfo.name,
+                email: userInfo.email,
+              }));
+
+              try {
+                await loginUser(userInfo.email);
+              } catch {
+                setEtapa("telefone");
+              }
             },
           );
         } else {
@@ -82,6 +67,7 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
       { scope: "email" },
     );
   }
+
   return (
     <Button
       className="bg-blue-dark hover:bg-blue flex items-center justify-center gap-2 p-2"
