@@ -295,10 +295,13 @@ export default function CadastroRestaurante() {
                   }
                 >
                   <option value="">Selecione</option>
+                  <option value="Lanches">Lanches</option>
+                  <option value="Saudáveis">Saudáveis</option>
                   <option value="Brasileira">Brasileira</option>
                   <option value="Japonesa">Japonesa</option>
                   <option value="Italiana">Italiana</option>
                   <option value="Mexicana">Mexicana</option>
+                  <option value="Árabe">Árabe</option>
                   <option value="Outros">Outros</option>
                 </select>
                 <p className="mt-2">

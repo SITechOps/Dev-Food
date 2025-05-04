@@ -243,7 +243,7 @@ export default function Home() {
         />
       </div>
       <h2 className="text-blue mb-4 text-2xl font-semibold">
-        Pedir seu delivery no iFood é rápido e prático! Conheça as categorias
+        Pedir seu delivery no TechOps é rápido e prático! Conheça as categorias
       </h2>
       <Categorias onCategoryClick={handleCategoryClick} />
       {abaAtiva === "restaurantes" && restaurantesProximos.length > 0 && (
