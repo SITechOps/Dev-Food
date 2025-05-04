@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { api } from "../../connection/axios";
 import Modal from "../ui/Modal";
@@ -11,7 +11,6 @@ import { useAuth } from "../../contexts/AuthContext";
 
 export default function ListagemEndereco() {
   const [enderecos, setEnderecos] = useState<IAddress[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { userData, token } = useAuth();
@@ -19,13 +18,8 @@ export default function ListagemEndereco() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (location.pathname === "/account" && showModal) {
-      setShowModal(false);
-    }
-  }, [location.pathname, showModal]);
-
-  async function mostrarEnderecoSalvo() {
+  // Função que busca os endereços
+  const buscarEnderecos = useCallback(async () => {
     try {
       const response = await api.get(`/user/${idUsuario}/enderecos`, {
         headers: {
@@ -35,12 +29,24 @@ export default function ListagemEndereco() {
 
       const enderecosData = response.data?.data?.attributes || [];
       setEnderecos(enderecosData);
-      setIsExpanded(true);
-      setShowModal(true);
     } catch (error) {
       console.error("Erro ao buscar endereços:", error);
     }
-  }
+  }, [idUsuario, token]);
+
+  // Atualiza lista sempre que o modal abrir
+  useEffect(() => {
+    if (showModal) {
+      buscarEnderecos();
+    }
+  }, [showModal, buscarEnderecos]);
+
+  // Fecha modal ao mudar de rota
+  useEffect(() => {
+    if (location.pathname === "/account" && showModal) {
+      setShowModal(false);
+    }
+  }, [location.pathname, showModal]);
 
   const handleDeleteEndereco = async (id: string) => {
     try {
@@ -49,7 +55,8 @@ export default function ListagemEndereco() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setEnderecos(enderecos.filter((endereco) => endereco.id !== id));
+      // Atualiza a lista após deletar
+      await buscarEnderecos();
     } catch (error) {
       console.error("Erro ao excluir endereço:", error);
     }
@@ -63,13 +70,13 @@ export default function ListagemEndereco() {
     <>
       <p
         className="flex cursor-pointer items-center justify-between border-b p-4"
-        onClick={mostrarEnderecoSalvo}
+        onClick={() => setShowModal(true)}
       >
         <span className="text-blue text-lg font-semibold">
           {enderecos[0]?.logradouro || "Adicionar endereço"}
         </span>
         <IoIosArrowDown
-          className={`icon transition-transform ${isExpanded ? "rotate-180" : ""}`}
+          className={`icon transition-transform ${showModal ? "rotate-180" : ""}`}
         />
       </p>
 
@@ -86,17 +93,17 @@ export default function ListagemEndereco() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-4 w-full rounded-md border p-2"
         />
+
         <div className="space-y-2">
           {filteredEnderecos.map((endereco) => (
-            <>
-              <EnderecoItem
-                key={endereco.id}
-                endereco={endereco}
-                onDelete={handleDeleteEndereco}
-              />
-            </>
+            <EnderecoItem
+              key={endereco.id}
+              endereco={endereco}
+              onDelete={handleDeleteEndereco}
+            />
           ))}
         </div>
+
         <Button
           className="mt-6"
           onClick={() => {

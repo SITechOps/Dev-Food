@@ -8,91 +8,97 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const usePagamento = () => {
-	const { userData, token } = useAuth();
-	const navigate = useNavigate();
-	const [endereco, setEndereco] = useState({
-		rua: "",
-		complemento: "",
-		id: ""
-	});
-	const idUsuario = userData?.sub;
-	const [user, setUser] = useState<IUsuarioCliente>();
-	const [loading, setLoading] = useState(true);
-	const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
-	const [showModal, setShowModal] = useState(false);
-	const [meiosSelecao, setMeiosSelecao] = useState<"site" | "entrega">("site");
-	const [selecionado, setSelecionado] = useState<"padrão" | "rápida">("padrão");
-	const [etapa, setEtapa] = useState<"opcaoPagamento" | "pagePix" | "pageCartao">("opcaoPagamento");
-	const [modeloPagamento, setModeloPagamento] = useState<"site" | "entrega">("site");
-	const [restaurante, setRestaurante] = useState("");
-	const storedCompra = localStorage.getItem("compraAtual");
-	const [valoresCarrinho, setValoresCarrinho] = useState({
-		subtotal: 0,
-		taxaEntrega: 0,
-		total: 0
-	});
+  const { userData, token } = useAuth();
+  const navigate = useNavigate();
+  const [endereco, setEndereco] = useState({
+    rua: "",
+    complemento: "",
+    id: "",
+  });
+  const idUsuario = userData?.sub;
+  const [user, setUser] = useState<IUsuarioCliente>();
+  const [loading, setLoading] = useState(true);
+  const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+  const [showModal, setShowModal] = useState(false);
+  const [meiosSelecao, setMeiosSelecao] = useState<"site" | "entrega">("site");
+  const [selecionado, setSelecionado] = useState<"padrão" | "rápida">("padrão");
+  const [etapa, setEtapa] = useState<
+    "opcaoPagamento" | "pagePix" | "pageCartao"
+  >("opcaoPagamento");
+  const [modeloPagamento, setModeloPagamento] = useState<"site" | "entrega">(
+    "site",
+  );
+  const [restaurante, setRestaurante] = useState("");
+  const storedCompra = localStorage.getItem("compraAtual");
+  const [valoresCarrinho, setValoresCarrinho] = useState({
+    subtotal: 0,
+    taxaEntrega: 0,
+    total: 0,
+  });
 
-	useEffect(() => {
-		obterEnderecoCliente();
-		fetchData();
-	}, [idUsuario, token, storedCompra]);
+  useEffect(() => {
+    obterEnderecoCliente();
+    fetchData();
+  }, [idUsuario, token, storedCompra]);
 
+  async function fetchData() {
+    if (storedCompra) {
+      const compra = JSON.parse(storedCompra);
+      setRestaurante(compra.itens[0]?.restaurante.nome);
+      setValoresCarrinho({
+        subtotal: compra.subtotal,
+        taxaEntrega: compra.taxaEntrega,
+        total: compra.total,
+      });
+    }
+  }
 
-	async function fetchData() {
+  async function obterEnderecoCliente() {
+    try {
+      if (!idUsuario || !token) {
+        navigate("/");
+        alert("Usuário ou token não encontrado. Não é possível buscar o endereço.")
+        console.warn("Usuário ou token não encontrado. Não é possível buscar o endereço.",);
+        throw new Error("Usuário ou token não encontrado. Não é possível buscar o endereço.")
+      }
 
-		if (storedCompra) {
-			const compra = JSON.parse(storedCompra);
-			setRestaurante(compra.itens[0]?.restaurante.nome);
-			setValoresCarrinho({
-				subtotal: compra.subtotal,
-				taxaEntrega: compra.taxaEntrega,
-				total: compra.total,
-			});
+      const response = await api.get(`/user/${idUsuario}/enderecos`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-		} 
-	};
+      const endereco = response.data?.data?.attributes?.[0];
 
-	async function obterEnderecoCliente() {
-		try {
-			if (!idUsuario || !token) {
-				navigate("/")
-				alert("Usuário ou token não encontrado. Não é possível buscar o endereço.")
-				throw new Error("Usuário ou token não encontrado. Não é possível buscar o endereço.")
-			}
+      if (
+        !endereco.logradouro ||
+        !endereco.numero ||
+        !endereco.bairro ||
+        !endereco.cidade ||
+        !endereco.estado ||
+        !endereco.pais
+      ) {
+        navigate("/");
+        console.error("Endereço incompleto retornado pela API:", endereco);
+        throw new Error(
+          "O endereço retornado está incompleto. Verifique os dados cadastrados.",
+        );
+      }
 
-			const response = await api.get(`/user/${idUsuario}/enderecos`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
+      const rua = `${endereco.logradouro}, ${endereco.numero}`;
+      const complemento = `${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
 
-			const endereco = response.data?.data?.attributes?.[0];
+      setEndereco({
+        rua: rua,
+        complemento: complemento,
+        id: endereco.id,
+      });
 
-			if (!endereco) {
-				navigate("/")
-				alert("Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro")
-				throw new Error("Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro")
-			}
-
-			if (!endereco.logradouro || !endereco.numero || !endereco.bairro || !endereco.cidade || !endereco.estado || !endereco.pais) {
-				console.error("Endereço incompleto retornado pela API:", endereco);
-				throw new Error("O endereço retornado está incompleto. Verifique os dados cadastrados.");
-			}
-
-			const rua = `${endereco.logradouro}, ${endereco.numero}`;
-			const complemento = `${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
-
-			setEndereco({
-				rua: rua,
-				complemento: complemento,
-				id: endereco.id,
-			});
-
-			console.log("Endereço definido com sucesso:");
-		} catch (error) {
-			console.log("erro obterEnderecoCliente:",error)
-		}
-	}
+      console.log("Endereço definido com sucesso:");
+    } catch (error) {
+     console.log(" Chamada de obterEnderecoCliente:", error)
+    }
+  }
 
 	async function getDadosUser() {
 		try {

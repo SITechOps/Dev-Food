@@ -6,6 +6,15 @@ import AppRoutes from "./routes/AppRoutes";
 import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";
 
+const AppWrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="min-h-screen">
+      <Menu />
+      <main className="mx-auto w-4/5 max-w-screen-xl p-4">{children}</main>l
+    </div>
+  );
+};
+
 export default function App() {
   const { userData, isAuthenticated, loading } = useAuth();
 
@@ -16,14 +25,15 @@ export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <CarrinhoProvider>
-        <Menu />
-        {isAuthenticated && userData?.role === "restaurante" ? (
-          <LayoutRestaurante>
+        <AppWrapper>
+          {isAuthenticated && userData?.role === "restaurante" ? (
+            <LayoutRestaurante>
+              <AppRoutes />
+            </LayoutRestaurante>
+          ) : (
             <AppRoutes />
-          </LayoutRestaurante>
-        ) : (
-          <AppRoutes />
-        )}
+          )}
+        </AppWrapper>
       </CarrinhoProvider>
     </Suspense>
   );

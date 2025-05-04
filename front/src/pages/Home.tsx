@@ -9,7 +9,7 @@ import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
 import { useAuth } from "../contexts/AuthContext";
 import Categorias from "./RestaurantesDisponiveis/Categorias";
 import Input from "@/components/ui/Input";
-
+import { initMapScript } from "@/utils/initMapScript";
 // Tipagens explícitas
 interface Endereco {
   logradouro: string;
@@ -43,6 +43,7 @@ export default function Home() {
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [filtroDistanciaAtivo, setFiltroDistanciaAtivo] = useState(false);
   const { userData, token } = useAuth();
   const idUsuario = userData?.sub;
   const [clienteCoords, setClienteCoords] = useState<{
@@ -150,40 +151,49 @@ export default function Home() {
       )
         return;
 
-      const atualizados: Restaurante[] = await Promise.all(
-        restaurantes.map(async (rest) => {
-          const enderecoCompletoRestaurante = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
+      try {
+        // Aguarde a inicialização do Google Maps
+        await initMapScript();
 
-          const destino = await geocodeTexto(enderecoCompletoRestaurante);
-          if (!destino) return rest;
+        const atualizados: Restaurante[] = await Promise.all(
+          restaurantes.map(async (rest) => {
+            const enderecoCompletoRestaurante = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
 
-          try {
-            const distanciaInfo = await calcularDistancia(
-              clienteCoords,
-              destino,
-            );
+            const destino = await geocodeTexto(enderecoCompletoRestaurante);
+            if (!destino) return rest;
 
-            const taxaEntrega =
-              distanciaInfo.distance != null
-                ? calcularTaxaEntrega(distanciaInfo.distance)
-                : undefined;
+            try {
+              const distanciaInfo = await calcularDistancia(
+                clienteCoords,
+                destino,
+              );
 
-            return {
-              ...rest,
-              distancia: distanciaInfo.distance?.toFixed(1),
-              duration: distanciaInfo.duration,
-              taxaEntrega,
-            };
-          } catch (err) {
-            console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
-            return rest;
-          }
-        }),
-      );
+              const taxaEntrega =
+                distanciaInfo.distance != null
+                  ? calcularTaxaEntrega(distanciaInfo.distance)
+                  : undefined;
 
-      setRestaurantes(atualizados);
+              return {
+                ...rest,
+                distancia: distanciaInfo.distance?.toFixed(1),
+                duration: distanciaInfo.duration,
+                taxaEntrega,
+              };
+            } catch (err) {
+              console.error(
+                `Erro ao calcular distância para ${rest.nome}:`,
+                err,
+              );
+              return rest;
+            }
+          }),
+        );
 
-      processamentoFeitoRef.current = true;
+        setRestaurantes(atualizados);
+        processamentoFeitoRef.current = true;
+      } catch (error) {
+        console.error("Erro ao inicializar Google Maps API:", error);
+      }
     }
 
     processarRestaurantes();
@@ -243,24 +253,41 @@ export default function Home() {
         />
       </div>
       <h2 className="text-blue mb-4 text-2xl font-semibold">
-        Pedir seu delivery no iFood é rápido e prático! Conheça as categorias
+        Pedir seu delivery no TechOps é rápido e prático! Conheça as categorias
       </h2>
-      <Categorias onCategoryClick={handleCategoryClick} />
-      {abaAtiva === "restaurantes" && restaurantesProximos.length > 0 && (
-        <div className="mb-10">
-          <h2 className="text-blue mt-6 mb-4 text-xl font-semibold">
-            Restaurantes Próximos (até 10km)
-          </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {restaurantesProximos.map((restaurante) => (
-              <Link to={`/restaurante/${restaurante.id}`} key={restaurante.id}>
-                <RestauranteCard restaurante={restaurante} />
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
 
+      <Categorias onCategoryClick={handleCategoryClick} />
+      {abaAtiva === "restaurantes" &&
+        filtroDistanciaAtivo &&
+        restaurantesProximos.length > 0 && (
+          <div className="mb-10">
+            <h2 className="text-blue mt-6 mb-4 text-xl font-semibold">
+              Restaurantes Próximos (até 10km)
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+              {restaurantesProximos.map((restaurante) => (
+                <Link
+                  to={`/restaurante/${restaurante.id}`}
+                  key={restaurante.id}
+                >
+                  <RestauranteCard restaurante={restaurante} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      <div className="mt-6 w-full">
+        <button
+          className={`rounded px-4 py-2 ${
+            filtroDistanciaAtivo
+              ? "bg-gray-medium text-white"
+              : "text-blue bg-white"
+          }`}
+          onClick={() => setFiltroDistanciaAtivo(!filtroDistanciaAtivo)}
+        >
+          Próximos de mim
+        </button>
+      </div>
       {/* Aba de seleção */}
       <div className="mt-6 mb-6 flex border-b border-gray-300">
         <button
@@ -280,7 +307,10 @@ export default function Home() {
       {/* Grid principal */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {abaAtiva === "restaurantes" &&
-          filteredRestaurantes.map((restaurante) => (
+          (filtroDistanciaAtivo
+            ? restaurantesProximos
+            : filteredRestaurantes
+          ).map((restaurante) => (
             <Link
               to={`/restaurante/${restaurante.id}`}
               key={restaurante.id}
