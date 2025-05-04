@@ -7,6 +7,7 @@ import { IAddress } from "../interface/IAddress";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
 import { initMapScript } from "@/utils/initMapScript";
+import { stringify } from "querystring";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
@@ -85,6 +86,61 @@ export const useEndereco = () => {
 
   const handleFavoritar = (tipoSelecionado: string) => setTipo(tipoSelecionado);
 
+  const handleEditar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!address || !numero)
+      return alert("Por favor, preencha todos os campos do endereço.");
+    if (!idUsuario) return alert("Erro ao obter ID do usuário.");
+
+    const enderecoFinal = {
+      id_usuario: idUsuario,
+      attributes: {
+        logradouro: address.logradouro,
+        numero,
+        complemento,
+        bairro: address.bairro,
+        cidade: address.cidade,
+        estado: address.estado,
+        pais: address.pais,
+        tipo,
+      },
+    };
+
+    // Obtenha o token do localStorage
+    const token = localStorage.getItem("token");
+    // Obtenha o ID do endereço a partir do id_usuario
+    const enderecoId = async () => {
+      try {
+        const response = await api.get(`/user/${idUsuario}/enderecos`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+        );
+        return stringify(response.data[0].numero);
+      } catch (error) {
+        console.error("Erro ao obter ID do endereço:", error);
+        return null;
+      }
+    }
+    // Obtenha o ID do endereço
+    const endereco = await enderecoId();
+
+    try {
+      await api.put(`/endereco/${endereco}`, { data: enderecoFinal });
+      alert("Endereço atualizado com sucesso!");
+      setAddress(null);
+      setNumero("");
+      setComplemento("");
+      setTipo("");
+      if (searchInput.current) searchInput.current.value = "";
+      navigate("/");
+    } catch (error) {
+      console.error("Erro ao atualizar endereço:", error);
+      alert("Erro ao atualizar endereço. Tente novamente.");
+    }
+  }
+
   const handleCadastrar = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!address || !numero)
@@ -145,6 +201,7 @@ export const useEndereco = () => {
     setComplemento,
     handleFavoritar,
     handleCadastrar,
+    handleEditar,
     findMyLocation,
     fecharModal,
   };

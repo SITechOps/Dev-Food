@@ -20,6 +20,10 @@ export default function EnderecoItem({ endereco, onDelete }: EnderecoItemProps) 
     }
   };
 
+  const handleEdit = () => {
+    const enderecoString = encodeURIComponent(JSON.stringify(endereco));
+    navigate(`/c-endereco?endereco=${enderecoString}`);
+  };
   return (
     <div className="relative rounded-md border p-4">
       <div className="flex items-center justify-between">
@@ -28,7 +32,7 @@ export default function EnderecoItem({ endereco, onDelete }: EnderecoItemProps) 
           {showActions && (
             <>
               <button
-                onClick={() => navigate(`/account`)}
+                onClick={handleEdit}
                 className="text-white hover:text-blue bg-brown-normal p-4 rounded-full pointer-events-auto cursor-pointer"
                 title="Editar"
               >
@@ -44,14 +48,13 @@ export default function EnderecoItem({ endereco, onDelete }: EnderecoItemProps) 
             </>
           )}
 
-          {/* Ícone do tipo de endereço */}
           {endereco.tipo === "casa" ? (
             <FaHome className="text-blue mr-2" />
           ) : endereco.tipo === "trabalho" ? (
             <FaBriefcase className="text-blue mr-2" />
           ) : null}
 
-          {/* Dados do endereço */}
+
           <div>
             <p className="text-blue font-semibold">{endereco.logradouro}</p>
             <p className="text-gray-medium">
@@ -60,7 +63,6 @@ export default function EnderecoItem({ endereco, onDelete }: EnderecoItemProps) 
           </div>
         </div>
 
-        {/* Botão para mostrar/ocultar ações */}
         <button
           onClick={() => setShowActions(!showActions)}
           className="text-gray-medium hover:text-gray-dark"
