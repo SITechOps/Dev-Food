@@ -7,6 +7,7 @@ import { IoClose } from "react-icons/io5";
 import { useEndereco } from "../../hooks/useAddress";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
+import { useSearchParams } from "react-router-dom";
 
 const CadastroEndereco = () => {
   const {
@@ -21,8 +22,33 @@ const CadastroEndereco = () => {
     findMyLocation,
     handleFavoritar,
     handleCadastrar,
+    handleEditar,
     fecharModal,
   } = useEndereco();
+
+  const [searchParams] = useSearchParams();
+  const enderecoParam = searchParams.get("endereco");
+
+  useEffect(() => {
+    const enderecoParam = searchParams.get("endereco");
+    if (enderecoParam) {
+      try {
+        const parsedEndereco = JSON.parse(decodeURIComponent(enderecoParam));
+        // Preencha os campos do formulário com os dados do endereço
+        if (parsedEndereco) {
+          setNumero(parsedEndereco.numero.toString());
+          setComplemento(parsedEndereco.complemento);
+          // set search input
+          if (searchInput.current) {
+            searchInput.current.value = `${parsedEndereco.logradouro}, ${parsedEndereco.numero}, ${parsedEndereco.bairro}, ${parsedEndereco.cidade}, ${parsedEndereco.estado}`;
+          }
+          // Você pode adicionar mais campos conforme necessário
+        }
+      } catch (error) {
+        console.error("Erro ao parsear o endereço:", error);
+      }
+    }
+  }, [searchParams, setNumero, setComplemento]);
 
   return (
     <section className="fixed inset-0 flex h-screen items-center justify-center bg-black/50">
@@ -136,14 +162,25 @@ const CadastroEndereco = () => {
                     </div>
                   </div>
                 )}
-
+                {enderecoParam && (
                 <Button
                   type="submit"
                   disabled={!address || !numero}
                   className="mt-4"
+                  onClick={handleEditar}
                 >
-                  Salvar endereço
+                    Editar endereço
                 </Button>
+                )}
+                {!enderecoParam && (
+                  <Button
+                    type="submit"
+                    disabled={!address || !numero}
+                    className="mt-4"
+                  >
+                    Cadastrar endereço
+                  </Button>
+                )}
               </div>
             </>
           )}
