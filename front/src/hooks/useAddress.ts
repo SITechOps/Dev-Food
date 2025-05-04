@@ -108,8 +108,27 @@ export const useEndereco = () => {
       },
     };
 
+    // Obtenha o token do localStorage
+    const token = localStorage.getItem("token");
+    // Obtenha o ID do endereço a partir do id_usuario
+    const enderecoId = async () => {
+      try {
+        const response = await api.get(`/user/${idUsuario}/enderecos`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return stringify(response.data[0].numero);
+      } catch (error) {
+        console.error("Erro ao obter ID do endereço:", error);
+        return null;
+      }
+    };
+    // Obtenha o ID do endereço
+    const endereco = await enderecoId();
+
     try {
-      await api.put(`/endereco/${enderecoId}`, { data: enderecoFinal });
+      await api.put(`/endereco/${endereco}`, { data: enderecoFinal });
       alert("Endereço atualizado com sucesso!");
       setAddress(null);
       setNumero("");
@@ -121,7 +140,7 @@ export const useEndereco = () => {
       console.error("Erro ao atualizar endereço:", error);
       alert("Erro ao atualizar endereço. Tente novamente.");
     }
-  }
+  };
 
   const handleCadastrar = async (e: React.FormEvent) => {
     e.preventDefault();

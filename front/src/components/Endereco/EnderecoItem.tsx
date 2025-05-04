@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaHome, FaBriefcase, FaEdit, FaTrash, FaEllipsisV } from "react-icons/fa";
+import {
+  FaHome,
+  FaBriefcase,
+  FaEdit,
+  FaTrash,
+  FaEllipsisV,
+} from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
 interface EnderecoItemProps {
@@ -11,7 +17,13 @@ interface EnderecoItemProps {
   onEdit?: () => void; // Nova prop para a função de fechar o modal
 }
 
-export default function EnderecoItem({ endereco, onDelete, isSelected, onSelect, onEdit }: EnderecoItemProps) {
+export default function EnderecoItem({
+  endereco,
+  onDelete,
+  isSelected,
+  onSelect,
+  onEdit,
+}: EnderecoItemProps) {
   const navigate = useNavigate();
   const [showActions, setShowActions] = useState(false);
   const { userData, token } = useAuth();
@@ -24,24 +36,19 @@ export default function EnderecoItem({ endereco, onDelete, isSelected, onSelect,
     }
   };
 
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onEdit) {
-      onEdit(); // Chama a função para fechar o modal
-    }
+  const handleEdit = () => {
     const enderecoString = encodeURIComponent(JSON.stringify(endereco));
-    navigate(`/c-endereco?id=${endereco.id}&endereco=${enderecoString}`);
+    navigate(`/c-endereco?endereco=${enderecoString}`);
   };
-
   return (
     <div
       className={`relative rounded-md border-2 p-4 ${
-        isSelected ? 'border-red-500' : 'border-gray-300'
+        isSelected ? "border-red-500" : "border-gray-300"
       } cursor-pointer`}
       onClick={() => onSelect(endereco)}
     >
       {isSelected && (
-        <div className="absolute top-[-16px] left-0 bg-green-500 text-white text-xs font-semibold py-0.5 px-2 rounded-md">
+        <div className="absolute top-[-16px] left-0 rounded-md bg-green-500 px-2 py-0.5 text-xs font-semibold text-white">
           Padrão
         </div>
       )}
@@ -50,15 +57,15 @@ export default function EnderecoItem({ endereco, onDelete, isSelected, onSelect,
           {showActions && (
             <>
               <button
-                onClick={handleEdit} // A função handleEdit agora chama onEdit
-                className="text-white hover:text-blue bg-brown-normal p-4 rounded-full pointer-events-auto cursor-pointer"
+                onClick={handleEdit}
+                className="hover:text-blue bg-brown-normal pointer-events-auto cursor-pointer rounded-full p-4 text-white"
                 title="Editar"
               >
                 <FaEdit />
               </button>
               <button
                 onClick={handleDelete}
-                className="text-white hover:text-blue bg-brown-normal p-4 rounded-full pointer-events-auto cursor-pointer"
+                className="hover:text-blue bg-brown-normal pointer-events-auto cursor-pointer rounded-full p-4 text-white"
                 title="Excluir"
               >
                 <FaTrash />
