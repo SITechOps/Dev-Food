@@ -1,51 +1,61 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Favicon padrão -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Favicon padrão -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="shortcut icon" href="/favicon.ico" />
+    <!-- Ícones para dispositivos Apple -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-  <!-- Ícones para dispositivos Apple -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <!-- Ícones para Android -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/android-chrome-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/android-chrome-512x512.png"
+    />
 
-  <!-- Ícones para Android -->
-  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+    <!-- Manifesto para PWA -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>TechOps</title>
 
-  <!-- Manifesto para PWA -->
-  <link rel="manifest" href="/site.webmanifest" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet" />
-  <title>Clone Ifood</title>
+    <!-- Incluir a biblioteca do Google Maps -->
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI_WAz30LQwToCoTVwYabUn3PKH4ZRvDU&libraries=places&callback=initMap"
+    ></script>
 
-  <!-- Incluir a biblioteca do Google Maps -->
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI_WAz30LQwToCoTVwYabUn3PKH4ZRvDU&libraries=places&callback=initMap">
+    <!-- Biblioteca do Mercado pago -->
+    <script src="https://sdk.mercadopago.com/js/v2" data-preconnect></script>
+    <script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
+
+    <script>
+      // Função de inicialização para garantir que a API esteja carregada
+      function initMap() {
+        console.log("Google Maps API carregada");
+      }
     </script>
+  </head>
 
-  <!-- Biblioteca do Mercado pago -->
-  <script src="https://sdk.mercadopago.com/js/v2" data-preconnect></script>
-  <script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
-
-
-  <script>
-    // Função de inicialização para garantir que a API esteja carregada
-    function initMap() {
-      console.log("Google Maps API carregada");
-    }
-  </script>
-</head>
-
-<body class="m-auto w-4/5 bg-white">
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+  <body class="m-auto w-full bg-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
