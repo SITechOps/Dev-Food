@@ -9,16 +9,16 @@ import { useCartaoComponent } from "@/hooks/Pagamento/useCartao";
 
 export default function PagueCartao() {
 	const {
-		isCardFormReady, 
+		isCardFormReady,
 		formKey,
-		showModal, 
+		showModal,
 		setShowModal,
-		loadingGenerico, 
+		loadingGenerico,
 		adicionarCartao,
 		simulacaoGenerica,
 		handleSubmit
 	} = useCartaoComponent();
-	
+
 	return (
 		<>
 			<p className="my-4 font-bold">Cartões Cadastrados:</p>
@@ -32,11 +32,10 @@ export default function PagueCartao() {
 
 			<hr className="my-5" />
 			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
-			<Modal isOpen={showModal} onClose={() => setShowModal(false)} className="w-100">
+			<Modal isOpen={showModal} onClose={() => setShowModal(false)} className="w-100 h-150 overflow-y-auto custom-scroll">
 
 				<div key={formKey}>
 					<form id="form-checkout" onSubmit={handleSubmit}>
-
 						<Input
 							textLabel="Número do cartão"
 							id="form-checkout__cardNumber"
@@ -76,6 +75,13 @@ export default function PagueCartao() {
 							</div>
 
 						</div>
+						<Input
+							textLabel="E-mail do Titular"
+							id="form-checkout__email"
+							type="email"
+							className="mb-3"
+						/>
+
 						<div className="flex gap-4 items-center">
 							<Input
 								textLabel="Nome do Titular"

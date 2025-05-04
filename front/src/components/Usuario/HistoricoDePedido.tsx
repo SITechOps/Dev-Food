@@ -5,6 +5,7 @@ import { Props } from "@/interface/IMeusPedidos";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Button from "../ui/Button";
 
 export default function HistoricoDePedido({ tipo }: Props) {
   const { userData } = useAuth();
@@ -41,7 +42,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
       {pedidosRenderizar.map((pedido) => (
         <div
           key={pedido.Id}
-          className="mb-3 flex h-[14rem] flex-col justify-between rounded-md bg-white px-[0.75rem] py-[0.75rem] shadow-sm"
+          className="mb-3 flex flex-col justify-between rounded-md bg-white shadow-sm p-5"
           style={{ border: "1px solid #A9A9A9" }}
         >
           {/* Restaurante */}
@@ -87,24 +88,29 @@ export default function HistoricoDePedido({ tipo }: Props) {
           </p>
 
           {/* Botões */}
-          <div className="mt-[0.5rem] flex justify-center gap-30">
-            <button className="text-xl font-semibold text-[#EE4C58] hover:underline">
+          <div className="mt-[0.5rem] flex justify-center gap-10">
+            <Button color="plain" className="p-2">
               Ajuda
-            </button>
+            </Button>
             {tipo === "meuPedido" ? (
-              <button
-                className="h-[2.5rem] w-[12rem] cursor-pointer rounded-3xl border bg-[#EE4C58] text-xl font-semibold text-white hover:bg-red-600"
+              <Button
+                className="p-2"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate("/status-pedido");
                 }}
               >
                 Acompanhar pedido
-              </button>
+              </Button>
             ) : (
-              <button className="h-[2.5rem] w-[12rem] cursor-pointer text-xl font-semibold text-[#EE4C58]">
-                Adicionar à sacola
-              </button>
+              <>
+                <Button color="secondary" className="p-2">
+                  Adicionar à sacola
+                </Button>
+                <Button className="p-2">
+                  Detalhe do Pedido
+                </Button>
+              </>
             )}
           </div>
         </div>

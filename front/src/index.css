@@ -64,6 +64,24 @@
   .input {
     @apply bg-gray-light outline-gray-medium mt-1 w-full rounded-sm px-4 py-3 [&::-ms-reveal]:hidden;
   }
+  .custom-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-track {
+    background: var(--color-gray-medium);
+    border-radius: 9999px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-brown-light-active);
+    border-radius: 9999px;
+    border: solid 1px var(--color-brown-normal);
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brown-light-active);
+  }
 }
 
 input::-webkit-outer-spin-button,

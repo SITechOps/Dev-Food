@@ -3,7 +3,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { IItens, IPedido } from "@/interface/IPagamento";
 import { IUsuarioCliente } from "@/interface/IUser";
-import { AppError, handleApiError } from "@/utils/errors";
 import { AppSuccess } from "@/utils/success";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,10 +55,9 @@ export const usePagamento = () => {
 	async function obterEnderecoCliente() {
 		try {
 			if (!idUsuario || !token) {
-				alert("Usuário ou token não encontrado. Não é possível buscar o endereço.")
-				console.warn("Usuário ou token não encontrado. Não é possível buscar o endereço.");
 				navigate("/")
-				return;
+				alert("Usuário ou token não encontrado. Não é possível buscar o endereço.")
+				throw new Error("Usuário ou token não encontrado. Não é possível buscar o endereço.")
 			}
 
 			const response = await api.get(`/user/${idUsuario}/enderecos`, {
@@ -71,14 +69,14 @@ export const usePagamento = () => {
 			const endereco = response.data?.data?.attributes?.[0];
 
 			if (!endereco) {
-				alert("Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro")
 				navigate("/")
-				return;
+				alert("Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro")
+				throw new Error("Para continuar com o pagamento, é necessário cadastrar um endereço. Por favor, realize o cadastro")
 			}
 
 			if (!endereco.logradouro || !endereco.numero || !endereco.bairro || !endereco.cidade || !endereco.estado || !endereco.pais) {
 				console.error("Endereço incompleto retornado pela API:", endereco);
-				throw new AppError("O endereço retornado está incompleto. Verifique os dados cadastrados.");
+				throw new Error("O endereço retornado está incompleto. Verifique os dados cadastrados.");
 			}
 
 			const rua = `${endereco.logradouro}, ${endereco.numero}`;
@@ -92,8 +90,7 @@ export const usePagamento = () => {
 
 			console.log("Endereço definido com sucesso:");
 		} catch (error) {
-			const appError = handleApiError(error);
-			console.error(appError.message, appError.statusCode);
+			console.log("erro obterEnderecoCliente:",error)
 		}
 	}
 
@@ -104,33 +101,32 @@ export const usePagamento = () => {
 			setUser(dados);
 			return dados;
 		} catch (error) {
-			const appError = handleApiError(error);
-			console.error(appError.message, appError.statusCode);
+			console.log("erro getDadoUser:",error)
 		}
 	}
 
 	async function postPedido(formaPagamento: "pix" | "cartao") {
 		try {
 			if (!storedCompra) {
-				throw new AppError("Carrinho não encontrado. Adicione itens antes de prosseguir.");
+				throw new Error("Carrinho não encontrado. Adicione itens antes de prosseguir.");
 			}
 
 			const compra = JSON.parse(storedCompra);
 			const pedidoPayload: IPedido = construirPedidoPayload(compra, formaPagamento);
 			const resp = await api.post("/pedido", { pedido: pedidoPayload });
+			console.log("resp",resp)
 
 			if (resp.status === 201) {
 				setLoading(false);
-				atualizarQuantidadeTotal();
 				localStorage.removeItem("quantidadeTotal");
 				localStorage.removeItem("compraAtual");
 				localStorage.removeItem("carrinho");
-				navigate("/");
+				atualizarQuantidadeTotal();
+				navigate("/historico");
 				new AppSuccess("Pedido realizado com sucesso! Obrigado por comprar conosco.");
 			}
 		} catch (error) {
-			const appError = handleApiError(error);
-			console.error(appError.message, appError.statusCode);
+			console.log("erro postPedido:", error)
 		}
 	}
 

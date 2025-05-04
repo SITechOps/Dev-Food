@@ -31,7 +31,7 @@ export default function Carrinho({
   return (
     <>
       <div className="fixed inset-0 z-50 flex justify-end bg-black/70">
-        <div className="scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent relative h-full w-full max-w-md overflow-auto bg-white p-6">
+        <div className="relative h-full w-full max-w-md overflow-y-auto custom-scroll bg-white p-6">
           <div className="mb-10 flex h-fit items-start justify-start self-start">
             <IoClose
               className="icon brown-normal absolute top-3 right-4 cursor-pointer"
