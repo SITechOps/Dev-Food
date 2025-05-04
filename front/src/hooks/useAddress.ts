@@ -8,6 +8,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
 import { initMapScript } from "@/utils/initMapScript";
 import { stringify } from "querystring";
+import { stringify } from "querystring";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
@@ -202,6 +203,7 @@ export const useEndereco = () => {
     setComplemento,
     handleFavoritar,
     handleCadastrar,
+    handleEditar,
     handleEditar,
     findMyLocation,
     fecharModal,
