@@ -9,7 +9,7 @@ import { calcularTaxaEntrega } from "../utils/calculateDeliveryFee";
 import { useAuth } from "../contexts/AuthContext";
 import Categorias from "./RestaurantesDisponiveis/Categorias";
 import Input from "@/components/ui/Input";
-
+import { initMapScript } from "@/utils/initMapScript";
 // Tipagens explícitas
 interface Endereco {
   logradouro: string;
@@ -151,40 +151,49 @@ export default function Home() {
       )
         return;
 
-      const atualizados: Restaurante[] = await Promise.all(
-        restaurantes.map(async (rest) => {
-          const enderecoCompletoRestaurante = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
+      try {
+        // Aguarde a inicialização do Google Maps
+        await initMapScript();
 
-          const destino = await geocodeTexto(enderecoCompletoRestaurante);
-          if (!destino) return rest;
+        const atualizados: Restaurante[] = await Promise.all(
+          restaurantes.map(async (rest) => {
+            const enderecoCompletoRestaurante = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
 
-          try {
-            const distanciaInfo = await calcularDistancia(
-              clienteCoords,
-              destino,
-            );
+            const destino = await geocodeTexto(enderecoCompletoRestaurante);
+            if (!destino) return rest;
 
-            const taxaEntrega =
-              distanciaInfo.distance != null
-                ? calcularTaxaEntrega(distanciaInfo.distance)
-                : undefined;
+            try {
+              const distanciaInfo = await calcularDistancia(
+                clienteCoords,
+                destino,
+              );
 
-            return {
-              ...rest,
-              distancia: distanciaInfo.distance?.toFixed(1),
-              duration: distanciaInfo.duration,
-              taxaEntrega,
-            };
-          } catch (err) {
-            console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
-            return rest;
-          }
-        }),
-      );
+              const taxaEntrega =
+                distanciaInfo.distance != null
+                  ? calcularTaxaEntrega(distanciaInfo.distance)
+                  : undefined;
 
-      setRestaurantes(atualizados);
+              return {
+                ...rest,
+                distancia: distanciaInfo.distance?.toFixed(1),
+                duration: distanciaInfo.duration,
+                taxaEntrega,
+              };
+            } catch (err) {
+              console.error(
+                `Erro ao calcular distância para ${rest.nome}:`,
+                err,
+              );
+              return rest;
+            }
+          }),
+        );
 
-      processamentoFeitoRef.current = true;
+        setRestaurantes(atualizados);
+        processamentoFeitoRef.current = true;
+      } catch (error) {
+        console.error("Erro ao inicializar Google Maps API:", error);
+      }
     }
 
     processarRestaurantes();

@@ -3,8 +3,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
+  envDir: "../",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -19,7 +19,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: true, 
-    allowedHosts: ['caminho.ngrok-free.app'],
+    host: true,
+    allowedHosts: ["caminho.ngrok-free.app"],
   },
 });

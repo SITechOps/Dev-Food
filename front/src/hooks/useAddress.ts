@@ -6,13 +6,12 @@ import { useAuth } from "../contexts/AuthContext";
 import { IAddress } from "../interface/IAddress";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
+import { initMapScript } from "@/utils/initMapScript";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
   const role = userData?.role;
-  const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
-  const mapApiJs = "https://maps.googleapis.com/maps/api/js";
   const navigate = useNavigate();
 
   const searchInput = useRef<HTMLInputElement | null>(null);
@@ -24,27 +23,6 @@ export const useEndereco = () => {
   const fecharModal = () => {
     navigate("/");
   };
-
-  const initMapScript = useCallback(async (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      if (typeof window === "undefined") return;
-      if (window.google && window.google.maps) return resolve();
-      const scriptExists = document.querySelector(
-        `script[src^="${mapApiJs}?key=${googleApiKey}"]`,
-      );
-      if (!scriptExists) {
-        const script = document.createElement("script");
-        script.src = `${mapApiJs}?key=${googleApiKey}&libraries=places&v=weekly`;
-        script.async = true;
-        script.defer = true;
-        script.onload = () => resolve();
-        script.onerror = (err) => reject(err);
-        document.body.appendChild(script);
-      } else {
-        scriptExists.addEventListener("load", () => resolve());
-      }
-    });
-  }, []);
 
   const fetchViaCep = async (cep: string) => {
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
@@ -165,8 +143,6 @@ export const useEndereco = () => {
     setNumero,
     setTipo,
     setComplemento,
-    initMapScript,
-    initAutocomplete,
     handleFavoritar,
     handleCadastrar,
     findMyLocation,

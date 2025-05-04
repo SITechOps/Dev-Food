@@ -18,25 +18,11 @@ const CadastroEndereco = () => {
     setNumero,
     setComplemento,
     searchInput,
-    initMapScript,
-    initAutocomplete,
     findMyLocation,
     handleFavoritar,
     handleCadastrar,
     fecharModal,
   } = useEndereco();
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        await initMapScript();
-        initAutocomplete();
-      } catch (error) {
-        console.error("Erro ao carregar o Google Maps", error);
-      }
-    };
-    load();
-  }, [initMapScript, initAutocomplete]);
 
   return (
     <section className="fixed inset-0 flex h-screen items-center justify-center bg-black/50">
