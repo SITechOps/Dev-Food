@@ -40,6 +40,52 @@ export default function Home() {
   };
 
   useEffect(() => {
+    async function obterEnderecoCliente() {
+      try {
+        if (!idUsuario || !token) return;
+
+        // Tenta obter o endereço padrão completo do localStorage
+        const enderecoPadraoString = localStorage.getItem("enderecoPadrao");
+        let enderecoParaGeocodificar: Endereco | undefined;
+
+        if (enderecoPadraoString) {
+          enderecoParaGeocodificar = JSON.parse(enderecoPadraoString);
+        } else {
+          // Se não houver endereço padrão no localStorage, busca o primeiro endereço como antes
+          const response = await api.get(`/user/${idUsuario}/enderecos`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          enderecoParaGeocodificar = response.data?.data?.attributes[0];
+          // Garante que o objeto endereco tenha a propriedade 'id' (se sua lógica ainda depender disso)
+          if (
+            enderecoParaGeocodificar &&
+            !enderecoParaGeocodificar.id &&
+            response.data?.data?.length > 0
+          ) {
+            enderecoParaGeocodificar.id = response.data?.data[0]?.id;
+          }
+        }
+
+        if (!enderecoParaGeocodificar) return;
+
+        const enderecoCompleto = `${enderecoParaGeocodificar.logradouro}, ${enderecoParaGeocodificar.numero}, ${enderecoParaGeocodificar.bairro}, ${enderecoParaGeocodificar.cidade}, ${enderecoParaGeocodificar.estado}, ${enderecoParaGeocodificar.pais}`;
+        const coords = await geocodeTexto(enderecoCompleto);
+
+        if (coords) setClienteCoords(coords);
+      } catch (error) {
+        console.error(
+          "Erro ao buscar/geocodificar endereço do cliente:",
+          error,
+        );
+      }
+    }
+
+    obterEnderecoCliente();
+  }, [idUsuario, token]);
+
+  useEffect(() => {
     async function listarRestaurantes() {
       try {
         const response = await api.get("/restaurantes");
