@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
-import Input from "../ui/Input";
-import Button from "../ui/Button";
-import { IProduto } from "../../interface/IProduct";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+import { ProductProps } from "@/interface/IProduct";
 
 interface ModalProdutoProps {
   isOpen: boolean;
   onClose: () => void;
-  produto?: IProduto | null;
-  criarProduto: (produto: Omit<IProduto, "id">) => Promise<void>;
-  editarProduto: (id: string, produto: Omit<IProduto, "id">) => Promise<void>;
+  produto?: ProductProps | null;
+  criarProduto: (produto: Omit<ProductProps, "id">) => Promise<void>;
+  editarProduto: (
+    id: string,
+    produto: Omit<ProductProps, "id">,
+  ) => Promise<void>;
 }
 
 export default function ModalProduto({
