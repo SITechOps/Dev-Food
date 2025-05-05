@@ -73,16 +73,29 @@ export default function Home() {
       try {
         if (!idUsuario || !token) return;
 
-        const response = await api.get(`/user/${idUsuario}/enderecos`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const endereco = response.data?.data?.attributes[0];
+        // Tenta obter o endereço padrão completo do localStorage
+        const enderecoPadraoString = localStorage.getItem("enderecoPadrao");
+        let enderecoParaGeocodificar: Endereco | undefined;
 
-        if (!endereco) return;
+        if (enderecoPadraoString) {
+          enderecoParaGeocodificar = JSON.parse(enderecoPadraoString);
+        } else {
+          // Se não houver endereço padrão no localStorage, busca o primeiro endereço como antes
+          const response = await api.get(`/user/${idUsuario}/enderecos`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          enderecoParaGeocodificar = response.data?.data?.attributes[0];
+          // Garante que o objeto endereco tenha a propriedade 'id' (se sua lógica ainda depender disso)
+          if (enderecoParaGeocodificar && !enderecoParaGeocodificar.id && response.data?.data?.length > 0) {
+            enderecoParaGeocodificar.id = response.data?.data[0]?.id;
+          }
+        }
 
-        const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
+        if (!enderecoParaGeocodificar) return;
+
+        const enderecoCompleto = `${enderecoParaGeocodificar.logradouro}, ${enderecoParaGeocodificar.numero}, ${enderecoParaGeocodificar.bairro}, ${enderecoParaGeocodificar.cidade}, ${enderecoParaGeocodificar.estado}, ${enderecoParaGeocodificar.pais}`;
         const coords = await geocodeTexto(enderecoCompleto);
 
         if (coords) setClienteCoords(coords);
