@@ -34,6 +34,11 @@ def handle_twilio_error(error):
     return ResponseFormatter.format_error(error_message, 400, error_details)
 
 
+@handlers_bp.app_errorhandler(PermissionError)
+def handle_permission_error(error):
+    return ResponseFormatter.format_error(error.args[0], 403)
+
+
 @handlers_bp.app_errorhandler(404)
 @handlers_bp.app_errorhandler(405)
 def handle_http_errors(error):
