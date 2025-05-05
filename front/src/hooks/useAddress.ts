@@ -132,27 +132,8 @@ export const useEndereco = () => {
 
     if (!enderecoId) return alert("Endereço não encontrado para edição.");
 
-    // Obtenha o token do localStorage
-    const token = localStorage.getItem("token");
-    // Obtenha o ID do endereço a partir do id_usuario
-    const enderecoId = async () => {
-      try {
-        const response = await api.get(`/user/${idUsuario}/enderecos`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return stringify(response.data[0].numero);
-      } catch (error) {
-        console.error("Erro ao obter ID do endereço:", error);
-        return null;
-      }
-    };
-    // Obtenha o ID do endereço
-    const endereco = await enderecoId();
-
     try {
-      await api.put(`/endereco/${endereco}`, { data: enderecoFinal });
+      await api.put(`/endereco/${enderecoId}`, { data: enderecoFinal });
       alert("Endereço atualizado com sucesso!");
       limparCampos();
       navigate("/");
