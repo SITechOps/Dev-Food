@@ -75,7 +75,7 @@ export default function DetalhesRestaurante() {
             id={produto.id}
             nome={produto.nome}
             descricao={produto.descricao}
-            imageUrl={produto.imageUrl}
+            image_url={produto.image_url}
             valor_unitario={produto.valor_unitario}
             dadosRestaurante={restaurante}
           />

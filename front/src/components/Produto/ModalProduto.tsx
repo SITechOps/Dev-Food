@@ -1,17 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import Input from "../../components/ui/Input";
-import Button from "../../components/ui/Button";
+import Button from "@/components/ui/Button";
+import ImageUploadButton from "@/components/ui/ImageUploadButton";
 import { ProductProps } from "@/interface/IProduct";
 
 interface ModalProdutoProps {
   isOpen: boolean;
   onClose: () => void;
   produto?: ProductProps | null;
-  criarProduto: (produto: Omit<ProductProps, "id">) => Promise<void>;
+  criarProduto: (
+    produto: Omit<ProductProps, "id">,
+    imageFile?: File | null,
+  ) => Promise<void>;
   editarProduto: (
     id: string,
     produto: Omit<ProductProps, "id">,
+    imageFile?: File | null,
   ) => Promise<void>;
 }
 
@@ -26,7 +31,8 @@ export default function ModalProduto({
   const [descricao, setDescricao] = useState("");
   const [valorUnitario, setValorUnitario] = useState("");
   const [qtdEstoque, setQtdEstoque] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [image_url, setimage_url] = useState("");
+  const [imageFile, setimageFile] = useState<File | null>(null);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -36,13 +42,13 @@ export default function ModalProduto({
       setDescricao(produto.descricao);
       setValorUnitario(produto.valor_unitario.toString());
       setQtdEstoque(produto.qtd_estoque.toString());
-      setImageUrl(produto.imageUrl);
+      setimage_url(produto.image_url);
     } else {
       setNome("");
       setDescricao("");
       setValorUnitario("");
       setQtdEstoque("");
-      setImageUrl("");
+      setimage_url("");
     }
   }, [produto]);
 
@@ -52,14 +58,14 @@ export default function ModalProduto({
       descricao,
       valor_unitario: parseFloat(valorUnitario),
       qtd_estoque: parseInt(qtdEstoque),
-      imageUrl,
+      image_url,
     };
 
     try {
       if (produto?.id) {
-        await editarProduto(produto.id, dadosProduto);
+        await editarProduto(produto.id, dadosProduto, imageFile);
       } else {
-        await criarProduto(dadosProduto);
+        await criarProduto(dadosProduto, imageFile);
       }
       onClose();
     } catch (error) {
@@ -108,12 +114,9 @@ export default function ModalProduto({
             value={qtdEstoque}
             onChange={(value) => setQtdEstoque(value)}
           />
-          <Input
-            textLabel="URL da imagem:"
-            placeholder="Ex: https://imagem.com/produto.png"
-            value={imageUrl}
-            onChange={(value) => setImageUrl(value)}
-          />
+
+          <ImageUploadButton onFileSelect={(file) => setimageFile(file)} />
+
           <Button onClick={handleSubmit} className="p-2">
             Salvar
           </Button>

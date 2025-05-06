@@ -1006,7 +1006,7 @@ paths:
                               type: string
                             qtd_estoque:
                               type: integer
-                            imageUrl:
+                            image_url:
                               type: string
                     example:
                       Type: Produto
@@ -1016,13 +1016,13 @@ paths:
                           descricao: "Temaki de salmão preparado com arroz, algas e tiras de salmão fresco."
                           valor_unitario: "28.00"
                           qtd_estoque: 60
-                          imageUrl: ""
+                          image_url: ""
                         - id: "0a92387a-56b3-4b9e-a47d-d39ebc1d8bb6"
                           nome: "Taco de Carne"
                           descricao: "Taco de carne suculenta, recheado com temperos mexicanos e servido em tortilhas crocantes."
                           valor_unitario: "18.00"
                           qtd_estoque: 100
-                          imageUrl: ""
+                          image_url: ""
                   count:
                     type: integer
                     example: 2
