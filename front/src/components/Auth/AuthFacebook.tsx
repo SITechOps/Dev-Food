@@ -45,21 +45,40 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
     })(document, "script", "facebook-jssdk");
 
     const { email } = user;
+    (async () => {
+      try {
+        await loginUser(email);
+      } catch {
+        setFormList((prev) => ({ ...prev, email }));
+        setEtapa("telefone");
+      }
+    })();
+  }, [user, setAuth]);
 
-    loginUser(email)
-      .then(async (res) => {
-        const { email } = res.data;
-        try {
-          await loginUser(email);
-        } catch {
-          setFormList((prev) => ({ ...prev, email }));
-          setEtapa("telefone");
-        }
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar informações:", err);
+  useEffect(() => {
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: "1359659571817427",
+        cookie: true,
+        xfbml: true,
+        version: "v22.0",
       });
-  }, [user, setAuth, navigate]);
+
+      window.FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, "script", "facebook-jssdk");
+  }, []); // Executa apenas uma vez na montagem do componente
 
   function loginComFacebook() {
     window.FB.login(
