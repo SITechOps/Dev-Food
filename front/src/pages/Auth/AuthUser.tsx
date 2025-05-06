@@ -6,6 +6,7 @@ import ModalCodigoVerificacao from "../../components/shared/ModalCodigoVerificac
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
 import IconAction from "@/components/ui/IconAction";
+import { SetStateAction } from "react";
 
 export default function AuthUser() {
   const {
@@ -57,7 +58,7 @@ export default function AuthUser() {
             <div className="text-center">
               <div className="mb-4 flex gap-4">
                 <AuthGoogle setEtapa={setEtapa} setFormList={setFormList} />
-                <AuthFacebook />
+                <AuthFacebook setEtapa={setEtapa} setFormList={setFormList} />
               </div>
               <span className="text-gray-medium">
                 -------------- ou --------------
