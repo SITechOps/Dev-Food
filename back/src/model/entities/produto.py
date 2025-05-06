@@ -10,7 +10,7 @@ class Produto(Base):
     descricao = Column(String(255))
     valor_unitario = Column(Numeric(5, 2))
     qtd_estoque = Column(Integer)
-    imageUrl = Column(Text, nullable=True)
+    image_url = Column(Text, nullable=True)
 
     id_restaurante = Column(CHAR(36), ForeignKey("Restaurante.id", ondelete="CASCADE"), nullable=False)
 
@@ -27,6 +27,6 @@ class Produto(Base):
             "descricao": self.descricao,
             "valor_unitario": self.valor_unitario,
             "qtd_estoque": self.qtd_estoque,
-            "imageUrl": self.imageUrl or "",
+            "image_url": self.image_url or "",
             "id_restaurante": self.id_restaurante
         }

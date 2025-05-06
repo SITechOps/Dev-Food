@@ -2,11 +2,10 @@ import { memo, useMemo } from "react";
 import { IRestaurante } from "@/interface/IRestaurante";
 
 type RestauranteProps = {
-  restaurante: IRestaurante & {
-    duration?: number;
-    distancia?: number;
-    taxaEntrega?: number;
-  };
+  restaurant: IRestaurante;
+  duration?: number;
+  distancia?: number;
+  taxaEntrega?: number;
 };
 
 const RestauranteCard = memo(({ restaurante }: RestauranteProps) => {

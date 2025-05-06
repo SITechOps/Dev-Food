@@ -23,6 +23,7 @@ interface Endereco {
 interface Restaurante {
   id: string;
   nome: string;
+  logo?: string;
   especialidade?: string;
   endereco: Endereco;
   duration?: number | null;
@@ -257,25 +258,6 @@ export default function Home() {
       </h2>
 
       <Categorias onCategoryClick={handleCategoryClick} />
-      {abaAtiva === "restaurantes" &&
-        filtroDistanciaAtivo &&
-        restaurantesProximos.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-blue mt-6 mb-4 text-xl font-semibold">
-              Restaurantes Próximos (até 10km)
-            </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-              {restaurantesProximos.map((restaurante) => (
-                <Link
-                  to={`/restaurante/${restaurante.id}`}
-                  key={restaurante.id}
-                >
-                  <RestauranteCard restaurante={restaurante} />
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
       <div className="mt-6 w-full">
         <button
           className={`rounded px-4 py-2 ${
@@ -291,13 +273,13 @@ export default function Home() {
       {/* Aba de seleção */}
       <div className="mt-6 mb-6 flex border-b border-gray-300">
         <button
-          className={`px-4 py-2 font-bold ${abaAtiva === "restaurantes" ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold" : ""}`}
+          className={`px-4 py-2 font-bold ${abaAtiva === "restaurantes" ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold" : "text-blue"}`}
           onClick={() => setAbaAtiva("restaurantes")}
         >
           Restaurantes
         </button>
         <button
-          className={`px-4 py-2 font-bold ${abaAtiva === "itens" ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold" : ""}`}
+          className={`px-4 py-2 font-bold ${abaAtiva === "itens" ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold" : "text-blue"}`}
           onClick={() => setAbaAtiva("itens")}
         >
           Itens
@@ -334,7 +316,36 @@ export default function Home() {
 
         {abaAtiva === "itens" &&
           produtosFiltrados.map((produto) => (
-            <ProdutoCard key={produto.id} produto={produto} />
+            <div key={produto.id} className="mb-8">
+              <div className="mb-3 flex items-center gap-4">
+                {produto.restaurante?.logo && (
+                  <img
+                    src={produto.restaurante.logo}
+                    alt={`Logo do restaurante ${produto.restaurante.nome}`}
+                    className="h-12 w-12 rounded-full border object-cover"
+                  />
+                )}
+                <div className="flex flex-col">
+                  <span className="text-blue text-base font-semibold">
+                    {produto.restaurante?.nome}
+                  </span>
+                  <span className="text-blue text-sm">
+                    {produto.restaurante?.especialidade}
+                    {produto.restaurante?.distancia &&
+                      ` • ${produto.restaurante.distancia} km`}
+                  </span>
+                  <span className="text-green-dark text-sm font-medium">
+                    {produto.restaurante?.taxaEntrega === 0 ||
+                    produto.restaurante?.taxaEntrega === undefined
+                      ? "Entrega grátis"
+                      : `Entrega: R$ ${produto.restaurante?.taxaEntrega.toFixed(2)}`}
+                  </span>
+                </div>
+              </div>
+
+              {/* Card do produto */}
+              <ProdutoCard produto={produto} />
+            </div>
           ))}
       </div>
     </div>
