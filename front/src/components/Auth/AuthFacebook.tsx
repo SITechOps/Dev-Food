@@ -22,20 +22,15 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
     if (!user) return; // Retorna se não houver usuário
 
     const { email } = user;
-
-    loginUser(email)
-      .then(async () => {
+    (async () => {
         try {
           await loginUser(email);
         } catch {
           setFormList((prev) => ({ ...prev, email }));
           setEtapa("telefone");
         }
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar informações:", err);
-      });
-  }, [user, setAuth, navigate, loginUser, setEtapa, setFormList]);
+      })();
+  },[user, setAuth])
 
   useEffect(() => {
     window.fbAsyncInit = function () {
