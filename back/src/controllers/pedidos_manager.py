@@ -108,7 +108,7 @@ class PedidosManager:
                 raise PermissionError(f"O produto '{produto.nome}' não pertence a esse restaurante!", 403)
             
             
-    def format_response(self, pedidos: list[Pedido]) -> dict[list]:
+    def format_response(self, pedidos: list[Pedido], is_nota_fiscal: bool = False) -> dict[list]:
         pedidos_formatados = []
         
         for pedido in pedidos:
@@ -145,7 +145,7 @@ class PedidosManager:
                     "logo": restaurante.logo or "",
                     "cnpj": restaurante.cnpj or "",
                     "telefone": restaurante.telefone or "",
-                    "endereco": restaurante.endereco
+                    "endereco": restaurante.endereco if is_nota_fiscal else restaurante.endereco.to_dict()
                 },
                 "endereco": {
                     "logradouro": endereco.logradouro or "",

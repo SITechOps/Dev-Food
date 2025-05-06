@@ -19,7 +19,7 @@ class NotaFiscalManager:
             if not pedido:
                 raise NotFound("Pedido")
 
-            pedido_formatado = self.pedidos_manager.format_response([pedido])["pedidos"][0]
+            pedido_formatado = self.pedidos_manager.format_response([pedido], True)["pedidos"][0]
 
             pdf_buffer = self.gerador_pdf.gerar_nota_fiscal(pedido_formatado)
             self.email_sender.send_pdf(pedido_formatado.get("email"), pdf_buffer, id_pedido)
