@@ -10,7 +10,7 @@ import { IAddress } from "../../interface/IAddress";
 import { useAuth } from "../../contexts/AuthContext";
 
 interface ListagemEnderecoProps {
-  onCloseModal?: () => void; // Prop opcional para fechar o modal
+  onCloseModal?: () => void;
 }
 
 export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps) {
@@ -42,9 +42,11 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
       setEnderecoPadraoId(storedEnderecoPadraoId);
       if (storedEnderecoPadraoId) {
         const enderecoPadrao = enderecosData.find((end) => end.id === storedEnderecoPadraoId);
-        setEnderecoSelecionado(enderecoPadrao || (enderecosData.length > 0 ? enderecosData[0] : null));
+        setEnderecoSelecionado(enderecoPadrao || null);
       } else if (enderecosData.length > 0) {
         setEnderecoSelecionado(enderecosData[0]);
+      } else {
+        setEnderecoSelecionado(null); // Não há endereços
       }
     } catch (error) {
       console.error("Erro ao buscar endereços:", error);
@@ -52,8 +54,12 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
   }, [idUsuario, token]);
 
   useEffect(() => {
+    buscarEnderecos(); // Buscar endereços na montagem do componente
+  }, [buscarEnderecos]);
+
+  useEffect(() => {
     if (showModal) {
-      buscarEnderecos();
+      buscarEnderecos(); // Buscar novamente ao abrir o modal para garantir a lista atualizada
     }
   }, [showModal, buscarEnderecos]);
 
@@ -96,7 +102,7 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
     if (onCloseModal) {
       onCloseModal();
     } else {
-      setShowModal(false); // Caso o onCloseModal não seja passado como prop
+      setShowModal(false);
     }
   };
 
@@ -111,14 +117,14 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
         onClick={() => setShowModal(true)}
       >
         <span className="text-blue text-lg font-semibold">
-          {enderecoSelecionado?.logradouro || "Adicionar endereço"}
+          {enderecoSelecionado?.logradouro || (enderecos.length === 0 ? "Adicionar endereço" : "Selecionar endereço")}
         </span>
         <IoIosArrowDown
           className={`icon transition-transform ${showModal ? "rotate-180" : ""}`}
         />
       </p>
 
-      <Modal isOpen={showModal} onClose={fecharModalEndereco}> {/* Usando fecharModalEndereco no onClose */}
+      <Modal isOpen={showModal} onClose={fecharModalEndereco}>
         <div className="mb-4 flex items-center">
           <img src={ifoodLogo} alt="iFood Logo" className="mr-2 h-8" />
           <h2 className="text-blue text-lg font-semibold">Meus Endereços</h2>
@@ -140,7 +146,7 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
               onDelete={handleDeleteEndereco}
               isSelected={endereco.id === enderecoPadraoId}
               onSelect={handleSelecionarEndereco}
-              onEdit={fecharModalEndereco} // Passando a função para fechar o modal
+              onEdit={fecharModalEndereco}
             />
           ))}
         </div>
