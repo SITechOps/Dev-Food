@@ -25,6 +25,7 @@ def create_app():
     app.register_blueprint(pagamento_route_bp)
     app.register_blueprint(email_route_bp)
     app.register_blueprint(sms_route_bp)
+    app.register_blueprint(nota_fiscal_bp)
     app.register_blueprint(handlers_bp)
 
     DBConnectionHandler()
