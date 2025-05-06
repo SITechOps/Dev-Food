@@ -1,3 +1,4 @@
+from io import BytesIO
 from flask import render_template
 from flask_mail import Mail, Message
 from src.http_types.http_request import HttpRequest
@@ -30,6 +31,27 @@ class EmailSender:
             raise InvalidEmailFormat()
         
         return ResponseFormatter.display_verification_code(verification_code)
+
+
+    def send_pdf(self, recipient_email: str, pdf_buffer: BytesIO, pedido_id: int) -> None:
+        try:
+            msg = Message(
+                subject=f"Nota Fiscal - Pedido #{pedido_id}",
+                sender="devfoodsender@gmail.com",
+                recipients=[recipient_email],
+                body=f"Olá! Segue em anexo a nota fiscal referente ao pedido #{pedido_id}. Obrigado por usar o DevFood!"
+            )
+
+            # Adiciona o PDF como anexo
+            msg.attach(
+                f"nota_fiscal_pedido_{pedido_id}.pdf",
+                "application/pdf",
+                pdf_buffer.getvalue()
+            )
+            self.mail.send(msg)
+
+        except SMTPRecipientsRefused:
+            raise InvalidEmailFormat()
         
         
     def __get_email(self, http_request: HttpRequest) -> str:

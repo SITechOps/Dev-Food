@@ -32,7 +32,7 @@ class PedidosRepository:
     
 
     @db_scope
-    def get_by_id(self, db, id_pedido: str) -> Pedido:
+    def find_by_id(self, db, id_pedido: str) -> Pedido:
         return (
             db.session
             .query(Pedido)
@@ -46,5 +46,4 @@ class PedidosRepository:
         pedido = self.get_by_id(id_pedido)        
         pedido.status = novo_status
         db.session.add(pedido)
-        db.session.commit()
-    
+        db.session.commit()   

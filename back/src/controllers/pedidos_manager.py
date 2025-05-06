@@ -7,7 +7,7 @@ from src.main.utils.response_formatter import ResponseFormatter
 
 class PedidosManager:
     def __init__(self, pedidos_repo, itens_repo = None, usuarios_repo = None, restaurantes_repo = None, enderecos_repo = None, produtos_repo = None) -> None:
-        self.__pedidos_repo = pedidos_repo
+        self.pedidos_repo = pedidos_repo
         self.__itens_repo = itens_repo
         self.__usuarios_repo = usuarios_repo
         self.__restaurantes_repo = restaurantes_repo
@@ -17,15 +17,15 @@ class PedidosManager:
 
     def create_new_pedido(self, http_request: HttpRequest) -> HttpResponse:
         info_pedido = http_request.body.get("pedido")
+        self.__validate_data(info_pedido)
         itens = info_pedido.pop("itens")
 
-        id_pedido = self.__pedidos_repo.insert_pedido(info_pedido)
-
+        id_pedido = self.pedidos_repo.insert_pedido(info_pedido)
         for info_item in itens:
             self.__itens_repo.insert_item_pedido(id_pedido, info_item)
 
         socketio.emit("pedido_criado")
-        return ResponseFormatter.display_operation("Pedido", "criado")
+        return ResponseFormatter.display_operation(f"Pedido #{id_pedido}", "criado")
     
 
     def get_pedidos(self, http_request: HttpRequest):
@@ -33,13 +33,15 @@ class PedidosManager:
         id_restaurante = http_request.params.get("id_restaurante")
 
         if id_usuario:
-            pedidos = self.__pedidos_repo.list_pedidos_by_usuario(id_usuario)
+            self.__validate_usuario(id_usuario)
+            pedidos = self.pedidos_repo.list_pedidos_by_usuario(id_usuario)
         elif id_restaurante:
-            pedidos = self.__pedidos_repo.list_pedidos_by_restaurante(id_restaurante)
+            self.__validate_restaurante(id_restaurante)
+            pedidos = self.pedidos_repo.list_pedidos_by_restaurante(id_restaurante)
         else:
             return ResponseFormatter.format_error("Id não informado", 400)
             
-        pedidos_formatados = self.__format_response(pedidos)
+        pedidos_formatados = self.format_response(pedidos)
         return HttpResponse(body=pedidos_formatados, status_code=200)
 
 
@@ -50,15 +52,63 @@ class PedidosManager:
         if not id_pedido or not novo_status:
             return HttpResponse(body={"error": "id_pedido e status são obrigatórios"}, status_code=400)
 
-        if not self.__pedidos_repo.get_by_id(id_pedido):
+        if not self.pedidos_repo.find_by_id(id_pedido):
             raise NotFound("Pedido")
 
-        self.__pedidos_repo.update_status(id_pedido, novo_status)
+        self.pedidos_repo.update_status(id_pedido, novo_status)
         socketio.emit("atualizar_status")
         return ResponseFormatter.display_operation("Status do pedido", "alterado")
+    
+
+    def __validate_data(self, info_pedido: dict) -> None:
+        id_usuario = info_pedido.get("id_usuario")
+        id_restaurante = info_pedido.get("id_restaurante")
+        id_endereco = info_pedido.get("id_endereco")
+        itens = info_pedido.get("itens")
+
+        self.__validate_usuario(id_usuario)
+        self.__validate_endereco(id_usuario, id_endereco)
+        self.__validate_restaurante(id_restaurante)
+        self.__validate_produto(id_restaurante, itens)
+
+
+    def __validate_usuario(self, id_usuario: str) -> None:
+        if not self.__usuarios_repo.find_by_id(id_usuario):
+            raise NotFound("Usuário")
+
+
+    def __validate_endereco(self, id_usuario: str, id_endereco: str) -> None:
+        if not self.__enderecos_repo.find_by_id(id_endereco):
+            raise NotFound("Endereço")
+        
+        enderecos_ids = {
+            endereco.id for endereco in self.__enderecos_repo.find_all_enderecos_by_user(id_usuario)
+        }
+        if id_endereco not in enderecos_ids:
+            raise PermissionError("O endereço não pertence a esse usuário!")
         
 
-    def __format_response(self, pedidos: list[Pedido]) -> dict[list]:
+    def __validate_restaurante(self, id_restaurante: str) -> None:
+        if not self.__restaurantes_repo.find_by_id(id_restaurante):
+            raise NotFound("Restaurante")
+        
+
+    def __validate_produto(self, id_restaurante: str, itens: list) -> None:
+        produtos_restaurante = {
+            produto.id for produto in self.__produtos_repo.list_products_by_restaurante(id_restaurante)
+        }
+        for item in itens:
+            id_produto = item.get("id_produto") or ""
+            produto = self.__produtos_repo.find_by_id(id_produto)
+
+            if not produto:
+                raise NotFound("Produto")
+
+            if id_produto not in produtos_restaurante:
+                raise PermissionError(f"O produto '{produto.nome}' não pertence a esse restaurante!", 403)
+            
+            
+    def format_response(self, pedidos: list[Pedido]) -> dict[list]:
         pedidos_formatados = []
         
         for pedido in pedidos:
@@ -78,17 +128,24 @@ class PedidosManager:
 
             pedidos_formatados.append({
                 "Id": pedido.id,
-                "valor_total": pedido.valor_total,
                 "data_pedido": pedido.created_at,
-                "forma_pagamento": pedido.forma_pagamento,
                 "status": pedido.status,
+                "forma_pagamento": pedido.forma_pagamento.capitalize(),
                 "cliente": usuario.nome,
+                "email": usuario.email,
+                "telefone": usuario.telefone,
                 "tipo_entrega": pedido.tipo_entrega,
+                "sub_total": pedido.sub_total,
+                "valor_total": pedido.valor_total,
+                "taxa_entrega": pedido.taxa_entrega,
                 "atualizado_em": pedido.updated_at,
                 "codigo": usuario.telefone[-4:],
                 "restaurante": {
                     "nome": restaurante.nome or "",
                     "logo": restaurante.logo or "",
+                    "cnpj": restaurante.cnpj or "",
+                    "telefone": restaurante.telefone or "",
+                    "endereco": restaurante.endereco
                 },
                 "endereco": {
                     "logradouro": endereco.logradouro or "",

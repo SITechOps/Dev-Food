@@ -5,13 +5,15 @@ from random import randint
 class Pedido(Base):
     __tablename__ = "Pedido"
     id = Column(CHAR(36), primary_key=True, default=lambda: randint(1000, 10000))
-    valor_total = Column(Numeric(6, 2), nullable=False)
     id_usuario = Column(CHAR(36), ForeignKey("Usuario.id", ondelete="CASCADE"), nullable=False)
     id_restaurante = Column(CHAR(36), ForeignKey("Restaurante.id"), nullable=False)
     id_endereco = Column(CHAR(36), ForeignKey("Endereco.id"), nullable=False)
     forma_pagamento = Column(String(20), nullable=False)
     status = Column(String(20), default="Pendente")
     tipo_entrega = Column(String(10), default="Padrão")
+    sub_total = Column(Numeric(5, 2), nullable=False)
+    taxa_entrega = Column(Numeric(5, 2), nullable=False)
+    valor_total = Column(Numeric(6, 2), nullable=False)
 
     def to_dict(self):
         return {

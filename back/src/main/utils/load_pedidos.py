@@ -28,6 +28,7 @@ def load_pedidos_exemplo():
             "bairro": "Jardim Colorado",
             "cidade": "São Paulo",
             "estado": "SP",
+            "pais": "Brasil",
             "numero": "38",
             "complemento": "Bloco A",
             "tipo": "casa"
@@ -48,13 +49,15 @@ def load_pedidos_exemplo():
         produtos_r1 = produtos_repo.list_products_by_restaurante(restaurantes[0].id)
         if len(produtos_r1) >= 2:
             pedidos.append({
-                "valor_total": 100.00,
                 "id_usuario": id_usuario,
                 "id_restaurante": restaurantes[0].id,
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Cartão",
                 "status": "Entregue",
                 "tipo_entrega": "Padrão",
+                "sub_total": 100.00,
+                "taxa_entrega": 15.00,
+                "valor_total": 115.00,
                 "itens": [
                     {"id_produto": produtos_r1[0].id, "qtd_itens": 2, "valor_calculado": 50.00},
                     {"id_produto": produtos_r1[1].id, "qtd_itens": 1, "valor_calculado": 50.00},
@@ -64,13 +67,15 @@ def load_pedidos_exemplo():
         produtos_r2 = produtos_repo.list_products_by_restaurante(restaurantes[1].id)
         if len(produtos_r2) >= 1:
             pedidos.append({
-                "valor_total": 200.00,
                 "id_usuario": id_usuario,
                 "id_restaurante": restaurantes[1].id,
                 "id_endereco": id_endereco,
                 "forma_pagamento": "Pix",
                 "status": "Entregue",
                 "tipo_entrega": "Rápida",
+                "sub_total": 200.00,
+                "taxa_entrega": 25.00,
+                "valor_total": 225.00,
                 "created_at": data_ontem,
                 "updated_at": data_ontem,
                 "itens": [
@@ -81,13 +86,15 @@ def load_pedidos_exemplo():
         produtos_r3 = produtos_repo.list_products_by_restaurante(restaurantes[2].id)
         if len(produtos_r3) >= 1:
             pedidos.append({
-                "valor_total": 150.00,
                 "id_usuario": id_usuario,
                 "id_restaurante": restaurantes[2].id,
                 "id_endereco": id_endereco,
-                "forma_pagamento": "Dinheiro",
+                "forma_pagamento": "Cartão",
                 "status": "Pendente",
                 "tipo_entrega": "Padrão",
+                "sub_total": 150.00,
+                "taxa_entrega": 10.00,
+                "valor_total": 160.00,
                 "created_at": data_3_dias_atras,
                 "updated_at": data_3_dias_atras,
                 "itens": [
