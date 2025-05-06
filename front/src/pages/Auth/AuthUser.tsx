@@ -6,6 +6,7 @@ import ModalCodigoVerificacao from "../../components/shared/ModalCodigoVerificac
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
 import IconAction from "@/components/ui/IconAction";
+import { SetStateAction } from "react";
 
 export default function AuthUser() {
   const {
