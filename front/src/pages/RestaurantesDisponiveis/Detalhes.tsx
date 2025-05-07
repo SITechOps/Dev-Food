@@ -67,7 +67,7 @@ export default function DetalhesRestaurante() {
       </div>
       <div
         id="produtos"
-        className="mt-5 mb-[5rem] grid gap-12 min-[600px]:grid-cols-1 min-[601px]:grid-cols-2 min-[1100px]:grid-cols-3 min-[2000px]:grid-cols-5"
+        className="mt-5 mb-[5rem] grid gap-12 min-[600px]:grid-cols-1 min-[601px]:grid-cols-2 min-[1100px]:grid-cols-3"
       >
         {dadosProdutos.map((produto, index) => (
           <CardProdutos

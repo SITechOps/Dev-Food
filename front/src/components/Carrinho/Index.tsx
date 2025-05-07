@@ -30,7 +30,7 @@ export default function Carrinho({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-end bg-black/70">
+      <div className="fixed inset-0 z-50 flex justify-end bg-black/70  text-blue">
         <div className="relative h-full w-full max-w-md overflow-y-auto custom-scroll bg-white p-6">
           <div className="mb-10 flex h-fit items-start justify-start self-start">
             <IoClose
@@ -41,7 +41,7 @@ export default function Carrinho({
           </div>
 
           {dados.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center">
+            <div className="flex h-full flex-col items-center justify-center ">
               <img
                 src={ifoodLogo}
                 alt="Logo Ifood"

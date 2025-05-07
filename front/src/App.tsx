@@ -5,12 +5,14 @@ import LayoutRestaurante from "./components/Restaurante/LayoutRestaurante";
 import AppRoutes from "./routes/AppRoutes";
 import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";
+import { TaxaEntregaProvider } from "./contexts/TaxaEntregaContext";
+import { PagamentoProvider } from "./contexts/PagamaentoContext";
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen">
       <Menu />
-      <main className="mx-auto w-4/5 max-w-screen-xl p-4">{children}</main>l
+      <main className="text-blue mx-auto w-4/5 max-w-screen-xl p-4">{children}</main>l
     </div>
   );
 };
@@ -31,7 +33,11 @@ export default function App() {
               <AppRoutes />
             </LayoutRestaurante>
           ) : (
+            <PagamentoProvider>
+            <TaxaEntregaProvider>
             <AppRoutes />
+            </TaxaEntregaProvider>
+            </PagamentoProvider>
           )}
         </AppWrapper>
       </CarrinhoProvider>

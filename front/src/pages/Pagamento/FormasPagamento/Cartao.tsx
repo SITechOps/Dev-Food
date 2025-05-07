@@ -33,6 +33,7 @@ export default function PagueCartao() {
 			<hr className="my-5" />
 			<Button className="p-2" onClick={adicionarCartao}>Adicionar novo Cartão</Button>
 			<Modal isOpen={showModal} onClose={() => setShowModal(false)} className="w-100 h-150 overflow-y-auto custom-scroll">
+				<p className="font-bold text-center">Aceitamos pagamentos com cartão (débito ou crédito).</p>
 
 				<div key={formKey}>
 					<form id="form-checkout" onSubmit={handleSubmit}>

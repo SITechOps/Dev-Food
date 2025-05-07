@@ -7,17 +7,12 @@ import PageCartao from "./FormasPagamento/Cartao";
 import CardsOpcoes from "./components/CardsOpcoes";
 import IconAction from "@/components/ui/IconAction";
 import { usePagamento } from "@/hooks/Pagamento/usePagamento";
-import { useEffect, useState } from "react";
+import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
 
 export default function Pagamento() {
   const {
     restaurante,
-    // subtotal,
     valoresCarrinho,
-		meiosSelecao, 
-		setMeiosSelecao,
-    selecionado, 
-		setSelecionado,
     endereco,
     etapa,
     setEtapa,
@@ -25,46 +20,15 @@ export default function Pagamento() {
     setModeloPagamento,
   } = usePagamento();
 
-  const [taxaEntregaSelecionada, setTaxaEntregaSelecionada] = useState(0.0);
-  const [duracaoPadrao, setDuracaoPadrao] = useState<string | null>(null);
-  const [duracaoRapida, setDuracaoRapida] = useState<string | null>(null);
-  const [taxaEntregaPadrao, setTaxaEntregaPadrao] = useState(0.0);
-  const [taxaEntregaRapida, setTaxaEntregaRapida] = useState(0.0);
+  const {
+    taxaEntregaSelecionada,
+    taxaEntregaPadrao,
+    taxaEntregaRapida,
+    duracaoPadrao,
+    duracaoRapida,
+    handleSelecionado,
+  } = useTaxaEntrega();
 
-  // setando a taxa de entrega para padrão quando entrar na tela de pagamento
-  useEffect(() => {
-    setTaxaEntregaSelecionada(taxaEntregaPadrao);
-  }, [taxaEntregaPadrao]);
-
-  useEffect(() => {
-    const storedFrete = JSON.parse(
-      localStorage.getItem("restauranteSelecionado") || "null",
-    );
-    if (storedFrete) {
-      setTaxaEntregaPadrao(storedFrete.taxaEntrega || 0);
-      setTaxaEntregaRapida(storedFrete.taxaEntrega * 1.15 || 0);
-      setDuracaoPadrao(
-        storedFrete.duration
-          ? `${Math.floor(storedFrete.duration / 60)}-${Math.floor(storedFrete.duration / 60) + 10} min`
-          : null,
-      );
-      setDuracaoRapida(
-        storedFrete.duration
-          ? `${Math.floor((storedFrete.duration / 60) * 0.8)}-${Math.floor((storedFrete.duration / 60) * 0.8) + 10} min`
-          : null,
-      );
-    }
-    handleSelecionado("padrão");
-  }, []);
-
-  const handleSelecionado = (value: "padrão" | "rápida") => {
-    setSelecionado(value);
-    if (value === "padrão") {
-      setTaxaEntregaSelecionada(taxaEntregaPadrao);
-    } else if (value === "rápida") {
-      setTaxaEntregaSelecionada(taxaEntregaRapida);
-    }
-  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 xl:flex-row">
@@ -79,8 +43,8 @@ export default function Pagamento() {
             <TfiMapAlt className="text-3xl" />
             <div className="my-4 flex w-full items-center justify-between gap-4">
               <div>
-                <p className="font-semibold break-words w-80">{endereco.rua}</p>
-                <p className="">{endereco.complemento}</p>
+                <p className="font-semibold break-words">{endereco.rua}</p>
+                <p className="break-words w-80">{endereco.complemento}</p>
               </div>
             </div>
           </div>
@@ -98,29 +62,27 @@ export default function Pagamento() {
         <div className="mt-5 flex gap-5">
           <div
             onClick={() => handleSelecionado("padrão")}
-            className={`w-full cursor-pointer rounded-lg border-2 p-4 ${
-              selecionado === "padrão"
-                ? "border-brown-normal text-brown-dark"
-                : "border-gray-300"
-            }`}
+            className={`w-full cursor-pointer rounded-lg border-2 p-4 ${taxaEntregaSelecionada === taxaEntregaPadrao
+              ? "border-brown-normal text-brown-dark"
+              : "border-gray-300"
+              }`}
           >
             <p className="font-semibold">Padrão</p>
             <p className="text-sm font-semibold">Hoje, {duracaoPadrao}</p>
-            <p className="mt-2 font-semibold text-black">
+            <p className="mt-2 font-semibold text-blue">
               R$ {taxaEntregaPadrao.toFixed(2)}
             </p>
           </div>
           <div
             onClick={() => handleSelecionado("rápida")}
-            className={`w-full cursor-pointer rounded-lg border-2 p-4 ${
-              selecionado === "rápida"
-                ? "border-brown-normal text-brown-dark"
-                : "border-gray-300"
-            }`}
+            className={`w-full cursor-pointer rounded-lg border-2 p-4 ${taxaEntregaSelecionada === taxaEntregaRapida
+              ? "border-brown-normal text-brown-dark"
+              : "border-gray-300"
+              }`}
           >
             <p className="font-semibold">Rápida</p>
             <p className="text-sm font-semibold">Hoje, {duracaoRapida}</p>
-            <p className="mt-2 font-semibold text-black">
+            <p className="mt-2 font-semibold text-blue">
               R$ {taxaEntregaRapida.toFixed(2)}
             </p>
           </div>
@@ -130,29 +92,25 @@ export default function Pagamento() {
           <div className="mb-10 flex w-100 items-center justify-between">
             <Button
               onClick={() => {
-                setMeiosSelecao("site");
                 setModeloPagamento("site");
               }}
               color="plain"
-              className={`border-b-2 pb-2 transition-all ${
-                meiosSelecao === "site"
-                  ? "text-brown-normal border-brown-normal"
-                  : "hover:text-blue-dark border-transparent"
-              }`}
+              className={`border-b-2 pb-2 transition-all ${modeloPagamento === "site"
+                ? "text-brown-normal border-brown-normal"
+                : "hover:text-blue-dark border-transparent"
+                }`}
             >
               Pague pelo site
             </Button>
             <Button
               onClick={() => {
-                setMeiosSelecao("entrega");
                 setModeloPagamento("entrega");
               }}
               color="plain"
-              className={`border-b-2 pb-2 transition-all ${
-                meiosSelecao === "site"
-                  ? "text-blue hover:text-blue-dark border-transparent"
-                  : "text-brown-normal border-brown-normal"
-              }`}
+              className={`border-b-2 pb-2 transition-all ${modeloPagamento === "site"
+                ? "text-blue hover:text-blue-dark border-transparent"
+                : "text-brown-normal border-brown-normal"
+                }`}
             >
               Pague na entrega
             </Button>
