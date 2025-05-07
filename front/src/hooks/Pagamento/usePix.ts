@@ -9,7 +9,7 @@ export const usePixComponent = () => {
 	const [key, setKey] = useState(0);
 	const [copied, setCopied] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-	const { valoresCarrinho, userData, setLoading, postPedido, navigate } = usePagamento();
+	const { valoresCarrinho, userData, setIsLoading, isLoading, taxaEntregaSelecionada, storedCompra, postPedido } = usePagamento();
 	const [statusPagamento, setStatusPagamento] = useState<StatusChave>("pendente");
 	const sequencia: StatusChave[] = ["pendente", "processando", "aprovado"];
 	const idGenerico = Math.random().toString(36).substring(2, 10);
@@ -22,7 +22,7 @@ export const usePixComponent = () => {
 	const [loadingMP, setLoadingMP] = useState(false);
 	const [loadingGenerico, setLoadingGenerico] = useState(false);
 	const [pagamentoIniciado, setPagamentoIniciado] = useState(false);
-	const {resetPagamento} = usePagamentoContext();
+	const { resetPagamento } = usePagamentoContext();
 
 
 	useEffect(() => {
@@ -33,9 +33,9 @@ export const usePixComponent = () => {
 	async function processamentoPagamento(sequencia: StatusChave[], intervaloMs: number = 10000) {
 		for (let index = 0; index < sequencia.length; index++) {
 			const novoStatus = sequencia[index];
-	
+
 			setStatusPagamento(novoStatus);
-	
+
 			if (novoStatus === "aprovado") {
 				setShowModal(true);
 				break;
@@ -47,7 +47,6 @@ export const usePixComponent = () => {
 
 	async function acompanharPedido() {
 		await postPedido("pix");
-		setShowModal(false);
 	};
 
 	async function qrCodeGenerico() {
@@ -66,8 +65,8 @@ export const usePixComponent = () => {
 			processamentoPagamento(sequencia, 8000);
 		} catch (error) {
 			setTimeout(() => {
-				resetPagamento(); 
-			  }, 0);
+				resetPagamento();
+			}, 0);
 			console.log("erro qrCodeGenerico:", error)
 		} finally {
 			setLoadingGenerico(false);
@@ -83,39 +82,42 @@ export const usePixComponent = () => {
 				const { data } = await api.get(`/user/${userData?.sub}`);
 				const dados = data?.data?.attributes || [];
 
-				const pixPayload: IPagePix = {
-					email_comprador: dados.email,
-					nome_comprador: dados.nome,
-					valor_pagamento: valoresCarrinho.total,
-				};
+				if (storedCompra) {
+					const compra = JSON.parse(storedCompra);
+					const pixPayload: IPagePix = {
+						email_comprador: dados.email,
+						nome_comprador: dados.nome,
+						valor_pagamento: Number((compra.subtotal + taxaEntregaSelecionada).toFixed(2)),
+					};
 
-				const response = await api.post<IResponsePagePix>("/pix/qr-code", {
-					pix: pixPayload,
-				});
-
-				const dadosPix = response.data;
-
-				const qrVazio =
-					!dadosPix?.qr_code ||
-					!dadosPix?.qr_code_base64 ||
-					dadosPix.qr_code.trim() === '' ||
-					dadosPix.qr_code_base64.trim() === '';
-
-				if (!qrVazio) {
-					setRespPagamento({
-						id: dadosPix.id,
-						qr_code: dadosPix.qr_code,
-						qr_code_base64: `data:image/svg;base64,${dadosPix.qr_code_base64}`,
+					const response = await api.post<IResponsePagePix>("/pix/qr-code", {
+						pix: pixPayload,
 					});
-					setKey(prevKey => prevKey + 1);
-				} else {
-					alert('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
+
+					const dadosPix = response.data;
+
+					const qrVazio =
+						!dadosPix?.qr_code ||
+						!dadosPix?.qr_code_base64 ||
+						dadosPix.qr_code.trim() === '' ||
+						dadosPix.qr_code_base64.trim() === '';
+
+					if (!qrVazio) {
+						setRespPagamento({
+							id: dadosPix.id,
+							qr_code: dadosPix.qr_code,
+							qr_code_base64: `data:image/svg;base64,${dadosPix.qr_code_base64}`,
+						});
+						setKey(prevKey => prevKey + 1);
+					} else {
+						alert('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
+					}
 				}
 			} catch (error) {
 				setTimeout(() => {
-					resetPagamento(); 
-				  }, 0);
-				console.log("erro qrCodeMercadoPago:",error)
+					resetPagamento();
+				}, 0);
+				console.log("erro qrCodeMercadoPago:", error)
 			} finally {
 				setLoadingMP(false);
 			}
@@ -141,29 +143,29 @@ export const usePixComponent = () => {
 					setStatusPagamento("aprovado");
 					setShowModal(true);
 					break;
-	
+
 				case "pending":
 					setStatusPagamento("pendente");
 					console.log("pedido pendente de pagamento")
 					break;
-	
+
 				case "rejected":
 					setStatusPagamento("rejeitado");
 					alert("Pagamento rejeitado. Por favor, tente novamente.");
-					navigate("/")
+					resetPagamento();
 					break;
-	
+
 				default:
-					navigate("/")
+					resetPagamento();
 					console.warn(`Status desconhecido recebido: ${status}`);
 					break;
 			}
 
 		} catch (error) {
 			setTimeout(() => {
-				resetPagamento(); 
-			  }, 0);
-			console.log("erro stausPagamentoPix:",error)
+				resetPagamento();
+			}, 0);
+			console.log("erro stausPagamentoPix:", error)
 		}
 	}
 
@@ -174,7 +176,8 @@ export const usePixComponent = () => {
 		valoresCarrinho,
 		copied,
 		setCopied,
-		setLoading,
+		setIsLoading,
+		isLoading,
 		showModal,
 		setShowModal,
 		statusPagamento,

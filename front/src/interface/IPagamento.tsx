@@ -30,23 +30,9 @@ export interface IItens {
 	valor_calculado: string;
 }
 
-export interface IRespPedido {
-		Id: string;
-		atualizado_em: string;
-		cliente: string;
-		codigo: string;
-		data_pedido: string;
-		email: string;
-		endereco: IEndereco;
-		forma_pagamento: string;
-		itens: IItens;
-		restaurante: IRestaurante;
-		status: string;
-		sub_total: string;
-		taxa_entrega: string;
-		telefone: string;
-		tipo_entrega: string;
-		valor_total: string;
+export interface IRespPostPedido {
+	id_pedido: string;
+	message: string;		
 }
 
 export interface ITipoProps {

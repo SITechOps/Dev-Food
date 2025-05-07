@@ -23,6 +23,7 @@ export default function PagePix() {
 		statusTipo,
 		qrCodeGenerico,
 		loadingGenerico,
+		isLoading,
 		qrCodeMercadoPago,
 		loadingMP,
 		pagamentoIniciado,
@@ -127,10 +128,13 @@ export default function PagePix() {
 
 							{pagoComMP && (
 								<Button
-									className="my-6 p-2 bg-brown-light-active text-brown-normal hover:text-white"
+									className="my-6 p-2 whitespace-nowrap flex justify-center gap-3 items-center mb-5 mt-5"
 									onClick={stausPagamentoPix}
+									disabled={isLoading}
+									color="secondary"
 								>
-									Confirmar pagamento
+									{isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+									<span>{isLoading ? "Processando..." : "Confirmar pagamento"}</span>
 								</Button>
 							)}
 						</>
@@ -145,7 +149,14 @@ export default function PagePix() {
 				</p>
 				<p className="text-center mt-3">Pagamento processado com sucesso! <br /> <span className="font-bold">Pedido em andamento</span></p>
 
-				<Button className="mt-5 p-2" onClick={acompanharPedido} >Acompanhe seu pedido</Button>
+				<Button
+					className="my-6 p-2 whitespace-nowrap flex justify-center gap-3 items-center mb-5 mt-5"
+					onClick={acompanharPedido}
+					disabled={isLoading}
+				>
+					{isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+					<span>{isLoading ? "Carregando..." : "Acompanhe seu pedido"}</span>
+				</Button>
 			</Modal>
 
 			{statusPagamento === "expirou" && (
