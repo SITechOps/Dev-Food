@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IPagePix, IResponsePagePix, StatusChave, statusTipo } from "@/interface/IPagamento";
 import { usePagamento } from "./usePagamento";
 import QRCode from 'qrcode';
+import { usePagamentoContext } from "@/contexts/PagamaentoContext";
 
 export const usePixComponent = () => {
 	const [key, setKey] = useState(0);
@@ -21,7 +22,7 @@ export const usePixComponent = () => {
 	const [loadingMP, setLoadingMP] = useState(false);
 	const [loadingGenerico, setLoadingGenerico] = useState(false);
 	const [pagamentoIniciado, setPagamentoIniciado] = useState(false);
-
+	const {resetPagamento} = usePagamentoContext();
 
 
 	useEffect(() => {
@@ -64,6 +65,9 @@ export const usePixComponent = () => {
 			}
 			processamentoPagamento(sequencia, 8000);
 		} catch (error) {
+			setTimeout(() => {
+				resetPagamento(); 
+			  }, 0);
 			console.log("erro qrCodeGenerico:", error)
 		} finally {
 			setLoadingGenerico(false);
@@ -108,6 +112,9 @@ export const usePixComponent = () => {
 					alert('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
 				}
 			} catch (error) {
+				setTimeout(() => {
+					resetPagamento(); 
+				  }, 0);
 				console.log("erro qrCodeMercadoPago:",error)
 			} finally {
 				setLoadingMP(false);
@@ -153,6 +160,9 @@ export const usePixComponent = () => {
 			}
 
 		} catch (error) {
+			setTimeout(() => {
+				resetPagamento(); 
+			  }, 0);
 			console.log("erro stausPagamentoPix:",error)
 		}
 	}
