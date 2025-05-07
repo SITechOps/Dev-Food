@@ -25,8 +25,13 @@ class PedidosManager:
             self.__itens_repo.insert_item_pedido(id_pedido, info_item)
 
         socketio.emit("pedido_criado")
-        return ResponseFormatter.display_operation(f"Pedido #{id_pedido}", "criado")
-    
+        return HttpResponse(
+            body={
+                "message": "Pedido criado com sucesso!",
+                "id_pedido": id_pedido
+            },
+            status_code=201
+        )
 
     def get_pedidos(self, http_request: HttpRequest):
         id_usuario = http_request.params.get("id_usuario")
