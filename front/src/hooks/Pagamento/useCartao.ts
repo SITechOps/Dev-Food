@@ -3,6 +3,7 @@ import { usePagamento } from "./usePagamento";
 import { ICreatFormCartao, ITokenCartao } from "@/interface/IPagamento";
 import { api } from "@/connection/axios";
 import { AppSuccess } from "@/utils/success";
+import { usePagamentoContext } from "@/contexts/PagamaentoContext";
 export { };
 
 declare global {
@@ -22,6 +23,7 @@ export const useCartaoComponent = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [etapa, setEtapa] = useState<"incial" | "novoCartao">("incial");
 	const [loadingGenerico, setLoadingGenerico] = useState(false);
+	const {resetPagamento} = usePagamentoContext();
 
 	useEffect(() => {
 		if (showModal) {
@@ -65,7 +67,7 @@ export const useCartaoComponent = () => {
 					console.log("Formulário montado com sucesso");
 				},
 				onError: (error: any) => {
-					console.log("erro form:",error)
+					console.log("erro form:", error)
 				},
 			}
 		});
@@ -89,7 +91,7 @@ export const useCartaoComponent = () => {
 				await postCartao(formData)
 			}
 		} catch (error) {
-			console.log("erro handleSubmit:",error)
+			console.log("erro handleSubmit:", error)
 		}
 	}
 
@@ -117,7 +119,10 @@ export const useCartaoComponent = () => {
 			}
 
 		} catch (error) {
-			console.log("erro", error)	
+			setTimeout(() => {
+				resetPagamento(); 
+			  }, 0);
+			console.log("erro", error)
 		}
 	}
 
