@@ -13,11 +13,8 @@ export default function HistoricoDePedido({ tipo }: Props) {
   const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
   const navigate = useNavigate();
 
-  console.log(id_usuario);
   useEffect(() => {
     async function buscarPedidos() {
-      if (!id_usuario) return;
-
       try {
         const { data } = await api.get(`/pedidos/usuario/${id_usuario}`);
         setPedidos(data.pedidos);
@@ -27,7 +24,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
     }
 
     buscarPedidos();
-  }, [id_usuario]);
+  }, []);
 
   // filtrar os pedidos com base no tipo
   let pedidosRenderizar = [];
@@ -42,7 +39,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
       {pedidosRenderizar.map((pedido) => (
         <div
           key={pedido.Id}
-          className="mb-3 flex flex-col justify-between rounded-md bg-white shadow-sm p-5"
+          className="mb-3 flex flex-col justify-between rounded-md bg-white p-5 shadow-sm"
           style={{ border: "1px solid #A9A9A9" }}
         >
           {/* Restaurante */}
@@ -107,9 +104,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
                 <Button color="secondary" className="p-2">
                   Adicionar à sacola
                 </Button>
-                <Button className="p-2">
-                  Detalhe do Pedido
-                </Button>
+                <Button className="p-2">Detalhe do Pedido</Button>
               </>
             )}
           </div>
