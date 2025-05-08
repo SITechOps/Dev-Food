@@ -1,0 +1,1643 @@
+openapi: 3.0.0
+info:
+  title: DevFood API
+  description: API para aplicação DevFood
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Servidor de desenvolvimento local
+tags:
+  - name: Usuários
+    description: Operações relacionadas a usuários
+  - name: Login
+    description: Operações relacionadas ao login
+  - name: Endereços
+    description: Operações relacionadas a endereços
+  - name: Email
+    description: Operações relacionadas a envio de emails
+  - name: Restaurantes
+    description: Operações relacionadas a restaurantes
+  - name: Produtos
+    description: Operações relacionadas a produtos
+  - name: Pedidos
+    description: Operações relacionadas a pedidos
+  - name: Pagamentos
+    description: Operações relacionadas a pagamentos
+
+paths:
+  /auth/create:
+    post:
+      tags:
+        - Usuários
+      summary: Criar novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                      example: Ana Souza
+                    email:
+                      type: string
+                      example: ana.souza@gmail.com
+                    telefone:
+                      type: string
+                      example: "11912345678"
+      responses:
+        "201":
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuário criado com sucesso!
+                  properties:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0NTIwMzE2NywianRpIjoiZDU5MzRiZTQtZDE0ZS00OTU5LTg1NjMtZWRlOTAzYTdhNjc0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImQ0ZDdhNmYxLTZmM2QtNDZmYy1iYTFjLWVhODUwODk3YjNmMyIsIm5iZiI6MTc0NTIwMzE2NywiY3NyZiI6IjQzM2ZjM2UwLTljZWEtNGEyMS1iZDM5LTJkMTQyMmU2NjM4MiIsImV4cCI6MTc0NTIwNDA2Nywicm9sZSI6InVzdWFyaW8ifQ.k4eV7s6HUJswXYCbbW0vZU2FF5rE77xYfv9-ATpZasc
+        "409":
+          description: Usuário já existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: Este e-mail já existe!
+
+  /auth/login:
+    post:
+      tags:
+        - Login
+      summary: Login de usuário ou restaurante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+            example:
+              email: ana.souza@gmail.com
+
+      responses:
+        "200":
+          description: Login realizado com sucesso (usuário ou restaurante)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  properties:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+              examples:
+                usuario:
+                  summary: Login como usuário
+                  value:
+                    message: Usuário logado com sucesso!
+                    properties:
+                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0NTIwMzIyNywianRpIjoiNzVmN2Q4NTgtMDQ2OS00ODI2LThmNTgtNGM2ZjgzNThkN2VhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImQ0ZDdhNmYxLTZmM2QtNDZmYy1iYTFjLWVhODUwODk3YjNmMyIsIm5iZiI6MTc0NTIwMzIyNywiY3NyZiI6IjlhODBhNGU5LWYxMjktNGFkNy04YWI1LWNmMjQzYjI4ZmZiOCIsImV4cCI6MTc0NTIwNDEyNywicm9sZSI6InVzdWFyaW8ifQ.chl68bJ02VVl7dq5YDksO-P_HXI6K09tP8oLoKCEL-U
+                restaurante:
+                  summary: Login como restaurante
+                  value:
+                    message: Restaurante logado com sucesso!
+                    properties:
+                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0NTIwMzQxOSwianRpIjoiYzFhZWY5ODAtZWEwZC00OWEyLTlmYmMtZTg3ZWQ1ZjNhOTMwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYyYzFlODA4LTNjZjctNGM0NC05ODU2LTQ2NTQxYjIxZjRkNyIsIm5iZiI6MTc0NTIwMzQxOSwiY3NyZiI6ImRjMWJiNzhkLWM0MDEtNGNkMi1hZWYxLWM1NjZhYmY4NWE3YyIsImV4cCI6MTc0NTIwNDMxOSwicm9sZSI6InJlc3RhdXJhbnRlIn0.82kSSz2jWDnvkOfcFPQoW--GxhWYAq1iS_ww8VEajdA
+        "404":
+          description: Usuário ou restaurante não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: Usuário ou restaurante não encontrado!
+              examples:
+                usuario:
+                  summary: Erro ao tentar logar como usuário
+                  value:
+                    error_message: Usuário não encontrado!
+                restaurante:
+                  summary: Erro ao tentar logar como restaurante
+                  value:
+                    error_message: Restaurante não encontrado!
+
+  /users:
+    get:
+      tags:
+        - Usuários
+      summary: Listar todos os usuários
+      description: Retorna uma lista de todos os usuários cadastrados
+      responses:
+        "200":
+          description: Lista de usuários
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: "550e8400-e29b-41d4-a716-446655440000"
+                        nome:
+                          type: string
+                          example: "Nome Exemplo"
+                        email:
+                          type: string
+                          format: email
+                          example: "exemplo@email.com"
+                        telefone:
+                          type: string
+                          format: phone
+                          example: "11948307497"
+        "500":
+          description: Erro no servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Não foi possível conectar com o banco de dados!"
+
+  /user/{id}:
+    put:
+      tags:
+        - Usuários
+      summary: Alterar dados de um usuário
+      description: Atualiza os dados de um usuário específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                      example: "Novo Nome"
+                    email:
+                      type: string
+                      format: email
+                      example: "novo@email.com"
+                    senha:
+                      type: string
+                      example: "nova_senha"
+                    telefone:
+                      type: string
+                      format: phone
+                      example: "11948307497"
+      responses:
+        "200":
+          description: Usuário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      nome:
+                        type: string
+                        example: "Novo Nome"
+                      email:
+                        type: string
+                        format: email
+                        example: "novo@email.com"
+                      telefone:
+                        type: string
+                        format: phone
+                        example: "11948307497"
+        "400":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Ocorreu um erro ao processar seus dados!"
+        "403":
+          description: Alteração não permitida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Este e-mail não pode ser alterado!"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+
+    delete:
+      tags:
+        - Usuários
+      summary: Deletar um usuário
+      description: Remove um usuário do sistema
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Usuário deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Usuário deletado com sucesso"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+
+  /endereco:
+    post:
+      tags:
+        - Endereços
+      summary: Cadastrar novo endereço
+      description: Adiciona um novo endereço para um usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                    - id_usuario
+                    - attributes
+                  properties:
+                    id_usuario:
+                      type: string
+                      format: uuid
+                      example: "550e8400-e29b-41d4-a716-446655440000"
+                    attributes:
+                      type: object
+                      required:
+                        - logradouro
+                        - bairro
+                        - cidade
+                        - estado
+                        - pais
+                        - numero
+                        - tipo
+                      properties:
+                        logradouro:
+                          type: string
+                          example: "Rua Exemplo"
+                        bairro:
+                          type: string
+                          example: "Bairro Exemplo"
+                        cidade:
+                          type: string
+                          example: "Cidade Exemplo"
+                        estado:
+                          type: string
+                          example: "UF"
+                        pais:
+                          type: string
+                          example: "País Exemplo"
+                        numero:
+                          type: integer
+                          example: 123
+                        complemento:
+                          type: string
+                          example: "Apto 123"
+                        tipo:
+                          type: string
+                          enum: ["casa", "trabalho", "outro"]
+                          example: "casa"
+      responses:
+        "201":
+          description: Endereço criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "450e8400-e29b-41d4-a716-446655440000"
+                      id_usuario:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      attributes:
+                        type: object
+                        properties:
+                          logradouro:
+                            type: string
+                            example: "Rua Exemplo"
+                          bairro:
+                            type: string
+                            example: "Bairro Exemplo"
+                          cidade:
+                            type: string
+                            example: "Cidade Exemplo"
+                          estado:
+                            type: string
+                            example: "UF"
+                          pais:
+                            type: string
+                            example: "País Exemplo"
+                          numero:
+                            type: integer
+                            example: 123
+                          complemento:
+                            type: string
+                            example: "Apto 123"
+                          tipo:
+                            type: string
+                            example: "casa"
+        "400":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Tipo de endereço inválido! Escolha entre casa ou trabalho"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+        "409":
+          description: Tipo de endereço já existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Esse tipo de endereço já existe!"
+
+  /user/{id}/enderecos:
+    get:
+      tags:
+        - Endereços
+      summary: Listar endereços de um usuário
+      description: Retorna todos os endereços de um usuário específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de endereços
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: "450e8400-e29b-41d4-a716-446655440000"
+                        id_usuario:
+                          type: string
+                          format: uuid
+                          example: "550e8400-e29b-41d4-a716-446655440000"
+                        logradouro:
+                          type: string
+                          example: "Rua Exemplo"
+                        bairro:
+                          type: string
+                          example: "Bairro Exemplo"
+                        cidade:
+                          type: string
+                          example: "Cidade Exemplo"
+                        estado:
+                          type: string
+                          example: "UF"
+                        pais:
+                          type: string
+                          example: "País Exemplo"
+                        numero:
+                          type: integer
+                          example: 123
+                        complemento:
+                          type: string
+                          example: "Apto 123"
+                        tipo:
+                          type: string
+                          example: "casa"
+        "404":
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Usuário não encontrado!"
+
+  /endereco/{id}:
+    put:
+      tags:
+        - Endereços
+      summary: Alterar um endereço
+      description: Atualiza os dados de um endereço específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do endereço
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                    - id_usuario
+                    - attributes
+                  properties:
+                    id_usuario:
+                      type: string
+                      format: uuid
+                      example: "550e8400-e29b-41d4-a716-446655440000"
+                    attributes:
+                      type: object
+                      properties:
+                        logradouro:
+                          type: string
+                          example: "Nova Rua"
+                        bairro:
+                          type: string
+                          example: "Novo Bairro"
+                        cidade:
+                          type: string
+                          example: "Nova Cidade"
+                        estado:
+                          type: string
+                          example: "NE"
+                        pais:
+                          type: string
+                          example: "Novo País"
+                        numero:
+                          type: integer
+                          example: 456
+                        complemento:
+                          type: string
+                          example: "Bloco B"
+                        tipo:
+                          type: string
+                          enum: ["casa", "trabalho", "outro"]
+                          example: "trabalho"
+      responses:
+        "200":
+          description: Endereço atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "450e8400-e29b-41d4-a716-446655440000"
+                      id_usuario:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      attributes:
+                        type: object
+                        properties:
+                          logradouro:
+                            type: string
+                            example: "Nova Rua"
+                          bairro:
+                            type: string
+                            example: "Novo Bairro"
+                          cidade:
+                            type: string
+                            example: "Nova Cidade"
+                          estado:
+                            type: string
+                            example: "NE"
+                          pais:
+                            type: string
+                            example: "Novo País"
+                          numero:
+                            type: integer
+                            example: 456
+                          complemento:
+                            type: string
+                            example: "Bloco B"
+                          tipo:
+                            type: string
+                            example: "trabalho"
+        "400":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Tipo de endereço inválido! Escolha entre casa ou trabalho"
+        "404":
+          description: Endereço não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Endereço não encontrado!"
+        "409":
+          description: Tipo de endereço já existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Esse tipo de endereço já existe!"
+
+    delete:
+      tags:
+        - Endereços
+      summary: Deletar um endereço
+      description: Remove um endereço do sistema
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do endereço
+          schema:
+            type: string
+            format: uuid
+        - name: idUsuario
+          in: query
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Endereço deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Endereço deletado com sucesso"
+        "404":
+          description: Endereço não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Endereço não encontrado!"
+
+  /send-email:
+    post:
+      tags:
+        - Email
+      summary: Enviar email
+      description: Envia um email para o endereço especificado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                    - email
+                  properties:
+                    email:
+                      type: string
+                      format: email
+                      example: "destinatario@email.com"
+      responses:
+        "200":
+          description: Email enviado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Email enviado com sucesso"
+        "400":
+          description: Email inválido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Email inválido"
+
+  /restaurantes:
+    get:
+      tags:
+        - Restaurantes
+      summary: Listar todos os restaurantes
+      responses:
+        "200":
+          description: Lista de restaurantes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Restaurante"
+
+  /restaurante:
+    post:
+      tags:
+        - Restaurantes
+      summary: Criar um novo restaurante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    descricao:
+                      type: string
+                    email:
+                      type: string
+                      format: email
+                    cnpj:
+                      type: string
+                    razao_social:
+                      type: string
+                    especialidade:
+                      type: string
+                    telefone:
+                      type: string
+                    horario_funcionamento:
+                      type: string
+                    banco:
+                      type: string
+                    agencia:
+                      type: string
+                    nro_conta:
+                      type: string
+                    tipo_conta:
+                      type: string
+                    endereco:
+                      type: object
+                      properties:
+                        logradouro:
+                          type: string
+                        bairro:
+                          type: string
+                        cidade:
+                          type: string
+                        estado:
+                          type: string
+                        pais:
+                          type: string
+                        numero:
+                          type: integer
+                        complemento:
+                          type: string
+      responses:
+        "201":
+          description: Restaurante criado com sucesso
+        "400":
+          description: Requisição inválida
+  /restaurante/{id}:
+    get:
+      tags:
+        - Restaurantes
+      summary: Obter restaurante por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do restaurante
+      responses:
+        "200":
+          description: Dados do restaurante
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Restaurante"
+        "404":
+          description: Restaurante não encontrado
+
+    delete:
+      tags:
+        - Restaurantes
+      summary: Deletar restaurante por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Restaurante deletado com sucesso
+        "404":
+          description: Restaurante não encontrado
+
+    put:
+      tags:
+        - Restaurantes
+      summary: Atualizar dados do restaurante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    agencia:
+                      type: string
+                    banco:
+                      type: string
+                    cnpj:
+                      type: string
+                    email:
+                      type: string
+                    especialidade:
+                      type: string
+                    horario_funcionamento:
+                      type: string
+                    nome:
+                      type: string
+                    descricao:
+                      type: string
+                    nro_conta:
+                      type: string
+                    razao_social:
+                      type: string
+                    telefone:
+                      type: string
+                    tipo_conta:
+                      type: string
+      responses:
+        "200":
+          description: Restaurante atualizado com sucesso
+        "404":
+          description: Restaurante não encontrado
+  /restaurante/endereco/{id}:
+    put:
+      tags:
+        - Restaurantes
+      summary: Atualizar endereço do restaurante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    attributes:
+                      type: object
+                      properties:
+                        logradouro:
+                          type: string
+                        bairro:
+                          type: string
+                        cidade:
+                          type: string
+                        estado:
+                          type: string
+                        pais:
+                          type: string
+                        numero:
+                          type: integer
+                        complemento:
+                          type: string
+                        tipo:
+                          type: string
+      responses:
+        "200":
+          description: Endereço atualizado com sucesso
+        "404":
+          description: Restaurante não encontrado
+
+  paths:
+  /produtos:
+    get:
+      tags:
+        - Produtos
+      summary: Retorna a lista de produtos disponíveis
+      description: Retorna todos os produtos cadastrados, com informações como nome, descrição, valor, quantidade em estoque e URL da imagem.
+      responses:
+        "200":
+          description: Lista de produtos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      Type:
+                        type: string
+                        example: Produto
+                      attributes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            nome:
+                              type: string
+                            descricao:
+                              type: string
+                            valor_unitario:
+                              type: string
+                            qtd_estoque:
+                              type: integer
+                            imageUrl:
+                              type: string
+                    example:
+                      Type: Produto
+                      attributes:
+                        - id: "0a5ffbae-b4f8-4d2e-9406-7c74d0f41d65"
+                          nome: "Temaki Salmão"
+                          descricao: "Temaki de salmão preparado com arroz, algas e tiras de salmão fresco."
+                          valor_unitario: "28.00"
+                          qtd_estoque: 60
+                          imageUrl: ""
+                        - id: "0a92387a-56b3-4b9e-a47d-d39ebc1d8bb6"
+                          nome: "Taco de Carne"
+                          descricao: "Taco de carne suculenta, recheado com temperos mexicanos e servido em tortilhas crocantes."
+                          valor_unitario: "18.00"
+                          qtd_estoque: 100
+                          imageUrl: ""
+                  count:
+                    type: integer
+                    example: 2
+
+  /produto:
+    post:
+      tags:
+        - Produtos
+      summary: "Criar novo produto"
+      description: "Adiciona um novo produto ao banco de dados."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    valor_unitario:
+                      type: number
+                      format: float
+                    qtd_estoque:
+                      type: integer
+              required:
+                - data
+                - nome
+                - valor_unitario
+                - qtd_estoque
+            example:
+              data:
+                nome: "Pizza de Mussarela"
+                valor_unitario: 52.00
+                qtd_estoque: 100
+      responses:
+        "201":
+          description: "Produto criado com sucesso."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                      valor_unitario:
+                        type: number
+                        format: float
+                      qtd_estoque:
+                        type: integer
+              example:
+                message: "Produto criado com sucesso!"
+        "404":
+          description: "Restaurante não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Restaurante não encontrado!"
+        "409":
+          description: "Produto já existe"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto já existe!"
+
+  /restaurante/{id}/produtos:
+    get:
+      tags:
+        - Produtos
+      summary: "Listar produtos por restaurante"
+      description: "Retorna a lista de produtos de um restaurante específico."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: string
+          description: "ID do restaurante"
+      responses:
+        "200":
+          description: "Lista de produtos do restaurante."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      Type:
+                        type: string
+                        example: "Produto"
+                      attributes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            nome:
+                              type: string
+                            qtd_estoque:
+                              type: integer
+                            valor_unitario:
+                              type: number
+                              format: float
+                      count:
+                        type: integer
+                        example: 4
+              example:
+                data:
+                  Type: "Produto"
+                  attributes:
+                    - id: "3a969b87-bd48-4a99-9f0d-b7bc4b256a39"
+                      nome: "Sashimi de Salmão"
+                      qtd_estoque: 50
+                      valor_unitario: 48.00
+                    - id: "7b89bea4-f021-487c-94f0-cf644eb1081d"
+                      nome: "Temaki Salmão"
+                      qtd_estoque: 60
+                      valor_unitario: 28.00
+                    - id: "b9fab80b-6d82-41af-a1bc-5ad5107a5eb1"
+                      nome: "Sushi Especial"
+                      qtd_estoque: 80
+                      valor_unitario: 45.00
+                  count: 3
+        "404":
+          description: "Restaurante não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Restaurante não encontrado!"
+
+  /produto/{id}:
+    put:
+      tags:
+        - Produtos
+      summary: "Atualizar produto"
+      description: "Atualiza os dados de um produto existente."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: string
+          description: "ID do produto"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    valor_unitario:
+                      type: number
+                      format: float
+                    qtd_estoque:
+                      type: integer
+              required:
+                - data
+                - nome
+                - valor_unitario
+                - qtd_estoque
+            example:
+              data:
+                nome: "Sushimi de Salmão - Atualizado"
+                valor_unitario: 50.00
+                qtd_estoque: 45
+      responses:
+        "200":
+          description: "Produto alterado com sucesso."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                      valor_unitario:
+                        type: number
+                        format: float
+                      qtd_estoque:
+                        type: integer
+              example:
+                message: Produto alterado com sucesso.
+        "404":
+          description: "Produto não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto não encontrado!"
+        "409":
+          description: "Produto já existe"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto já existe!"
+
+    delete:
+      tags:
+        - Produtos
+      summary: "Excluir produto"
+      description: "Deleta um produto existente."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: string
+          description: "ID do produto"
+      responses:
+        "200":
+          description: "Produto deletado com sucesso."
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: "Produto deletado com sucesso."
+        "404":
+          description: "Produto não encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error_message: "Produto não encontrado!"
+
+  /pedido:
+    post:
+      summary: Criar um novo pedido
+      description: Cria um novo pedido com seus respectivos itens
+      tags:
+        - Pedidos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pedido:
+                  type: object
+                  required:
+                    - id_usuario
+                    - id_restaurante
+                    - id_endereco
+                    - valor_total
+                    - forma_pagamento
+                    - itens
+                  properties:
+                    id_usuario:
+                      type: string
+                      format: uuid
+                      description: ID do usuário que está realizando o pedido
+                    id_restaurante:
+                      type: string
+                      format: uuid
+                      description: ID do restaurante onde o pedido está sendo feito
+                    id_endereco:
+                      type: string
+                      format: uuid
+                      description: ID do endereço de entrega
+                    valor_total:
+                      type: number
+                      format: float
+                      description: Valor total do pedido
+                    forma_pagamento:
+                      type: string
+                      description: Forma de pagamento escolhida
+                    itens:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - id_produto
+                          - qtd_itens
+                          - valor_calculado
+                        properties:
+                          id_produto:
+                            type: string
+                            format: uuid
+                            description: ID do produto
+                          qtd_itens:
+                            type: integer
+                            description: Quantidade de itens
+                          valor_calculado:
+                            type: number
+                            format: float
+                            description: Valor calculado para o item
+            example:
+              pedido:
+                id_usuario: "550e8400-e29b-41d4-a716-446655440000"
+                id_restaurante: "550e8400-e29b-41d4-a716-446655440001"
+                id_endereco: "550e8400-e29b-41d4-a716-446655440002"
+                valor_total: 59.90
+                forma_pagamento: "pix"
+                itens:
+                  - id_produto: "550e8400-e29b-41d4-a716-446655440003"
+                    qtd_itens: 2
+                    valor_calculado: 39.90
+                  - id_produto: "550e8400-e29b-41d4-a716-446655440004"
+                    qtd_itens: 3
+                    valor_calculado: 49.90
+      responses:
+        "200":
+          description: Pedido criado com sucesso
+          content:
+            application/json:
+              example:
+                message: "Pedido criado com sucesso!"
+
+  /pedidos/usuario/{id_usuario}:
+    get:
+      summary: Listar pedidos de um usuário
+      description: Retorna todos os pedidos realizados por um usuário específico
+      tags:
+        - Pedidos
+      parameters:
+        - name: id_usuario
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de pedidos do usuário
+          content:
+            application/json:
+              example:
+                pedidos:
+                  - Id: "550e8400-e29b-41d4-a716-446655440005"
+                    valor_total: 59.90
+                    data_pedido: "2023-11-15T14:30:00Z"
+                    forma_pagamento: "cartão de crédito"
+                    restaurante:
+                      nome: "Restaurante Exemplo"
+                      logo: "https://exemplo.com/logo.png"
+                    endereco:
+                      logradouro: "Rua das Flores"
+                      bairro: "Centro"
+                      cidade: "São Paulo"
+                      estado: "SP"
+                      numero: "123"
+                      complemento: "Apto 45"
+                    itens:
+                      - produto: "X-Tudo"
+                        qtd_itens: 2
+                        valor_calculado: 39.90
+                      - produto: "Refrigerante"
+                        qtd_itens: 1
+                        valor_calculado: 20.00
+        "404":
+          description: ID do restaurante não encontrado
+          content:
+            application/json:
+              example:
+                message_error: "ID não informado!"
+
+  /pedidos/restaurante/{id_restaurante}:
+    get:
+      summary: Listar pedidos de um restaurante
+      description: Retorna todos os pedidos realizados para um restaurante específico
+      tags:
+        - Pedidos
+      parameters:
+        - name: id_restaurante
+          in: path
+          required: true
+          description: ID do restaurante
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de pedidos do restaurante
+          content:
+            application/json:
+              example:
+                pedidos:
+                  - Id: "550e8400-e29b-41d4-a716-446655440005"
+                    valor_total: 59.90
+                    data_pedido: "2023-11-15T14:30:00Z"
+                    forma_pagamento: "cartão de crédito"
+                    restaurante:
+                      nome: "Restaurante Exemplo"
+                      logo: "https://exemplo.com/logo.png"
+                    endereco:
+                      logradouro: "Rua das Flores"
+                      bairro: "Centro"
+                      cidade: "São Paulo"
+                      estado: "SP"
+                      numero: "123"
+                      complemento: "Apto 45"
+                    itens:
+                      - produto: "X-Tudo"
+                        qtd_itens: 2
+                        valor_calculado: 39.90
+                      - produto: "Refrigerante"
+                        qtd_itens: 1
+                        valor_calculado: 20.00
+        "404":
+          description: ID do restaurante não encontrado
+          content:
+            application/json:
+              example:
+                message_error: "ID não informado!"
+
+  /pix/qr-code:
+    post:
+      tags:
+        - Pagamentos
+      summary: Gerar QR Code para pagamento PIX
+      description: Cria um QR Code para pagamento via PIX usando Mercado Pago
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - pix
+              properties:
+                pix:
+                  type: object
+                  required:
+                    - email_comprador
+                    - nome_comprador
+                    - valor_pagamento
+                  properties:
+                    email_comprador:
+                      type: string
+                      description: Email do comprador
+                    nome_comprador:
+                      type: string
+                      description: Nome do comprador
+                    valor_pagamento:
+                      type: number
+                      format: float
+                      description: Valor do pagamento
+            example:
+              pix:
+                email_comprador: "ana.souza@gmail.com"
+                nome_comprador: "Ana Souza"
+                valor_pagamento: 25.90
+      responses:
+        "201":
+          description: QR Code gerado com sucesso
+          content:
+            application/json:
+              example:
+                id: 123456789
+                status: "pending"
+                qr_code: "00020101021226870014br.gov.bcb.pix2565qrcodes.mercadopago.com/pix/v2/123456789"
+                qr_code_base64: "iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAIAAAAP3aGbAAAACXBIWXMAAAsTAAALEwEAmpwYAAAIHklEQVR4nO3dwW4bORRFQcfI/3+yMYsBZmfCYWxL5LtVteSNwTpBs3kp6fX9/f0P0Pf39wMAqf/+9QAAHidYQIJgAQmCBSQIFpAgWECCYAEJggUkCBaQIFhAgmABCYIFJAgWkCBYQIJgAQmCBSQIFpAgWECCYAE..."
+                ticket_url: "https://www.mercadopago.com.br/payments/123456789/ticket"
+        "400":
+          description: Erro ao processar pagamento
+          content:
+            application/json:
+              example:
+                message_error: "Erro ao processar pagamento!"
+
+  /pix/status/{id_pagamento}:
+    get:
+      tags:
+        - Pagamentos
+      summary: Verificar status de pagamento PIX
+      description: Consulta o status de um pagamento PIX pelo ID
+      parameters:
+        - name: id_pagamento
+          in: path
+          required: true
+          description: ID do pagamento a ser consultado
+          schema:
+            type: string
+          example: "123456789"
+      responses:
+        "200":
+          description: Status do pagamento obtido com sucesso
+          content:
+            application/json:
+              examples:
+                pagamento_aprovado:
+                  summary: Pagamento aprovado
+                  value:
+                    id: 123456789
+                    status: "approved"
+                    status_detail: "accredited"
+                pagamento_pendente:
+                  summary: Pagamento pendente
+                  value:
+                    id: 123456879
+                    status: "pending"
+                    status_detail: "pending_waiting_transfer"
+        "400":
+          description: Erro ao consultar status do pagamento
+          content:
+            application/json:
+              example:
+                messagae_error: "ID de pagamento não fornecido!"
+
+  /cartao:
+    post:
+      tags:
+        - Pagamentos
+      summary: Processar pagamento com cartão de crédito
+      description: Endpoint para processar um pagamento com cartão de crédito.
+      requestBody:
+        description: Dados do cartão e informações do pagamento
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Token do cartão gerado pela plataforma de pagamento.
+                  example: "tok_abc123xyz"
+                cardholderEmail:
+                  type: string
+                  description: E-mail do titular do cartão.
+                  example: "cliente@exemplo.com"
+                transaction_amount:
+                  type: number
+                  format: float
+                  description: Valor da transação.
+                  example: 150.75
+                installments:
+                  type: integer
+                  description: Número de parcelas para o pagamento.
+                  example: 3
+                identification_type:
+                  type: string
+                  description: Tipo de identificação do titular do cartão.
+                  example: "CPF"
+                identification_number:
+                  type: string
+                  description: Número do documento de identificação do titular.
+                  example: "123.456.789-00"
+                payment_method_id:
+                  type: string
+                  description: Método de pagamento (e.g., "visa" ou "mastercard").
+                  example: "visa"
+              required:
+                - token
+                - cardholderEmail
+                - transaction_amount
+                - installments
+                - payment_method_id
+      responses:
+        "201":
+          description: Pagamento realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID da transação de pagamento.
+                    example: "12345abcde"
+                  status:
+                    type: string
+                    description: Status do pagamento.
+                    example: "approved"
+                  status_detail:
+                    type: string
+                    description: Detalhes do status do pagamento.
+                    example: "Pagamento aprovado com sucesso"
+                  description:
+                    type: string
+                    description: Descrição da transação.
+                    example: "Compra com cartão"
+                  installments:
+                    type: integer
+                    description: Número de parcelas do pagamento.
+                    example: 3
+                  payment_type_id:
+                    type: string
+                    description: Tipo de pagamento.
+                    example: "credit_card"
+        "400":
+          description: Erro no processamento do pagamento com cartão
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    description: Mensagem de erro.
+                    example: "Token ou email ausente!"
