@@ -67,7 +67,6 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
       { scope: "email" },
     );
   }
-
   return (
     <Button
       className="bg-blue-dark hover:bg-blue flex items-center justify-center gap-2 p-2"
