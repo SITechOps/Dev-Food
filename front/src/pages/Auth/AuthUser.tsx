@@ -57,7 +57,7 @@ export default function AuthUser() {
             <div className="text-center">
               <div className="mb-4 flex gap-4">
                 <AuthGoogle setEtapa={setEtapa} setFormList={setFormList} />
-                <AuthFacebook />
+                <AuthFacebook setEtapa={setEtapa} setFormList={setFormList} />
               </div>
               <span className="text-gray-medium">
                 -------------- ou --------------
