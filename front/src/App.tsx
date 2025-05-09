@@ -10,10 +10,12 @@ import { PagamentoProvider } from "./contexts/PagamaentoContext";
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen">
+    <>
       <Menu />
-      <main className="text-blue mx-auto w-4/5 max-w-screen-xl p-4">{children}</main>l
-    </div>
+      <div className="text-blue mx-auto w-4/5 max-w-screen-xl pt-[72px]">
+        <main>{children}</main>
+      </div>
+    </>
   );
 };
 
@@ -34,9 +36,9 @@ export default function App() {
             </LayoutRestaurante>
           ) : (
             <PagamentoProvider>
-            <TaxaEntregaProvider>
-            <AppRoutes />
-            </TaxaEntregaProvider>
+              <TaxaEntregaProvider>
+                <AppRoutes />
+              </TaxaEntregaProvider>
             </PagamentoProvider>
           )}
         </AppWrapper>

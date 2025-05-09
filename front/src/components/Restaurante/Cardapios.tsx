@@ -27,7 +27,7 @@ const Cardapios = () => {
   } = useProdutos();
 
   return (
-    <div className="bg-white p-6">
+    <div className="rounded-[10px] bg-white p-6">
       <div className="h-w-auto mb-6 flex items-center gap-10">
         <Button
           className="w-3xs"

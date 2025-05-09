@@ -35,7 +35,7 @@ export default function Menu() {
         ref={menuRef}
         className="fixed top-0 left-0 z-50 w-full bg-white py-2 shadow-md"
       >
-        <div className="mx-auto flex max-w-4/5 items-center justify-between">
+        <div className="mx-auto flex w-4/5 max-w-screen-xl items-center justify-between px-4 sm:px-8 md:px-12 xl:px-0">
           <Link to="/">
             <img src={iFoodLogo} alt="iFood Logo" className="h-12 py-1" />
           </Link>
