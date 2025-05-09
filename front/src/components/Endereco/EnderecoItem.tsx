@@ -57,7 +57,7 @@ export default function EnderecoItem({
           {showActions && (
             <>
               <button
-                onClick={handleEdit}
+                onClick={handleEdit} // A função handleEdit agora chama onEdit
                 className="hover:text-blue bg-brown-normal pointer-events-auto cursor-pointer rounded-full p-4 text-white"
                 title="Editar"
               >
