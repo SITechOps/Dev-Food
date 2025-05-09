@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useEffect } from "react";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
 import Button from "../ui/Button";
 import { FaFacebook } from "react-icons/fa";
@@ -7,21 +6,17 @@ import { FaFacebook } from "react-icons/fa";
 interface AuthFacebookProps {
   setEtapa: React.Dispatch<React.SetStateAction<"telefone" | "email">>;
   setFormList: React.Dispatch<
-    React.SetStateAction<{ email: string; telefone: string }>
+    React.SetStateAction<{ nome: string; email: string; telefone: string }>
   >;
 }
 
 function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
   const { loginUser } = useAuthUserComponent();
-  const { setAuth } = useAuth();
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (!user) return;
-
-    window.fbAsyncInit = function () {
-      window.FB.init({
-        appId: "1359659571817427",
+    (window as any).fbAsyncInit = function () {
+      (window as any).FB.init({
+        appId: import.meta.env.VITE_FACEBOOK_APP_ID,
         cookie: true,
         xfbml: true,
         version: "v22.0",
@@ -81,14 +76,25 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
     window.FB.login(
       (response) => {
         if (response.authResponse) {
-          console.log("Welcome! Fetching your information.... ");
-          window.FB.api("/me", { fields: "email" }, (userInfo) => {
-            console.log("Usuário logado:", userInfo);
-            const { email } = userInfo;
-            loginUser(email);
-            setFormList((prev) => ({ ...prev, email }));
-            setEtapa("telefone");
-          });
+          (window as any).FB.api(
+            "/me",
+            { fields: "email, name" },
+            async (userInfo: any) => {
+              console.log("Usuário logado:", userInfo.email);
+
+              setFormList((prev) => ({
+                ...prev,
+                nome: userInfo.name,
+                email: userInfo.email,
+              }));
+
+              try {
+                await loginUser(userInfo.email);
+              } catch {
+                setEtapa("telefone");
+              }
+            },
+          );
         } else {
           console.log("User cancelled login or did not fully authorize.");
         }
@@ -96,6 +102,7 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
       { scope: "email" },
     );
   }
+
   return (
     <Button
       className="bg-blue-dark hover:bg-blue flex items-center justify-center gap-2 p-2"
