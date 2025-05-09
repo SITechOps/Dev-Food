@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
 import Button from "../ui/Button";
@@ -13,7 +12,6 @@ interface AuthFacebookProps {
 }
 
 function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
-  const navigate = useNavigate();
   const { loginUser } = useAuthUserComponent();
   const { setAuth } = useAuth();
   const [user, setUser] = useState(null);
@@ -29,9 +27,8 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
         version: "v22.0",
       });
 
-      window.FB.AppEvents.logPageView();
+      (window as any).FB.AppEvents.logPageView();
     };
-
     (function (d, s, id) {
       var js,
         fjs = d.getElementsByTagName(s)[0];
@@ -99,7 +96,6 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
       { scope: "email" },
     );
   }
-
   return (
     <Button
       className="bg-blue-dark hover:bg-blue flex items-center justify-center gap-2 p-2"
