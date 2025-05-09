@@ -16,7 +16,11 @@ def create_new_pedido():
     
     pedidos_repo = PedidosRepository()
     itens_repo = ItensRepository()
-    pedidos_manager = PedidosManager(pedidos_repo, itens_repo)
+    usuarios_repo = UsuariosRepository()
+    restaurantes_repo = RestaurantesRepository()
+    enderecos_repo = EnderecosRepository()
+    produtos_repo = ProdutosRepository()
+    pedidos_manager = PedidosManager(pedidos_repo, itens_repo, usuarios_repo, restaurantes_repo, enderecos_repo, produtos_repo)
 
     http_response = pedidos_manager.create_new_pedido(http_request)
     return jsonify(http_response.body), http_response.status_code

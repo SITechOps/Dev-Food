@@ -4,21 +4,24 @@ import { reverseGeoCode } from "../utils/geolocation";
 import { api } from "../connection/axios";
 import { useAuth } from "../contexts/AuthContext";
 import { IAddress } from "../interface/IAddress";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
 import { initMapScript } from "@/utils/initMapScript";
+import { stringify } from "querystring";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
   const role = userData?.role;
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const searchInput = useRef<HTMLInputElement | null>(null);
   const [address, setAddress] = useState<IAddress | null>(null);
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
   const [tipo, setTipo] = useState("");
+  const enderecoId = searchParams.get("id");
 
   const fecharModal = () => {
     navigate("/");
@@ -85,6 +88,41 @@ export const useEndereco = () => {
 
   const handleFavoritar = (tipoSelecionado: string) => setTipo(tipoSelecionado);
 
+  const handleEditar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!address || !numero)
+      return alert("Por favor, preencha todos os campos do endereço.");
+    if (!idUsuario) return alert("Erro ao obter ID do usuário.");
+
+    const enderecoFinal = {
+      id_usuario: idUsuario,
+      attributes: {
+        logradouro: address.logradouro,
+        numero,
+        complemento,
+        bairro: address.bairro,
+        cidade: address.cidade,
+        estado: address.estado,
+        pais: address.pais,
+        tipo,
+      },
+    };
+
+    try {
+      await api.put(`/endereco/${enderecoId}`, { data: enderecoFinal });
+      alert("Endereço atualizado com sucesso!");
+      setAddress(null);
+      setNumero("");
+      setComplemento("");
+      setTipo("");
+      if (searchInput.current) searchInput.current.value = "";
+      navigate("/");
+    } catch (error) {
+      console.error("Erro ao atualizar endereço:", error);
+      alert("Erro ao atualizar endereço. Tente novamente.");
+    }
+  }
+
   const handleCadastrar = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!address || !numero)
@@ -145,6 +183,7 @@ export const useEndereco = () => {
     setComplemento,
     handleFavoritar,
     handleCadastrar,
+    handleEditar,
     findMyLocation,
     fecharModal,
   };
