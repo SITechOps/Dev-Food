@@ -69,7 +69,7 @@ export default function AuthUser() {
             onSubmit={(e) => {
               e.preventDefault();
               if (etapa === "telefone") {
-                createUser(formList.email, formList.telefone);
+                createUser(formList.nome, formList.email, formList.telefone);
               }
             }}
           >

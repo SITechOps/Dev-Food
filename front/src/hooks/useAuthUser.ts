@@ -7,8 +7,9 @@ export const useAuthUserComponent = () => {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const [formList, setFormList] = useState({
-    telefone: "",
+    nome: "",
     email: "",
+    telefone: "",
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,10 +45,10 @@ export const useAuthUserComponent = () => {
     }
   }
 
-  async function createUser(email: string, telefone: string) {
+  async function createUser(nome: string, email: string, telefone: string) {
     try {
       const cadastroResp = await api.post("/auth/create", {
-        data: { email, telefone },
+        data: { nome, email, telefone },
       });
       const token = cadastroResp?.data?.properties?.token;
       if (token) {

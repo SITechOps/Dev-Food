@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useEffect } from "react";
 import { useAuthUserComponent } from "../../hooks/useAuthUser";
 import Button from "../ui/Button";
 import { FaFacebook } from "react-icons/fa";
@@ -7,28 +6,12 @@ import { FaFacebook } from "react-icons/fa";
 interface AuthFacebookProps {
   setEtapa: React.Dispatch<React.SetStateAction<"telefone" | "email">>;
   setFormList: React.Dispatch<
-    React.SetStateAction<{ email: string; telefone: string }>
+    React.SetStateAction<{ nome: string; email: string; telefone: string }>
   >;
 }
 
 function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
   const { loginUser } = useAuthUserComponent();
-  const { setAuth } = useAuth();
-  const [user, setUser] = useState<any>(null); // Estado para armazenar os dados do usuário do Facebook
-
-  useEffect(() => {
-    if (!user) return; // Retorna se não houver usuário
-
-    const { email } = user;
-    (async () => {
-      try {
-        await loginUser(email);
-      } catch {
-        setFormList((prev) => ({ ...prev, email }));
-        setEtapa("telefone");
-      }
-    })();
-  }, [user, setAuth]);
 
   useEffect(() => {
     (window as any).fbAsyncInit = function () {
@@ -60,10 +43,21 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
         if (response.authResponse) {
           (window as any).FB.api(
             "/me",
-            { fields: "email" },
-            (userInfo: any) => {
+            { fields: "email, name" },
+            async (userInfo: any) => {
               console.log("Usuário logado:", userInfo.email);
-              setUser(userInfo); // Atualiza o estado 'user' com os dados do usuário
+
+              setFormList((prev) => ({
+                ...prev,
+                nome: userInfo.name,
+                email: userInfo.email,
+              }));
+
+              try {
+                await loginUser(userInfo.email);
+              } catch {
+                setEtapa("telefone");
+              }
             },
           );
         } else {
@@ -73,6 +67,7 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
       { scope: "email" },
     );
   }
+
   return (
     <Button
       className="bg-blue-dark hover:bg-blue flex items-center justify-center gap-2 p-2"
