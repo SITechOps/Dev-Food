@@ -10,7 +10,7 @@ import Button from "../ui/Button";
 interface AuthGoogleProps {
   setEtapa: React.Dispatch<React.SetStateAction<"telefone" | "email">>;
   setFormList: React.Dispatch<
-    React.SetStateAction<{ email: string; telefone: string }>
+    React.SetStateAction<{ nome: string; email: string; telefone: string }>
   >;
 }
 
@@ -39,11 +39,11 @@ export default function AuthGoogle({ setEtapa, setFormList }: AuthGoogleProps) {
         },
       )
       .then(async (res) => {
-        const { email } = res.data;
+        const { name: nome, email } = res.data;
         try {
           await loginUser(email);
         } catch {
-          setFormList((prev) => ({ ...prev, email }));
+          setFormList((prev) => ({ ...prev, nome, email }));
           setEtapa("telefone");
         }
       })
