@@ -1,5 +1,6 @@
-import Input from "../../../../components/ui/Input";
-import Button from "../../../../components/ui/Button";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import ImageUploadButton from "@/components/ui/ImageUploadButton";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
 import { useCadastroRestaurante } from "./useCadastroRestaurante";
 import ModalCodigoVerificacao from "../../../../components/shared/ModalCodigoVerificacao";
@@ -18,6 +19,7 @@ export default function CadastroRestaurante() {
     setMostrarModal,
     codigoEnviado,
     handleSubmit,
+    setImageFile,
   } = useCadastroRestaurante();
 
   return (
@@ -283,7 +285,7 @@ export default function CadastroRestaurante() {
 
               <div id="compo-select">
                 <label className="mb-1 block font-medium text-gray-700">
-                  Especialidade
+                  Especialidade:
                 </label>
                 <select
                   className="input mt-2 w-full rounded border p-2"
@@ -304,9 +306,14 @@ export default function CadastroRestaurante() {
                   <option value="Árabe">Árabe</option>
                   <option value="Outros">Outros</option>
                 </select>
-                <p className="mt-2">
-                  Esse item poderá ser alterado posteriormente
-                </p>
+              </div>
+              <div className="mt-2">
+                <label className="mb-1 block font-medium text-gray-700">
+                  Logo do Restaurante:
+                </label>
+                <ImageUploadButton
+                  onFileSelect={(file) => setImageFile(file)}
+                />
               </div>
 
               <Button

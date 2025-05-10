@@ -12,7 +12,7 @@ const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Menu />
-      <div className="text-blue mx-auto w-4/5 max-w-screen-xl pt-[72px]">
+      <div className="text-blue mx-auto w-4/5 max-w-screen-xl">
         <main>{children}</main>
       </div>
     </>

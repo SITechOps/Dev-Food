@@ -188,7 +188,7 @@ export const useRestaurantAccount = () => {
       await api.delete(`/restaurante/${idRestaurante}`);
       alert("restaurante removido com sucesso!");
       localStorage.clear();
-      navigate("/");
+      navigate("/auth");
     } catch (error) {
       console.error(error);
       alert("Erro ao deletar restaurante. Tente novamente.");

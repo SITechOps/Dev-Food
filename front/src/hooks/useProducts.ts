@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { api } from "../connection/axios";
 import { useAuth } from "../contexts/AuthContext";
-import { ProductProps } from "../interface/IProduct";
+import { IProduto } from "../interface/IProduto";
 
 const useProdutos = () => {
   const { userData } = useAuth();
   const idRestaurante = userData?.sub;
-  const [Produtos, setProdutos] = useState<ProductProps[]>([]);
+  const [Produtos, setProdutos] = useState<IProduto[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [produtoSelecionado, setProdutoSelecionado] =
-    useState<ProductProps | null>(null);
+  const [produtoSelecionado, setProdutoSelecionado] = useState<IProduto | null>(
+    null,
+  );
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const filteredProducts = Produtos.filter((produto) =>
@@ -33,7 +34,7 @@ const useProdutos = () => {
   }, [idRestaurante]);
 
   async function criarProduto(
-    produto: Omit<ProductProps, "id">,
+    produto: Omit<IProduto, "id">,
     imageFile?: File | null,
   ) {
     try {
@@ -67,7 +68,7 @@ const useProdutos = () => {
 
   async function editarProduto(
     id: string,
-    produto: Omit<ProductProps, "id">,
+    produto: Omit<IProduto, "id">,
     imageFile?: File | null,
   ) {
     try {
@@ -118,7 +119,7 @@ const useProdutos = () => {
     setIsModalOpen(true);
   };
 
-  const abrirModalEditar = (produto: ProductProps) => {
+  const abrirModalEditar = (produto: IProduto) => {
     setProdutoSelecionado(produto);
     setIsModalOpen(true);
   };

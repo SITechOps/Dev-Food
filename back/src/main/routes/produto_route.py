@@ -3,7 +3,7 @@ from src.model.repositories.restaurantes_repository import RestaurantesRepositor
 from src.controllers.produtos_manager import ProdutosManager
 from src.model.repositories.produtos_repository import ProdutosRepository
 from src.http_types.http_request import HttpRequest
-
+import os
 
 produto_route_bp = Blueprint('produto_route', __name__)
 
@@ -351,5 +351,5 @@ def upload_produto_image(id):
 
 @produto_route_bp.get('/produto/images/<path:filename>')
 def serve_produto_image(filename):
-    upload_folder = current_app.config['UPLOAD_FOLDER']
-    return send_from_directory(upload_folder, filename)
+    image_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], 'produto/images')
+    return send_from_directory(image_folder, filename)

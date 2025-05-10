@@ -10,40 +10,17 @@ import { useAuth } from "../contexts/AuthContext";
 import Categorias from "./RestaurantesDisponiveis/Categorias";
 import Input from "@/components/ui/Input";
 import { initMapScript } from "@/utils/initMapScript";
-// Tipagens explícitas
-interface Endereco {
-  logradouro: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
-  pais: string;
-}
-
-interface Restaurante {
-  id: string;
-  nome: string;
-  logo?: string;
-  especialidade?: string;
-  endereco: Endereco;
-  duration?: number | null;
-  distancia?: string;
-  taxaEntrega?: number;
-}
-
-interface Produto {
-  id: string;
-  nome: string;
-  id_restaurante: string;
-  restaurante?: Restaurante;
-  [key: string]: any;
-}
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import { MapPin } from "lucide-react";
+import { IRestaurante } from "@/interface/IRestaurante";
+import { IProduto } from "@/interface/IProduto";
+import { IEndereco } from "@/interface/IEndereco";
 
 export default function Home() {
-  const [restaurantes, setRestaurantes] = useState<Restaurante[]>([]);
+  const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [produtos, setProdutos] = useState<IProduto[]>([]);
   const [filtroDistanciaAtivo, setFiltroDistanciaAtivo] = useState(false);
   const { userData, token } = useAuth();
   const idUsuario = userData?.sub;
@@ -53,15 +30,13 @@ export default function Home() {
   } | null>(null);
   const processamentoFeitoRef = useRef(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
   const restaurantesProximos = useMemo(() => {
     return restaurantes
       .filter((restaurante) => {
-        if (!restaurante.distancia) return false;
-        const distanciaNum = parseFloat(restaurante.distancia);
-        return !isNaN(distanciaNum) && distanciaNum <= 10;
+        if (restaurante.distancia === undefined) return false;
+        return restaurante.distancia <= 10;
       })
-      .sort((a, b) => parseFloat(a.distancia!) - parseFloat(b.distancia!));
+      .sort((a, b) => a.distancia! - b.distancia!);
   }, [restaurantes]);
 
   const handleCategoryClick = (category: string) => {
@@ -72,23 +47,23 @@ export default function Home() {
     async function obterEnderecoCliente() {
       try {
         if (!idUsuario || !token) return;
-
-        // Tenta obter o endereço padrão completo do localStorage
         const enderecoPadraoString = localStorage.getItem("enderecoPadrao");
-        let enderecoParaGeocodificar: Endereco | undefined;
+        let enderecoParaGeocodificar: IEndereco | undefined;
 
         if (enderecoPadraoString) {
           enderecoParaGeocodificar = JSON.parse(enderecoPadraoString);
         } else {
-          // Se não houver endereço padrão no localStorage, busca o primeiro endereço como antes
           const response = await api.get(`/user/${idUsuario}/enderecos`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           enderecoParaGeocodificar = response.data?.data?.attributes[0];
-          // Garante que o objeto endereco tenha a propriedade 'id' (se sua lógica ainda depender disso)
-          if (enderecoParaGeocodificar && !enderecoParaGeocodificar.id && response.data?.data?.length > 0) {
+          if (
+            enderecoParaGeocodificar &&
+            !enderecoParaGeocodificar.id &&
+            response.data?.data?.length > 0
+          ) {
             enderecoParaGeocodificar.id = response.data?.data[0]?.id;
           }
         }
@@ -114,7 +89,7 @@ export default function Home() {
     async function listarRestaurantes() {
       try {
         const response = await api.get("/restaurantes");
-        const data: Restaurante[] = response?.data?.data?.attributes || [];
+        const data: IRestaurante[] = response?.data?.data?.attributes || [];
         setRestaurantes(data);
       } catch (error) {
         console.error("Erro ao buscar restaurantes:", error);
@@ -127,13 +102,13 @@ export default function Home() {
   useEffect(() => {
     async function listarProdutosPorRestaurante() {
       try {
-        const allProdutos: Produto[] = [];
+        const allProdutos: IProduto[] = [];
 
         for (const restaurante of restaurantes) {
           const response = await api.get(
             `/restaurante/${restaurante.id}/produtos`,
           );
-          const produtos: Produto[] = response?.data?.data?.attributes || [];
+          const produtos: IProduto[] = response?.data?.data?.attributes || [];
 
           const produtosComRestaurante = produtos.map((produto) => ({
             ...produto,
@@ -155,7 +130,6 @@ export default function Home() {
     }
   }, [restaurantes]);
 
-  // Processar distância e taxa de entrega
   useEffect(() => {
     async function processarRestaurantes() {
       if (
@@ -166,10 +140,9 @@ export default function Home() {
         return;
 
       try {
-        // Aguarde a inicialização do Google Maps
         await initMapScript();
 
-        const atualizados: Restaurante[] = await Promise.all(
+        const atualizados: IRestaurante[] = await Promise.all(
           restaurantes.map(async (rest) => {
             const enderecoCompletoRestaurante = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
 
@@ -189,7 +162,10 @@ export default function Home() {
 
               return {
                 ...rest,
-                distancia: distanciaInfo.distance?.toFixed(1),
+                distancia:
+                  distanciaInfo.distance != null
+                    ? distanciaInfo.distance
+                    : undefined,
                 duration: distanciaInfo.duration,
                 taxaEntrega,
               };
@@ -248,9 +224,20 @@ export default function Home() {
           !selectedCategory ||
           selectedCategory === "Todos" ||
           produto.restaurante?.especialidade === selectedCategory;
-        return nomeMatch && categoriaMatch;
+        const distanciaMatch =
+          !filtroDistanciaAtivo ||
+          (produto.restaurante?.distancia !== undefined &&
+            produto.restaurante?.distancia <= 10);
+
+        return nomeMatch && categoriaMatch && distanciaMatch;
       });
-  }, [produtos, restaurantes, searchTerm, selectedCategory]);
+  }, [
+    produtos,
+    restaurantes,
+    searchTerm,
+    selectedCategory,
+    filtroDistanciaAtivo,
+  ]);
 
   return (
     <div className="mt-[5rem]">
@@ -273,13 +260,14 @@ export default function Home() {
       <Categorias onCategoryClick={handleCategoryClick} />
       <div className="mt-6 w-full">
         <button
-          className={`rounded px-4 py-2 ${
+          className={`flex items-center gap-2 rounded-[10px] px-6 py-2 text-sm font-semibold shadow-md transition-all duration-200 hover:shadow-lg ${
             filtroDistanciaAtivo
-              ? "bg-gray-medium text-white"
-              : "text-blue bg-white"
+              ? "bg-brown-normal hover:bg-brown-dark text-white"
+              : "text-brown-normal border-brown-normal hover:bg-brown-light border bg-white"
           }`}
           onClick={() => setFiltroDistanciaAtivo(!filtroDistanciaAtivo)}
         >
+          <MapPin className="h-4 w-4" />
           Próximos de mim
         </button>
       </div>
@@ -301,65 +289,112 @@ export default function Home() {
 
       {/* Grid principal */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {abaAtiva === "restaurantes" &&
-          (filtroDistanciaAtivo
-            ? restaurantesProximos
-            : filteredRestaurantes
-          ).map((restaurante) => (
-            <Link
-              to={`/restaurante/${restaurante.id}`}
-              key={restaurante.id}
-              onClick={() => {
-                const restauranteComFrete = {
-                  ...restaurante,
-                  distancia: restaurante.distancia,
-                  duration: restaurante.duration,
-                  taxaEntrega: restaurante.taxaEntrega,
-                };
+        {abaAtiva === "restaurantes" && (
+          <>
+            {(filtroDistanciaAtivo
+              ? restaurantesProximos
+              : filteredRestaurantes
+            ).map((restaurante) => (
+              <Link
+                to={`/restaurante/${restaurante.id}`}
+                key={restaurante.id}
+                onClick={() => {
+                  const restauranteComFrete = {
+                    ...restaurante,
+                    distancia: restaurante.distancia,
+                    duration: restaurante.duration,
+                    taxaEntrega: restaurante.taxaEntrega,
+                  };
+                  localStorage.setItem(
+                    "restauranteSelecionado",
+                    JSON.stringify(restauranteComFrete),
+                  );
+                }}
+              >
+                <RestauranteCard restaurante={restaurante} />
+              </Link>
+            ))}
 
-                localStorage.setItem(
-                  "restauranteSelecionado",
-                  JSON.stringify(restauranteComFrete),
-                );
-              }}
-            >
-              <RestauranteCard restaurante={restaurante} />
-            </Link>
-          ))}
-
-        {abaAtiva === "itens" &&
-          produtosFiltrados.map((produto) => (
-            <div key={produto.id} className="mb-8">
-              <div className="mb-3 flex items-center gap-4">
-                {produto.restaurante?.logo && (
-                  <img
-                    src={produto.restaurante.logo}
-                    alt={`Logo do restaurante ${produto.restaurante.nome}`}
-                    className="h-12 w-12 rounded-full border object-cover"
-                  />
-                )}
-                <div className="flex flex-col">
-                  <span className="text-blue text-base font-semibold">
-                    {produto.restaurante?.nome}
-                  </span>
-                  <span className="text-blue text-sm">
-                    {produto.restaurante?.especialidade}
-                    {produto.restaurante?.distancia &&
-                      ` • ${produto.restaurante.distancia} km`}
-                  </span>
-                  <span className="text-green-dark text-sm font-medium">
-                    {produto.restaurante?.taxaEntrega === 0 ||
-                    produto.restaurante?.taxaEntrega === undefined
-                      ? "Entrega grátis"
-                      : `Entrega: R$ ${produto.restaurante?.taxaEntrega.toFixed(2)}`}
-                  </span>
-                </div>
+            {filtroDistanciaAtivo && restaurantesProximos.length === 0 ? (
+              <div className="mt-4 h-40">
+                <p className="text-blue col-span-full text-center text-lg">
+                  Nenhum restaurante próximo foi encontrado.
+                </p>
               </div>
+            ) : (filtroDistanciaAtivo
+                ? restaurantesProximos
+                : filteredRestaurantes
+              ).length === 0 ? (
+              <div className="mt-4 h-40">
+                <p className="text-blue col-span-full text-center text-lg">
+                  {selectedCategory && selectedCategory !== "Todos"
+                    ? "Nenhum restaurante encontrado nesta categoria."
+                    : "Nenhum restaurante encontrado."}
+                </p>
+              </div>
+            ) : null}
+          </>
+        )}
 
-              {/* Card do produto */}
-              <ProdutoCard produto={produto} />
-            </div>
-          ))}
+        {abaAtiva === "itens" && (
+          <>
+            {produtosFiltrados.map((produto) => (
+              <div key={produto.id} className="mb-8">
+                <div className="mb-3 flex items-center gap-4">
+                  {produto.restaurante?.logo && (
+                    <ImagemDeEntidade
+                      src={produto.restaurante.logo}
+                      alt={`Logo do restaurante ${produto.restaurante.nome}`}
+                      className="h-12 w-12 rounded-full border object-cover"
+                    />
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-blue text-base font-semibold">
+                      {produto.restaurante?.nome}
+                    </span>
+                    <span className="text-blue text-sm">
+                      {produto.restaurante?.especialidade}
+                      {produto.restaurante?.distancia &&
+                        ` • ${produto.restaurante.distancia} km`}
+                    </span>
+                    <span className="text-green-dark text-sm font-medium">
+                      {produto.restaurante?.taxaEntrega === 0 ||
+                      produto.restaurante?.taxaEntrega === undefined
+                        ? "Entrega grátis"
+                        : `Entrega: R$ ${produto.restaurante?.taxaEntrega.toFixed(2)}`}
+                    </span>
+                  </div>
+                </div>
+
+                <Link
+                  to={`/restaurante/${produto.restaurante?.id}`}
+                  onClick={() => {
+                    const restauranteComFrete = {
+                      ...produto.restaurante,
+                      distancia: produto.restaurante?.distancia,
+                      duration: produto.restaurante?.duration,
+                      taxaEntrega: produto.restaurante?.taxaEntrega,
+                    };
+                    localStorage.setItem(
+                      "restauranteSelecionado",
+                      JSON.stringify(restauranteComFrete),
+                    );
+                  }}
+                >
+                  <ProdutoCard produto={produto} />
+                </Link>
+              </div>
+            ))}
+
+            {produtosFiltrados.length === 0 && (
+              <div className="mt-4 h-40">
+                <p className="text-blue col-span-full text-center text-lg">
+                  Nenhum item encontrado
+                </p>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

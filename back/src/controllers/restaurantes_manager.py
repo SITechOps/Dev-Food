@@ -3,6 +3,8 @@ from src.http_types.http_response import HttpResponse
 from src.model.repositories.interfaces.irestaurantes_repository import IRestaurantesRepository
 from src.main.utils.response_formatter import ResponseFormatter
 from flask_jwt_extended import create_access_token
+from src.services.image_service import ImageService
+from werkzeug.datastructures import FileStorage
 
 class RestaurantesManager:
     def __init__(self, restaurante_repo: IRestaurantesRepository) -> None:
@@ -94,3 +96,22 @@ class RestaurantesManager:
 
         self.__restaurante_repo.delete(id_restaurante)
         return ResponseFormatter.display_operation(self.class_name, "deletado")
+    
+
+    def update_image(self, http_request: HttpRequest, file: FileStorage) -> HttpResponse:
+        id_restaurante = http_request.params.get("id_restaurante")
+
+        restaurante = self.__restaurante_repo.find_by_id(id_restaurante)
+        if not restaurante:
+            return ResponseFormatter.display_error("Restaurante não encontrado.", 404)
+
+        nome_restaurante = restaurante.nome
+
+        try:
+            image_url = ImageService.update_image(file, "restaurante/images", nome_restaurante)
+            self.__restaurante_repo.update_image_path(id_restaurante, image_url)
+            return HttpResponse(body={"image_url": image_url}, status_code=200)
+        except ValueError as e:
+            return HttpResponse(body={"error": str(e)}, status_code=400)
+
+

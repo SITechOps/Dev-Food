@@ -6,26 +6,31 @@ import EnderecoItem from "./EnderecoItem";
 import { useLocation, useNavigate } from "react-router-dom";
 import ifoodLogo from "../../assets/ifood.png";
 import Button from "../ui/Button";
-import { IAddress } from "../../interface/IAddress";
+import { IEndereco } from "../../interface/IEndereco";
 import { useAuth } from "../../contexts/AuthContext";
 
 interface ListagemEnderecoProps {
   onCloseModal?: () => void;
 }
 
-export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps) {
-  const [enderecos, setEnderecos] = useState<IAddress[]>([]);
-  const [enderecoSelecionado, setEnderecoSelecionado] = useState<IAddress | null>(null);
+export default function ListagemEndereco({
+  onCloseModal,
+}: ListagemEnderecoProps) {
+  const [enderecos, setEnderecos] = useState<IEndereco[]>([]);
+  const [enderecoSelecionado, setEnderecoSelecionado] =
+    useState<IEndereco | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { userData, token } = useAuth();
   const idUsuario = userData?.sub;
   const location = useLocation();
   const navigate = useNavigate();
-  const [enderecoPadraoId, setEnderecoPadraoId] = useState<string | null>(localStorage.getItem("enderecoPadraoId"));
+  const [enderecoPadraoId, setEnderecoPadraoId] = useState<string | null>(
+    localStorage.getItem("enderecoPadraoId"),
+  );
   const [confirmacaoPadrao, setConfirmacaoPadrao] = useState<{
     show: boolean;
-    endereco: IAddress | null;
+    endereco: IEndereco | null;
   }>({ show: false, endereco: null });
 
   const buscarEnderecos = useCallback(async () => {
@@ -41,7 +46,9 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
       const storedEnderecoPadraoId = localStorage.getItem("enderecoPadraoId");
       setEnderecoPadraoId(storedEnderecoPadraoId);
       if (storedEnderecoPadraoId) {
-        const enderecoPadrao = enderecosData.find((end) => end.id === storedEnderecoPadraoId);
+        const enderecoPadrao = enderecosData.find(
+          (end: IEndereco) => end.id === storedEnderecoPadraoId,
+        );
         setEnderecoSelecionado(enderecoPadrao || null);
       } else if (enderecosData.length > 0) {
         setEnderecoSelecionado(enderecosData[0]);
@@ -82,14 +89,14 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
     }
   };
 
-  const handleSelecionarEndereco = (endereco: IAddress) => {
+  const handleSelecionarEndereco = (endereco: IEndereco) => {
     setConfirmacaoPadrao({ show: true, endereco });
   };
 
-  const confirmarEnderecoPadrao = (endereco: IAddress) => {
-    localStorage.setItem("enderecoPadraoId", endereco.id);
+  const confirmarEnderecoPadrao = (endereco: IEndereco) => {
+    localStorage.setItem("enderecoPadraoId", endereco.id!);
     localStorage.setItem("enderecoPadrao", JSON.stringify(endereco));
-    setEnderecoPadraoId(endereco.id);
+    setEnderecoPadraoId(endereco.id!);
     setConfirmacaoPadrao({ show: false, endereco: null });
     window.location.reload();
   };
@@ -117,7 +124,10 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
         onClick={() => setShowModal(true)}
       >
         <span className="text-blue text-lg font-semibold">
-          {enderecoSelecionado?.logradouro || (enderecos.length === 0 ? "Adicionar endereço" : "Selecionar endereço")}
+          {enderecoSelecionado?.logradouro ||
+            (enderecos.length === 0
+              ? "Adicionar endereço"
+              : "Selecionar endereço")}
         </span>
         <IoIosArrowDown
           className={`icon transition-transform ${showModal ? "rotate-180" : ""}`}
@@ -165,15 +175,24 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
       {confirmacaoPadrao.show && (
         <Modal isOpen={confirmacaoPadrao.show} onClose={cancelarEnderecoPadrao}>
           <div className="p-4">
-            <h2 className="text-lg font-semibold mb-2">Definir como endereço padrão?</h2>
+            <h2 className="mb-2 text-lg font-semibold">
+              Definir como endereço padrão?
+            </h2>
             <p className="mb-4">
-              Deseja selecionar "{confirmacaoPadrao.endereco?.logradouro}, {confirmacaoPadrao.endereco?.numero} - {confirmacaoPadrao.endereco?.bairro}, {confirmacaoPadrao.endereco?.cidade}" como seu endereço padrão?
+              Deseja selecionar "{confirmacaoPadrao.endereco?.logradouro},{" "}
+              {confirmacaoPadrao.endereco?.numero} -{" "}
+              {confirmacaoPadrao.endereco?.bairro},{" "}
+              {confirmacaoPadrao.endereco?.cidade}" como seu endereço padrão?
             </p>
             <div className="flex justify-end space-x-2">
-              <Button onClick={cancelarEnderecoPadrao} variant="secondary">
+              <Button onClick={cancelarEnderecoPadrao} color="secondary">
                 Cancelar
               </Button>
-              <Button onClick={() => confirmarEnderecoPadrao(confirmacaoPadrao.endereco!)}>
+              <Button
+                onClick={() =>
+                  confirmarEnderecoPadrao(confirmacaoPadrao.endereco!)
+                }
+              >
                 Confirmar
               </Button>
             </div>

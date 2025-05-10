@@ -225,6 +225,20 @@ class RestaurantesRepository(IRestaurantesRepository):
             except Exception as exception:
                 db.session.rollback()
                 raise exception
+            
+
+    def update_image_path(self, id_restaurante: str, image_url: str) -> None:
+        with DBConnectionHandler() as db:
+            try:
+                restaurante = db.session.query(Restaurante).filter_by(id=id_restaurante).first()
+                if not restaurante:
+                    raise ValueError("Restaurante não encontrado")
+
+                restaurante.logo  = image_url 
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                raise e
 
 
     def __verificar_duplicidade(self, email=None, cnpj=None, razao_social=None, ignorar_id=None):

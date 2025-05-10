@@ -3,19 +3,19 @@ import { IoClose } from "react-icons/io5";
 import Input from "../../components/ui/Input";
 import Button from "@/components/ui/Button";
 import ImageUploadButton from "@/components/ui/ImageUploadButton";
-import { ProductProps } from "@/interface/IProduct";
+import { IProduto } from "@/interface/IProduto";
 
 interface ModalProdutoProps {
   isOpen: boolean;
   onClose: () => void;
-  produto?: ProductProps | null;
+  produto?: IProduto | null;
   criarProduto: (
-    produto: Omit<ProductProps, "id">,
+    produto: Omit<IProduto, "id">,
     imageFile?: File | null,
   ) => Promise<void>;
   editarProduto: (
     id: string,
-    produto: Omit<ProductProps, "id">,
+    produto: Omit<IProduto, "id">,
     imageFile?: File | null,
   ) => Promise<void>;
 }

@@ -7,6 +7,7 @@ from src.main.utils.response_formatter import ResponseFormatter
 from src.main.utils.file_upload import save_file, allowed_file, delete_file
 from flask import current_app
 from werkzeug.datastructures import FileStorage
+from src.services.image_service import ImageService
 import os
 
 class ProdutosManager:
@@ -55,11 +56,9 @@ class ProdutosManager:
         self.__produtos_repo.update(id_produto, produto_info)
 
         if image_file:
-            http_response = self.__update_product_image(id_produto, image_file)
-        else:
-            http_response = ResponseFormatter.display_operation(self.class_name, "alterado")
+            return self.update_image(http_request, image_file)
 
-        return http_response
+        return ResponseFormatter.display_operation(self.class_name, "alterado")
 
 
     def delete(self, http_request: HttpRequest) -> HttpResponse:
@@ -78,25 +77,16 @@ class ProdutosManager:
         id_produto = http_request.params.get("id_produto")
         self.__check_if_product_exists(id_produto)
 
-        if not allowed_file(file.filename):
-            return HttpResponse(body={"error": "Tipo de arquivo inválido"}, status_code=400)
+        produto = self.__produtos_repo.find_by_id(id_produto)
+        nome_produto = produto.nome 
 
-        upload_folder = current_app.config['UPLOAD_FOLDER']
+        try:
+            image_url = ImageService.update_image(file, "produto/images", nome_produto)
+            self.__produtos_repo.update_image_path(id_produto, image_url)
+            return HttpResponse(body={"image_url": image_url}, status_code=200)
+        except ValueError as e:
+            return HttpResponse(body={"error": str(e)}, status_code=400)
 
-        for ext in ['.png', '.jpg', '.jpeg']:
-            existing_image_path = os.path.join(upload_folder, f"{id_produto}{ext}")
-            if os.path.exists(existing_image_path):
-                delete_file(existing_image_path)
-
-        file_extension = os.path.splitext(file.filename)[1].lower()
-        new_filename = f"{id_produto}{file_extension}"
-        save_file(file, upload_folder, new_filename)
-
-        image_url = f"/produto/images/{new_filename}"
-        self.__produtos_repo.update_image_path(id_produto, image_url)
-
-        return HttpResponse(body={"image_url": image_url}, status_code=200)
-        
 
     def __check_if_product_exists(self, id_produto: str) -> None:
         produto = self.__produtos_repo.find_by_id(id_produto)
@@ -115,24 +105,6 @@ class ProdutosManager:
         if not restaurante:
             raise RestaurantNotFound()
         
-
-    def __update_product_image(self, id_produto: str, image_file: FileStorage) -> HttpResponse:
-        upload_folder = current_app.config['UPLOAD_FOLDER']
-        for ext in ['.png', '.jpg', '.jpeg']:
-            existing_image_path = os.path.join(upload_folder, f"{id_produto}{ext}")
-            if os.path.exists(existing_image_path):
-                delete_file(existing_image_path)
-
-        file_extension = os.path.splitext(image_file.filename)[1].lower()
-        new_filename = f"{id_produto}{file_extension}"
-
-        save_file(image_file, upload_folder, new_filename)
-
-        image_url = f"/produto/images/{new_filename}"
-        self.__produtos_repo.update_image_path(id_produto, image_url)
-
-        return HttpResponse(body={"image_url": image_url}, status_code=200)
-
 
     def __delete_product_image(self, image_url: str) -> None:
         upload_folder = current_app.config['UPLOAD_FOLDER']

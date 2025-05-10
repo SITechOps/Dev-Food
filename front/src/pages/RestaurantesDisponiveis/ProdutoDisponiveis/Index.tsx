@@ -2,8 +2,8 @@ import { Minus, Plus } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useCardProdutos } from "../../../hooks/useCardProduto";
-import { CardProdutosProps } from "../../../interface/IProduct";
-
+import { CardProdutosProps } from "../../../interface/IProduto";
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 export default function CardProdutos(props: CardProdutosProps) {
   const { nome, descricao, image_url, valor_unitario, dadosRestaurante } =
     props;
@@ -14,19 +14,13 @@ export default function CardProdutos(props: CardProdutosProps) {
     useCardProdutos(props, dadosRestaurante);
 
   // Agora você pode acessar dadosRestaurante para pegar a taxa de entrega
-  const taxaEntrega = dadosRestaurante?.taxaEntrega;
+  // const taxaEntrega = dadosRestaurante?.taxaEntrega;
 
   return (
     <div className="border-gray-medium bg-gray-light m-auto max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300">
       <div className="flex gap-4">
-        <img
-          className="mx-auto mr-2 mb-4 ml-2 h-15 w-15 rounded-full object-cover"
-          src={
-            image_url ||
-            "https://food-guide.canada.ca/sites/default/files/styles/square_400_x_400/public/2020-12/CFGPlate-crop400x400.jpg"
-          }
-          alt={nome}
-        />
+        <ImagemDeEntidade src={image_url} alt={nome} />
+
         <h3 className="font-bold">{nome}</h3>
       </div>
 

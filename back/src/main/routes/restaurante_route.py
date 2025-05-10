@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app, send_from_directory
 from src.model.repositories.restaurantes_repository import RestaurantesRepository
 from src.controllers.restaurantes_manager import RestaurantesManager
 from src.http_types.http_request import HttpRequest
+import os
 
 restaurante_route_bp = Blueprint('restaurante_route', __name__)
 
@@ -83,3 +84,24 @@ def delete_restaurant(id):
     http_response = restaurante_manager.delete(http_request)
     
     return jsonify(http_response.body), http_response.status_code
+
+
+@restaurante_route_bp.post('/restaurante/upload-image/<id>')
+def upload_restaurante_image(id):
+    if 'image' not in request.files:
+        return jsonify({'error': 'Arquivo não enviado'}), 400
+
+    file = request.files['image']
+    http_request = HttpRequest(params={"id_restaurante": id})
+
+    restaurantes_repo = RestaurantesRepository()
+    restaurantes_manager = RestaurantesManager(restaurantes_repo)
+
+    http_response = restaurantes_manager.update_image(http_request, file)
+    return jsonify(http_response.body), http_response.status_code
+
+
+@restaurante_route_bp.get('/restaurante/images/<path:filename>')
+def serve_restaurante_image(filename):
+    upload_folder = current_app.config['UPLOAD_FOLDER']
+    return send_from_directory(os.path.join(upload_folder, 'restaurante/images'), filename)

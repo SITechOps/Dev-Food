@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../connection/axios";
 import { IRestaurante } from "../interface/IRestaurante";
-import { ProductProps } from "../interface/IProduct";
-
+import { IProduto } from "../interface/IProduto";
 
 export const useRestauranteDisponiveisDetalhes = () => {
   const { id } = useParams();
@@ -33,7 +32,7 @@ export const useRestauranteDisponiveisDetalhes = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  const [dadosProdutos, setDadosProdutos] = useState<ProductProps[]>([]);
+  const [dadosProdutos, setDadosProdutos] = useState<IProduto[]>([]);
 
   useEffect(() => {
     getDetalhesRestaurante();

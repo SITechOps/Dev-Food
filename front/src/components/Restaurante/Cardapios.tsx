@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input";
 import ModalProduto from "@/components/Produto/ModalProduto";
 import { Search } from "lucide-react";
 import useProdutos from "@/hooks/useProducts";
-import { API_BASE_URL } from "../../connection/apiConfig";
+import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
 const Cardapios = () => {
   const iconStyle =
@@ -72,14 +72,9 @@ const Cardapios = () => {
               className="border-gray-medium grid grid-cols-[140px_180px_200px_130px_120px] border-t bg-white px-2.5 sm:grid-cols-[1fr_2fr_3fr_2fr_2fr]"
             >
               <div className="flex flex-col items-center p-4">
-                <img
-                  src={
-                    product.image_url
-                      ? `${API_BASE_URL}${product.image_url}`
-                      : Padrao
-                  }
+                <ImagemDeEntidade
+                  src={product.image_url ? product.image_url : Padrao}
                   alt={product.nome}
-                  className="h-20 w-20 rounded object-contain"
                 />
 
                 <span className="text-blue mt-1 text-sm">
