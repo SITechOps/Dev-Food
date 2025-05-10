@@ -1,15 +1,12 @@
 import os, secrets, sys
 from dotenv import load_dotenv
+from flasgger import Swagger
 from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
-from flask_swagger_ui import get_swaggerui_blueprint
 from io import StringIO
     
 load_dotenv()
-
 socketio = SocketIO(cors_allowed_origins="*")
-BASE_URL = "/docs"
-FILE_URL = "/swagger.yaml"
 
 def configure_jwt(app):
     app.config["JWT_SECRET_KEY"] = secrets.token_hex(32)
@@ -27,9 +24,33 @@ def configure_mail(app):
 
 
 def configure_swagger(app):
-    app.static_folder = "../../../"
-    swagger_bp = get_swaggerui_blueprint(BASE_URL, FILE_URL)
-    app.register_blueprint(swagger_bp)
+    app.config['SWAGGER'] = {
+        "title": "DevFood API",
+        "description": "API para o sistema Dev-Food",
+        "version": "1.0.0",
+        "specs_route": "/docs/",
+        "specs": [{
+            "endpoint": "swagger",
+            "route": "/swagger.json",
+        }],
+        "servers":[{
+            "url": "http://localhost:5000",
+            "description": "Servidor de desenvolvimento local"
+        }],
+        "openapi": "3.0.1",
+        "headers": [],
+        "termsOfService": "",
+        "swagger_ui_theme": "github",
+        "use_latest_resources": True,
+        "ui_params": {
+            "syntaxHighlight.theme": "github"
+        },
+       
+        "swagger_ui_bundle_js": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-bundle.js",
+        "swagger_ui_standalone_preset_js": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-standalone-preset.js",
+        "swagger_ui_css": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.css",
+    }
+    Swagger(app)
 
 
 def configure_twilio(app):
