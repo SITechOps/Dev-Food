@@ -3,7 +3,7 @@ import { IRestaurante } from "@/interface/IRestaurante";
 import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
 type RestauranteProps = {
-  restaurant: IRestaurante;
+  restaurante: IRestaurante;
   duration?: number;
   distancia?: number;
   taxaEntrega?: number;

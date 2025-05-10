@@ -4,7 +4,7 @@ import { reverseGeoCode } from "../utils/geolocation";
 import { api } from "../connection/axios";
 import { useAuth } from "../contexts/AuthContext";
 import { IEndereco } from "../interface/IEndereco";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { initMapScript } from "@/utils/initMapScript";
 
 export const useEndereco = () => {
@@ -12,14 +12,12 @@ export const useEndereco = () => {
   const idUsuario = userData?.sub;
   const role = userData?.role;
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   const searchInput = useRef<HTMLInputElement | null>(null);
   const [address, setAddress] = useState<IEndereco | null>(null);
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
   const [tipo, setTipo] = useState("");
-  const enderecoId = searchParams.get("id");
 
   const fecharModal = () => navigate("/");
 
@@ -130,29 +128,13 @@ export const useEndereco = () => {
       return alert("Por favor, preencha todos os campos do endereço.");
     if (!idUsuario) return alert("Erro ao obter ID do usuário.");
 
+    const enderecoId = await getEnderecoId();
     if (!enderecoId) return alert("Endereço não encontrado para edição.");
 
-    // Obtenha o token do localStorage
-    const token = localStorage.getItem("token");
-    // Obtenha o ID do endereço a partir do id_usuario
-    const enderecoId = async () => {
-      try {
-        const response = await api.get(`/user/${idUsuario}/enderecos`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return stringify(response.data[0].numero);
-      } catch (error) {
-        console.error("Erro ao obter ID do endereço:", error);
-        return null;
-      }
-    };
-    // Obtenha o ID do endereço
-    const endereco = await enderecoId();
-
     try {
-      await api.put(`/endereco/${endereco}`, { data: enderecoFinal });
+      await api.put(`/endereco/${enderecoId}`, {
+        data: buildEnderecoPayload(),
+      });
       alert("Endereço atualizado com sucesso!");
       limparCampos();
       navigate("/");
