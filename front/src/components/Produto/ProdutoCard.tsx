@@ -8,10 +8,7 @@ const ProdutoCard = ({ produto }: ProdutoCardProps) => {
   return (
     <div className="rounded-lg border bg-white p-4 shadow-md">
       <ImagemDeEntidade
-        src={
-          produto.image_url ||
-          "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        }
+        src={produto.image_url}
         alt={produto.nome}
         className="h-32 w-full rounded object-cover"
       />
