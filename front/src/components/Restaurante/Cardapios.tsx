@@ -1,7 +1,6 @@
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Button from "@/components/ui/Button";
-import Padrao from "@/assets/prato-padrao.png";
 import Input from "@/components/ui/Input";
 import ModalProduto from "@/components/Produto/ModalProduto";
 import { Search } from "lucide-react";
@@ -71,13 +70,13 @@ const Cardapios = () => {
               key={product.id}
               className="border-gray-medium grid grid-cols-[140px_180px_200px_130px_120px] border-t bg-white px-2.5 sm:grid-cols-[1fr_2fr_3fr_2fr_2fr]"
             >
-              <div className="flex flex-col items-center p-4">
+              <div className="flex flex-col items-center justify-center py-4">
                 <ImagemDeEntidade
-                  src={product.image_url ? product.image_url : Padrao}
+                  src={product.image_url}
                   alt={product.nome}
+                  className="h-20 w-20 border object-cover"
                 />
-
-                <span className="text-blue mt-1 text-sm">
+                <span className="text-blue mt-2 text-sm">
                   Qtd: {product.qtd_estoque}
                 </span>
               </div>

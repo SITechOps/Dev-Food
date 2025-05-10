@@ -10,7 +10,7 @@ type ImagemDeEntidadeProps = {
 export const ImagemDeEntidade: React.FC<ImagemDeEntidadeProps> = ({
   src,
   alt,
-  className = "h-15 w-15 rounded-full object-cover mb-4",
+  className = "h-15 w-15 rounded-full object-cover",
 }) => {
   const fallback =
     "https://food-guide.canada.ca/sites/default/files/styles/square_400_x_400/public/2020-12/CFGPlate-crop400x400.jpg";

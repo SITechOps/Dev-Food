@@ -6,6 +6,7 @@ import { Props } from "@/interface/IMeusPedidos";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
+import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
 export default function HistoricoDePedido({ tipo }: Props) {
   const { userData } = useAuth();
@@ -44,11 +45,12 @@ export default function HistoricoDePedido({ tipo }: Props) {
         >
           {/* Restaurante */}
           <div className="mb-[0.5rem] flex items-center gap-[0.75rem]">
-            <img
-              src={pedido.restaurante.logo || "img/SushiRest.webp"}
-              alt="Logo restaurante"
-              className="h-[2rem] w-[2rem] rounded-full border object-cover"
+            <ImagemDeEntidade
+              src={pedido.restaurante.logo}
+              alt={pedido.restaurante.nome}
+              className="mb-4 h-[2rem] w-[2rem] rounded-full border object-cover"
             />
+
             <div>
               <p className="text-base font-semibold text-black">
                 {pedido.restaurante.nome}
