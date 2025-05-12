@@ -15,6 +15,56 @@ nota_fiscal_bp = Blueprint('nota_fiscal', __name__)
 
 @nota_fiscal_bp.post('/nota-fiscal')
 def processar_nota_fiscal():
+    """
+    Gerar e enviar nota fiscal
+    ---
+    tags:
+      - Nota Fiscal
+    summary: Gera e envia uma nota fiscal para o email do cliente
+    description: Processa a geração de uma nota fiscal em PDF para um pedido específico e envia por email para o cliente
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id_pedido:
+                type: integer
+                description: ID do pedido para o qual a nota fiscal será gerada
+                example: 6083
+    responses:
+      "200":
+        description: Nota fiscal gerada e enviada com sucesso
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Nota fiscal enviada com sucesso!"
+      "404":
+        description: Pedido não encontrado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error_message:
+                  type: string
+                  example: "Pedido não encontrado!"
+      "500":
+        description: Erro ao processar a nota fiscal
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error_message:
+                  type: string
+                  example: "Erro ao gerar ou enviar a nota fiscal!"
+    """
     http_request = HttpRequest(body=request.json)
 
     pedidos_manager = estruturar_pedido()

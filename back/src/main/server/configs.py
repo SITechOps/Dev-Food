@@ -36,21 +36,34 @@ def configure_swagger(app):
         "servers":[{
             "url": "http://localhost:5000",
             "description": "Servidor de desenvolvimento local"
-        }],
+        }],  
         "openapi": "3.0.1",
         "headers": [],
         "termsOfService": "",
         "swagger_ui_theme": "github",
         "use_latest_resources": True,
         "ui_params": {
-            "syntaxHighlight.theme": "github"
+            "syntaxHighlight.theme": "github",
+            "operationsSorter": "alpha"
         },
-       
-        "swagger_ui_bundle_js": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-bundle.js",
-        "swagger_ui_standalone_preset_js": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-standalone-preset.js",
-        "swagger_ui_css": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.css",
+        "swagger_ui_bundle_js": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js",
+        "swagger_ui_standalone_preset_js": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js",
+        "swagger_ui_css": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css",
     }
-    Swagger(app)
+    template={
+        "tags": [
+            {"name": "Usuários", "description": "Operações relacionadas a usuários"},
+            {"name": "Login", "description": "Operações relacionadas ao login"},
+            {"name": "Endereços", "description": "Operações relacionadas a endereços"},
+            {"name": "Email", "description": "Operações relacionadas a envio de emails"},
+            {"name": "Restaurantes", "description": "Operações relacionadas a restaurantes"},
+            {"name": "Produtos", "description": "Operações relacionadas a produtos"},
+            {"name": "Pedidos", "description": "Operações relacionadas a pedidos"},
+            {"name": "Pagamentos", "description": "Operações relacionadas a pagamentos"},
+            {"name": "Nota Fiscal", "description": "Operações relacionadas a envio de nota fiscal"}
+        ]
+    }
+    Swagger(app, template=template)
 
 
 def configure_twilio(app):

@@ -151,7 +151,6 @@ def get_all_users():
     ---
     tags:
       - Usuários
-    summary: Listar todos os usuários
     description: Retorna uma lista de todos os usuários cadastrados
     responses:
       "200":
@@ -217,7 +216,6 @@ def update_user(id: str):
     ---
     tags:
       - Usuários
-    summary: Alterar dados de um usuário
     description: Atualiza os dados de um usuário específico
     parameters:
       - name: id
@@ -324,7 +322,6 @@ def delete_user(id: str):
     ---
     tags:
       - Usuários
-    summary: Deletar um usuário
     description: Remove um usuário do sistema
     parameters:
       - name: id
