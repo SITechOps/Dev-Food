@@ -7,22 +7,15 @@ import Categorias from "./RestaurantesDisponiveis/Categorias";
 import Input from "@/components/ui/Input";
 import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
 import { IRestaurante } from "@/interface/IRestaurante";
+import { IProduto } from "@/interface/IProduto";
 import { MapPin } from "lucide-react";
 import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
-
-interface Produto {
-  id: string;
-  nome: string;
-  id_restaurante: string;
-  restaurante?: IRestaurante;
-  [key: string]: any;
-}
 
 export default function Home() {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [produtos, setProdutos] = useState<IProduto[]>([]);
   const [filtroDistanciaAtivo, setFiltroDistanciaAtivo] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { processarRestaurantes, clienteCoords } = useConfirmacaoEndereco();
@@ -58,13 +51,13 @@ export default function Home() {
   useEffect(() => {
     async function listarProdutosPorRestaurante() {
       try {
-        const allProdutos: Produto[] = [];
+        const allProdutos: IProduto[] = [];
 
         for (const restaurante of restaurantes) {
           const response = await api.get(
             `/restaurante/${restaurante.id}/produtos`,
           );
-          const produtos: Produto[] = response?.data?.data?.attributes || [];
+          const produtos: IProduto[] = response?.data?.data?.attributes || [];
 
           const produtosComRestaurante = produtos.map((produto) => ({
             ...produto,
@@ -199,7 +192,7 @@ export default function Home() {
                   ...restaurante,
                   distancia: restaurante.distancia,
                   duration: restaurante.duration,
-                  taxaEntrega: restaurante.taxa_entrega,
+                  taxaEntrega: restaurante.taxaEntrega,
                 };
 
                 localStorage.setItem(
