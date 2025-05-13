@@ -5,7 +5,7 @@ import ProdutoCard from "../components/Produto/ProdutoCard";
 import { Link } from "react-router-dom";
 import Categorias from "./RestaurantesDisponiveis/Categorias";
 import Input from "@/components/ui/Input";
-import { useConfirmacaoEndereco } from "@/contexts/EnderecoContext";
+import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
 import { IRestaurante } from "@/interface/IRestaurante";
 
 
