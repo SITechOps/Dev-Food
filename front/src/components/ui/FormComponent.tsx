@@ -29,6 +29,7 @@ interface FormProps {
   baseText: string;
   labelStyle?: React.CSSProperties;
   title?: string;
+  extraContentBottom?: React.ReactNode;
 }
 
 const FormComponent: React.FC<FormProps> = ({
@@ -46,6 +47,7 @@ const FormComponent: React.FC<FormProps> = ({
   baseText,
   labelStyle,
   title = "Título",
+  extraContentBottom,
 }) => {
   if (isLoading) {
     return (
@@ -121,7 +123,7 @@ const FormComponent: React.FC<FormProps> = ({
             )}
           </div>
         ))}
-
+        {isEditing && extraContentBottom}
         {isEditing && (
           <Button type="submit" className="mt-5">
             Salvar

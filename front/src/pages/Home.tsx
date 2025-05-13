@@ -8,22 +8,20 @@ import Input from "@/components/ui/Input";
 import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
 import { IRestaurante } from "@/interface/IRestaurante";
 
-
-interface Produto {
-  id: string;
-  nome: string;
-  id_restaurante: string;
-  restaurante?: IRestaurante;
-  [key: string]: any;
-}
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import { MapPin } from "lucide-react";
+import { IProduto } from "@/interface/IProduto";
+import { IEndereco } from "@/interface/IEndereco";
 
 export default function Home() {
-const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
+  const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
+
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [produtos, setProdutos] = useState<IProduto[]>([]);
   const [filtroDistanciaAtivo, setFiltroDistanciaAtivo] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
   const { processarRestaurantes , clienteCoords } = useConfirmacaoEndereco();
   
   const restaurantesProximos = useMemo(() => {
@@ -57,22 +55,28 @@ const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
   
   useEffect(() => {
     async function listarProdutosPorRestaurante() {
-    try {
-      const allProdutos: Produto[] = [];
-  
-      for (const restaurante of restaurantes) {
-      const response = await api.get(
-        `/restaurante/${restaurante.id}/produtos`,
-      );
-      const produtos: Produto[] = response?.data?.data?.attributes || [];
-  
-      const produtosComRestaurante = produtos.map((produto) => ({
-        ...produto,
-        id_restaurante: restaurante.id,
-        restaurante,
-      }));
-  
-      allProdutos.push(...produtosComRestaurante);
+
+      try {
+        const allProdutos: IProduto[] = [];
+
+        for (const restaurante of restaurantes) {
+          const response = await api.get(
+            `/restaurante/${restaurante.id}/produtos`,
+          );
+          const produtos: IProduto[] = response?.data?.data?.attributes || [];
+
+          const produtosComRestaurante = produtos.map((produto) => ({
+            ...produto,
+            id_restaurante: restaurante.id,
+            restaurante,
+          }));
+
+          allProdutos.push(...produtosComRestaurante);
+        }
+
+        setProdutos(allProdutos);
+      } catch (error) {
+        console.error("Erro ao buscar produtos por restaurante:", error);
       }
   
       setProdutos(allProdutos);
@@ -117,22 +121,28 @@ const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
   
   const produtosFiltrados = useMemo(() => {
     return produtos
-    .map((produto) => {
-      const restaurante = restaurantes.find(
-      (r) => r.id === produto.id_restaurante,
-      );
-      return { ...produto, restaurante };
-    })
-    .filter((produto) => {
-      const nomeMatch = produto.nome
-      ?.toLowerCase()
-      .includes(searchTerm.toLowerCase());
-      const categoriaMatch =
-      !selectedCategory ||
-      selectedCategory === "Todos" ||
-      produto.restaurante?.especialidade === selectedCategory;
-      return nomeMatch && categoriaMatch;
-    });
+      .map((produto) => {
+        const restaurante = restaurantes.find(
+          (r) => r.id === produto.id_restaurante,
+        );
+        return { ...produto, restaurante };
+      })
+      .filter((produto) => {
+        const nomeMatch = produto.nome
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const categoriaMatch =
+          !selectedCategory ||
+          selectedCategory === "Todos" ||
+          produto.restaurante?.especialidade === selectedCategory;
+        const distanciaMatch =
+          !filtroDistanciaAtivo ||
+          (produto.restaurante?.distancia !== undefined &&
+            produto.restaurante?.distancia <= 10);
+
+        return nomeMatch && categoriaMatch && distanciaMatch;
+      });
+
   }, [produtos, restaurantes, searchTerm, selectedCategory]);
   return (
     <div className="mt-[5rem]">
@@ -174,13 +184,14 @@ const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
         )}
       <div className="mt-6 w-full">
         <button
-          className={`rounded px-4 py-2 ${
+          className={`flex items-center gap-2 rounded-[10px] px-6 py-2 text-sm font-semibold shadow-md transition-all duration-200 hover:shadow-lg ${
             filtroDistanciaAtivo
-              ? "bg-gray-medium text-white"
-              : "text-blue bg-white"
+              ? "bg-brown-normal hover:bg-brown-dark text-white"
+              : "text-brown-normal border-brown-normal hover:bg-brown-light border bg-white"
           }`}
           onClick={() => setFiltroDistanciaAtivo(!filtroDistanciaAtivo)}
         >
+          <MapPin className="h-4 w-4" />
           Próximos de mim
         </button>
       </div>
@@ -202,36 +213,112 @@ const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
 
       {/* Grid principal */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {abaAtiva === "restaurantes" &&
-          (filtroDistanciaAtivo
-            ? restaurantesProximos
-            : filteredRestaurantes
-          ).map((restaurante) => (
-            <Link
-              to={`/restaurante/${restaurante.id}`}
-              key={restaurante.id}
-              onClick={() => {
-                const restauranteComFrete = {
-                  ...restaurante,
-                  distancia: restaurante.distancia,
-                  duration: restaurante.duration,
-                  taxaEntrega: restaurante.taxa_entrega,
-                };
+        {abaAtiva === "restaurantes" && (
+          <>
+            {(filtroDistanciaAtivo
+              ? restaurantesProximos
+              : filteredRestaurantes
+            ).map((restaurante) => (
+              <Link
+                to={`/restaurante/${restaurante.id}`}
+                key={restaurante.id}
+                onClick={() => {
+                  const restauranteComFrete = {
+                    ...restaurante,
+                    distancia: restaurante.distancia,
+                    duration: restaurante.duration,
+                    taxaEntrega: restaurante.taxaEntrega,
+                  };
+                  localStorage.setItem(
+                    "restauranteSelecionado",
+                    JSON.stringify(restauranteComFrete),
+                  );
+                }}
+              >
+                <RestauranteCard restaurante={restaurante} />
+              </Link>
+            ))}
 
-                localStorage.setItem(
-                  "restauranteSelecionado",
-                  JSON.stringify(restauranteComFrete),
-                );
-              }}
-            >
-              <RestauranteCard restaurante={restaurante} />
-            </Link>
-          ))}
+            {filtroDistanciaAtivo && restaurantesProximos.length === 0 ? (
+              <div className="mt-4 h-40">
+                <p className="text-blue col-span-full text-center text-lg">
+                  Nenhum restaurante próximo foi encontrado.
+                </p>
+              </div>
+            ) : (filtroDistanciaAtivo
+                ? restaurantesProximos
+                : filteredRestaurantes
+              ).length === 0 ? (
+              <div className="mt-4 h-40">
+                <p className="text-blue col-span-full text-center text-lg">
+                  {selectedCategory && selectedCategory !== "Todos"
+                    ? "Nenhum restaurante encontrado nesta categoria."
+                    : "Nenhum restaurante encontrado."}
+                </p>
+              </div>
+            ) : null}
+          </>
+        )}
 
-        {abaAtiva === "itens" &&
-          produtosFiltrados.map((produto) => (
-            <ProdutoCard key={produto.id} produto={produto} />
-          ))}
+        {abaAtiva === "itens" && (
+          <>
+            {produtosFiltrados.map((produto) => (
+              <div key={produto.id} className="mb-8">
+                <div className="mb-3 flex items-center gap-4">
+                  {produto.restaurante?.logo && (
+                    <ImagemDeEntidade
+                      src={produto.restaurante.logo}
+                      alt={`Logo do restaurante ${produto.restaurante.nome}`}
+                      className="h-12 w-12 rounded-full border object-cover"
+                    />
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-blue text-base font-semibold">
+                      {produto.restaurante?.nome}
+                    </span>
+                    <span className="text-blue text-sm">
+                      {produto.restaurante?.especialidade}
+                      {produto.restaurante?.distancia &&
+                        ` • ${produto.restaurante.distancia} km`}
+                    </span>
+                    <span className="text-green-dark text-sm font-medium">
+                      {produto.restaurante?.taxaEntrega === 0 ||
+                      produto.restaurante?.taxaEntrega === undefined
+                        ? "Entrega grátis"
+                        : `Entrega: R$ ${produto.restaurante?.taxaEntrega.toFixed(2)}`}
+                    </span>
+                  </div>
+                </div>
+
+                <Link
+                  to={`/restaurante/${produto.restaurante?.id}`}
+                  onClick={() => {
+                    const restauranteComFrete = {
+                      ...produto.restaurante,
+                      distancia: produto.restaurante?.distancia,
+                      duration: produto.restaurante?.duration,
+                      taxaEntrega: produto.restaurante?.taxaEntrega,
+                    };
+                    localStorage.setItem(
+                      "restauranteSelecionado",
+                      JSON.stringify(restauranteComFrete),
+                    );
+                  }}
+                >
+                  <ProdutoCard produto={produto} />
+                </Link>
+              </div>
+            ))}
+
+            {produtosFiltrados.length === 0 && (
+              <div className="mt-4 h-40">
+                <p className="text-blue col-span-full text-center text-lg">
+                  Nenhum item encontrado
+                </p>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

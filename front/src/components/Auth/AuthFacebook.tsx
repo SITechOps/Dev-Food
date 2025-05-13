@@ -30,16 +30,51 @@ function AuthFacebook({ setEtapa, setFormList }: AuthFacebookProps) {
       if (d.getElementById(id)) {
         return;
       }
-      js = d.createElement(s) as HTMLScriptElement;
+      js = d.createElement(s);
       js.id = id;
       js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode?.insertBefore(js, fjs);
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, "script", "facebook-jssdk");
+
+    const { email } = user;
+    (async () => {
+      try {
+        await loginUser(email);
+      } catch {
+        setFormList((prev) => ({ ...prev, email }));
+        setEtapa("telefone");
+      }
+    })();
+  }, [user, setAuth]);
+
+  useEffect(() => {
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: "1359659571817427",
+        cookie: true,
+        xfbml: true,
+        version: "v22.0",
+      });
+
+      window.FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
     })(document, "script", "facebook-jssdk");
   }, []); // Executa apenas uma vez na montagem do componente
 
   function loginComFacebook() {
-    (window as any).FB.login(
-      (response: { authResponse: any }) => {
+    window.FB.login(
+      (response) => {
         if (response.authResponse) {
           (window as any).FB.api(
             "/me",

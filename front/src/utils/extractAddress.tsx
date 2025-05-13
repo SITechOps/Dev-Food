@@ -1,9 +1,9 @@
-import { IAddress } from "../interface/IAddress";
+import { IEndereco } from "../interface/IEndereco";
 
 export const extractAddress = (
-  place: google.maps.places.PlaceResult
-): IAddress => {
-  const address: IAddress = {
+  place: google.maps.places.PlaceResult,
+): IEndereco => {
+  const address: IEndereco = {
     logradouro: "",
     numero: "",
     bairro: "",

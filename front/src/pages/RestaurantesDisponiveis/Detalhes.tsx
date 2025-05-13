@@ -5,6 +5,7 @@ import { useRestauranteDisponiveisDetalhes } from "../../hooks/useRestauranteDis
 import { Loading } from "../../components/shared/Loading";
 import VerMaisRestaurante from "./VerMais/Index";
 import IconAction from "@/components/ui/IconAction";
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 
 export default function DetalhesRestaurante() {
   const {
@@ -38,21 +39,28 @@ export default function DetalhesRestaurante() {
           className="h-full w-full object-cover"
         />
       </div>
-      <div className="px-4 py-6">
+      <div className="py-6">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-black">
-              {restaurante.nome}
-            </h1>
-            <div className="mt-1 flex items-center">
-              <div className="text-brown-normal flex items-center">
-                <Star className="fill-brown-normal mr-1 h-5 w-5" />
-                <span className="font-medium">4.2</span>
+          <div className="flex items-center gap-4">
+            {restaurante.logo && (
+              <ImagemDeEntidade
+                src={restaurante.logo}
+                alt={restaurante.nome}
+                className="h-14 w-14 rounded-full border object-cover"
+              />
+            )}
+            <div className="flex flex-col justify-center">
+              <h1 className="text-2xl font-bold text-black">
+                {restaurante.nome}
+              </h1>
+              <div className="text-muted-foreground mt-1 flex items-center text-sm">
+                <div className="text-brown-normal flex items-center">
+                  <Star className="fill-brown-normal mr-1 h-4 w-4" />
+                  <span className="text-base font-medium">4.2</span>
+                </div>
+                <span className="mx-2">•</span>
+                <span>{restaurante.especialidade}</span>
               </div>
-              <span className="text-muted-foreground mx-2">•</span>
-              <span className="text-muted-foreground">
-                {restaurante.especialidade}
-              </span>
             </div>
           </div>
 
@@ -75,7 +83,7 @@ export default function DetalhesRestaurante() {
             id={produto.id}
             nome={produto.nome}
             descricao={produto.descricao}
-            imageUrl={produto.imageUrl}
+            image_url={produto.image_url}
             valor_unitario={produto.valor_unitario}
             dadosRestaurante={restaurante}
           />

@@ -6,6 +6,7 @@ import { Props } from "@/interface/IMeusPedidos";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
+import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
 export default function HistoricoDePedido({ tipo }: Props) {
   const { userData } = useAuth();
@@ -13,11 +14,8 @@ export default function HistoricoDePedido({ tipo }: Props) {
   const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
   const navigate = useNavigate();
 
-  console.log(id_usuario);
   useEffect(() => {
     async function buscarPedidos() {
-      if (!id_usuario) return;
-
       try {
         const { data } = await api.get(`/pedidos/usuario/${id_usuario}`);
         setPedidos(data.pedidos);
@@ -27,7 +25,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
     }
 
     buscarPedidos();
-  }, [id_usuario]);
+  }, []);
 
   // filtrar os pedidos com base no tipo
   let pedidosRenderizar = [];
@@ -42,16 +40,17 @@ export default function HistoricoDePedido({ tipo }: Props) {
       {pedidosRenderizar.map((pedido) => (
         <div
           key={pedido.Id}
-          className="mb-3 flex flex-col justify-between rounded-md bg-white shadow-sm p-5"
+          className="mb-3 flex flex-col justify-between rounded-md bg-white p-5 shadow-sm"
           style={{ border: "1px solid #A9A9A9" }}
         >
           {/* Restaurante */}
           <div className="mb-[0.5rem] flex items-center gap-[0.75rem]">
-            <img
-              src={pedido.restaurante.logo || "img/SushiRest.webp"}
-              alt="Logo restaurante"
-              className="h-[2rem] w-[2rem] rounded-full border object-cover"
+            <ImagemDeEntidade
+              src={pedido.restaurante.logo}
+              alt={pedido.restaurante.nome}
+              className="mb-4 h-[2rem] w-[2rem] rounded-full border object-cover"
             />
+
             <div>
               <p className="text-base font-semibold text-black">
                 {pedido.restaurante.nome}
@@ -107,9 +106,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
                 <Button color="secondary" className="p-2">
                   Adicionar à sacola
                 </Button>
-                <Button className="p-2">
-                  Detalhe do Pedido
-                </Button>
+                <Button className="p-2">Detalhe do Pedido</Button>
               </>
             )}
           </div>

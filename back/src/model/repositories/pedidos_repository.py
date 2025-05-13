@@ -43,7 +43,7 @@ class PedidosRepository:
     
     @db_scope
     def update_status(self, db, id_pedido, novo_status):
-        pedido = self.get_by_id(id_pedido)        
+        pedido = self.find_by_id(id_pedido)        
         pedido.status = novo_status
         db.session.add(pedido)
         db.session.commit()   

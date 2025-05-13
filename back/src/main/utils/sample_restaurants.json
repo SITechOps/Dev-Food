@@ -12,7 +12,7 @@
     "agencia": "3245",
     "nro_conta": "56789-0",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/sabor-brasileiro.webp",
+    "logo": "/restaurante/images/sabor-brasileiro.webp",
     "endereco": {
       "logradouro": "Avenida Paulista",
       "numero": "1500",
@@ -62,7 +62,7 @@
     "agencia": "4265",
     "nro_conta": "78901-2",
     "tipo_conta": "Empresarial",
-    "logo": "/img/restaurantes/mineiro-de-coracao.webp",
+    "logo": "/restaurante/images/mineiro-de-coracao.webp",
     "endereco": {
       "logradouro": "Rua Oscar Freire",
       "numero": "780",
@@ -112,7 +112,7 @@
     "agencia": "5678",
     "nro_conta": "98765-4",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/sabores-do-sertao.webp",
+    "logo": "/restaurante/images/sabores-do-sertao.webp",
     "endereco": {
       "logradouro": "Rua Itapura",
       "numero": "456",
@@ -162,7 +162,7 @@
     "agencia": "1789",
     "nro_conta": "12345-6",
     "tipo_conta": "Empresarial",
-    "logo": "/img/restaurantes/cantina-italiana.webp",
+    "logo": "/restaurante/images/cantina-italiana.webp",
     "endereco": {
       "logradouro": "Rua Augusta",
       "numero": "789",
@@ -212,7 +212,7 @@
     "agencia": "2578",
     "nro_conta": "78901-3",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/forno-di-napoli.webp",
+    "logo": "/restaurante/images/forno-di-napoli.webp",
     "endereco": {
       "logradouro": "Rua Amauri",
       "numero": "328",
@@ -256,7 +256,7 @@
     "agencia": "0123",
     "nro_conta": "987654-3",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/sushi-express.webp",
+    "logo": "/restaurante/images/sushi-express.webp",
     "endereco": {
       "logradouro": "Rua Liberdade",
       "numero": "123",
@@ -300,7 +300,7 @@
     "agencia": "3672",
     "nro_conta": "54321-9",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/sakura-japan.webp",
+    "logo": "/restaurante/images/sakura-japan.webp",
     "endereco": {
       "logradouro": "Rua Thomaz Gonzaga",
       "numero": "56",
@@ -344,7 +344,7 @@
     "agencia": "1452",
     "nro_conta": "34567-8",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/la-taqueria.webp",
+    "logo": "/restaurante/images/la-taqueria.webp",
     "endereco": {
       "logradouro": "Rua dos Três Irmãos",
       "numero": "500",
@@ -388,7 +388,7 @@
     "agencia": "3789",
     "nro_conta": "89012-3",
     "tipo_conta": "Empresarial",
-    "logo": "/img/restaurantes/el-chapulin.webp",
+    "logo": "/restaurante/images/el-chapulin.webp",
     "endereco": {
       "logradouro": "Alameda Santos",
       "numero": "1520",
@@ -432,7 +432,7 @@
     "agencia": "4876",
     "nro_conta": "65432-1",
     "tipo_conta": "Empresarial",
-    "logo": "/img/restaurantes/aladdin-palace.webp",
+    "logo": "/restaurante/images/aladdin-palace.webp",
     "endereco": {
       "logradouro": "Avenida Rebouças",
       "numero": "3200",
@@ -476,7 +476,7 @@
     "agencia": "6543",
     "nro_conta": "76543-2",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/american-burguer.webp",
+    "logo": "/restaurante/images/american-burguer.webp",
     "endereco": {
       "logradouro": "Rua dos Pinheiros",
       "numero": "275",
@@ -520,7 +520,7 @@
     "agencia": "9876",
     "nro_conta": "54321-0",
     "tipo_conta": "Corrente",
-    "logo": "/img/restaurantes/fit-and-fresh.webp",
+    "logo": "/restaurante/images/fit-and-fresh.webp",
     "endereco": {
       "logradouro": "Avenida Brigadeiro Faria Lima",
       "numero": "3900",
