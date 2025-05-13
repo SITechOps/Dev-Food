@@ -36,10 +36,15 @@ export default function EnderecoItem({
     }
   };
 
-  const handleEdit = () => {
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(); // Chama a função para fechar o modal
+    }
     const enderecoString = encodeURIComponent(JSON.stringify(endereco));
-    navigate(`/c-endereco?endereco=${enderecoString}`);
+    navigate(`/c-endereco?id=${endereco.id}&endereco=${enderecoString}`);
   };
+
   return (
     <div
       className={`relative rounded-md border-2 p-4 ${

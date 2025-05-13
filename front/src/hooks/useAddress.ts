@@ -6,18 +6,21 @@ import { useAuth } from "../contexts/AuthContext";
 import { IEndereco } from "../interface/IEndereco";
 import { useNavigate } from "react-router-dom";
 import { initMapScript } from "@/utils/initMapScript";
+import { stringify } from "querystring";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
   const role = userData?.role;
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const searchInput = useRef<HTMLInputElement | null>(null);
   const [address, setAddress] = useState<IEndereco | null>(null);
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
   const [tipo, setTipo] = useState("");
+  const enderecoId = searchParams.get("id");
 
   const fecharModal = () => navigate("/");
 
