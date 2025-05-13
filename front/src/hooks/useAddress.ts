@@ -4,9 +4,8 @@ import { reverseGeoCode } from "../utils/geolocation";
 import { api } from "../connection/axios";
 import { useAuth } from "../contexts/AuthContext";
 import { IEndereco } from "../interface/IEndereco";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { initMapScript } from "@/utils/initMapScript";
-import { stringify } from "querystring";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
@@ -131,7 +130,6 @@ export const useEndereco = () => {
       return alert("Por favor, preencha todos os campos do endereço.");
     if (!idUsuario) return alert("Erro ao obter ID do usuário.");
 
-    const enderecoId = await getEnderecoId();
     if (!enderecoId) return alert("Endereço não encontrado para edição.");
 
     try {
