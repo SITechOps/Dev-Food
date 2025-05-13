@@ -3,7 +3,6 @@ from src.model.repositories.restaurantes_repository import RestaurantesRepositor
 from src.controllers.restaurantes_manager import RestaurantesManager
 from src.http_types.http_request import HttpRequest
 import os
-import json
 
 restaurante_route_bp = Blueprint('restaurante_route', __name__)
 
@@ -386,21 +385,11 @@ def update_restaurant(id):
         description: Restaurante não encontrado
     """
     http_request = HttpRequest(params={"id": id}, body=request.json)
-    image_file = request.files.get('image')
-    raw_data = request.form.get("data")
-    try:
-        parsed_data = json.loads(raw_data) if raw_data else {}
-    except json.JSONDecodeError:
-        return jsonify({"error": "Formato JSON inválido no campo 'data'."}), 400
-
-    http_request = HttpRequest(
-        params={"id": id},
-        body={"data": parsed_data}
-    )
 
     restaurante_repo = RestaurantesRepository()
     restaurante_manager = RestaurantesManager(restaurante_repo)
-    http_response = restaurante_manager.update(http_request, image_file)
+
+    http_response = restaurante_manager.update(http_request)
 
     return jsonify(http_response.body), http_response.status_code
 
