@@ -26,7 +26,7 @@ export default function EnderecoItem({
 }: EnderecoItemProps) {
   const navigate = useNavigate();
   const [showActions, setShowActions] = useState(false);
-  const { userData, token } = useAuth();
+  const { userData } = useAuth();
   const idUsuario = userData?.sub;
 
   const handleDelete = (e: React.MouseEvent) => {
