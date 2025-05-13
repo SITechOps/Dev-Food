@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import iFoodLogo from "../../assets/ifood.png";
+import TechOpsLogo from "@/assets/techops.png";
 import { CiUser } from "react-icons/ci";
 import Button from "../ui/Button";
 import ListagemEndereco from "../Endereco/ListagensEndereco/ListagemEndereco";
@@ -13,10 +13,12 @@ export default function Menu() {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
-  const role = userData?.role; // Pegando a role do usuário
+  const role = userData?.role;
+
   const [menuHeight, setMenuHeight] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [isCarrinhoOpen, setIsCarrinhoOpen] = useState(false);
+
   const { quantidadeTotal, atualizarQuantidadeTotal } =
     useContext(CarrinhoContext);
 
@@ -30,6 +32,8 @@ export default function Menu() {
     atualizarQuantidadeTotal();
   }, [isCarrinhoOpen]);
 
+  const isNotRestaurante = role !== "restaurante";
+
   return (
     <>
       <header
@@ -38,44 +42,38 @@ export default function Menu() {
       >
         <div className="mx-auto flex w-4/5 max-w-screen-xl items-center justify-between px-4 sm:px-8 md:px-12 xl:px-0">
           <Link to="/">
-            <img src={iFoodLogo} alt="iFood Logo" className="h-12 py-1" />
+            <img src={TechOpsLogo} alt="TechOps Logo" className="h-12 py-1" />
           </Link>
 
-          {(idUsuario && role !== "restaurante") ||
-            (role == undefined && (
-              // Só exibe a ListagemEndereco se o usuário não for um restaurante
-              <ListagemEndereco />
-            ))}
+          {isNotRestaurante && <ListagemEndereco />}
 
           <div className="align-center flex gap-3">
-            {(idUsuario && role !== "restaurante") ||
-              (role == undefined && (
-                // Só exibe "Meus Pedidos" e "Itens no Carrinho" se o usuário não for um restaurante
-                <>
-                  <Button
-                    color="plain"
-                    onClick={() => navigate("/historico")}
-                    className="w-40 py-2"
-                  >
-                    Meus Pedidos
-                  </Button>
-                  <div
-                    className="hover:bg-brown-light-active flex w-30 cursor-pointer rounded-sm"
-                    onClick={() => {
-                      setIsCarrinhoOpen(true);
-                      atualizarQuantidadeTotal();
-                    }}
-                  >
-                    <div className="text-brown-normal flex items-center justify-center pl-2">
-                      <TbShoppingBag className="self-center text-4xl" />
-                      <p className="text-blue p-1 font-bold">
-                        {quantidadeTotal}{" "}
-                        <span className="font-light">Itens</span>
-                      </p>
-                    </div>
+            {isNotRestaurante && (
+              <>
+                <Button
+                  color="plain"
+                  onClick={() => navigate("/historico")}
+                  className="w-40 py-2"
+                >
+                  Meus Pedidos
+                </Button>
+                <div
+                  className="hover:bg-brown-light-active flex w-30 cursor-pointer rounded-sm"
+                  onClick={() => {
+                    setIsCarrinhoOpen(true);
+                    atualizarQuantidadeTotal();
+                  }}
+                >
+                  <div className="text-brown-normal flex items-center justify-center pl-2">
+                    <TbShoppingBag className="self-center text-4xl" />
+                    <p className="text-blue p-1 font-bold">
+                      {quantidadeTotal}{" "}
+                      <span className="font-light">Itens</span>
+                    </p>
                   </div>
-                </>
-              ))}
+                </div>
+              </>
+            )}
 
             {idUsuario ? (
               <Button
@@ -104,6 +102,7 @@ export default function Menu() {
           setIsCarrinhoOpen={setIsCarrinhoOpen}
         />
       )}
+
       <div style={{ height: menuHeight }} />
     </>
   );
