@@ -30,6 +30,7 @@ const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
 const Pedidos = lazy(() => import("../pages/Restaurante/Account/Pedidos"));
 
 const MeusPedidos = lazy(() => import("../pages/MeusPedidos/Index"));
+const ListagemEndereco = lazy(() => import("../components/Endereco/ListagensEndereco/ListagemEndereco"));
 
 const AppRoutes = () => {
   return (
@@ -43,6 +44,7 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/account" element={<Account />} />
         <Route path="/c-endereco" element={<CadastroEndereco />} />
+        <Route path="/listagem-endereco" element={<ListagemEndereco />} />
         <Route
           path="/alterar-endereco"
           element={<AlterarEnderecoRestaurante />}

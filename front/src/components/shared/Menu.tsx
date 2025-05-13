@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import iFoodLogo from "../../assets/ifood.png";
 import { CiUser } from "react-icons/ci";
 import Button from "../ui/Button";
-import ListagemEndereco from "../Endereco/ListagemEndereco";
+import ListagemEndereco from "../Endereco/ListagensEndereco/ListagemEndereco";
 import { useAuth } from "../../contexts/AuthContext";
 import { TbShoppingBag } from "react-icons/tb";
 import Carrinho from "../Carrinho/Index";

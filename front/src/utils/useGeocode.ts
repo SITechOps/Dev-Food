@@ -1,4 +1,3 @@
-// src/utils/useGeocode.ts
 import axios from "axios";
 
 const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -18,7 +17,7 @@ export async function geocodeTexto(endereco: string): Promise<{ lat: number; lng
     }
     return null;
   } catch (err) {
-    console.error("❌ Erro ao geocodificar endereço:", err);
+    console.error("Erro ao geocodificar endereço:", err);
     return null;
   }
 }
