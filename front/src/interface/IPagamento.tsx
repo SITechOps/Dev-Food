@@ -31,7 +31,7 @@ export interface IItens {
 }
 
 export interface IRespPedido {
-  Id: string;
+  id_pedido: string;
   atualizado_em: string;
   cliente: string;
   codigo: string;

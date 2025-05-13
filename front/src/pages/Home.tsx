@@ -7,63 +7,64 @@ import Categorias from "./RestaurantesDisponiveis/Categorias";
 import Input from "@/components/ui/Input";
 import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
 import { IRestaurante } from "@/interface/IRestaurante";
-
-import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 import { MapPin } from "lucide-react";
-import { IProduto } from "@/interface/IProduto";
-import { IEndereco } from "@/interface/IEndereco";
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+
+interface Produto {
+  id: string;
+  nome: string;
+  id_restaurante: string;
+  restaurante?: IRestaurante;
+  [key: string]: any;
+}
 
 export default function Home() {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
-
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
-  const [produtos, setProdutos] = useState<IProduto[]>([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const [filtroDistanciaAtivo, setFiltroDistanciaAtivo] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { processarRestaurantes, clienteCoords } = useConfirmacaoEndereco();
 
-  const { processarRestaurantes , clienteCoords } = useConfirmacaoEndereco();
-  
   const restaurantesProximos = useMemo(() => {
     return restaurantes
-    .filter((restaurante) => {
-      if (!restaurante.distancia) return false;
-      const distanciaNum = restaurante.distancia;
-      return !isNaN(distanciaNum) && distanciaNum <= 10;
-    })
-    .sort((a, b) => a.distancia! - b.distancia!);
+      .filter((restaurante) => {
+        if (!restaurante.distancia) return false;
+        const distanciaNum = restaurante.distancia;
+        return !isNaN(distanciaNum) && distanciaNum <= 10;
+      })
+      .sort((a, b) => a.distancia! - b.distancia!);
   }, [restaurantes]);
-  
+
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
-   
-  
+
   useEffect(() => {
     async function listarRestaurantes() {
-    try {
-      const response = await api.get("/restaurantes");
-      const data: IRestaurante[] = response?.data?.data?.attributes || [];
-      setRestaurantes(data);
-    } catch (error) {
-      console.error("Erro ao buscar restaurantes:", error);
+      try {
+        const response = await api.get("/restaurantes");
+        const data: IRestaurante[] = response?.data?.data?.attributes || [];
+        setRestaurantes(data);
+      } catch (error) {
+        console.error("Erro ao buscar restaurantes:", error);
+      }
     }
-    }
-  
+
     listarRestaurantes();
   }, []);
-  
+
   useEffect(() => {
     async function listarProdutosPorRestaurante() {
-
       try {
-        const allProdutos: IProduto[] = [];
+        const allProdutos: Produto[] = [];
 
         for (const restaurante of restaurantes) {
           const response = await api.get(
             `/restaurante/${restaurante.id}/produtos`,
           );
-          const produtos: IProduto[] = response?.data?.data?.attributes || [];
+          const produtos: Produto[] = response?.data?.data?.attributes || [];
 
           const produtosComRestaurante = produtos.map((produto) => ({
             ...produto,
@@ -78,47 +79,43 @@ export default function Home() {
       } catch (error) {
         console.error("Erro ao buscar produtos por restaurante:", error);
       }
-  
-      setProdutos(allProdutos);
-    } catch (error) {
-      console.error("Erro ao buscar produtos por restaurante:", error);
     }
-    }
-  
+
     if (restaurantes.length > 0) {
-    listarProdutosPorRestaurante();
+      listarProdutosPorRestaurante();
     }
   }, [restaurantes]);
-  
+
   useEffect(() => {
     async function carregarRestaurantes() {
-    if (!clienteCoords) return;
-  
-    const restaurantesAtualizados = await processarRestaurantes(clienteCoords);
-    setRestaurantes(restaurantesAtualizados);
+      if (!clienteCoords) return;
+
+      const restaurantesAtualizados =
+        await processarRestaurantes(clienteCoords);
+      setRestaurantes(restaurantesAtualizados);
     }
     carregarRestaurantes();
   }, [clienteCoords]);
-  
+
   const filteredRestaurantes = useMemo(() => {
     return restaurantes.filter((restaurante) => {
-    const nomeMatch = restaurante.nome
-      ?.toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const produtosDoRestaurante = produtos.filter(
-      (produto) => produto.id_restaurante === restaurante.id,
-    );
-    const produtoMatch = produtosDoRestaurante.some((produto) =>
-      produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-    const categoriaMatch =
-      !selectedCategory ||
-      selectedCategory === "Todos" ||
-      restaurante.especialidade === selectedCategory;
-    return (nomeMatch || produtoMatch) && categoriaMatch;
+      const nomeMatch = restaurante.nome
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const produtosDoRestaurante = produtos.filter(
+        (produto) => produto.id_restaurante === restaurante.id,
+      );
+      const produtoMatch = produtosDoRestaurante.some((produto) =>
+        produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+      const categoriaMatch =
+        !selectedCategory ||
+        selectedCategory === "Todos" ||
+        restaurante.especialidade === selectedCategory;
+      return (nomeMatch || produtoMatch) && categoriaMatch;
     });
   }, [restaurantes, produtos, searchTerm, selectedCategory]);
-  
+
   const produtosFiltrados = useMemo(() => {
     return produtos
       .map((produto) => {
@@ -135,14 +132,8 @@ export default function Home() {
           !selectedCategory ||
           selectedCategory === "Todos" ||
           produto.restaurante?.especialidade === selectedCategory;
-        const distanciaMatch =
-          !filtroDistanciaAtivo ||
-          (produto.restaurante?.distancia !== undefined &&
-            produto.restaurante?.distancia <= 10);
-
-        return nomeMatch && categoriaMatch && distanciaMatch;
+        return nomeMatch && categoriaMatch;
       });
-
   }, [produtos, restaurantes, searchTerm, selectedCategory]);
   return (
     <div className="mt-[5rem]">
@@ -163,25 +154,7 @@ export default function Home() {
       </h2>
 
       <Categorias onCategoryClick={handleCategoryClick} />
-      {abaAtiva === "restaurantes" &&
-        filtroDistanciaAtivo &&
-        restaurantesProximos.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-blue mt-6 mb-4 text-xl font-semibold">
-              Restaurantes Próximos (até 10km)
-            </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-              {restaurantesProximos.map((restaurante) => (
-                <Link
-                  to={`/restaurante/${restaurante.id}`}
-                  key={restaurante.id}
-                >
-                  <RestauranteCard restaurante={restaurante} />
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+
       <div className="mt-6 w-full">
         <button
           className={`flex items-center gap-2 rounded-[10px] px-6 py-2 text-sm font-semibold shadow-md transition-all duration-200 hover:shadow-lg ${
@@ -213,52 +186,31 @@ export default function Home() {
 
       {/* Grid principal */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {abaAtiva === "restaurantes" && (
-          <>
-            {(filtroDistanciaAtivo
-              ? restaurantesProximos
-              : filteredRestaurantes
-            ).map((restaurante) => (
-              <Link
-                to={`/restaurante/${restaurante.id}`}
-                key={restaurante.id}
-                onClick={() => {
-                  const restauranteComFrete = {
-                    ...restaurante,
-                    distancia: restaurante.distancia,
-                    duration: restaurante.duration,
-                    taxaEntrega: restaurante.taxaEntrega,
-                  };
-                  localStorage.setItem(
-                    "restauranteSelecionado",
-                    JSON.stringify(restauranteComFrete),
-                  );
-                }}
-              >
-                <RestauranteCard restaurante={restaurante} />
-              </Link>
-            ))}
+        {abaAtiva === "restaurantes" &&
+          (filtroDistanciaAtivo
+            ? restaurantesProximos
+            : filteredRestaurantes
+          ).map((restaurante) => (
+            <Link
+              to={`/restaurante/${restaurante.id}`}
+              key={restaurante.id}
+              onClick={() => {
+                const restauranteComFrete = {
+                  ...restaurante,
+                  distancia: restaurante.distancia,
+                  duration: restaurante.duration,
+                  taxaEntrega: restaurante.taxa_entrega,
+                };
 
-            {filtroDistanciaAtivo && restaurantesProximos.length === 0 ? (
-              <div className="mt-4 h-40">
-                <p className="text-blue col-span-full text-center text-lg">
-                  Nenhum restaurante próximo foi encontrado.
-                </p>
-              </div>
-            ) : (filtroDistanciaAtivo
-                ? restaurantesProximos
-                : filteredRestaurantes
-              ).length === 0 ? (
-              <div className="mt-4 h-40">
-                <p className="text-blue col-span-full text-center text-lg">
-                  {selectedCategory && selectedCategory !== "Todos"
-                    ? "Nenhum restaurante encontrado nesta categoria."
-                    : "Nenhum restaurante encontrado."}
-                </p>
-              </div>
-            ) : null}
-          </>
-        )}
+                localStorage.setItem(
+                  "restauranteSelecionado",
+                  JSON.stringify(restauranteComFrete),
+                );
+              }}
+            >
+              <RestauranteCard restaurante={restaurante} />
+            </Link>
+          ))}
 
         {abaAtiva === "itens" && (
           <>

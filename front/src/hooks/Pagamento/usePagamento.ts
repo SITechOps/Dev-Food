@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { usePagamentoContext } from "@/contexts/PagamaentoContext";
 import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
-import { IItens, IPedido, IRespPostPedido } from "@/interface/IPagamento";
+import { IItens, IPedido, IRespPedido } from "@/interface/IPagamento";
 import { IUsuarioCliente } from "@/interface/IUser";
 import { AppSuccess } from "@/utils/success";
 import { useContext, useEffect, useState } from "react";
@@ -127,7 +127,7 @@ export const usePagamento = () => {
         compra,
         formaPagamento,
       );
-      const resp = await api.post<IRespPostPedido>("/pedido", {
+      const resp = await api.post<IRespPedido>("/pedido", {
         pedido: pedidoPayload,
       });
 
