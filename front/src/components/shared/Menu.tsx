@@ -41,39 +41,41 @@ export default function Menu() {
             <img src={iFoodLogo} alt="iFood Logo" className="h-12 py-1" />
           </Link>
 
-          {idUsuario && role !== "restaurante" && (
-            // Só exibe a ListagemEndereco se o usuário não for um restaurante
-            <ListagemEndereco />
-          )}
+          {(idUsuario && role !== "restaurante") ||
+            (role == undefined && (
+              // Só exibe a ListagemEndereco se o usuário não for um restaurante
+              <ListagemEndereco />
+            ))}
 
           <div className="align-center flex gap-3">
-            {idUsuario && role !== "restaurante" && (
-              // Só exibe "Meus Pedidos" e "Itens no Carrinho" se o usuário não for um restaurante
-              <>
-                <Button
-                  color="plain"
-                  onClick={() => navigate("/historico")}
-                  className="w-40 py-2"
-                >
-                  Meus Pedidos
-                </Button>
-                <div
-                  className="hover:bg-brown-light-active flex w-30 cursor-pointer rounded-sm"
-                  onClick={() => {
-                    setIsCarrinhoOpen(true);
-                    atualizarQuantidadeTotal();
-                  }}
-                >
-                  <div className="text-brown-normal flex items-center justify-center pl-2">
-                    <TbShoppingBag className="self-center text-4xl" />
-                    <p className="text-blue p-1 font-bold">
-                      {quantidadeTotal}{" "}
-                      <span className="font-light">Itens</span>
-                    </p>
+            {(idUsuario && role !== "restaurante") ||
+              (role == undefined && (
+                // Só exibe "Meus Pedidos" e "Itens no Carrinho" se o usuário não for um restaurante
+                <>
+                  <Button
+                    color="plain"
+                    onClick={() => navigate("/historico")}
+                    className="w-40 py-2"
+                  >
+                    Meus Pedidos
+                  </Button>
+                  <div
+                    className="hover:bg-brown-light-active flex w-30 cursor-pointer rounded-sm"
+                    onClick={() => {
+                      setIsCarrinhoOpen(true);
+                      atualizarQuantidadeTotal();
+                    }}
+                  >
+                    <div className="text-brown-normal flex items-center justify-center pl-2">
+                      <TbShoppingBag className="self-center text-4xl" />
+                      <p className="text-blue p-1 font-bold">
+                        {quantidadeTotal}{" "}
+                        <span className="font-light">Itens</span>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              ))}
 
             {idUsuario ? (
               <Button
