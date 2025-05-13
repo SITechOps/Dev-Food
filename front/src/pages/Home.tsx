@@ -49,35 +49,19 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    async function listarProdutosPorRestaurante() {
+    async function listarProdutos() {
       try {
-        const allProdutos: IProduto[] = [];
+        const response = await api.get("/produtos");
+        const produtos: IProduto[] = response?.data?.data?.attributes || [];
 
-        for (const restaurante of restaurantes) {
-          const response = await api.get(
-            `/restaurante/${restaurante.id}/produtos`,
-          );
-          const produtos: IProduto[] = response?.data?.data?.attributes || [];
-
-          const produtosComRestaurante = produtos.map((produto) => ({
-            ...produto,
-            id_restaurante: restaurante.id,
-            restaurante,
-          }));
-
-          allProdutos.push(...produtosComRestaurante);
-        }
-
-        setProdutos(allProdutos);
+        setProdutos(produtos);
       } catch (error) {
-        console.error("Erro ao buscar produtos por restaurante:", error);
+        console.error("Erro ao buscar produtos:", error);
       }
     }
 
-    if (restaurantes.length > 0) {
-      listarProdutosPorRestaurante();
-    }
-  }, [restaurantes]);
+    listarProdutos();
+  }, []);
 
   useEffect(() => {
     async function carregarRestaurantes() {

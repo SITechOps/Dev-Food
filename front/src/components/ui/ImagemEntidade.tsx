@@ -20,6 +20,7 @@ export const ImagemDeEntidade: React.FC<ImagemDeEntidadeProps> = ({
       src={src ? `${API_BASE_URL}${src}` : fallback}
       alt={alt}
       className={className}
+      loading="lazy"
     />
   );
 };

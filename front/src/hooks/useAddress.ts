@@ -4,13 +4,12 @@ import { reverseGeoCode } from "../utils/geolocation";
 import { api } from "../connection/axios";
 import { useAuth } from "../contexts/AuthContext";
 import { IEndereco } from "../interface/IEndereco";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { initMapScript } from "@/utils/initMapScript";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
   const idUsuario = userData?.sub;
-  const role = userData?.role;
   const navigate = useNavigate();
 
   const searchInput = useRef<HTMLInputElement | null>(null);
@@ -18,6 +17,7 @@ export const useEndereco = () => {
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
   const [tipo, setTipo] = useState("");
+  const [enderecoId, setEnderecoId] = useState<string | null>(null);
 
   const fecharModal = () => navigate("/");
 
@@ -38,24 +38,22 @@ export const useEndereco = () => {
     }
     setNumero(String(extracted.numero ?? ""));
 
-    if (!extracted.bairro || !extracted.cidade || !extracted.estado) {
-      if (extracted.cep) {
-        const viaCepData = await fetchViaCep(extracted.cep);
-        if (viaCepData) {
-          setAddress((prev) => ({
-            ...prev,
-            bairro: extracted.bairro || viaCepData.bairro || prev?.bairro || "",
-            cidade:
-              extracted.cidade || viaCepData.localidade || prev?.cidade || "",
-            estado: extracted.estado || viaCepData.uf || prev?.estado || "",
-            pais: extracted.pais || prev?.pais || "Brasil",
-            logradouro: prev?.logradouro || "",
-            numero: prev?.numero || "",
-            cep: prev?.cep || "",
-            plain: prev?.plain || (() => ""),
-          }));
-        }
-      }
+    const isIncomplete =
+      !extracted.bairro || !extracted.cidade || !extracted.estado;
+
+    if (isIncomplete && extracted.cep) {
+      const viaCepData = await fetchViaCep(extracted.cep);
+      setAddress((prev) => ({
+        ...prev,
+        bairro: extracted.bairro || viaCepData.bairro || prev?.bairro || "",
+        cidade: extracted.cidade || viaCepData.localidade || prev?.cidade || "",
+        estado: extracted.estado || viaCepData.uf || prev?.estado || "",
+        pais: extracted.pais || prev?.pais || "Brasil",
+        logradouro: prev?.logradouro || "",
+        numero: prev?.numero || "",
+        cep: prev?.cep || "",
+        plain: prev?.plain || (() => ""),
+      }));
     }
   };
 
@@ -122,44 +120,38 @@ export const useEndereco = () => {
     if (searchInput.current) searchInput.current.value = "";
   };
 
-  const handleEditar = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent,
+    tipo: "cadastrar" | "editar",
+  ) => {
     e.preventDefault();
     if (!address || !numero)
       return alert("Por favor, preencha todos os campos do endereço.");
     if (!idUsuario) return alert("Erro ao obter ID do usuário.");
 
-    if (!enderecoId) return alert("Endereço não encontrado para edição.");
+    const url = tipo === "cadastrar" ? "/endereco" : `/endereco/${enderecoId}`;
+    const method = tipo === "cadastrar" ? api.post : api.put;
 
     try {
-      await api.put(`/endereco/${enderecoId}`, {
+      await method(url, {
         data: buildEnderecoPayload(),
       });
-      alert("Endereço atualizado com sucesso!");
+      alert(
+        `Endereço ${tipo === "cadastrar" ? "cadastrado" : "atualizado"} com sucesso!`,
+      );
       limparCampos();
       navigate("/");
     } catch (error) {
-      console.error("Erro ao atualizar endereço:", error);
-      alert("Erro ao atualizar endereço. Tente novamente.");
+      console.error(`Erro ao ${tipo} endereço:`, error);
+      alert(`Erro ao ${tipo} endereço. Tente novamente.`);
     }
   };
 
-  const handleCadastrar = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!address || !numero)
-      return alert("Por favor, preencha todos os campos do endereço.");
-    if (!idUsuario) return alert("Erro ao obter ID do usuário.");
+  const handleCadastrar = (e: React.FormEvent) => handleSubmit(e, "cadastrar");
 
-    try {
-      await api.post("/endereco", {
-        data: buildEnderecoPayload(),
-      });
-      alert("Endereço cadastrado com sucesso!");
-      limparCampos();
-      navigate("/");
-    } catch (error) {
-      console.error("Erro ao cadastrar endereço:", error);
-      alert("Erro ao cadastrar endereço. Tente novamente.");
-    }
+  const handleEditar = (e: React.FormEvent) => {
+    if (!enderecoId) return alert("Endereço não encontrado para edição.");
+    handleSubmit(e, "editar");
   };
 
   useEffect(() => {
@@ -174,13 +166,22 @@ export const useEndereco = () => {
     load();
   }, [initAutocomplete]);
 
+  useEffect(() => {
+    if (!enderecoId && idUsuario) {
+      const loadEnderecoId = async () => {
+        const id = await getEnderecoId();
+        setEnderecoId(id);
+      };
+      loadEnderecoId();
+    }
+  }, [idUsuario, enderecoId]);
+
   return {
     searchInput,
     address,
     numero,
     complemento,
     tipo,
-    role,
     setNumero,
     setTipo,
     setComplemento,

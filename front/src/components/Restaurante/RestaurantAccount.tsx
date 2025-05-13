@@ -1,6 +1,7 @@
 import { useRestaurantAccount } from "../../hooks/useRestaurantAccount";
 import FormComponent from "../ui/FormComponent";
 import ImageUploadButton from "../ui/ImageUploadButton";
+import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
 export default function RestaurantForm() {
   const {
@@ -16,6 +17,7 @@ export default function RestaurantForm() {
     setImageFile,
     imageFile,
     handleEditSubmit,
+    restaurantLogo,
   } = useRestaurantAccount();
 
   const baseText = "text-lg mb-1";
@@ -44,13 +46,25 @@ export default function RestaurantForm() {
       title="Minha Conta"
       extraContentBottom={
         <>
-          <ImageUploadButton onFileSelect={(file) => setImageFile(file)} />
-          {imageFile && (
-            <img
-              src={URL.createObjectURL(imageFile)}
-              alt="Pré-visualização"
-              className="mt-4 h-32 rounded object-cover"
+          <div className="mt-4">
+            <ImagemDeEntidade
+              src={restaurantLogo ?? undefined}
+              alt="Logo do Restaurante"
+              className="h-32 w-1/2 rounded object-cover"
             />
+          </div>
+
+          {isEditing && (
+            <>
+              <ImageUploadButton onFileSelect={(file) => setImageFile(file)} />
+              {imageFile && (
+                <img
+                  src={URL.createObjectURL(imageFile)}
+                  alt="Pré-visualização"
+                  className="mt-4 h-32 rounded object-cover"
+                />
+              )}
+            </>
           )}
         </>
       }

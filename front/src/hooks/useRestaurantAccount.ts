@@ -11,6 +11,7 @@ export const useRestaurantAccount = () => {
   const [isLoading, setIsLoading] = useState(true);
   const idRestaurante = userData?.sub;
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [restaurantLogo, setRestaurantLogo] = useState<string | null>(null);
 
   const restaurantEnderecoFields = [
     { label: "Logradouro", name: "logradouro", type: "text" },
@@ -91,6 +92,8 @@ export const useRestaurantAccount = () => {
       const response = await api.get(`/restaurante/${idRestaurante}`);
       const respRestaurante = response.data?.data?.attributes || [];
       const enderecoRestaurante = respRestaurante.endereco || {};
+      const logo = respRestaurante.logo || null;
+      setRestaurantLogo(logo);
 
       setFormList({
         nome: respRestaurante.nome || "",
@@ -256,6 +259,8 @@ export const useRestaurantAccount = () => {
     idRestaurante,
     imageFile,
     setImageFile,
+    restaurantLogo,
+    setRestaurantLogo,
     handleLogout,
     deletarDados,
     alterarDadosRestaurante,

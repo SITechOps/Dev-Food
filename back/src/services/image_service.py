@@ -16,13 +16,11 @@ class ImageService:
 
         safe_name = secure_filename(entity_name.strip().lower().replace(" ", "_"))
 
-        for ext in ['.png', '.jpg', '.jpeg']:
+        for ext in ['.png', '.jpg', '.jpeg', '.webp']:
             existing_path = os.path.join(entity_folder, f"{safe_name}{ext}")
             if os.path.exists(existing_path):
                 delete_file(existing_path)
 
-        ext = os.path.splitext(file.filename)[1].lower()
-        filename = f"{safe_name}{ext}"
-        save_file(file, entity_folder, filename)
+        relative_path = save_file(file, entity_folder, filename=safe_name)
 
-        return f"/{folder_prefix}/{filename}"
+        return f"/{folder_prefix}/{os.path.basename(relative_path)}"

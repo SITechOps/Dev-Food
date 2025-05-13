@@ -123,7 +123,7 @@ const FormComponent: React.FC<FormProps> = ({
             )}
           </div>
         ))}
-        {isEditing && extraContentBottom}
+        {extraContentBottom}
         {isEditing && (
           <Button type="submit" className="mt-5">
             Salvar
