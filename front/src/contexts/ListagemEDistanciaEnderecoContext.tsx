@@ -43,21 +43,13 @@ interface ConfirmacaoEnderecoContextProps {
   calcularTaxaEntrega: (distancia: number) => number; 
 }
 
+const ConfirmacaoEnderecoContext = createContext<ConfirmacaoEnderecoContextProps | undefined>(undefined);
 
-const ConfirmacaoEnderecoContext = createContext<
-  ConfirmacaoEnderecoContextProps | undefined
->(undefined);
-
-export const ConfirmacaoEnderecoProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
-  const [confirmacaoPadrao, setConfirmacaoPadrao] =
-    useState<ConfirmacaoPadraoState>({
-      show: false,
-      endereco: null,
-    });
+export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode }) => {
+  const [confirmacaoPadrao, setConfirmacaoPadrao] = useState<ConfirmacaoPadraoState>({
+    show: false,
+    endereco: null,
+  });
 
   const [enderecoPadraoId, setEnderecoPadraoId] = useState<string | null>(null);
   const [clienteCoords, setClienteCoords] = useState<Coordenadas | null>(null);
@@ -109,8 +101,7 @@ export const ConfirmacaoEnderecoProvider = ({
     }
 
     geocodificarEnderecoPadrao();
-  }, [enderecoPadraoId]);
-
+  }, [enderecoPadraoId]);  // Agora o useEffect só depende de enderecoPadraoId
 
   const processarRestaurantes = async (coords: { lat: number; lng: number }) => {
     try {
@@ -176,9 +167,7 @@ export const ConfirmacaoEnderecoProvider = ({
 export const useConfirmacaoEndereco = (): ConfirmacaoEnderecoContextProps => {
   const context = useContext(ConfirmacaoEnderecoContext);
   if (!context) {
-    throw new Error(
-      "useConfirmacaoEndereco deve ser usado dentro de ConfirmacaoEnderecoProvider"
-    );
+    throw new Error("useConfirmacaoEndereco deve ser usado dentro de ConfirmacaoEnderecoProvider");
   }
   return context;
 };

@@ -7,6 +7,7 @@ import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";
 import { TaxaEntregaProvider } from "./contexts/TaxaEntregaContext";
 import { PagamentoProvider } from "./contexts/PagamaentoContext";
+import { ConfirmacaoEnderecoProvider } from "./contexts/ListagemEDistanciaEnderecoContext";
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -28,21 +29,23 @@ export default function App() {
 
   return (
     <Suspense fallback={<Loading />}>
-      <CarrinhoProvider>
-        <AppWrapper>
-          {isAuthenticated && userData?.role === "restaurante" ? (
-            <LayoutRestaurante>
-              <AppRoutes />
-            </LayoutRestaurante>
-          ) : (
-            <PagamentoProvider>
-              <TaxaEntregaProvider>
+      <ConfirmacaoEnderecoProvider>
+        <CarrinhoProvider>
+          <AppWrapper>
+            {isAuthenticated && userData?.role === "restaurante" ? (
+              <LayoutRestaurante>
                 <AppRoutes />
+              </LayoutRestaurante>
+            ) : (
+              <TaxaEntregaProvider>
+                <PagamentoProvider>
+                  <AppRoutes />
+                </PagamentoProvider>
               </TaxaEntregaProvider>
-            </PagamentoProvider>
-          )}
-        </AppWrapper>
-      </CarrinhoProvider>
+            )}
+          </AppWrapper>
+        </CarrinhoProvider>
+      </ConfirmacaoEnderecoProvider>
     </Suspense>
   );
 }

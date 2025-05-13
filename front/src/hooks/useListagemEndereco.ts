@@ -1,6 +1,6 @@
 import { api } from "@/connection/axios";
 import { useAuth } from "@/contexts/AuthContext";
-import { useConfirmacaoEndereco } from "@/contexts/EnderecoContext";
+import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
 import { IAddress } from "@/interface/IAddress";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
