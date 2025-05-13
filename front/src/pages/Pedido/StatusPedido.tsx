@@ -75,10 +75,10 @@ export default function OrderStatusTracker() {
   return (
     <>
       <IconAction
-        className="hover:bg-brown-light-active mt-[rem] flex cursor-pointer items-center justify-center gap-3 self-start rounded-md p-2 border border-brown-normal"
+        className="text-brown-normal mt-6 ml-4 flex cursor-pointer items-center gap-2 hover:underline"
         onClick={() => navigate("/historico")}
       >
-        <p className="text-2xl">Voltar</p>
+        <span className="text-lg font-medium">Voltar</span>
       </IconAction>
 
       <div className="mx-auto mt-10 max-w-2xl rounded-2xl border bg-white p-6 shadow-md">
@@ -126,8 +126,9 @@ export default function OrderStatusTracker() {
                     {[...Array(steps)].map((_, index) => (
                       <div
                         key={index}
-                        className={`mx-1 h-1 flex-1 rounded-full ${index <= step ? "bg-blue" : "bg-gray-medium"
-                          }`}
+                        className={`mx-1 h-1 flex-1 rounded-full ${
+                          index <= step ? "bg-blue" : "bg-gray-medium"
+                        }`}
                       />
                     ))}
                   </div>

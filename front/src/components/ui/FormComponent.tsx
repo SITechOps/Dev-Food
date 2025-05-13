@@ -59,7 +59,9 @@ const FormComponent: React.FC<FormProps> = ({
   return (
     <section className="m-auto flex w-2/3 flex-col justify-center rounded-md bg-white p-5 shadow">
       <div className="flex w-full items-center justify-between">
-        <IconAction onClick={() => navigate("/")}>Voltar</IconAction>
+        <IconAction onClick={() => navigate("/")} className="cursor-pointer">
+          Voltar
+        </IconAction>
 
         <div id="icones-de-acao" className="flex justify-end gap-4">
           <div
