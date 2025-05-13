@@ -7,6 +7,7 @@ import Categorias from "./RestaurantesDisponiveis/Categorias";
 import Input from "@/components/ui/Input";
 import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
 import { IRestaurante } from "@/interface/IRestaurante";
+
 import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 import { MapPin } from "lucide-react";
 import { IProduto } from "@/interface/IProduto";
@@ -14,85 +15,47 @@ import { IEndereco } from "@/interface/IEndereco";
 
 export default function Home() {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
+
   const [abaAtiva, setAbaAtiva] = useState("restaurantes");
   const [searchTerm, setSearchTerm] = useState("");
   const [produtos, setProdutos] = useState<IProduto[]>([]);
   const [filtroDistanciaAtivo, setFiltroDistanciaAtivo] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const { processarRestaurantes, clienteCoords } = useConfirmacaoEndereco();
 
+  const { processarRestaurantes , clienteCoords } = useConfirmacaoEndereco();
+  
   const restaurantesProximos = useMemo(() => {
     return restaurantes
-      .filter((restaurante) => {
-        if (!restaurante.distancia) return false;
-        const distanciaNum = restaurante.distancia;
-        return !isNaN(distanciaNum) && distanciaNum <= 10;
-      })
-      .sort((a, b) => a.distancia! - b.distancia!);
+    .filter((restaurante) => {
+      if (!restaurante.distancia) return false;
+      const distanciaNum = restaurante.distancia;
+      return !isNaN(distanciaNum) && distanciaNum <= 10;
+    })
+    .sort((a, b) => a.distancia! - b.distancia!);
   }, [restaurantes]);
-
+  
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
-
-  useEffect(() => {
-    async function obterEnderecoCliente() {
-      try {
-        if (!idUsuario || !token) return;
-        const enderecoPadraoString = localStorage.getItem("enderecoPadrao");
-        let enderecoParaGeocodificar: IEndereco | undefined;
-
-        if (enderecoPadraoString) {
-          enderecoParaGeocodificar = JSON.parse(enderecoPadraoString);
-        } else {
-          const response = await api.get(`/user/${idUsuario}/enderecos`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          enderecoParaGeocodificar = response.data?.data?.attributes[0];
-          if (
-            enderecoParaGeocodificar &&
-            !enderecoParaGeocodificar.id &&
-            response.data?.data?.length > 0
-          ) {
-            enderecoParaGeocodificar.id = response.data?.data[0]?.id;
-          }
-        }
-
-        if (!enderecoParaGeocodificar) return;
-
-        const enderecoCompleto = `${enderecoParaGeocodificar.logradouro}, ${enderecoParaGeocodificar.numero}, ${enderecoParaGeocodificar.bairro}, ${enderecoParaGeocodificar.cidade}, ${enderecoParaGeocodificar.estado}, ${enderecoParaGeocodificar.pais}`;
-        const coords = await geocodeTexto(enderecoCompleto);
-
-        if (coords) setClienteCoords(coords);
-      } catch (error) {
-        console.error(
-          "Erro ao buscar/geocodificar endereço do cliente:",
-          error,
-        );
-      }
-    }
-
-    obterEnderecoCliente();
-  }, [idUsuario, token]);
-
+   
+  
   useEffect(() => {
     async function listarRestaurantes() {
-      try {
-        const response = await api.get("/restaurantes");
-        const data: IRestaurante[] = response?.data?.data?.attributes || [];
-        setRestaurantes(data);
-      } catch (error) {
-        console.error("Erro ao buscar restaurantes:", error);
-      }
+    try {
+      const response = await api.get("/restaurantes");
+      const data: IRestaurante[] = response?.data?.data?.attributes || [];
+      setRestaurantes(data);
+    } catch (error) {
+      console.error("Erro ao buscar restaurantes:", error);
     }
-
+    }
+  
     listarRestaurantes();
   }, []);
-
+  
   useEffect(() => {
     async function listarProdutosPorRestaurante() {
+
       try {
         const allProdutos: IProduto[] = [];
 
@@ -115,43 +78,47 @@ export default function Home() {
       } catch (error) {
         console.error("Erro ao buscar produtos por restaurante:", error);
       }
+  
+      setProdutos(allProdutos);
+    } catch (error) {
+      console.error("Erro ao buscar produtos por restaurante:", error);
     }
-
+    }
+  
     if (restaurantes.length > 0) {
-      listarProdutosPorRestaurante();
+    listarProdutosPorRestaurante();
     }
   }, [restaurantes]);
-
+  
   useEffect(() => {
     async function carregarRestaurantes() {
-      if (!clienteCoords) return;
-
-      const restaurantesAtualizados =
-        await processarRestaurantes(clienteCoords);
-      setRestaurantes(restaurantesAtualizados);
+    if (!clienteCoords) return;
+  
+    const restaurantesAtualizados = await processarRestaurantes(clienteCoords);
+    setRestaurantes(restaurantesAtualizados);
     }
     carregarRestaurantes();
   }, [clienteCoords]);
-
+  
   const filteredRestaurantes = useMemo(() => {
     return restaurantes.filter((restaurante) => {
-      const nomeMatch = restaurante.nome
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const produtosDoRestaurante = produtos.filter(
-        (produto) => produto.id_restaurante === restaurante.id,
-      );
-      const produtoMatch = produtosDoRestaurante.some((produto) =>
-        produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-      const categoriaMatch =
-        !selectedCategory ||
-        selectedCategory === "Todos" ||
-        restaurante.especialidade === selectedCategory;
-      return (nomeMatch || produtoMatch) && categoriaMatch;
+    const nomeMatch = restaurante.nome
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const produtosDoRestaurante = produtos.filter(
+      (produto) => produto.id_restaurante === restaurante.id,
+    );
+    const produtoMatch = produtosDoRestaurante.some((produto) =>
+      produto.nome?.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+    const categoriaMatch =
+      !selectedCategory ||
+      selectedCategory === "Todos" ||
+      restaurante.especialidade === selectedCategory;
+    return (nomeMatch || produtoMatch) && categoriaMatch;
     });
   }, [restaurantes, produtos, searchTerm, selectedCategory]);
-
+  
   const produtosFiltrados = useMemo(() => {
     return produtos
       .map((produto) => {
@@ -175,6 +142,7 @@ export default function Home() {
 
         return nomeMatch && categoriaMatch && distanciaMatch;
       });
+
   }, [produtos, restaurantes, searchTerm, selectedCategory]);
   return (
     <div className="mt-[5rem]">
