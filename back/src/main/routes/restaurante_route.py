@@ -385,7 +385,6 @@ def update_restaurant(id):
       "404":
         description: Restaurante não encontrado
     """
-    http_request = HttpRequest(params={"id": id}, body=request.json)
     image_file = request.files.get('image')
     raw_data = request.form.get("data")
     try:
