@@ -1,38 +1,25 @@
-import { api } from "@/connection/axios";
-import { useEffect, useState } from "react";
-import { IMeusPedidos } from "@/interface/IMeusPedidos";
-import { Props } from "@/interface/IMeusPedidos";
-
-import { useAuth } from "@/contexts/AuthContext";
+import { IMeusPedidos, Props } from "@/interface/IMeusPedidos";
 import { useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
 import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
-export default function HistoricoDePedido({ tipo }: Props) {
-  const { userData } = useAuth();
-  const id_usuario = userData?.sub;
-  const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
+export default function HistoricoDePedido({ tipo, pedidos, loading }: Props) {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function buscarPedidos() {
-      try {
-        const { data } = await api.get(`/pedidos/usuario/${id_usuario}`);
-        setPedidos(data.pedidos);
-      } catch (error) {
-        console.error("Erro ao buscar pedidos:", error);
-      }
-    }
+  let pedidosRenderizar: IMeusPedidos[] = [];
 
-    buscarPedidos();
-  }, []);
-
-  // filtrar os pedidos com base no tipo
-  let pedidosRenderizar = [];
   if (tipo === "meuPedido") {
     pedidosRenderizar = pedidos.slice(0, 1);
   } else if (tipo === "historico") {
     pedidosRenderizar = pedidos.slice(1, 3);
+  }
+
+  if (loading) {
+    return (
+      <div className="text-blue flex items-center justify-start p-4">
+        Carregando pedidos...
+      </div>
+    );
   }
 
   return (
@@ -45,30 +32,34 @@ export default function HistoricoDePedido({ tipo }: Props) {
         >
           {/* Restaurante */}
           <div className="mb-[0.5rem] flex items-center gap-[0.75rem]">
-            <ImagemDeEntidade
-              src={pedido.restaurante.logo}
-              alt={pedido.restaurante.nome}
-              className="mb-4 h-[2rem] w-[2rem] rounded-full border object-cover"
-            />
+            {pedido.restaurante && (
+              <ImagemDeEntidade
+                src={pedido.restaurante.logo}
+                alt={pedido.restaurante.nome}
+                className="mb-4 h-[2rem] w-[2rem] rounded-full border object-cover"
+              />
+            )}
 
             <div>
-              <p className="text-base font-semibold text-black">
-                {pedido.restaurante.nome}
-              </p>
+              {pedido.restaurante && (
+                <p className="text-base font-semibold text-black">
+                  {pedido.restaurante.nome}
+                </p>
+              )}
               <p className="text-sm text-black">
-                Pedido {pedido.status.toLowerCase()} • Nº {pedido.Id}
+                Pedido {pedido.status?.toLowerCase()} • Nº {pedido.Id}
               </p>
             </div>
           </div>
 
           {/* Itens */}
           <div className="mb-[0.5rem] ml-[1.25rem] border-l-2 border-gray-200 pl-[0.75rem] text-sm text-black">
-            {pedido.itens.slice(0, 2).map((item, index) => (
+            {pedido.itens?.slice(0, 2).map((item, index) => (
               <p key={index}>
                 {item.qtd_itens} {item.produto}
               </p>
             ))}
-            {pedido.itens.length > 2 && (
+            {pedido.itens && pedido.itens.length > 2 && (
               <p className="text-gray-500">+{pedido.itens.length - 2} itens</p>
             )}
           </div>
