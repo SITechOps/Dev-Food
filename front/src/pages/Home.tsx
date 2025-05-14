@@ -1,15 +1,16 @@
 import { useEffect, useState, useMemo } from "react";
 import { api } from "../connection/axios";
-import RestauranteCard from "../components/Restaurante/RestaurantCard";
+import RestauranteCard from "./Restaurante/components/RestaurantCard";
 import ProdutoCard from "../components/Produto/ProdutoCard";
 import { Link } from "react-router-dom";
-import Categorias from "./RestaurantesDisponiveis/Categorias";
+import Categorias from "./Restaurante/components/Categorias/Categorias";
 import Input from "@/components/ui/Input";
 import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
 import { IRestaurante } from "@/interface/IRestaurante";
 import { IProduto } from "@/interface/IProduto";
 import { MapPin } from "lucide-react";
 import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import FiltroDistanciaModal from "./Restaurante/components/FiltroDistanciaModal";
 
 export default function Home() {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
@@ -19,6 +20,8 @@ export default function Home() {
   const [filtroDistanciaAtivo, setFiltroDistanciaAtivo] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { processarRestaurantes, clienteCoords } = useConfirmacaoEndereco();
+  const [modalAberto, setModalAberto] = useState(false);
+  const [raioDistanciaKm, setRaioDistanciaKm] = useState(10);
 
   const restaurantesProximos = useMemo(() => {
     return restaurantes
@@ -114,6 +117,14 @@ export default function Home() {
   }, [produtos, restaurantes, searchTerm, selectedCategory]);
   return (
     <div className="mt-[5rem]">
+      <FiltroDistanciaModal
+        isOpen={modalAberto}
+        onClose={() => setModalAberto(false)}
+        distanciaAtual={raioDistanciaKm}
+        setDistanciaAtual={setRaioDistanciaKm}
+        onAplicar={(novaDistancia) => setRaioDistanciaKm(novaDistancia)}
+      />
+
       <h1 className="text-blue my-8 text-center font-medium">
         Conheça os restaurantes disponíveis
       </h1>
@@ -132,7 +143,7 @@ export default function Home() {
 
       <Categorias onCategoryClick={handleCategoryClick} />
 
-      <div className="mt-6 w-full">
+      <div className="mt-6 flex w-full gap-6">
         <button
           className={`flex items-center gap-2 rounded-[10px] px-6 py-2 text-sm font-semibold shadow-md transition-all duration-200 hover:shadow-lg ${
             filtroDistanciaAtivo
@@ -143,6 +154,25 @@ export default function Home() {
         >
           <MapPin className="h-4 w-4" />
           Próximos de mim
+        </button>
+        <button
+          onClick={() => setModalAberto(true)}
+          className="border-brown-normal hover:bg-brown-light text-brown-normal flex items-center gap-2 rounded-[10px] border bg-white px-6 py-2 text-sm font-semibold shadow-md transition-colors"
+        >
+          Distância
+          <svg
+            className="text-brown-normal h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
         </button>
       </div>
       {/* Aba de seleção */}

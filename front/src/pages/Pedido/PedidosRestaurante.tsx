@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { PedidosProvider } from "@/contexts/PedidosContext";
-import PedidosContent from "@/components/Restaurante/PedidosContent";
+import PedidosContent from "@/pages/Pedido/components/Restaurante/PedidosContent";
 
 export default function Pedidos() {
   const { userData } = useAuth();

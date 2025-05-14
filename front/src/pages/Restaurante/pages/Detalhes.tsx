@@ -1,9 +1,9 @@
 import { Star, ChevronRight } from "lucide-react";
-import Button from "../../components/ui/Button";
-import CardProdutos from "./ProdutoDisponiveis/Index";
-import { useRestauranteDisponiveisDetalhes } from "../../hooks/useRestauranteDisDetalhes";
-import { Loading } from "../../components/shared/Loading";
-import VerMaisRestaurante from "./VerMais/Index";
+import Button from "@/components/ui/Button";
+import CardProdutos from "../components/Produtos/ProdutosDisponiveis";
+import { useRestauranteDisponiveisDetalhes } from "@/pages/Restaurante/hooks/useRestauranteDisDetalhes";
+import { Loading } from "@/components/shared/Loading";
+import VerMaisRestaurante from "../components/VerMais";
 import IconAction from "@/components/ui/IconAction";
 import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 

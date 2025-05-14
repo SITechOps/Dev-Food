@@ -10,9 +10,11 @@ const Home = lazy(() => import("../pages/Home"));
 const AuthUser = lazy(() => import("../pages/Auth/AuthUser"));
 const Intermediaria = lazy(() => import("../pages/Intermediaria"));
 const Account = lazy(() => import("../pages/Account"));
-const Cardapio = lazy(() => import("../components/Restaurante/Cardapios"));
-const Financeiro = lazy(() => import("../components/Restaurante/Financeiro"));
-const StatusPedido = lazy(() => import("../pages/Pedido/StatusPedido"));
+const Cardapio = lazy(() => import("../pages/Restaurante/pages/Cardapios"));
+const Financeiro = lazy(() => import("../pages/Restaurante/pages/Financeiro"));
+const StatusPedido = lazy(
+  () => import("../pages/Pedido/components/Usuario/StatusPedido"),
+);
 const CadastroEndereco = lazy(
   () => import("../components/Endereco/CadastroEndereco"),
 );
@@ -21,16 +23,18 @@ const CadastroRestaurante = lazy(
     import("../pages/Usuario/Restaurante/FormRestaurante/CadastroRestaurante"),
 );
 const DetalhesRestaurante = lazy(
-  () => import("../pages/RestaurantesDisponiveis/Detalhes"),
+  () => import("../pages/Restaurante/pages/Detalhes"),
 );
 const AlterarEnderecoRestaurante = lazy(
   () => import("../components/Endereco/EnderecoModal"),
 );
 const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
-const Pedidos = lazy(() => import("../pages/Restaurante/Account/Pedidos"));
+const Pedidos = lazy(() => import("../pages/Pedido/PedidosRestaurante"));
 
 const MeusPedidos = lazy(() => import("../pages/MeusPedidos/Index"));
-const ListagemEndereco = lazy(() => import("../components/Endereco/ListagensEndereco/ListagemEndereco"));
+const ListagemEndereco = lazy(
+  () => import("../components/Endereco/ListagensEndereco/ListagemEndereco"),
+);
 
 const AppRoutes = () => {
   return (

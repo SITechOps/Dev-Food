@@ -1,4 +1,4 @@
-import { useRestaurantAccount } from "../../hooks/useRestaurantAccount";
+import { useRestaurantAccount } from "../../pages/Restaurante/hooks/useRestaurantAccount";
 import FormComponent from "../ui/FormComponent";
 
 export default function EnderecoModal() {

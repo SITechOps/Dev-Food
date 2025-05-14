@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { api } from "../../connection/axios";
-import { socket } from "../../utils/socket";
-import { useAuth } from "../../contexts/AuthContext";
-import { useUserAccount } from "../../hooks/useUserAccount";
-import { pedidosUtils } from "../../utils/pedidosUtils";
+import { api } from "../../../../connection/axios";
+import { socket } from "../../../../utils/socket";
+import { useAuth } from "../../../../contexts/AuthContext";
+import { useUserAccount } from "../../../../hooks/useUserAccount";
+import { pedidosUtils } from "../../../../utils/pedidosUtils";
 import IconAction from "@/components/ui/IconAction";
 import { useNavigate } from "react-router";
 

@@ -1,4 +1,4 @@
-import EntregadorContent from "./EntregadorContent";
+import EntregadorContent from "./components/Restaurante/EntregadorContent";
 import { useAuth } from "@/contexts/AuthContext";
 import { PedidosProvider } from "@/contexts/PedidosContext";
 

@@ -14,7 +14,8 @@
       "@/contexts/*": ["src/contexts/*"],
       "@/interface/*": ["src/interface/*"],
       "@/connection/*": ["src/connection/*"],
-      "@/utils/*": ["src/utils/*"]
+      "@/utils/*": ["src/utils/*"],
+      "@/pages/*": ["src/pages/*"]
     }
   }
 }

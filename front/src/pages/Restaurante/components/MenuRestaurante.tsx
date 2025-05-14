@@ -8,9 +8,9 @@ import {
   Package,
 } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-import { api } from "../../connection/axios";
-import { socket } from "../../utils/socket";
+import { useAuth } from "../../../contexts/AuthContext";
+import { api } from "../../../connection/axios";
+import { socket } from "../../../utils/socket";
 import { IPedido } from "@/interface/IPedidos";
 
 const MenuRestaurante = () => {

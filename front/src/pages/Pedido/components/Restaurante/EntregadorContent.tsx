@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ModalCodigoVerificacao from "@/components/shared/ModalCodigoVerificacao";
 import { api } from "@/connection/axios";
 import Button from "@/components/ui/Button";
-import { usePedidosFetch } from "@/hooks/usePedidosFetch";
+import { usePedidosFetch } from "@/pages/Pedido/hooks/usePedidosFetch";
 import { IPedido } from "@/interface/IPedidos";
 import { useAuth } from "@/contexts/AuthContext";
 

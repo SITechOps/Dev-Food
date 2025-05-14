@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { usePedidosContext } from "@/contexts/usePedidosContext";
-import DetalhesPedido from "@/components/Restaurante/DetalhesPedido";
-import PainelPedidos from "@/components/Restaurante/PainelPedidos";
+import DetalhesPedido from "@/pages/Pedido/components/Restaurante/DetalhesPedido";
+import PainelPedidos from "@/pages/Pedido/components/Restaurante/PainelPedidos";
 
 export default function PedidosContent() {
   const { pedidos, error } = usePedidosContext();

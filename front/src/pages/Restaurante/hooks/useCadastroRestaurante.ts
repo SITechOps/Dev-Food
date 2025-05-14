@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../connection/axios";
+import { api } from "../../../connection/axios";
 import axios from "axios";
 
 export const useCadastroRestaurante = () => {

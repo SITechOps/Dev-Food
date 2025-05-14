@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 import { IRestaurante } from "@/interface/IRestaurante";
-import { ImagemDeEntidade } from "../ui/ImagemEntidade";
+import { ImagemDeEntidade } from "../../../components/ui/ImagemEntidade";
 
 type RestauranteProps = {
   restaurante: IRestaurante;

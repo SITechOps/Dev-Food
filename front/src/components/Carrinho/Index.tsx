@@ -1,7 +1,7 @@
 import { IoClose } from "react-icons/io5";
 import Button from "@/components/ui/Button";
 import { Minus, Plus } from "lucide-react";
-import { useCarrinho } from "@/hooks/useCarinho";
+import { useCarrinho } from "@/hooks/useCarrinho";
 import TechOpsLogo from "@/assets/techops.png";
 
 interface MenuLeteralCarrinhoProps {

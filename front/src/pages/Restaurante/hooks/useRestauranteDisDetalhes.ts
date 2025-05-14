@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { api } from "../connection/axios";
-import { IRestaurante } from "../interface/IRestaurante";
-import { IProduto } from "../interface/IProduto";
+import { api } from "../../../connection/axios";
+import { IRestaurante } from "../../../interface/IRestaurante";
+import { IProduto } from "../../../interface/IProduto";
 
 export const useRestauranteDisponiveisDetalhes = () => {
   const { id } = useParams();

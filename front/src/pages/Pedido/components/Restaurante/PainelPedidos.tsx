@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { usePedidosContext } from "@/contexts/usePedidosContext";
-import { IPedido } from "../../interface/IPedidos";
-import { pedidosUtils } from "../../utils/pedidosUtils";
+import { IPedido } from "../../../../interface/IPedidos";
+import { pedidosUtils } from "../../../../utils/pedidosUtils";
 import { useNavigate } from "react-router-dom";
 
 interface PainelPedidosProps {

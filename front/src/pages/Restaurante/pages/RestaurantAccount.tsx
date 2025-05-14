@@ -1,7 +1,7 @@
-import { useRestaurantAccount } from "../../hooks/useRestaurantAccount";
-import FormComponent from "../ui/FormComponent";
-import ImageUploadButton from "../ui/ImageUploadButton";
-import { ImagemDeEntidade } from "../ui/ImagemEntidade";
+import { useRestaurantAccount } from "@/pages/Restaurante/hooks/useRestaurantAccount";
+import FormComponent from "@/components/ui/FormComponent";
+import ImageUploadButton from "@/components/ui/ImageUploadButton";
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 
 export default function RestaurantForm() {
   const {

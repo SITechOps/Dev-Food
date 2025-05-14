@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MenuRestaurante from "./MenuRestaurante";
+import MenuRestaurante from "./components/MenuRestaurante";
 
 const LayoutRestaurante = ({ children }: { children: React.ReactNode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
