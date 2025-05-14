@@ -1,13 +1,13 @@
 import { Clock, MapPin } from "lucide-react";
 import { IoClose } from "react-icons/io5";
-import { useRestauranteDisponiveisDetalhes } from "../../../hooks/useRestauranteDisDetalhes";
+import { useRestaurante } from "../../../hooks/Restaurante/VisaoCliente/useRestaurante";
 import { Loading } from "../../../components/shared/Loading";
 
 export default function VerMaisRestaurante({ onClose }: any) {
 	const {
 		restaurante,
 		loading,
-	} = useRestauranteDisponiveisDetalhes();
+	} = useRestaurante();
 	
 	return (
 		<div className="fixed inset-0 z-50 flex justify-end bg-black/70">

@@ -7,7 +7,8 @@ import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";
 import { TaxaEntregaProvider } from "./contexts/TaxaEntregaContext";
 import { PagamentoProvider } from "./contexts/PagamaentoContext";
-import { ConfirmacaoEnderecoProvider } from "./contexts/ListagemEDistanciaEnderecoContext";
+import { RestauranteProdutoProvider } from "./contexts/VisaoCliente/Restaurante&ProdutoContext";
+import { ConfirmacaoEnderecoProvider } from "./contexts/ConfirmacaoEnderecoContext";
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -37,7 +38,9 @@ export default function App() {
             ) : (
               <TaxaEntregaProvider>
                 <PagamentoProvider>
-                  <AppRoutes />
+                  <RestauranteProdutoProvider>
+                    <AppRoutes />
+                  </RestauranteProdutoProvider>
                 </PagamentoProvider>
               </TaxaEntregaProvider>
             )}

@@ -19,14 +19,9 @@ export default function Carrinho({
     decrementar,
     removerItem,
     subtotal,
-    total,
     escolherFormaPagamento,
   } = useCarrinho();
 
-  const resSelecionado = localStorage.getItem("restauranteSelecionado");
-  const taxaEntregaRestaurante = resSelecionado
-    ? JSON.parse(resSelecionado).taxaEntrega
-    : 0;
 
   return (
     <>
@@ -100,22 +95,16 @@ export default function Carrinho({
                     </div>
                   </div>
                 ))}
-                <div>
                   <p className="my-2 flex items-center justify-between">
                     Subtotal
                     <span>R$ {subtotal.toFixed(2)}</span>
                   </p>
-                  <p className="my-2 flex items-center justify-between">
-                    Taxa de entrega
-                    <span>R$ {taxaEntregaRestaurante?.toFixed(2)}</span>
-                  </p>
-                </div>
               </div>
 
               <div className="mt-10">
                 <p className="flex items-center justify-between text-2xl font-bold">
                   Total
-                  <span>R$ {(total + taxaEntregaRestaurante).toFixed(2)}</span>
+                  <span>R$ {(subtotal).toFixed(2)}</span>
                 </p>
                 <Button
                   className="mt-4 w-full p-2"

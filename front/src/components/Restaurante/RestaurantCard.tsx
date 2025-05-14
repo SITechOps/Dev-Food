@@ -3,9 +3,6 @@ import { IRestaurante } from "@/interface/IRestaurante";
 
 type RestauranteProps = {
   restaurante: IRestaurante & {
-    duration?: number;
-    distancia?: number;
-    taxaEntrega?: number;
   };
 };
 
@@ -33,10 +30,10 @@ const RestauranteCard = memo(({ restaurante }: RestauranteProps) => {
       <p className="text-blue text-sm">
         {formattedDuration} min •{" "}
         <span className="text-green-dark">
-          {restaurante.taxaEntrega === 0 ||
-          restaurante.taxaEntrega === undefined
+          {restaurante.taxa_entrega === 0 ||
+          restaurante.taxa_entrega === undefined
             ? "Grátis"
-            : `R$ ${restaurante.taxaEntrega.toFixed(2)}`}
+            : `R$ ${restaurante.taxa_entrega.toFixed(2)}`}
         </span>
       </p>
     </div>

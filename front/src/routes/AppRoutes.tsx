@@ -7,6 +7,7 @@ import RestrictRestauranteOnly from "./RestrictRestaurant";
 const Entregador = lazy(() => import("../pages/Pedido/Entregador"));
 const Error404 = lazy(() => import("@/components/Error404"));
 const Home = lazy(() => import("../pages/Home"));
+const FiltroLupa = lazy(() => import("../pages/RestaurantesDisponiveis/Filtros/FiltroLupa"));
 const AuthUser = lazy(() => import("../pages/Auth/AuthUser"));
 const Intermediaria = lazy(() => import("../pages/Intermediaria"));
 const Account = lazy(() => import("../pages/Account"));
@@ -59,7 +60,8 @@ const AppRoutes = () => {
       </Route>
 
       <Route element={<RestrictRestauranteOnly />}>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={ <Home />} />
+        <Route path="/buscar" element={<FiltroLupa />} />
         <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
       </Route>
 

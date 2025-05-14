@@ -6,14 +6,9 @@ import { CardProdutosProps } from "../../../interface/IProduct";
 
 export default function CardProdutos(props: CardProdutosProps) {
   const { nome, descricao, imageUrl, valor_unitario, dadosRestaurante } = props;
-
   const num = +valor_unitario;
-
   const { quantidade, incrementar, decrementar, adicionarAoCarrinho } =
     useCardProdutos(props, dadosRestaurante);
-
-  // Agora você pode acessar dadosRestaurante para pegar a taxa de entrega
-  const taxaEntrega = dadosRestaurante?.taxaEntrega;
 
   return (
     <div className="border-gray-medium bg-gray-light max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300 m-auto">
@@ -51,7 +46,6 @@ export default function CardProdutos(props: CardProdutosProps) {
             >
               <div className="flex items-center gap-2">
                 <AiOutlineShoppingCart className="text-2x1" />
-                {/* <p className="text-sm md:text-base">Adicionar</p> */}
               </div>
               <span className="text-sm md:text-base whitespace-nowrap">
                 R${" "}

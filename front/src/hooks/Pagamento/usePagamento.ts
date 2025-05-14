@@ -19,7 +19,7 @@ export const usePagamento = () => {
   });
   const [valoresCarrinho, setValoresCarrinho] = useState({
     subtotal: 0,
-    taxaEntrega: 0,
+    taxa_entrega: 0,
     total: 0,
   });
   const idUsuario = userData?.sub;
@@ -60,7 +60,7 @@ export const usePagamento = () => {
       setRestaurante(compra.itens[0]?.restaurante.nome);
       setValoresCarrinho({
         subtotal: compra.subtotal,
-        taxaEntrega: compra.taxaEntrega,
+        taxa_entrega: compra.taxa_entrega,
         total: compra.total,
       });
     }

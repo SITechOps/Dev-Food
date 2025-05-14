@@ -1,14 +1,15 @@
 import { IRestaurante } from "./IRestaurante";
 
-export interface ProductProps {
+export interface IProduto {
   id: string;
   nome: string;
   descricao: string;
-  qtd_estoque: number;
+  qtd_estoque?: number;
   imageUrl: string;
   valor_unitario: number;
+  id_restaurante?: string;
 }
 
-export interface CardProdutosProps extends ProductProps {
+export interface CardProdutosProps extends IProduto {
   dadosRestaurante: IRestaurante;
 }
