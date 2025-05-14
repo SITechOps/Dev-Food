@@ -1,12 +1,12 @@
 import { memo, useMemo } from "react";
 import { IRestaurante } from "@/interface/IRestaurante";
+import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
 type RestauranteProps = {
-  restaurante: IRestaurante & {
-    duration?: number;
-    distancia?: number;
-    taxaEntrega?: number;
-  };
+  restaurante: IRestaurante;
+  duration?: number;
+  distancia?: number;
+  taxaEntrega?: number;
 };
 
 const RestauranteCard = memo(({ restaurante }: RestauranteProps) => {
@@ -17,18 +17,15 @@ const RestauranteCard = memo(({ restaurante }: RestauranteProps) => {
 
   return (
     <div className="rounded-lg border bg-white p-4 shadow-md">
-      <img
-        src={
-          restaurante.logo ||
-          "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        }
+      <ImagemDeEntidade
+        src={restaurante.logo}
         alt={restaurante.nome}
-        loading="lazy"
         className="h-32 w-full rounded object-cover"
       />
       <h3 className="mt-2 font-semibold">{restaurante.nome}</h3>
       <p className="text-blue text-sm">
-        {restaurante.especialidade} • {restaurante.distancia ?? ""} km
+        {restaurante.especialidade} • {restaurante.distancia?.toFixed(1) ?? ""}{" "}
+        km
       </p>
       <p className="text-blue text-sm">
         {formattedDuration} min •{" "}

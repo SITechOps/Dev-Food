@@ -1,7 +1,7 @@
 import { IoIosArrowDown } from "react-icons/io";
-import Modal from "../../ui/Modal";
+import Modal from "@/components/ui/Modal";
 import EnderecoItem from "./EnderecoItem";
-import ifoodLogo from "../../../assets/ifood.png";
+import TechOpsLogo from "@/assets/techops.png";
 import Button from "../../ui/Button";
 import { useListaEndereco } from "@/hooks/useListagemEndereco";
 
@@ -9,29 +9,31 @@ interface ListagemEnderecoProps {
   onCloseModal?: () => void;
 }
 
-export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps) {
+export default function ListagemEndereco({
+  onCloseModal,
+}: ListagemEnderecoProps) {
   const {
     enderecoSelecionado,
-		enderecos,	
-		showModal,
-		setShowModal,
-		searchTerm,
-		setSearchTerm,
-		handleDeleteEndereco,
-		fecharModalEndereco,
-		filteredEnderecos,
-		mostrarConfirmacao,
-		confirmarEnderecoPadrao,
-		cancelarConfirmacao,
-		confirmacaoPadrao,
-		enderecoPadraoId,
-		navigate,
+    enderecos,
+    showModal,
+    setShowModal,
+    searchTerm,
+    setSearchTerm,
+    handleDeleteEndereco,
+    fecharModalEndereco,
+    filteredEnderecos,
+    mostrarConfirmacao,
+    confirmarEnderecoPadrao,
+    cancelarConfirmacao,
+    confirmacaoPadrao,
+    enderecoPadraoId,
+    navigate,
   } = useListaEndereco(onCloseModal);
- 
+
   return (
     <>
       <p
-        className="flex cursor-pointer items-center justify-between border-b p-4 text-blue"
+        className="text-blue flex cursor-pointer items-center justify-between border-b p-4"
         onClick={() => setShowModal(true)}
       >
         <span className="text-lg font-semibold">
@@ -41,13 +43,15 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
               ? "Adicionar endereço"
               : "Selecionar endereço"}
         </span>
-        <IoIosArrowDown className={`icon transition-transform ${showModal ? "rotate-180" : ""}`} />
+        <IoIosArrowDown
+          className={`icon transition-transform ${showModal ? "rotate-180" : ""}`}
+        />
       </p>
 
       {/* Modal Principal */}
       <Modal isOpen={showModal} className="w-120" onClose={fecharModalEndereco}>
         <div className="mb-4 flex items-center">
-          <img src={ifoodLogo} alt="iFood Logo" className="mr-2 h-8" />
+          <img src={TechOpsLogo} alt="TechOps Logo" className="mr-2 h-8" />
           <h2 className="text-blue text-lg font-semibold">Meus Endereços</h2>
         </div>
 
@@ -72,27 +76,39 @@ export default function ListagemEndereco({ onCloseModal }: ListagemEnderecoProps
           ))}
         </div>
 
-        <Button className="mt-6" onClick={() => {
-          setShowModal(false);
-          navigate("/c-endereco");
-        }}>
+        <Button
+          className="mt-6"
+          onClick={() => {
+            setShowModal(false);
+            navigate("/c-endereco");
+          }}
+        >
           Adicionar novo endereço
         </Button>
       </Modal>
 
       {confirmacaoPadrao.show && (
         <Modal isOpen={confirmacaoPadrao.show} onClose={cancelarConfirmacao}>
-          <div className="p-4 text-blue">
-            <h2 className="text-lg font-semibold mb-2">Definir como endereço padrão?</h2>
+          <div className="text-blue p-4">
+            <h2 className="mb-2 text-lg font-semibold">
+              Definir como endereço padrão?
+            </h2>
             <p className="mb-4">
-              Deseja selecionar "{confirmacaoPadrao.endereco?.logradouro}, {confirmacaoPadrao.endereco?.numero} - {confirmacaoPadrao.endereco?.bairro}, {confirmacaoPadrao.endereco?.cidade}" como seu endereço padrão?
+              Deseja selecionar "{confirmacaoPadrao.endereco?.logradouro},{" "}
+              {confirmacaoPadrao.endereco?.numero} -{" "}
+              {confirmacaoPadrao.endereco?.bairro},{" "}
+              {confirmacaoPadrao.endereco?.cidade}" como seu endereço padrão?
             </p>
             <div className="flex justify-end space-x-2">
-              <Button onClick={cancelarConfirmacao} color="secondary">Cancelar</Button>
-              <Button onClick={() => {
-                confirmarEnderecoPadrao(confirmacaoPadrao.endereco!);
-                setShowModal(false);
-              }}>
+              <Button onClick={cancelarConfirmacao} color="secondary">
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => {
+                  confirmarEnderecoPadrao(confirmacaoPadrao.endereco!);
+                  setShowModal(false);
+                }}
+              >
                 Confirmar
               </Button>
             </div>

@@ -23,6 +23,7 @@
    - [Places API (New)](https://console.cloud.google.com/marketplace/product/google/places.googleapis.com)
    - [Places API (Legado)](https://console.cloud.google.com/apis/library/places-backend.googleapis.com)
    - [Geocoding API](https://console.cloud.google.com/apis/library/geocoding-backend.googleapis.com)
+   - [Distance Matrix API](https://console.cloud.google.com/marketplace/product/google/distance-matrix-backend.googleapis.com?pli=1)
 4. Salve as alterações.
 
 ### 4. Configurar a Chave no Projeto

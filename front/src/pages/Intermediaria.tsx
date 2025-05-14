@@ -15,10 +15,10 @@ export default function Intermediaria() {
           className="mr-5 h-40 w-40"
         />
         <div>
-          <h1 className={styleH1}>Quer pedir comida no Ifood?</h1>
+          <h1 className={styleH1}>Quer pedir comida no TechOps?</h1>
           <p className={styleDescricao}>
             Faça login ou crie sua conta como cliente para começar a pedir no
-            Ifood.
+            TechOps.
           </p>
 
           <Button onClick={() => navigate("/auth")} className="mt-4 w-48">
@@ -34,7 +34,7 @@ export default function Intermediaria() {
           className="mr-5 h-40 w-40"
         />
         <div>
-          <h1 className={styleH1}>Quer vender no Ifood?</h1>
+          <h1 className={styleH1}>Quer vender no TechOps?</h1>
           <p className={styleDescricao}>
             Cadastre seu restaurante ou acesse sua conta se já for um de nossos
             parceiros.
@@ -47,7 +47,10 @@ export default function Intermediaria() {
               Cadastrar restaurante
             </Button>
 
-            <Button onClick={() => navigate("/auth")} className="mt-4 w-48 p-3.5">
+            <Button
+              onClick={() => navigate("/auth")}
+              className="mt-4 w-48 p-3.5"
+            >
               Já sou parceiro
             </Button>
           </div>

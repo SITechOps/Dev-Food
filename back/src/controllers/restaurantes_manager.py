@@ -3,6 +3,8 @@ from src.http_types.http_response import HttpResponse
 from src.model.repositories.interfaces.irestaurantes_repository import IRestaurantesRepository
 from src.main.utils.response_formatter import ResponseFormatter
 from flask_jwt_extended import create_access_token
+from src.services.image_service import ImageService
+from werkzeug.datastructures import FileStorage
 
 class RestaurantesManager:
     def __init__(self, restaurante_repo: IRestaurantesRepository) -> None:
@@ -48,19 +50,20 @@ class RestaurantesManager:
         return ResponseFormatter.display_single_obj(restaurante)
 
 
-    def update(self, http_request: HttpRequest) -> HttpResponse:
+    def update(self, http_request: HttpRequest, image_file: FileStorage = None) -> HttpResponse:
+     
         restaurante_info = http_request.body.get("data")
         id_restaurante = http_request.params.get("id")
-
-        if not restaurante_info:
-            return ResponseFormatter.display_error("Requisição inválida: 'data' é obrigatório.", 400)
-
-        if not id_restaurante:
-            return ResponseFormatter.display_error("ID do restaurante é obrigatório.", 400)
-
         self.__restaurante_repo.update(id_restaurante, restaurante_info)
-        return ResponseFormatter.display_operation(self.class_name, "alterado")
-    
+
+        if image_file:
+            self.update_image(http_request, image_file)
+
+        return HttpResponse(
+            body={"message": f"{self.class_name} alterado com sucesso!"},
+            status_code=200
+        )
+
 
     def update_financeiro(self, http_request: HttpRequest) -> HttpResponse:
         id_restaurante = http_request.params.get("id")
@@ -80,7 +83,6 @@ class RestaurantesManager:
         id_restaurante = http_request.params.get("id")
         restaurante_info = http_request.body.get("data")
         endereco_info = restaurante_info.get("attributes")
-        print(http_request) 
 
         self.__restaurante_repo.update_endereco(id_restaurante, endereco_info)
         return ResponseFormatter.display_operation(self.class_name, "atualizado com novo endereço")
@@ -94,3 +96,22 @@ class RestaurantesManager:
 
         self.__restaurante_repo.delete(id_restaurante)
         return ResponseFormatter.display_operation(self.class_name, "deletado")
+    
+
+    def update_image(self, http_request: HttpRequest, file: FileStorage) -> HttpResponse:
+        id_restaurante = http_request.params.get("id")
+
+        restaurante = self.__restaurante_repo.find_by_id(id_restaurante)
+        if not restaurante:
+            return ResponseFormatter.display_error("Restaurante não encontrado.", 404)
+
+        nome_restaurante = restaurante.nome
+
+        try:
+            logo = ImageService.update_image(file, "restaurante/images", nome_restaurante)
+            self.__restaurante_repo.update_image_path(id_restaurante, logo)
+            return HttpResponse(body={"image_url": logo}, status_code=200)
+        except ValueError as e:
+            return HttpResponse(body={"error": str(e)}, status_code=400)
+
+

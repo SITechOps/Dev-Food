@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { usePagamentoContext } from "@/contexts/PagamaentoContext";
 import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
-import { IItens, IPedido, IRespPostPedido } from "@/interface/IPagamento";
+import { IItens, IPedido, IRespPedido } from "@/interface/IPagamento";
 import { IUsuarioCliente } from "@/interface/IUser";
 import { AppSuccess } from "@/utils/success";
 import { useContext, useEffect, useState } from "react";
@@ -29,20 +29,21 @@ export const usePagamento = () => {
   const storedCompra = localStorage.getItem("compraAtual");
   const idEndereco = localStorage.getItem("enderecoPadraoId")!;
   const { taxaEntregaSelecionada, tipoEntregaSelecionada } = useTaxaEntrega();
-  const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+  const { quantidadeTotal, atualizarQuantidadeTotal } =
+    useContext(CarrinhoContext);
   const {
     modeloPagamento,
     setModeloPagamento,
     etapa,
     setEtapa,
-    resetPagamento
+    resetPagamento,
   } = usePagamentoContext();
 
   useEffect(() => {
     obterEnderecoCliente();
     if (taxaEntregaSelecionada === 0) {
       navigate("/");
-      alert("Não foi encontrado o valor da taxa, para prosseguir.")
+      alert("Não foi encontrado o valor da taxa, para prosseguir.");
     }
 
     if (!idEndereco) {
@@ -52,7 +53,6 @@ export const usePagamento = () => {
 
     fetchData();
   }, [idUsuario, token, storedCompra, idEndereco]);
-
 
   async function fetchData() {
     if (storedCompra) {
@@ -110,7 +110,7 @@ export const usePagamento = () => {
       setUser(dados);
       return dados;
     } catch (error) {
-      console.log("erro getDadoUser:", error)
+      console.log("erro getDadoUser:", error);
     }
   }
 
@@ -118,59 +118,73 @@ export const usePagamento = () => {
     setIsLoading(true);
     try {
       if (!storedCompra) {
-        throw new Error("Carrinho não encontrado. Adicione itens antes de prosseguir.");
+        throw new Error(
+          "Carrinho não encontrado. Adicione itens antes de prosseguir.",
+        );
       }
       const compra = JSON.parse(storedCompra);
-      const pedidoPayload: IPedido = construirPedidoPayload(compra, formaPagamento);
-      const resp = await api.post<IRespPostPedido>("/pedido", { pedido: pedidoPayload });
+      const pedidoPayload: IPedido = construirPedidoPayload(
+        compra,
+        formaPagamento,
+      );
+      const resp = await api.post<IRespPedido>("/pedido", {
+        pedido: pedidoPayload,
+      });
 
       if (resp.status === 201) {
-        postNF(resp.data.id_pedido) 
+        postNF(resp.data.id_pedido);
         localStorage.removeItem("quantidadeTotal");
         localStorage.removeItem("compraAtual");
         localStorage.removeItem("carrinho");
         atualizarQuantidadeTotal();
       }
     } catch (error) {
-      console.log("erro postPedido:", error)
+      console.log("erro postPedido:", error);
       setTimeout(() => {
-        resetPagamento(); 
+        resetPagamento();
       }, 0);
     }
   }
 
-  function construirPedidoPayload(compra: any, formaPagamento: "pix" | "cartao"): IPedido {
+  function construirPedidoPayload(
+    compra: any,
+    formaPagamento: "pix" | "cartao",
+  ): IPedido {
     return {
       id_usuario: userData?.sub,
       id_restaurante: compra.itens[0]?.restaurante.id,
       id_endereco: idEndereco,
       sub_total: compra.subtotal,
-      taxa_entrega: Number(taxaEntregaSelecionada.toFixed(2)), 
-      valor_total: Number((compra.subtotal + taxaEntregaSelecionada).toFixed(2)),
+      taxa_entrega: Number(taxaEntregaSelecionada.toFixed(2)),
+      valor_total: Number(
+        (compra.subtotal + taxaEntregaSelecionada).toFixed(2),
+      ),
       tipo_entrega: tipoEntregaSelecionada,
       forma_pagamento: formaPagamento,
-      itens: compra.itens.map((item: any): IItens => ({
-        id_produto: item.id,
-        qtd_itens: item.quantidade,
-        valor_calculado: item.subtotal,
-      })),
+      itens: compra.itens.map(
+        (item: any): IItens => ({
+          id_produto: item.id,
+          qtd_itens: item.quantidade,
+          valor_calculado: item.subtotal,
+        }),
+      ),
     };
   }
 
-  async function postNF(id_pedido: string){
+  async function postNF(id_pedido: string) {
     setIsLoading(true);
     try {
       const resp = await api.post("/nota-fiscal", { id_pedido });
-      new AppSuccess("Pedido realizado com sucesso! Obrigado por comprar conosco.");
+      new AppSuccess(
+        "Pedido realizado com sucesso! Obrigado por comprar conosco.",
+      );
       new AppSuccess("Foi gerada uma nota fiscal e encaminhada no seu e-mail");
       setIsLoading(false);
       navigate("/historico");
       return resp;
     } catch (error) {
-      setTimeout(() => {
-        
-      }, 0);
-      console.log("erro postNF:", error)
+      setTimeout(() => {}, 0);
+      console.log("erro postNF:", error);
     }
   }
 
@@ -191,5 +205,5 @@ export const usePagamento = () => {
     postPedido,
     getDadosUser,
     taxaEntregaSelecionada,
-  }
-}
+  };
+};

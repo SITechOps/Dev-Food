@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { IRestaurante } from "@/interface/IRestaurante";
 
 export const useRestaurantAccount = () => {
   const { logout, userData } = useAuth();
@@ -9,6 +10,8 @@ export const useRestaurantAccount = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const idRestaurante = userData?.sub;
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [restaurantLogo, setRestaurantLogo] = useState<string | null>(null);
 
   const restaurantEnderecoFields = [
     { label: "Logradouro", name: "logradouro", type: "text" },
@@ -89,6 +92,8 @@ export const useRestaurantAccount = () => {
       const response = await api.get(`/restaurante/${idRestaurante}`);
       const respRestaurante = response.data?.data?.attributes || [];
       const enderecoRestaurante = respRestaurante.endereco || {};
+      const logo = respRestaurante.logo || null;
+      setRestaurantLogo(logo);
 
       setFormList({
         nome: respRestaurante.nome || "",
@@ -125,17 +130,49 @@ export const useRestaurantAccount = () => {
     }
   }
 
-  async function alterarDadosRestaurante(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function alterarDadosRestaurante(
+    id: string,
+    restaurante: Partial<Omit<IRestaurante, "id">>,
+    imageFile?: File | null,
+  ) {
     try {
-      await api.patch(`/restaurante/${idRestaurante}`, { data: formList });
-      alert("Restaurante alterado com sucesso!");
+      setIsEditing(true);
+      const formData = new FormData();
+
+      formData.append(
+        "data",
+        JSON.stringify({
+          nome: restaurante.nome,
+          telefone: String(restaurante.telefone),
+          email: String(restaurante.email),
+          descricao: restaurante.descricao,
+          especialidade: restaurante.especialidade,
+          horario_funcionamento: restaurante.horario_funcionamento,
+          razao_social: restaurante.razao_social,
+          cnpj: restaurante.cnpj,
+        }),
+      );
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      await api.patch(`/restaurante/${id}`, formData);
+      fetchUserData();
       setIsEditing(false);
     } catch (error) {
-      alert("Erro ao alterar restaurante. Tente novamente.");
+      console.error("Erro ao editar restaurante:", error);
     }
-    fetchUserData();
   }
+
+  const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!idRestaurante) {
+      alert("ID do restaurante não encontrado.");
+      return;
+    }
+    await alterarDadosRestaurante(idRestaurante, formList, imageFile);
+  };
 
   async function alterarDadosBancarios(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -188,7 +225,7 @@ export const useRestaurantAccount = () => {
       await api.delete(`/restaurante/${idRestaurante}`);
       alert("restaurante removido com sucesso!");
       localStorage.clear();
-      navigate("/");
+      navigate("/auth");
     } catch (error) {
       console.error(error);
       alert("Erro ao deletar restaurante. Tente novamente.");
@@ -220,9 +257,14 @@ export const useRestaurantAccount = () => {
     setIsEditing,
     isLoading,
     idRestaurante,
+    imageFile,
+    setImageFile,
+    restaurantLogo,
+    setRestaurantLogo,
     handleLogout,
     deletarDados,
     alterarDadosRestaurante,
+    handleEditSubmit,
     alterarDadosBancarios,
     alterarEnderecoRestaurante,
   };

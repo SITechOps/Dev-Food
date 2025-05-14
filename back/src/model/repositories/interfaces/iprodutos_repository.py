@@ -29,3 +29,8 @@ class IProdutosRepository(ABC):
 
     @abstractmethod
     def delete(self, id_produto: str) -> None: pass
+
+
+    @abstractmethod
+    def update_image_path(self, id_produto: str, image_url: str) -> None:
+        pass
