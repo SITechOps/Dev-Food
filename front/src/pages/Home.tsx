@@ -4,9 +4,9 @@ import CardRestaurante from "./RestaurantesDisponiveis/Card";
 import React from "react";
 import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
-import Categorias from "./RestaurantesDisponiveis/Categorias";
 import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/interface/IRestaurante";
+import Categorias from "./RestaurantesDisponiveis/Filtros/FiltroCategorias";
 
 export default function Home() {
   const navigate = useNavigate();
