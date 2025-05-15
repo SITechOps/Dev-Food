@@ -13,7 +13,7 @@ export const useCarrinho = () => {
 	const [distancia, setDistancia] = useState<number | null>(null);
 	const [tempoEntrega, setTempoEntrega] = useState<number | null>(null);
 	const [restauranteId, setRestauranteId] = useState<string | null>(null);
-	const resSelecionado = localStorage.getItem("restauranteSelecionado"); // passar esse cara para o context
+	const resSelecionado = localStorage.getItem("restauranteSelecionado"); 
 	const taxaEntregaRestaurante = resSelecionado
 		? JSON.parse(resSelecionado).taxa_entrega
 		: 0;
@@ -82,7 +82,6 @@ export const useCarrinho = () => {
 					: item
 			)
 		);
-		console.log("dados", dados)
 	};
 
 	function decrementar(id: number) {
@@ -98,7 +97,6 @@ export const useCarrinho = () => {
 
 			)
 		);
-		console.log("dados", dados)
 	};
 
 	function removerItem(id: string) {

@@ -10,34 +10,39 @@ import { IRestaurante } from "@/interface/IRestaurante";
 
 export default function Home() {
   const navigate = useNavigate();
-  const CardRestauranteMemo = React.memo(CardRestaurante);
-  const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
   const { restaurantes } = useRestauranteProduto();
-  const { processarRestaurantes, clienteCoords, restaurantesCompletos } = useConfirmacaoEndereco();
-  const [restaurantesCarregados, setRestaurantesCarregados] = useState(false);
-
-  const [restaurantesFiltrados, setRestaurantesFiltrados] = useState<IRestaurante[]>([]);
+  const CardRestauranteMemo = React.memo(CardRestaurante);
   const [mensagemErro, setMensagemErro] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
+  const [restaurantesCarregados, setRestaurantesCarregados] = useState(false);
+  const [restaurantesFiltrados, setRestaurantesFiltrados] = useState<IRestaurante[]>([]);
+  const { processarRestaurantes, clienteCoords, restaurantesCompletos } = useConfirmacaoEndereco();
+
 
   const handleCategoryClick = (category: string) => {
     console.log("Categoria selecionada:", category);
     setSelectedCategory(category);
 
-    if (category.toLowerCase() === "todos") {
-      setRestaurantesFiltrados(restaurantesCompletos);
+    const categoriaSelecionada = category.toLowerCase();
+
+    const baseRestaurantes =
+      restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
+
+    if (categoriaSelecionada === "todos") {
+      setRestaurantesFiltrados(baseRestaurantes);
       setMensagemErro("");
       return;
     }
 
-    const filtrados = restaurantesCompletos.filter((restaurante) =>
-      restaurante.especialidade?.toLowerCase().includes(category.toLowerCase())
+    const filtrados = baseRestaurantes.filter((restaurante) =>
+      restaurante.especialidade?.toLowerCase().includes(categoriaSelecionada)
     );
 
     if (filtrados.length > 0) {
       setRestaurantesFiltrados(filtrados);
       setMensagemErro("");
     } else {
-      setRestaurantesFiltrados([]); 
+      setRestaurantesFiltrados([]);
       setMensagemErro(`Nenhum restaurante encontrado com a categoria "${category}"`);
     }
   };
@@ -53,7 +58,7 @@ export default function Home() {
   return (
     <div className="mt-[5rem]">
       <h1 className="text-blue mb-8 mt-2 text-center font-medium">
-        Pedir seu delivery no TechOps é rápido e prático! Conheça as categorias
+        Pedir seu delivery no TechOps é rápido e prático!
       </h1>
 
 
@@ -73,6 +78,9 @@ export default function Home() {
 
       <div className="my-20">
 
+        <h2 className="text-blue mb-5 text-2xl font-semibold">
+          Conheça as categorias
+        </h2>
         <Categorias onCategoryClick={handleCategoryClick} />
       </div>
 

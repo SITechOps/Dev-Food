@@ -8,22 +8,31 @@ import CardRestaurante from "../Card";
 import IconAction from "@/components/ui/IconAction";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import Button from "@/components/ui/Button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function FiltroLupa() {
-	const [abaAtiva, setAbaAtiva] = useState("restaurantes");
+	const navigate = useNavigate();
+	const { isAuthenticated } = useAuth();
 	const [searchParams] = useSearchParams();
 	const initialQuery = searchParams.get("query") || "";
-	const [searchTerm, setSearchTerm] = useState(initialQuery);
-	const CardRestauranteMemo = React.memo(CardRestaurante);
 	const { produtosAll } = useRestauranteProduto();
-	const { restaurantesCompletos } = useConfirmacaoEndereco();
+	const [searchTerm, setSearchTerm] = useState(initialQuery);
 	const searchTermLower = searchTerm.toLowerCase();
-	const navigate = useNavigate();
+	const { restaurantes } = useRestauranteProduto();
+	const [abaAtiva, setAbaAtiva] = useState("restaurantes");
+	const CardRestauranteMemo = React.memo(CardRestaurante);
+	const { restaurantesCompletos } = useConfirmacaoEndereco();
 
 	const restaurantesFiltrados = useMemo(() => {
-		if (!searchTerm.trim()) return restaurantesCompletos;
+		const baseRestaurantes =
+			restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
 
-		return restaurantesCompletos.filter((restaurante) => {
+		if (!searchTerm.trim()) return baseRestaurantes;
+
+		const searchTermLower = searchTerm.toLowerCase();
+
+		return baseRestaurantes.filter((restaurante) => {
 			return (
 				restaurante.nome?.toLowerCase().includes(searchTermLower) ||
 				restaurante.especialidade?.toLowerCase().includes(searchTermLower) ||
@@ -33,7 +42,8 @@ export default function FiltroLupa() {
 				restaurante.endereco?.cidade?.toLowerCase().includes(searchTermLower)
 			);
 		});
-	}, [searchTerm, restaurantesCompletos]);
+	}, [searchTerm, restaurantesCompletos, restaurantes]);
+
 
 	const produtosFiltrados = useMemo(() => {
 		if (!searchTerm.trim()) return [];
@@ -52,7 +62,7 @@ export default function FiltroLupa() {
 	};
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault(); 
+		e.preventDefault();
 	};
 
 	return (
@@ -101,34 +111,55 @@ export default function FiltroLupa() {
 					</button>
 				</div>
 
-				{abaAtiva === "restaurantes" && restaurantesFiltrados.length > 0 && (
-					<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-						{restaurantesFiltrados.map((restaurante) => (
-							<CardRestauranteMemo key={restaurante.id} restaurante={restaurante} />
-						))}
-					</div>
+				{abaAtiva === "restaurantes" && (
+					<>
+						{restaurantesFiltrados.length > 0 ? (
+							<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+								{restaurantesFiltrados.map((restaurante) => (
+									<CardRestauranteMemo key={restaurante.id} restaurante={restaurante} />
+								))}
+							</div>
+						) : (
+							<p className="text-muted-foreground text-center mt-2">Nenhum resultado encontrado.</p>
+						)}
+					</>
 				)}
 
-				{abaAtiva === "itens" && produtosFiltrados.length > 0 && (
-					<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 mt-10">
-						{produtosFiltrados
-							.filter((produto) => produto.restaurante)
-							.map((produto) => (
-								<CardProdutos
-									key={produto.id}
-									id={produto.id}
-									nome={produto.nome}
-									descricao={produto.descricao}
-									imageUrl={produto.imageUrl}
-									valor_unitario={produto.valor_unitario}
-									dadosRestaurante={produto.restaurante!}
-								/>
-							))}
-					</div>
-				)}
-
-				{restaurantesFiltrados.length === 0 && produtosFiltrados.length === 0 && (
-					<p className="text-muted-foreground text-center">Nenhum resultado encontrado.</p>
+				{abaAtiva === "itens" && (
+					<>
+						{!isAuthenticated ? (
+							<>
+								<p className="text-muted-foreground text-center mt-4">
+									Para consultar os produtos disponíveis, realize o LOGIN.
+								</p>
+								<div className="flex justify-center mt-4">
+									<Button onClick={() => navigate("/intermediaria")} className="w-80">
+										Realizar Login
+									</Button>
+								</div>
+							</>
+						) : produtosFiltrados.length > 0 ? (
+							<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 mt-10">
+								{produtosFiltrados
+									.filter((produto) => produto.restaurante)
+									.map((produto) => (
+										<CardProdutos
+											key={produto.id}
+											id={produto.id}
+											nome={produto.nome}
+											descricao={produto.descricao}
+											imageUrl={produto.imageUrl}
+											valor_unitario={produto.valor_unitario}
+											dadosRestaurante={produto.restaurante!}
+										/>
+									))}
+							</div>
+						) : (
+							<p className="text-muted-foreground text-center mt-4">
+								Nenhum produto encontrado.
+							</p>
+						)}
+					</>
 				)}
 			</>
 

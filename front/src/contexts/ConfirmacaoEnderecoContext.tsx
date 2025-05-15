@@ -26,15 +26,15 @@ interface ConfirmacaoPadraoState {
 
 interface ConfirmacaoEnderecoContextProps {
   loading: boolean;
-  confirmacaoPadrao: ConfirmacaoPadraoState;
-  mostrarConfirmacao: (endereco: IAddress) => void;
-  confirmarEnderecoPadrao: (endereco: IAddress) => void;
   cancelarConfirmacao: () => void;
   enderecoPadraoId: string | null;
-  setEnderecoPadraoId: (id: string | null) => void;
   clienteCoords: Coordenadas | null;
-  processarRestaurantes: (coords: Coordenadas) => Promise<IRestaurante[]>;
   restaurantesCompletos: IRestaurante[];
+  confirmacaoPadrao: ConfirmacaoPadraoState;
+  mostrarConfirmacao: (endereco: IAddress) => void;
+  setEnderecoPadraoId: (id: string | null) => void;
+  confirmarEnderecoPadrao: (endereco: IAddress) => void;
+  processarRestaurantes: (coords: Coordenadas) => Promise<IRestaurante[]>;
   setRestaurantesCompletos: React.Dispatch<React.SetStateAction<IRestaurante[]>>;
   calcularTaxaEntrega: (distancia: number) => number;
 }
