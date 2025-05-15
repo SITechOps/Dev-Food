@@ -12,11 +12,6 @@ import { useNavigate } from "react-router-dom";
 export const usePagamento = () => {
   const { userData, token } = useAuth();
   const navigate = useNavigate();
-  const [endereco, setEndereco] = useState({
-    rua: "",
-    complemento: "",
-    id: "",
-  });
   const [valoresCarrinho, setValoresCarrinho] = useState({
     subtotal: 0,
     taxa_entrega: 0,
@@ -27,9 +22,15 @@ export const usePagamento = () => {
   const [restaurante, setRestaurante] = useState("");
   const [user, setUser] = useState<IUsuarioCliente>();
   const storedCompra = localStorage.getItem("compraAtual");
-  const idEndereco = localStorage.getItem("enderecoPadraoId")!;
   const { taxaEntregaSelecionada, tipoEntregaSelecionada } = useTaxaEntrega();
-  const { quantidadeTotal, atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+  const { atualizarQuantidadeTotal } = useContext(CarrinhoContext);
+  const storageEnderecoId = localStorage.getItem("enderecoPadraoId");
+  const storageEndereco = JSON.parse(localStorage.getItem("enderecoPadrao") || "null");
+  const [endereco, setEndereco] = useState({
+    rua: storageEndereco.logradouro,
+    complemento: `${storageEndereco.bairro}, ${storageEndereco.cidade}, ${storageEndereco.estado} - ${storageEndereco.pais}`,
+    id: storageEnderecoId!,
+  });
   const {
     modeloPagamento,
     setModeloPagamento,
@@ -39,19 +40,23 @@ export const usePagamento = () => {
   } = usePagamentoContext();
 
   useEffect(() => {
-    obterEnderecoCliente();
+    if (!idUsuario || !token) {
+      navigate("/");
+      alert("Usuário ou token não encontrado.");
+      throw new Error("Usuário ou token não encontrado.");
+    }
     if (taxaEntregaSelecionada === 0) {
       navigate("/");
       alert("Não foi encontrado o valor da taxa, para prosseguir.")
     }
 
-    if (!idEndereco) {
+    if (endereco.id === null) {
       navigate("/");
       alert("Endereço padrão não encontrado no.");
     }
 
     fetchData();
-  }, [idUsuario, token, storedCompra, idEndereco]);
+  }, [idUsuario, token, storedCompra, endereco.id, taxaEntregaSelecionada]);
 
 
   async function fetchData() {
@@ -60,48 +65,13 @@ export const usePagamento = () => {
       setRestaurante(compra.itens[0]?.restaurante.nome);
       setValoresCarrinho({
         subtotal: compra.subtotal,
-        taxa_entrega: compra.taxa_entrega,
-        total: compra.total,
+        taxa_entrega: Number(taxaEntregaSelecionada.toFixed(2)),
+        total: compra.subtotal + taxaEntregaSelecionada,
       });
     }
   }
 
-  async function obterEnderecoCliente() {
-    try {
-      if (!idUsuario || !token) {
-        navigate("/");
-        alert("Usuário ou token não encontrado.");
-        throw new Error("Usuário ou token não encontrado.");
-      }
-
-      const response = await api.get(`/user/${idUsuario}/enderecos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const endereco = response.data?.data?.attributes?.[0];
-
-      if (!endereco) {
-        navigate("/");
-        alert("Nenhum endereço encontrado.");
-        return;
-      }
-
-      const rua = `${endereco.logradouro}, ${endereco.numero}`;
-      const complemento = `${endereco.bairro}, ${endereco.cidade}, ${endereco.estado} - ${endereco.pais}`;
-
-      setEndereco({
-        rua,
-        complemento,
-        id: endereco.id,
-      });
-
-      console.log("Endereço definido com sucesso:", rua, complemento);
-    } catch (error) {
-      console.error("Erro ao obter endereço:", error);
-    }
-  }
+  console.log("valoresCarrinho", valoresCarrinho)
 
   async function getDadosUser() {
     try {
@@ -125,7 +95,7 @@ export const usePagamento = () => {
       const resp = await api.post<IRespPostPedido>("/pedido", { pedido: pedidoPayload });
 
       if (resp.status === 201) {
-        postNF(resp.data.id_pedido) 
+        postNF(resp.data.id_pedido)
         localStorage.removeItem("quantidadeTotal");
         localStorage.removeItem("compraAtual");
         localStorage.removeItem("carrinho");
@@ -134,7 +104,7 @@ export const usePagamento = () => {
     } catch (error) {
       console.log("erro postPedido:", error)
       setTimeout(() => {
-        resetPagamento(); 
+        resetPagamento();
       }, 0);
     }
   }
@@ -143,10 +113,10 @@ export const usePagamento = () => {
     return {
       id_usuario: userData?.sub,
       id_restaurante: compra.itens[0]?.restaurante.id,
-      id_endereco: idEndereco,
+      id_endereco: endereco.id,
       sub_total: compra.subtotal,
-      taxa_entrega: Number(taxaEntregaSelecionada.toFixed(2)), 
-      valor_total: Number((compra.subtotal + taxaEntregaSelecionada).toFixed(2)),
+      taxa_entrega: valoresCarrinho.taxa_entrega,
+      valor_total: valoresCarrinho.total,
       tipo_entrega: tipoEntregaSelecionada,
       forma_pagamento: formaPagamento,
       itens: compra.itens.map((item: any): IItens => ({
@@ -157,7 +127,7 @@ export const usePagamento = () => {
     };
   }
 
-  async function postNF(id_pedido: string){
+  async function postNF(id_pedido: string) {
     setIsLoading(true);
     try {
       const resp = await api.post("/nota-fiscal", { id_pedido });
@@ -167,9 +137,6 @@ export const usePagamento = () => {
       navigate("/historico");
       return resp;
     } catch (error) {
-      setTimeout(() => {
-        
-      }, 0);
       console.log("erro postNF:", error)
     }
   }
@@ -179,9 +146,9 @@ export const usePagamento = () => {
     storedCompra,
     navigate,
     restaurante,
-    valoresCarrinho,
     setIsLoading,
     isLoading,
+    valoresCarrinho,
     setValoresCarrinho,
     endereco,
     etapa,

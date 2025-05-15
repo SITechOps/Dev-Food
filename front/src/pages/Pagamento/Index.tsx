@@ -172,12 +172,12 @@ export default function Pagamento() {
         </p>
         <p className="my-2 flex items-center justify-between gap-8">
           Taxa de entrega
-          <span>R$ {taxaEntregaSelecionada.toFixed(2)}</span>
+          <span>R$ {valoresCarrinho.taxa_entrega.toFixed(2)}</span>
         </p>
         <p className="mt-10 flex items-center justify-between gap-8 font-bold">
           Total
           <span>
-            R$ {(valoresCarrinho.subtotal + taxaEntregaSelecionada).toFixed(2)}
+            R$ {valoresCarrinho.total.toFixed(2)}
           </span>
         </p>
       </div>

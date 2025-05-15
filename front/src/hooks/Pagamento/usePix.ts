@@ -9,7 +9,7 @@ export const usePixComponent = () => {
 	const [key, setKey] = useState(0);
 	const [copied, setCopied] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-	const { valoresCarrinho, userData, setIsLoading, isLoading, taxaEntregaSelecionada, storedCompra, postPedido } = usePagamento();
+	const { valoresCarrinho, userData, setIsLoading, isLoading, storedCompra, postPedido } = usePagamento();
 	const [statusPagamento, setStatusPagamento] = useState<StatusChave>("pendente");
 	const sequencia: StatusChave[] = ["pendente", "processando", "aprovado"];
 	const idGenerico = Math.random().toString(36).substring(2, 10);
@@ -23,7 +23,6 @@ export const usePixComponent = () => {
 	const [loadingGenerico, setLoadingGenerico] = useState(false);
 	const [pagamentoIniciado, setPagamentoIniciado] = useState(false);
 	const { resetPagamento } = usePagamentoContext();
-
 
 	useEffect(() => {
 		if (!userData?.sub || valoresCarrinho.total === 0) return;
@@ -83,11 +82,10 @@ export const usePixComponent = () => {
 				const dados = data?.data?.attributes || [];
 
 				if (storedCompra) {
-					const compra = JSON.parse(storedCompra);
 					const pixPayload: IPagePix = {
 						email_comprador: dados.email,
 						nome_comprador: dados.nome,
-						valor_pagamento: Number((compra.subtotal + taxaEntregaSelecionada).toFixed(2)),
+						valor_pagamento: valoresCarrinho.total,
 					};
 
 					const response = await api.post<IResponsePagePix>("/pix/qr-code", {
