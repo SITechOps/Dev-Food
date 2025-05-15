@@ -94,3 +94,8 @@ class UnverifiedNumber(BaseCustomException):
 class SmsNotSent(BaseCustomException):
     def __init__(self, message="Número inválido!"):
         super().__init__(message, 400)
+
+
+class StockExceeded(BaseCustomException):
+    def __init__(self, message="Quantidade indisponível no estoque!"):
+        super().__init__(message, 409)

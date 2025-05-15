@@ -101,7 +101,19 @@ class ProdutosRepository(IProdutosRepository):
                     raise ProductAlreadyExists() from e
                 
                 raise e
-    
+
+
+    def subtrair_estoque(self, id_produto: str, qtd_itens: int) -> None:
+        with DBConnectionHandler() as db:
+            try:
+                produto = self.find_by_id(id_produto)
+                produto.qtd_estoque -= qtd_itens
+                db.session.add(produto)
+                db.session.commit()
+            except Exception as exception:
+                db.session.rollback()
+                raise exception
+
 
     def delete(self, id_produto: str) -> None:
         with DBConnectionHandler() as db:
