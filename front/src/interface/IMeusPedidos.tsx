@@ -8,6 +8,7 @@ export interface IMeusPedidos {
   restaurante?: IRestaurante;
   status?: string;
   itens?: { produto: string; qtd_itens: number; valor: number }[];
+  imagem_produto: string;
 
   restaurante_nome: string;
   restaurante_logo: string;
@@ -31,5 +32,5 @@ export interface IMeusPedidos {
 export interface Props {
   tipo: "meuPedido" | "historico";
   pedidos: IMeusPedidos[];
-  loading?: boolean; 
+  loading?: boolean;
 }
