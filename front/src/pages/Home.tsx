@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import Input from "@/components/ui/Input";
-import CardRestaurante from "./RestaurantesDisponiveis/Card";
 import React from "react";
 import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
 import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/interface/IRestaurante";
-import Categorias from "./RestaurantesDisponiveis/Filtros/FiltroCategorias";
+import Categorias from "./RestaurantesDisponiveis/Filtros/Categoria/FiltroCategorias";
+import CardRestaurante from "./RestaurantesDisponiveis/Cards/CardRestaurante";
 
 export default function Home() {
   const navigate = useNavigate();

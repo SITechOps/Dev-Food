@@ -43,7 +43,6 @@ export const usePixComponent = () => {
 		}
 	}
 
-
 	async function acompanharPedido() {
 		await postPedido("pix");
 	};

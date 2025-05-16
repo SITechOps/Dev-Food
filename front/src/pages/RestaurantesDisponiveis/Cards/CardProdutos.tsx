@@ -1,11 +1,11 @@
 import { Minus, Plus } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { useCardProdutos } from "../../../hooks/useCardProduto";
-import { CardProdutosProps } from "../../../interface/IProduct";
+import { useCardProdutos } from "@/hooks/Restaurante/VisaoCliente/useCardProduto";
+import { CardProdutosProps } from "@/interface/IProduto";
 
 export default function CardProdutos(props: CardProdutosProps) {
-  const { nome, descricao, imageUrl, valor_unitario, dadosRestaurante } = props;
+  const { nome, descricao, image_url, valor_unitario, dadosRestaurante } = props;
   const num = +valor_unitario;
   const { quantidade, incrementar, decrementar, adicionarAoCarrinho } =
     useCardProdutos(props, dadosRestaurante);
@@ -16,7 +16,7 @@ export default function CardProdutos(props: CardProdutosProps) {
         <img
           className="mx-auto mr-2 mb-4 ml-2 h-15 w-15 rounded-full object-cover"
           src={
-            imageUrl ||
+            image_url ||
             "https://food-guide.canada.ca/sites/default/files/styles/square_400_x_400/public/2020-12/CFGPlate-crop400x400.jpg"
           }
           alt={nome}

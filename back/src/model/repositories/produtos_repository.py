@@ -15,6 +15,8 @@ class ProdutosRepository(IProdutosRepository):
                 )
                 db.session.add(new_produto)
                 db.session.commit()
+                db.session.refresh(new_produto) 
+                return new_produto
             except Exception as e:
                 db.session.rollback()
                 raise e
@@ -99,7 +101,19 @@ class ProdutosRepository(IProdutosRepository):
                     raise ProductAlreadyExists() from e
                 
                 raise e
-    
+
+
+    def subtrair_estoque(self, id_produto: str, qtd_itens: int) -> None:
+        with DBConnectionHandler() as db:
+            try:
+                produto = self.find_by_id(id_produto)
+                produto.qtd_estoque -= qtd_itens
+                db.session.add(produto)
+                db.session.commit()
+            except Exception as exception:
+                db.session.rollback()
+                raise exception
+
 
     def delete(self, id_produto: str) -> None:
         with DBConnectionHandler() as db:
@@ -110,3 +124,17 @@ class ProdutosRepository(IProdutosRepository):
             except Exception as exception:
                 db.session.rollback()
                 raise exception
+
+    
+    def update_image_path(self, id_produto: str, image_url: str) -> None:
+        with DBConnectionHandler() as db:
+            try:
+                produto = db.session.query(Produto).filter_by(id=id_produto).first()
+                if not produto:
+                    raise ValueError("Produto não encontrado")
+
+                produto.image_url  = image_url 
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                raise e

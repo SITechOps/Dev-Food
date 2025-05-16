@@ -9,7 +9,19 @@ from src.main.server.configs import *
 from src.main.routes import *
 
 def create_app():
-    app = Flask(__name__, static_url_path="/")
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))  
+    PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', '..', '..')) 
+    STATIC_FOLDER = os.path.join(PROJECT_ROOT, 'static')
+    UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'static', 'uploads')
+
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+    app = Flask(__name__,
+                static_folder=STATIC_FOLDER,
+                static_url_path="/static")
+
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
     CORS(app)
 
     configure_jwt(app)

@@ -6,14 +6,16 @@ import { Props } from "@/interface/IMeusPedidos";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
+import ModalDetalhePedido from "./ModalDetalhePedido";
 
 export default function HistoricoDePedido({ tipo }: Props) {
   const { userData } = useAuth();
   const id_usuario = userData?.sub;
   const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
+  const [pedidoSelecionado, setPedidoSelecionado] =
+    useState<IMeusPedidos | null>(null);
   const navigate = useNavigate();
 
-  console.log(id_usuario);
   useEffect(() => {
     async function buscarPedidos() {
       if (!id_usuario) return;
@@ -29,7 +31,7 @@ export default function HistoricoDePedido({ tipo }: Props) {
     buscarPedidos();
   }, [id_usuario]);
 
-  // filtrar os pedidos com base no tipo
+  // Filtrar os pedidos com base no tipo
   let pedidosRenderizar = [];
   if (tipo === "meuPedido") {
     pedidosRenderizar = pedidos.slice(0, 1);
@@ -42,10 +44,9 @@ export default function HistoricoDePedido({ tipo }: Props) {
       {pedidosRenderizar.map((pedido) => (
         <div
           key={pedido.Id}
-          className="mb-3 flex flex-col justify-between rounded-md bg-white shadow-sm p-5"
+          className="mb-3 flex flex-col justify-between rounded-md bg-white p-5 shadow-sm"
           style={{ border: "1px solid #A9A9A9" }}
         >
-          {/* Restaurante */}
           <div className="mb-[0.5rem] flex items-center gap-[0.75rem]">
             <img
               src={pedido.restaurante.logo || "img/SushiRest.webp"}
@@ -62,7 +63,6 @@ export default function HistoricoDePedido({ tipo }: Props) {
             </div>
           </div>
 
-          {/* Itens */}
           <div className="mb-[0.5rem] ml-[1.25rem] border-l-2 border-gray-200 pl-[0.75rem] text-sm text-black">
             {pedido.itens.slice(0, 2).map((item, index) => (
               <p key={index}>
@@ -74,20 +74,17 @@ export default function HistoricoDePedido({ tipo }: Props) {
             )}
           </div>
 
-          {/* Endereço */}
           <p className="mb-[0.25rem] truncate text-sm text-black">
             <strong className="text-black">Endereço:</strong>{" "}
             {pedido.endereco.logradouro}, {pedido.endereco.numero}
           </p>
 
-          {/* Pagamento */}
           <p className="text-sm text-black">
             <strong className="text-black">Pagamento:</strong>{" "}
             {pedido.forma_pagamento} • <strong>Total:</strong> R${" "}
             {pedido.valor_total}
           </p>
 
-          {/* Botões */}
           <div className="mt-[0.5rem] flex justify-center gap-10">
             <Button color="plain" className="p-2">
               Ajuda
@@ -107,7 +104,10 @@ export default function HistoricoDePedido({ tipo }: Props) {
                 <Button color="secondary" className="p-2">
                   Adicionar à sacola
                 </Button>
-                <Button className="p-2">
+                <Button
+                  className="p-2"
+                  onClick={() => setPedidoSelecionado(pedido)}
+                >
                   Detalhe do Pedido
                 </Button>
               </>
@@ -115,6 +115,14 @@ export default function HistoricoDePedido({ tipo }: Props) {
           </div>
         </div>
       ))}
+
+      {/* Modal */}
+      {pedidoSelecionado && (
+        <ModalDetalhePedido
+          pedido={pedidoSelecionado}
+          onClose={() => setPedidoSelecionado(null)}
+        />
+      )}
     </div>
   );
 }

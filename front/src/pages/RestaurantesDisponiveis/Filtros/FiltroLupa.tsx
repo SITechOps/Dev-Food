@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import React from "react";
 import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
-import CardProdutos from "../ProdutoDisponiveis/Index";
+import CardProdutos from "../Cards/CardProdutos";
 import Input from "@/components/ui/Input";
 import CardRestaurante from "../Card";
 import IconAction from "@/components/ui/IconAction";
@@ -148,7 +148,7 @@ export default function FiltroLupa() {
 											id={produto.id}
 											nome={produto.nome}
 											descricao={produto.descricao}
-											imageUrl={produto.imageUrl}
+											 image_url={produto. image_url}
 											valor_unitario={produto.valor_unitario}
 											dadosRestaurante={produto.restaurante!}
 										/>

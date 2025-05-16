@@ -1,8 +1,8 @@
 import { IoClose } from "react-icons/io5";
-import Button from "../ui/Button";
+import Button from "@/components/ui/Button";
 import { Minus, Plus } from "lucide-react";
-import { useCarrinho } from "../../hooks/useCarinho";
-import ifoodLogo from "../../assets/ifood.png";
+import { useCarrinho } from "@/hooks/useCarinho";
+import TechOpsLogo from "@/assets/techops.png";
 
 interface MenuLeteralCarrinhoProps {
   isCarrinhoOpen: boolean;
@@ -25,8 +25,8 @@ export default function Carrinho({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-end bg-black/70  text-blue">
-        <div className="relative h-full w-full max-w-md overflow-y-auto custom-scroll bg-white p-6">
+      <div className="text-blue fixed inset-0 z-50 flex justify-end bg-black/70">
+        <div className="custom-scroll relative h-full w-full max-w-md overflow-y-auto bg-white p-6">
           <div className="mb-10 flex h-fit items-start justify-start self-start">
             <IoClose
               className="icon brown-normal absolute top-3 right-4 cursor-pointer"
@@ -36,10 +36,10 @@ export default function Carrinho({
           </div>
 
           {dados.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center ">
+            <div className="flex h-full flex-col items-center justify-center">
               <img
-                src={ifoodLogo}
-                alt="Logo Ifood"
+                src={TechOpsLogo}
+                alt="Logo TechOps"
                 className="m-auto my-2 w-30"
               />
               <p className="mt-2 font-bold">Sua sacola está vazia!</p>
@@ -110,7 +110,7 @@ export default function Carrinho({
                   className="mt-4 w-full p-2"
                   onClick={() => escolherFormaPagamento(setIsCarrinhoOpen)}
                 >
-                 Quero Comprar
+                  Quero Comprar
                 </Button>
               </div>
             </>

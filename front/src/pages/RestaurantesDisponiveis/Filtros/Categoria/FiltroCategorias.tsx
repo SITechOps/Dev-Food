@@ -6,8 +6,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-import CategoryCard from "../components/CategoriaCard";
-import { categories } from "../components/categories";
+import CategoryCard from "./CategoriaCard";
+import { categories } from "./categories";
 
 interface CategoriasProps {
   onCategoryClick: (category: string) => void;

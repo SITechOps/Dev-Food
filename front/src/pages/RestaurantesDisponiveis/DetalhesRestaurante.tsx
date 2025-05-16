@@ -1,6 +1,6 @@
 import { Star, ChevronRight } from "lucide-react";
 import Button from "../../components/ui/Button";
-import CardProdutos from "./ProdutoDisponiveis/Index";
+import CardProdutos from "./Cards/CardProdutos";
 import { useRestaurante } from "../../hooks/Restaurante/VisaoCliente/useRestaurante";
 import { Loading } from "../../components/shared/Loading";
 import VerMaisRestaurante from "./VerMais/Index";
@@ -82,7 +82,7 @@ export default function DetalhesRestaurante() {
                   id={produto.id}
                   nome={produto.nome}
                   descricao={produto.descricao}
-                  imageUrl={produto.imageUrl}
+                  image_url={produto.image_url}
                   valor_unitario={produto.valor_unitario}
                   dadosRestaurante={restaurante}
                 />

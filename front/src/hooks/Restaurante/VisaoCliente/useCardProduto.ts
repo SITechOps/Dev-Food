@@ -1,8 +1,7 @@
+import { CarrinhoContext } from "@/contexts/CarrinhoContext";
+import { IProduto } from "@/interface/IProduto";
+import { IRestaurante } from "@/interface/IRestaurante";
 import { useContext, useState } from "react";
-import { IProduto } from "../interface/IProduct";
-import { IRestaurante } from "../interface/IRestaurante";
-import { CarrinhoContext } from "../contexts/CarrinhoContext";
-
 
 export function useCardProdutos(produto: IProduto, restaurante: IRestaurante) {
 	const [quantidade, setQuantidade] = useState(0);

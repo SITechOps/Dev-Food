@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/connection/axios";
 import { IRestaurante } from "@/interface/IRestaurante";
-import { IProduto } from "@/interface/IProduct";
+import { IProduto } from "@/interface/IProduto";
 
 
 let cacheRestaurantes: IRestaurante[] = [];

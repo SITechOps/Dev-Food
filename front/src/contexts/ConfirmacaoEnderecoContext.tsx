@@ -6,13 +6,13 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { IAddress } from "../interface/IAddress";
 import { IRestaurante } from "@/interface/IRestaurante";
 import { api } from "@/connection/axios";
 import { geocodeTexto } from "@/utils/useGeocode";
 import { calcularDistancia } from "@/utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "@/utils/calculateDeliveryFee";
 import { initMapScript } from "@/utils/initMapScript";
+import { IEndereco } from "@/interface/IEndereco";
 
 interface Coordenadas {
   lat: number;
@@ -21,7 +21,7 @@ interface Coordenadas {
 
 interface ConfirmacaoPadraoState {
   show: boolean;
-  endereco: IAddress | null;
+  endereco: IEndereco | null;
 }
 
 interface ConfirmacaoEnderecoContextProps {
@@ -31,9 +31,9 @@ interface ConfirmacaoEnderecoContextProps {
   clienteCoords: Coordenadas | null;
   restaurantesCompletos: IRestaurante[];
   confirmacaoPadrao: ConfirmacaoPadraoState;
-  mostrarConfirmacao: (endereco: IAddress) => void;
+  mostrarConfirmacao: (endereco: IEndereco) => void;
   setEnderecoPadraoId: (id: string | null) => void;
-  confirmarEnderecoPadrao: (endereco: IAddress) => void;
+  confirmarEnderecoPadrao: (endereco: IEndereco) => void;
   processarRestaurantes: (coords: Coordenadas) => Promise<IRestaurante[]>;
   setRestaurantesCompletos: React.Dispatch<React.SetStateAction<IRestaurante[]>>;
   calcularTaxaEntrega: (distancia: number) => number;
@@ -54,9 +54,9 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
     setEnderecoPadraoId(id);
   };
 
-  const mostrarConfirmacao = (endereco: IAddress) => setConfirmacaoPadrao({ show: true, endereco });
+  const mostrarConfirmacao = (endereco: IEndereco) => setConfirmacaoPadrao({ show: true, endereco });
 
-  const confirmarEnderecoPadrao = (endereco: IAddress) => {
+  const confirmarEnderecoPadrao = (endereco: IEndereco) => {
     if (!endereco.id) return alert("Endereço não encontrado");
 
     localStorage.setItem("enderecoPadrao", JSON.stringify(endereco));
@@ -80,7 +80,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
       if (!enderecoStr) return setLoading(false);
 
       try {
-        const endereco: IAddress = JSON.parse(enderecoStr);
+        const endereco: IEndereco = JSON.parse(enderecoStr);
         const coordenadasSalvas = coordenadasSalvasStr ? JSON.parse(coordenadasSalvasStr) : null;
 
         if (coordenadasSalvas?.id === enderecoPadraoId) {

@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { usePagamentoContext } from "@/contexts/PagamaentoContext";
 import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
-import { IItens, IPedido, IRespPostPedido } from "@/interface/IPagamento";
+import { IItens, IPedido, IRespPedido } from "@/interface/IPagamento";
 import { IUsuarioCliente } from "@/interface/IUser";
 import { AppSuccess } from "@/utils/success";
 import { useContext, useEffect, useState } from "react";
@@ -58,7 +58,6 @@ export const usePagamento = () => {
     fetchData();
   }, [idUsuario, token, storedCompra, endereco.id, taxaEntregaSelecionada]);
 
-
   async function fetchData() {
     if (storedCompra) {
       const compra = JSON.parse(storedCompra);
@@ -92,9 +91,9 @@ export const usePagamento = () => {
       }
       const compra = JSON.parse(storedCompra);
       const pedidoPayload: IPedido = construirPedidoPayload(compra, formaPagamento);
-      const resp = await api.post<IRespPostPedido>("/pedido", { pedido: pedidoPayload });
+      const resp = await api.post<IRespPedido>("/pedido", { pedido: pedidoPayload });
 
-      if (resp.status === 201) {
+      if (resp.status === 201) { // precisa testar
         postNF(resp.data.id_pedido)
         localStorage.removeItem("quantidadeTotal");
         localStorage.removeItem("compraAtual");

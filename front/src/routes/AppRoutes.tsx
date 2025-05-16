@@ -22,7 +22,7 @@ const CadastroRestaurante = lazy(
     import("../pages/Usuario/Restaurante/FormRestaurante/CadastroRestaurante"),
 );
 const DetalhesRestaurante = lazy(
-  () => import("../pages/RestaurantesDisponiveis/Detalhes"),
+  () => import("../pages/RestaurantesDisponiveis/DetalhesRestaurante"),
 );
 const AlterarEnderecoRestaurante = lazy(
   () => import("../components/Endereco/EnderecoModal"),

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate} from "react-router-dom";
 import { api } from "../../../connection/axios";
-import { IProduto } from "../../../interface/IProduct";
+import { IProduto } from "@/interface/IProduto";
 
 
 export const useRestaurante = () => {

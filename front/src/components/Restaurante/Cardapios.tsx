@@ -1,11 +1,11 @@
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Button from "@/components/ui/Button";
-import Padrao from "@/assets/prato-padrao.png";
 import Input from "@/components/ui/Input";
 import ModalProduto from "@/components/Produto/ModalProduto";
 import { Search } from "lucide-react";
 import useProdutos from "@/hooks/useProducts";
+import { ImagemDeEntidade } from "../ui/ImagemEntidade";
 
 const Cardapios = () => {
   const iconStyle =
@@ -22,12 +22,17 @@ const Cardapios = () => {
     produtoSelecionado,
     criarProduto,
     editarProduto,
+    isUploading,
   } = useProdutos();
 
   return (
-    <div className="bg-white p-6">
+    <div className="rounded-[10px] bg-white p-6">
       <div className="h-w-auto mb-6 flex items-center gap-10">
-        <Button className="w-3xs" onClick={abrirModalAdicionar}>
+        <Button
+          className="w-3xs"
+          onClick={abrirModalAdicionar}
+          disabled={isUploading}
+        >
           Adicionar Produto
         </Button>
 
@@ -41,6 +46,7 @@ const Cardapios = () => {
             placeholder="Buscar produto"
             className="!mt-0 h-full !pl-10"
             onChange={handleSearch}
+            disabled={isUploading}
           />
         </div>
       </div>
@@ -54,59 +60,65 @@ const Cardapios = () => {
           <div className="flex items-center justify-center p-4">Ações</div>
         </div>
 
-        {produtosFiltrados.map((product) => (
-          <div
-            key={product.id}
-            className="border-gray-medium grid grid-cols-[140px_180px_200px_130px_120px] border-t bg-white px-2.5 sm:grid-cols-[1fr_2fr_3fr_2fr_2fr]"
-          >
-            <div className="flex flex-col items-center p-4">
-              <img
-                src={product.imageUrl ? product.imageUrl : Padrao}
-                alt={product.nome}
-                className="h-20 w-20 rounded object-contain"
-              />
-              <span className="text-blue mt-1 text-sm">
-                Qtd: {product.qtd_estoque}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-center p-4">
-              <span className="text-blue text-center leading-snug">
-                {product.nome}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-center p-4">
-              <span className="text-blue text-center leading-snug">
-                {product.descricao}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-center p-4">
-              <span className="text-blue font-medium">
-                R$ {product.valor_unitario}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-center gap-4 p-4">
-              <div
-                id="Editar"
-                className={iconStyle}
-                onClick={() => abrirModalEditar(product)}
-              >
-                <FiEdit2 className="icon" />
-              </div>
-              <div className="bg-gray-medium h-6 w-px"></div>
-              <div
-                id="deletar"
-                className={iconStyle}
-                onClick={() => deletarProduto(product.id)}
-              >
-                <AiOutlineDelete className="icon" />
-              </div>
-            </div>
+        {produtosFiltrados.length === 0 && !isUploading ? (
+          <div className="w-full p-4 text-center">
+            Nenhum produto encontrado.
           </div>
-        ))}
+        ) : (
+          produtosFiltrados.map((product) => (
+            <div
+              key={product.id}
+              className="border-gray-medium grid grid-cols-[140px_180px_200px_130px_120px] border-t bg-white px-2.5 sm:grid-cols-[1fr_2fr_3fr_2fr_2fr]"
+            >
+              <div className="flex flex-col items-center justify-center py-4">
+                <ImagemDeEntidade
+                  src={product.image_url}
+                  alt={product.nome}
+                  className="h-20 w-20 border object-cover"
+                />
+                <span className="text-blue mt-2 text-sm">
+                  Qtd: {product.qtd_estoque}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center p-4">
+                <span className="text-blue text-center leading-snug">
+                  {product.nome}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center p-4">
+                <span className="text-blue text-center leading-snug">
+                  {product.descricao}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center p-4">
+                <span className="text-blue font-medium">
+                  R$ {product.valor_unitario}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center gap-4 p-4">
+                <div
+                  id="Editar"
+                  className={iconStyle}
+                  onClick={() => abrirModalEditar(product)}
+                >
+                  <FiEdit2 className="icon" />
+                </div>
+                <div className="bg-gray-medium h-6 w-px"></div>
+                <div
+                  id="deletar"
+                  className={iconStyle}
+                  onClick={() => deletarProduto(product.id)}
+                >
+                  <AiOutlineDelete className="icon" />
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       <ModalProduto

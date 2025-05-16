@@ -27,7 +27,13 @@ export default function Account() {
 
   return (
     <section className="flex w-full justify-center">
-      {userData?.role === "usuario" ? <UserForm /> : <RestaurantForm />}
+      {userData?.role === "usuario" ? (
+        <div className="mt-10 flex w-full justify-center">
+          <UserForm />
+        </div>
+      ) : (
+        <RestaurantForm />
+      )}
     </section>
   );
 }
