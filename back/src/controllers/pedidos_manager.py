@@ -2,7 +2,7 @@ from src.main.server.configs import socketio
 from src.model.entities.pedido import Pedido
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
-from src.main.handlers.custom_exceptions import NotFound
+from src.main.handlers.custom_exceptions import NotFound, StockExceeded
 from src.main.utils.response_formatter import ResponseFormatter
 
 class PedidosManager:
@@ -23,6 +23,9 @@ class PedidosManager:
         id_pedido = self.pedidos_repo.insert_pedido(info_pedido)
         for info_item in itens:
             self.__itens_repo.insert_item_pedido(id_pedido, info_item)
+            self.__produtos_repo.subtrair_estoque(
+                info_item.get("id_produto"), int(info_item.get("qtd_itens"))
+            )
 
         socketio.emit("pedido_criado")
         return HttpResponse(
@@ -32,6 +35,7 @@ class PedidosManager:
             },
             status_code=201
         )
+
 
     def get_pedidos(self, http_request: HttpRequest):
         id_usuario = http_request.params.get("id_usuario")
@@ -112,6 +116,13 @@ class PedidosManager:
             if id_produto not in produtos_restaurante:
                 raise PermissionError(f"O produto '{produto.nome}' não pertence a esse restaurante!", 403)
             
+            self.__verificar_qtd_estoque(produto.qtd_estoque, int(item.get("qtd_itens")))
+
+
+    def __verificar_qtd_estoque(self, qtd_estoque: int, qtd_itens: int):
+        if qtd_estoque < qtd_itens:
+            raise StockExceeded(f"Quantidade indisponível no estoque! (Máximo: {qtd_estoque})")
+
             
     def format_response(self, pedidos: list[Pedido], is_nota_fiscal: bool = False) -> dict[list]:
         pedidos_formatados = []

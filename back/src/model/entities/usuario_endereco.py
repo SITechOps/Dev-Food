@@ -14,5 +14,4 @@ class UsuarioEndereco(Base):
 
     __table_args__ = (
         PrimaryKeyConstraint("id_usuario", "id_endereco", name="pk_user_endereco"),
-        UniqueConstraint("id_usuario", "tipo", name="unique_usuario_tipo"),
     )

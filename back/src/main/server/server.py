@@ -41,8 +41,8 @@ def create_app():
     app.register_blueprint(handlers_bp)
 
     DBConnectionHandler()
-    # load_sample_restaurants()
-    # load_pedidos_exemplo()
+    load_sample_restaurants()
+    load_pedidos_exemplo()
 
     socketio.init_app(app)
     hide_socketio_logs()
