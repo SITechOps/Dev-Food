@@ -12,8 +12,6 @@ class EnderecosRepository(IEnderecosRepository):
         with DBConnectionHandler() as db:
             try:
                 tipo = endereco.pop("tipo").lower()
-                self.__check_existing_type(db, id_usuario, tipo)
-
                 existing_endereco = self.__find_existing_address(db, endereco)
                 endereco_id = ""
 
@@ -89,8 +87,6 @@ class EnderecosRepository(IEnderecosRepository):
     def update(self, id_endereco: str, id_usuario: str, info_endereco: dict) -> None:
         with DBConnectionHandler() as db:
             try:
-                # self.__check_existing_type(db, id_usuario, info_endereco.get("tipo"))
-
                 novo_endereco_existente = self.__find_existing_address(db, info_endereco)
 
                 user_endereco = (
@@ -150,6 +146,7 @@ class EnderecosRepository(IEnderecosRepository):
 
                 if not user_endereco:
                     raise AddressNotFound()
+                
                 # Verifica quantos endereços o usuário tem
                 qtd_enderecos_usuario = (
                     db.session.query(UsuarioEndereco)
@@ -167,7 +164,14 @@ class EnderecosRepository(IEnderecosRepository):
                 # 3. Verifica se o endereço ainda está associado a outro usuário ou restaurante
                 endereco_usado_por_mais_alguem = self.__is_address_used(db, id_endereco)
 
-                if not endereco_usado_por_mais_alguem:
+                from src.model.entities.pedido import Pedido
+                pedidos_com_endereco = (
+                    db.session.query(Pedido)
+                    .filter(Pedido.id_endereco == id_endereco)
+                    .count()
+                )
+
+                if not endereco_usado_por_mais_alguem and pedidos_com_endereco == 0:
                     endereco = self.find_by_id(id_endereco)
                     db.session.delete(endereco)
 
@@ -176,18 +180,6 @@ class EnderecosRepository(IEnderecosRepository):
             except Exception as exception:
                 db.session.rollback()
                 raise exception
-
-    
-    def __check_existing_type(self, db, id_usuario: str, tipo: str) -> None:
-        existing_type = (
-            db.session
-            .query(UsuarioEndereco)
-            .filter(UsuarioEndereco.id_usuario == id_usuario,
-                    UsuarioEndereco.tipo == tipo)
-            .one_or_none()
-        )
-        if existing_type:
-            raise AddressTypeAlreadyExists()
 
 
     def __find_existing_address(self, db, endereco: dict) -> Endereco | None:
@@ -232,4 +224,3 @@ class EnderecosRepository(IEnderecosRepository):
         )
 
         return user_links > 0 or restaurant_links > 0
-
