@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import {useMemo, useState } from "react";
 import React from "react";
 import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
@@ -16,17 +16,18 @@ export default function FiltroLupa() {
 	const { isAuthenticated } = useAuth();
 	const [searchParams] = useSearchParams();
 	const initialQuery = searchParams.get("query") || "";
-	const { produtosAll } = useRestauranteProduto();
+	const { produtosAll, restaurantes } = useRestauranteProduto();
 	const [searchTerm, setSearchTerm] = useState(initialQuery);
 	const searchTermLower = searchTerm.toLowerCase();
-	const { restaurantes } = useRestauranteProduto();
 	const [abaAtiva, setAbaAtiva] = useState("restaurantes");
 	const CardRestauranteMemo = React.memo(CardRestaurante);
 	const { restaurantesCompletos } = useConfirmacaoEndereco();
 
 	const restaurantesFiltrados = useMemo(() => {
 		const baseRestaurantes =
-			restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
+			isAuthenticated && restaurantesCompletos.length > 0
+				? restaurantesCompletos
+				: restaurantes;
 
 		if (!searchTerm.trim()) return baseRestaurantes;
 
@@ -148,7 +149,7 @@ export default function FiltroLupa() {
 											id={produto.id}
 											nome={produto.nome}
 											descricao={produto.descricao}
-											 image_url={produto. image_url}
+											image_url={produto.image_url}
 											valor_unitario={produto.valor_unitario}
 											dadosRestaurante={produto.restaurante!}
 										/>

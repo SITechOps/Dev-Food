@@ -13,14 +13,13 @@ export const useCarrinho = () => {
 	const [distancia, setDistancia] = useState<number | null>(null);
 	const [tempoEntrega, setTempoEntrega] = useState<number | null>(null);
 	const [restauranteId, setRestauranteId] = useState<string | null>(null);
-	const resSelecionado = localStorage.getItem("restauranteSelecionado"); 
+	const resSelecionado = localStorage.getItem("restauranteSelecionado");
 	const taxaEntregaRestaurante = resSelecionado
 		? JSON.parse(resSelecionado).taxa_entrega
 		: 0;
 
 	useEffect(() => {
 		setTaxaEntrega(taxaEntregaRestaurante);
-
 		if (storedCarrinho) {
 			const carrinho = JSON.parse(storedCarrinho);
 
@@ -41,12 +40,6 @@ export const useCarrinho = () => {
 			}
 		} else {
 			console.log("Carrinho não encontrado no localStorage.");
-		}
-		const storedFrete = JSON.parse(localStorage.getItem("freteRestaurante") || "null");
-		if (storedFrete) {
-			setTaxaEntrega(storedFrete.taxa_entrega || 0); 
-			setDistancia(storedFrete.distancia || null);
-			setTempoEntrega(storedFrete.duracao || null);
 		}
 	}, []);
 
