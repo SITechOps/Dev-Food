@@ -3,6 +3,7 @@ import Button from "../../../components/ui/Button";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useCardProdutos } from "@/hooks/Restaurante/VisaoCliente/useCardProduto";
 import { CardProdutosProps } from "@/interface/IProduto";
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 
 export default function CardProdutos(props: CardProdutosProps) {
   const { nome, descricao, image_url, valor_unitario, dadosRestaurante } = props;
@@ -12,18 +13,11 @@ export default function CardProdutos(props: CardProdutosProps) {
 
   return (
     <div className="border-gray-medium bg-gray-light max-w-full cursor-pointer rounded-md border p-4 transition-all duration-300 m-auto">
-      <div className="flex gap-4">
-        <img
-          className="mx-auto mr-2 mb-4 ml-2 h-15 w-15 rounded-full object-cover"
-          src={
-            image_url ||
-            "https://food-guide.canada.ca/sites/default/files/styles/square_400_x_400/public/2020-12/CFGPlate-crop400x400.jpg"
-          }
-          alt={nome}
-        />
+       <div className="flex gap-4">
+        <ImagemDeEntidade src={image_url} alt={nome} />
+
         <h3 className="font-bold">{nome}</h3>
       </div>
-
       <div className="w-full">
         <p className="mt-2 font-light">{descricao}</p>
         <p className="mt-3 mb-3 text-[1.2rem] font-semibold">R$ {valor_unitario}</p>

@@ -7,12 +7,12 @@ import {
   ReactNode,
 } from "react";
 import { IRestaurante } from "@/interface/IRestaurante";
-import { api } from "@/connection/axios";
 import { geocodeTexto } from "@/utils/useGeocode";
 import { calcularDistancia } from "@/utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "@/utils/calculateDeliveryFee";
 import { initMapScript } from "@/utils/initMapScript";
 import { IEndereco } from "@/interface/IEndereco";
+import { useRestauranteProduto } from "./VisaoCliente/Restaurante&ProdutoContext";
 
 interface Coordenadas {
   lat: number;
@@ -34,7 +34,7 @@ interface ConfirmacaoEnderecoContextProps {
   mostrarConfirmacao: (endereco: IEndereco) => void;
   setEnderecoPadraoId: (id: string | null) => void;
   confirmarEnderecoPadrao: (endereco: IEndereco) => void;
-  processarRestaurantes: (coords: Coordenadas) => Promise<IRestaurante[]>;
+  processarRestaurantes: (coords: Coordenadas, restaurantes: IRestaurante[]) => Promise<IRestaurante[]>;
   setRestaurantesCompletos: React.Dispatch<React.SetStateAction<IRestaurante[]>>;
   calcularTaxaEntrega: (distancia: number) => number;
 }
@@ -45,9 +45,11 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   const [confirmacaoPadrao, setConfirmacaoPadrao] = useState<ConfirmacaoPadraoState>({ show: false, endereco: null });
   const [loading, setLoading] = useState(true);
   const [enderecoPadraoId, setEnderecoPadraoId] = useState<string | null>(null);
+  const [geoCliente, setGeoCliente] = useState<string | null>(null);
   const [clienteCoords, setClienteCoords] = useState<Coordenadas | null>(null);
   const [restaurantesCompletos, setRestaurantesCompletos] = useState<IRestaurante[]>([]);
   const cacheCoordenadasRestaurantes = new Map<string, Coordenadas>();
+  const { restaurantes } = useRestauranteProduto();
 
   const setEnderecoPadraoIdSync = (id: string | null) => {
     id ? localStorage.setItem("enderecoPadraoId", id) : localStorage.removeItem("enderecoPadraoId");
@@ -68,30 +70,36 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   const cancelarConfirmacao = () => setConfirmacaoPadrao({ show: false, endereco: null });
 
   useEffect(() => {
-    const enderecoSalvoId = localStorage.getItem("enderecoPadraoId");
-    enderecoSalvoId ? setEnderecoPadraoId(enderecoSalvoId) : setLoading(false);
-
     const geocodificar = async () => {
-      if (!enderecoPadraoId) return setLoading(false);
+      if (!enderecoPadraoId) {
+        setLoading(false);
+        return;
+      }
 
       const enderecoStr = localStorage.getItem("enderecoPadrao");
       const coordenadasSalvasStr = localStorage.getItem("geoCoordenadasCliente");
-
-      if (!enderecoStr) return setLoading(false);
+      const storageGeoEndereco = coordenadasSalvasStr ? JSON.parse(coordenadasSalvasStr) : null;
 
       try {
-        const endereco: IEndereco = JSON.parse(enderecoStr);
-        const coordenadasSalvas = coordenadasSalvasStr ? JSON.parse(coordenadasSalvasStr) : null;
+        const endereco: IEndereco = JSON.parse(enderecoStr || "");
+        const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
 
-        if (coordenadasSalvas?.id === enderecoPadraoId) {
-          setClienteCoords(coordenadasSalvas.coords);
-        } else {
-          const enderecoCompleto = `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
+        const idSalvo = storageGeoEndereco?.id?.trim?.();
+        const idAtual = enderecoPadraoId.trim();
+
+        console.log("Valores:", "(Geocode)", idSalvo, "(Endereço Selecionado)", idAtual);
+        console.log("Comparação estrita:", idSalvo !== idAtual);
+
+        if (!idSalvo || idSalvo !== idAtual) {
+          console.log("Coordenadas novas serão buscadas...");
           const coords = await geocodeTexto(enderecoCompleto);
           if (coords) {
             setClienteCoords(coords);
-            localStorage.setItem("geoCoordenadasCliente", JSON.stringify({ id: enderecoPadraoId, coords }));
+            setGeoCliente(enderecoPadraoId);
+            await processarRestaurantes(coords, restaurantes);
           }
+        } else {
+          console.log("Usando coordenadas já salvas.");
         }
       } catch (error) {
         console.error("Erro ao processar coordenadas do endereço:", error);
@@ -101,24 +109,17 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
     };
 
     geocodificar();
-  }, [enderecoPadraoId]);
+  }, [enderecoPadraoId]); 
+
 
   async function calcularCoordenadaRestaurante(rest: IRestaurante, clienteCoords: Coordenadas) {
+    console.log("coordenadas do cliente:", clienteCoords); // esse cliente nao é restaurante e sim a coordenada que é do enderecoPadraoId
     const chaveCache = `${rest.id}_${clienteCoords.lat}_${clienteCoords.lng}`;
     const storageKey = `geoCoordenadasRestaurante_${rest.id}`;
 
-    if (cacheCoordenadasRestaurantes.has(chaveCache)) {
-      return cacheCoordenadasRestaurantes.get(chaveCache)!;
-    }
-
-    const salvaStr = localStorage.getItem(storageKey);
-    if (salvaStr) {
-      const coord = JSON.parse(salvaStr);
-      cacheCoordenadasRestaurantes.set(chaveCache, coord);
-      return coord;
-    }
-
     const enderecoCompleto = `${rest.endereco.logradouro}, ${rest.endereco.numero}, ${rest.endereco.bairro}, ${rest.endereco.cidade}, ${rest.endereco.estado}, ${rest.endereco.pais}`;
+
+    console.log("Endereço completo do restaurante:", enderecoCompleto);
     const coord = await geocodeTexto(enderecoCompleto);
 
     if (coord) {
@@ -127,13 +128,13 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
     }
 
     return coord;
+
+    // depois que termina separa o do end (Analisar)
   }
 
-  async function processarRestaurantes(coords: Coordenadas): Promise<IRestaurante[]> {
+  async function processarRestaurantes(coords: Coordenadas, restaurantes: IRestaurante[]): Promise<IRestaurante[]> {
     try {
       await initMapScript();
-      const response = await api.get("/restaurantes");
-      const restaurantes: IRestaurante[] = response.data?.data?.attributes || [];
 
       const atualizados = await Promise.all(
         restaurantes.map(async (rest) => {
@@ -156,7 +157,13 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
               taxa_entrega,
             };
 
+            const geoCliente = {
+              id: enderecoPadraoId,
+              coords: clienteCoords,
+            };
             localStorage.setItem(cacheKey, JSON.stringify(dadosCompletos));
+
+            localStorage.setItem("geoCoordenadasCliente", JSON.stringify(geoCliente));
             return dadosCompletos;
           } catch (err) {
             console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
@@ -165,6 +172,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
         })
       );
 
+      console.log("Restaurantes atualizados:", atualizados);
       setRestaurantesCompletos(atualizados);
       return atualizados;
     } catch (error) {

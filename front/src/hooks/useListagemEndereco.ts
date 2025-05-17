@@ -61,6 +61,13 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 	};
 
 	useEffect(() => {
+		if (enderecoPadraoId) {
+			buscarEnderecos();
+		}
+	}, [enderecoPadraoId]);
+
+
+	useEffect(() => {
 		carregarEnderecoPadraoLocal();
 	}, [carregarEnderecoPadraoLocal, buscarEnderecos]);
 
@@ -85,7 +92,7 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 	return {
 		enderecoSelecionado,
 		setEnderecoSelecionado,
-		enderecos,	
+		enderecos,
 		setEnderecos,
 		showModal,
 		setShowModal,
@@ -105,6 +112,6 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 		idUsuario,
 		token,
 		navigate,
-		location,				
+		location,
 	};
 };

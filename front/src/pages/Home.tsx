@@ -14,7 +14,6 @@ export default function Home() {
   const CardRestauranteMemo = React.memo(CardRestaurante);
   const [mensagemErro, setMensagemErro] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
-  const [restaurantesCarregados, setRestaurantesCarregados] = useState(false);
   const [restaurantesFiltrados, setRestaurantesFiltrados] = useState<IRestaurante[]>([]);
   const { processarRestaurantes, clienteCoords, restaurantesCompletos } = useConfirmacaoEndereco();
 
@@ -47,12 +46,11 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    if (clienteCoords && !restaurantesCarregados) {
-      processarRestaurantes(clienteCoords);
-      setRestaurantesCarregados(true);
-    }
-  }, [clienteCoords, restaurantesCarregados]);
+useEffect(() => {
+  if (clienteCoords && restaurantes.length > 0) {
+    processarRestaurantes(clienteCoords, restaurantes);
+  }
+}, [clienteCoords, restaurantes]);
 
   const listaFinal = restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
   return (
@@ -72,7 +70,7 @@ export default function Home() {
               navigate("/buscar?query=" + encodeURIComponent(e.currentTarget.value));
             }
           }}
-          className="!bg-white border border-blue w-full rounded-md px-4 py-2 shadow-sm"
+          className="!bg-white border hover:border-blue w-full rounded-md px-4 py-2 shadow-sm  border-brown-light-active cursor-pointer"
         />
       </form>
 

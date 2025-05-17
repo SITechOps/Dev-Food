@@ -6,6 +6,7 @@ import { Loading } from "../../components/shared/Loading";
 import VerMaisRestaurante from "./VerMais/Index";
 import IconAction from "@/components/ui/IconAction";
 import { useAuth } from "@/contexts/AuthContext";
+import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
 
 export default function DetalhesRestaurante() {
   const { isAuthenticated } = useAuth();
@@ -33,11 +34,8 @@ export default function DetalhesRestaurante() {
           </IconAction>
 
           <div className="relative mt-[2rem] h-48 w-full rounded-md md:h-64">
-            <img
-              src={
-                restaurante.logo ||
-                "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              }
+            <ImagemDeEntidade
+              src={restaurante.logo}
               alt={restaurante.nome}
               className="h-full w-full object-cover"
             />

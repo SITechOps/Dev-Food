@@ -4,12 +4,12 @@ import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&Produ
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
 import CardProdutos from "../Cards/CardProdutos";
 import Input from "@/components/ui/Input";
-import CardRestaurante from "../Card";
 import IconAction from "@/components/ui/IconAction";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/contexts/AuthContext";
+import CardRestaurante from "../Cards/CardRestaurante";
 
 export default function FiltroLupa() {
 	const navigate = useNavigate();
@@ -85,7 +85,7 @@ export default function FiltroLupa() {
 					value={searchTerm}
 					onChange={handleSearchChange}
 					placeholder="Buscar..."
-					className="!bg-white border border-blue w-full rounded-md px-4 py-2 shadow-sm"
+					className="!bg-white border hover:border-blue w-full rounded-md px-4 py-2 shadow-sm  border-brown-normal cursor-pointer"
 				/>
 
 			</form>

@@ -128,7 +128,7 @@ const CadastroEndereco = () => {
                         onClick={() => handleFavoritar("Casa")}
                         className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
                           tipo === "Casa"
-                            ? "border-brown-normal border-2"
+                            ? "border-brown-normal border-2 !text-brown-normal"
                             : "hover:border-gray-medium border-2 border-transparent"
                         }`}
                       >
@@ -146,7 +146,7 @@ const CadastroEndereco = () => {
                         onClick={() => handleFavoritar("Trabalho")}
                         className={`bg-gray-light text-gray-medium flex items-center space-x-2 rounded px-2 py-1 transition-all duration-300 ease-in-out ${
                           tipo === "Trabalho"
-                            ? "border-brown-normal border-2"
+                            ? "border-brown-normal border-2 !text-brown-normal"
                             : "hover:border-gray-medium border-2 border-transparent"
                         }`}
                       >
