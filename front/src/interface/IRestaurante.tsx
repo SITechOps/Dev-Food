@@ -15,9 +15,9 @@ export interface IRestaurante {
   nro_conta: string;
   razao_social: string;
   telefone: string;
-  distancia?: number | undefined;  
-  taxa_entrega?: number | undefined;
-  duration?: number | undefined;  
+  distancia?: number | undefined | null;  
+  taxa_entrega?: number | undefined | null;
+  duration?: number | undefined | null;  
   tipo_conta: string;
 }
 
