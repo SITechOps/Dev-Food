@@ -45,10 +45,14 @@ export default function Menu() {
             <img src={TechOpsLogo} alt="TechOps Logo" className="h-12 py-1" />
           </Link>
 
-          {isNotRestaurante && <ListagemEndereco />}
+          {idUsuario ? (
+            <>
+              <ListagemEndereco />
+            </>
+          ) : null}
 
           <div className="align-center flex gap-3">
-            {isNotRestaurante && (
+            {!idUsuario || isNotRestaurante && (
               <>
                 <Button
                   color="plain"

@@ -1,13 +1,13 @@
 import { api } from "@/connection/axios";
 import { useAuth } from "@/contexts/AuthContext";
-import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
-import { IAddress } from "@/interface/IAddress";
+import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
+import { IEndereco } from "@/interface/IEndereco";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 export const useListaEndereco = (onCloseModal?: () => void) => {
-	const [enderecos, setEnderecos] = useState<IAddress[]>([]);
-	const [enderecoSelecionado, setEnderecoSelecionado] = useState<IAddress | null>(null);
+	const [enderecos, setEnderecos] = useState<IEndereco[]>([]);
+	const [enderecoSelecionado, setEnderecoSelecionado] = useState<IEndereco | null>(null);
 	const [showModal, setShowModal] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const { userData, token } = useAuth();
@@ -61,8 +61,14 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 	};
 
 	useEffect(() => {
+		if (enderecoPadraoId) {
+			buscarEnderecos();
+		}
+	}, [enderecoPadraoId]);
+
+
+	useEffect(() => {
 		carregarEnderecoPadraoLocal();
-		buscarEnderecos();
 	}, [carregarEnderecoPadraoLocal, buscarEnderecos]);
 
 	useEffect(() => {
@@ -86,7 +92,7 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 	return {
 		enderecoSelecionado,
 		setEnderecoSelecionado,
-		enderecos,	
+		enderecos,
 		setEnderecos,
 		showModal,
 		setShowModal,
@@ -106,6 +112,6 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 		idUsuario,
 		token,
 		navigate,
-		location,				
+		location,
 	};
 };

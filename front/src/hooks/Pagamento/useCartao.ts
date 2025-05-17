@@ -136,7 +136,7 @@ export const useCartaoComponent = () => {
 
 		const dadosMock = {
 			token: "85f87b05-2c23-4018-919b-20851de3dfe8",
-			amount: "40",
+			amount: valoresCarrinho.total.toFixed(2),
 			installments: "3",
 			identificationType: "CPF",
 			identificationNumber: "12345678909",
