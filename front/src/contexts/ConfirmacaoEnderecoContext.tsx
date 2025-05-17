@@ -13,6 +13,7 @@ import { calcularTaxaEntrega } from "@/utils/calculateDeliveryFee";
 import { initMapScript } from "@/utils/initMapScript";
 import { IEndereco } from "@/interface/IEndereco";
 import { useRestauranteProduto } from "./VisaoCliente/Restaurante&ProdutoContext";
+import { useNavigate } from "react-router";
 
 interface Coordenadas {
   lat: number;
@@ -50,10 +51,14 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   const [restaurantesCompletos, setRestaurantesCompletos] = useState<IRestaurante[]>([]);
   const cacheCoordenadasRestaurantes = new Map<string, Coordenadas>();
   const { restaurantes } = useRestauranteProduto();
+  const navigate = useNavigate();
 
   const setEnderecoPadraoIdSync = (id: string | null) => {
-    id ? localStorage.setItem("enderecoPadraoId", id) : localStorage.removeItem("enderecoPadraoId");
+    const atual = localStorage.getItem("enderecoPadraoId");
     setEnderecoPadraoId(id);
+    if (atual === id) return; 
+
+    id ? localStorage.setItem("enderecoPadraoId", id) : localStorage.removeItem("enderecoPadraoId");
   };
 
   const mostrarConfirmacao = (endereco: IEndereco) => setConfirmacaoPadrao({ show: true, endereco });
@@ -66,6 +71,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
     setEnderecoPadraoIdSync(endereco.id);
     setConfirmacaoPadrao({ show: false, endereco: null });
     setLoading(false);
+    navigate("/");
   };
 
   function montarEnderecoCompleto(endereco: IEndereco): string {
@@ -74,10 +80,10 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
 
   useEffect(() => {
     const geocodificar = async () => {
-      if (!enderecoPadraoId) {
-        setLoading(false);
-        return;
-      }
+    if (!enderecoPadraoId || geoCliente === enderecoPadraoId) {
+      setLoading(false);
+      return;
+    }
 
       const enderecoStr = localStorage.getItem("enderecoPadrao");
       const coordenadasSalvasStr = localStorage.getItem("geoCoordenadasCliente");
@@ -103,10 +109,10 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
         } else {
           console.log("Usando coordenadas já salvas.");
           if (storageGeoEndereco?.coords) {
-          setClienteCoords(storageGeoEndereco.coords);
-          setGeoCliente(enderecoPadraoId);
-          await processarRestaurantes(storageGeoEndereco.coords, restaurantes);
-        }
+            setClienteCoords(storageGeoEndereco.coords);
+            setGeoCliente(enderecoPadraoId);
+            await processarRestaurantes(storageGeoEndereco.coords, restaurantes);
+          }
         }
       } catch (error) {
         console.error("Erro ao processar coordenadas do endereço:", error);
@@ -133,57 +139,57 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
     return coord;
   }
 
-async function processarRestaurantes(coords: Coordenadas, restaurantes: IRestaurante[]): Promise<IRestaurante[]> {
-  try {
-    await initMapScript();
+  async function processarRestaurantes(coords: Coordenadas, restaurantes: IRestaurante[]): Promise<IRestaurante[]> {
+    try {
+      await initMapScript();
 
-    const atualizados = await Promise.all(
-      restaurantes.map(async (rest) => {
-        const destino = await calcularCoordenadaRestaurante(rest, coords);
-        if (!destino) return rest;
+      const atualizados = await Promise.all(
+        restaurantes.map(async (rest) => {
+          const destino = await calcularCoordenadaRestaurante(rest, coords);
+          if (!destino) return rest;
 
-        try {
-          const distanciaInfo = await calcularDistancia(coords, destino);
-          const taxa_entrega = distanciaInfo.distance ? calcularTaxaEntrega(distanciaInfo.distance) : undefined;
+          try {
+            const distanciaInfo = await calcularDistancia(coords, destino);
+            const taxa_entrega = distanciaInfo.distance ? calcularTaxaEntrega(distanciaInfo.distance) : undefined;
 
-          const dadosCompletos = {
-            ...rest,
-            distancia: distanciaInfo.distance,
-            duration: distanciaInfo.duration,
-            taxa_entrega,
-          };
+            const dadosCompletos = {
+              ...rest,
+              distancia: distanciaInfo.distance,
+              duration: distanciaInfo.duration,
+              taxa_entrega,
+            };
 
-          const geoCliente = {
-            id: enderecoPadraoId,
-            coords: clienteCoords,
-          };
+            const geoCliente = {
+              id: enderecoPadraoId,
+              coords: clienteCoords,
+            };
 
-          const cacheKey = `restaurante_completo_${rest.id}_${destino.lat}_${destino.lng}`;
-          localStorage.setItem(cacheKey, JSON.stringify(dadosCompletos));
-          localStorage.setItem("geoCoordenadasCliente", JSON.stringify(geoCliente));
+            const cacheKey = `restaurante_completo_${rest.id}_${destino.lat}_${destino.lng}`;
+            localStorage.setItem(cacheKey, JSON.stringify(dadosCompletos));
+            localStorage.setItem("geoCoordenadasCliente", JSON.stringify(geoCliente));
 
-          return dadosCompletos;
-        } catch (err) {
-          console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
-          return {
-            ...rest,
-            distancia: null,
-            duration: null,
-            taxa_entrega: undefined,
-          };
-        }
-      })
-    );
+            return dadosCompletos;
+          } catch (err) {
+            console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
+            return {
+              ...rest,
+              distancia: null,
+              duration: null,
+              taxa_entrega: undefined,
+            };
+          }
+        })
+      );
 
-    setRestaurantesCompletos(atualizados);
-    return atualizados;
-  } catch (error) {
-    console.error("Erro ao processar restaurantes:", error);
-    return [];
-  } finally {
-    setLoading(false);
+      setRestaurantesCompletos(atualizados);
+      return atualizados;
+    } catch (error) {
+      console.error("Erro ao processar restaurantes:", error);
+      return [];
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
 
   return (
