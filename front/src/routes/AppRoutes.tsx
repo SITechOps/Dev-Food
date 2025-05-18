@@ -4,34 +4,45 @@ import ProtectedRoute from "./ProtectedRoute";
 import RoleBasedRoute from "./RoleBasedRoute";
 import RestrictRestauranteOnly from "./RestrictRestaurant";
 
-const Entregador = lazy(() => import("../pages/Pedido/Entregador"));
+const Entregador = lazy(() => import("../pages/Restaurante/pages/Entregador"));
 const Error404 = lazy(() => import("@/components/Error404"));
 const Home = lazy(() => import("../pages/Home"));
-const FiltroLupa = lazy(() => import("../pages/RestaurantesDisponiveis/Filtros/FiltroLupa"));
+const FiltroLupa = lazy(
+  () =>
+    import(
+      "../pages/Restaurante/components/RestaurantesDisponiveis/Filtros/FiltroLupa"
+    ),
+);
 const AuthUser = lazy(() => import("../pages/Auth/AuthUser"));
 const Intermediaria = lazy(() => import("../pages/Intermediaria"));
 const Account = lazy(() => import("../pages/Account"));
-const Cardapio = lazy(() => import("../components/Restaurante/Cardapios"));
-const Financeiro = lazy(() => import("../components/Restaurante/Financeiro"));
-const StatusPedido = lazy(() => import("../pages/Pedido/StatusPedido"));
+const Cardapio = lazy(() => import("../pages/Restaurante/pages/Cardapios"));
+const Financeiro = lazy(() => import("../pages/Restaurante/pages/Financeiro"));
+const StatusPedido = lazy(
+  () => import("../pages/Pedido/Restaurante/components/StatusPedido"),
+);
 const CadastroEndereco = lazy(
   () => import("../components/Endereco/CadastroEndereco"),
 );
 const CadastroRestaurante = lazy(
-  () =>
-    import("../pages/Usuario/Restaurante/FormRestaurante/CadastroRestaurante"),
+  () => import("../pages/Restaurante/pages/CadastroRestaurante"),
 );
 const DetalhesRestaurante = lazy(
-  () => import("../pages/RestaurantesDisponiveis/DetalhesRestaurante"),
+  () =>
+    import(
+      "../pages/Restaurante/components/RestaurantesDisponiveis/DetalhesRestaurante"
+    ),
 );
 const AlterarEnderecoRestaurante = lazy(
-  () => import("../components/Endereco/EnderecoModal"),
+  () => import("../pages/Restaurante/pages/Endereco"),
 );
 const Pagamento = lazy(() => import("../pages/Pagamento/Index"));
-const Pedidos = lazy(() => import("../pages/Restaurante/Account/Pedidos"));
+const Pedidos = lazy(() => import("../pages/Pedido/Restaurante"));
 
-const MeusPedidos = lazy(() => import("../pages/MeusPedidos/Index"));
-const ListagemEndereco = lazy(() => import("../components/Endereco/ListagensEndereco/ListagemEndereco"));
+const MeusPedidos = lazy(() => import("../pages/Pedido/Cliente/Index"));
+const ListagemEndereco = lazy(
+  () => import("../components/Endereco/ListagensEndereco/ListagemEndereco"),
+);
 
 const AppRoutes = () => {
   return (
@@ -60,7 +71,7 @@ const AppRoutes = () => {
       </Route>
 
       <Route element={<RestrictRestauranteOnly />}>
-        <Route path="/" element={ <Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/buscar" element={<FiltroLupa />} />
         <Route path="/restaurante/:id" element={<DetalhesRestaurante />} />
       </Route>

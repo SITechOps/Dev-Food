@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import UserForm from "../components/Usuario/UserAccount";
-import RestaurantForm from "../components/Restaurante/RestaurantAccount";
+import RestaurantForm from "./Restaurante/pages/Account";
 import Button from "../components/ui/Button";
 import { useAuth } from "../contexts/AuthContext";
 

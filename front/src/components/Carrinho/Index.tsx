@@ -1,7 +1,7 @@
 import { IoClose } from "react-icons/io5";
 import Button from "@/components/ui/Button";
 import { Minus, Plus } from "lucide-react";
-import { useCarrinho } from "@/hooks/useCarinho";
+import { useCarrinho } from "@/hooks/useCarrinho";
 import TechOpsLogo from "@/assets/techops.png";
 
 interface MenuLeteralCarrinhoProps {
@@ -21,7 +21,6 @@ export default function Carrinho({
     subtotal,
     escolherFormaPagamento,
   } = useCarrinho();
-
 
   return (
     <>
@@ -95,16 +94,16 @@ export default function Carrinho({
                     </div>
                   </div>
                 ))}
-                  <p className="my-2 flex items-center justify-between">
-                    Subtotal
-                    <span>R$ {subtotal.toFixed(2)}</span>
-                  </p>
+                <p className="my-2 flex items-center justify-between">
+                  Subtotal
+                  <span>R$ {subtotal.toFixed(2)}</span>
+                </p>
               </div>
 
               <div className="mt-10">
                 <p className="flex items-center justify-between text-2xl font-bold">
                   Total
-                  <span>R$ {(subtotal).toFixed(2)}</span>
+                  <span>R$ {subtotal.toFixed(2)}</span>
                 </p>
                 <Button
                   className="mt-4 w-full p-2"

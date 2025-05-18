@@ -5,8 +5,8 @@ import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&Produ
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
 import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/interface/IRestaurante";
-import Categorias from "./RestaurantesDisponiveis/Filtros/Categoria/FiltroCategorias";
-import CardRestaurante from "./RestaurantesDisponiveis/Cards/CardRestaurante";
+import Categorias from "./Restaurante/components/RestaurantesDisponiveis/Filtros/Categoria/FiltroCategorias";
+import CardRestaurante from "./Restaurante/components/RestaurantesDisponiveis/Cards/CardRestaurante";
 import { showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export default function Home() {
@@ -15,9 +15,11 @@ export default function Home() {
   const CardRestauranteMemo = React.memo(CardRestaurante);
   const [mensagemErro, setMensagemErro] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
-  const [restaurantesFiltrados, setRestaurantesFiltrados] = useState<IRestaurante[]>([]);
-  const { processarRestaurantes, clienteCoords, restaurantesCompletos } = useConfirmacaoEndereco();
-
+  const [restaurantesFiltrados, setRestaurantesFiltrados] = useState<
+    IRestaurante[]
+  >([]);
+  const { processarRestaurantes, clienteCoords, restaurantesCompletos } =
+    useConfirmacaoEndereco();
 
   const handleCategoryClick = (category: string) => {
     console.log("Categoria selecionada:", category);
@@ -35,7 +37,7 @@ export default function Home() {
     }
 
     const filtrados = baseRestaurantes.filter((restaurante) =>
-      restaurante.especialidade?.toLowerCase().includes(categoriaSelecionada)
+      restaurante.especialidade?.toLowerCase().includes(categoriaSelecionada),
     );
 
     if (filtrados.length > 0) {
@@ -43,8 +45,10 @@ export default function Home() {
       setMensagemErro("");
     } else {
       setRestaurantesFiltrados([]);
-      showWarning('Nenhum restaurante encontrado com a categoria'); 
-      setMensagemErro(`Nenhum restaurante encontrado com a categoria "${category}"`);
+      showWarning("Nenhum restaurante encontrado com a categoria");
+      setMensagemErro(
+        `Nenhum restaurante encontrado com a categoria "${category}"`,
+      );
     }
   };
 
@@ -54,13 +58,13 @@ export default function Home() {
     }
   }, [clienteCoords, restaurantes]);
 
-  const listaFinal = restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
+  const listaFinal =
+    restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
   return (
     <div className="mt-[5rem]">
-      <h1 className="text-blue mb-8 mt-2 text-center font-medium">
+      <h1 className="text-blue mt-2 mb-8 text-center font-medium">
         Pedir seu delivery no TechOps é rápido e prático!
       </h1>
-
 
       <form className="mx-auto mb-8 max-w-md">
         <Input
@@ -69,15 +73,16 @@ export default function Home() {
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              navigate("/buscar?query=" + encodeURIComponent(e.currentTarget.value));
+              navigate(
+                "/buscar?query=" + encodeURIComponent(e.currentTarget.value),
+              );
             }
           }}
-          className="!bg-white border hover:border-blue w-full rounded-md px-4 py-2 shadow-sm  border-brown-light-active cursor-pointer"
+          className="hover:border-blue border-brown-light-active w-full cursor-pointer rounded-md border !bg-white px-4 py-2 shadow-sm"
         />
       </form>
 
       <div className="my-20">
-
         <h2 className="text-blue mb-5 text-2xl font-semibold">
           Conheça as categorias
         </h2>
@@ -88,13 +93,11 @@ export default function Home() {
         Conheça os restaurantes disponíveis
       </h2>
 
-      <div className="mt-6 w-full">
-        {/* botão de filtro de distância */}
-      </div>
+      <div className="mt-6 w-full">{/* botão de filtro de distância */}</div>
 
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
         {mensagemErro ? (
-          <p className="text-red-500 col-span-full">{mensagemErro}</p>
+          <p className="col-span-full text-red-500">{mensagemErro}</p>
         ) : selectedCategory.toLowerCase() === "todos" ? (
           listaFinal.map((itens) => (
             <CardRestauranteMemo key={itens.id} restaurante={itens} />
@@ -105,7 +108,6 @@ export default function Home() {
           ))
         )}
       </div>
-
     </div>
   );
 }

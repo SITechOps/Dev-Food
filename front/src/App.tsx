@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Loading } from "./components/shared/Loading";
 import Menu from "./components/shared/Menu";
-import LayoutRestaurante from "./components/Restaurante/LayoutRestaurante";
+import LayoutRestaurante from "./pages/Restaurante";
 import AppRoutes from "./routes/AppRoutes";
 import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";
@@ -32,25 +32,25 @@ export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <AlertasPersonalizados />
-        <ConfirmacaoEnderecoProvider>
-          <CarrinhoProvider>
-            <AppWrapper>
-              {isAuthenticated && userData?.role === "restaurante" ? (
-                <LayoutRestaurante>
-                  <AppRoutes />
-                </LayoutRestaurante>
-              ) : (
-                <TaxaEntregaProvider>
-                  <PagamentoProvider>
-                    <RestauranteProdutoProvider>
-                      <AppRoutes />
-                    </RestauranteProdutoProvider>
-                  </PagamentoProvider>
-                </TaxaEntregaProvider>
-              )}
-            </AppWrapper>
-          </CarrinhoProvider>
-        </ConfirmacaoEnderecoProvider>
+      <ConfirmacaoEnderecoProvider>
+        <CarrinhoProvider>
+          <AppWrapper>
+            {isAuthenticated && userData?.role === "restaurante" ? (
+              <LayoutRestaurante>
+                <AppRoutes />
+              </LayoutRestaurante>
+            ) : (
+              <TaxaEntregaProvider>
+                <PagamentoProvider>
+                  <RestauranteProdutoProvider>
+                    <AppRoutes />
+                  </RestauranteProdutoProvider>
+                </PagamentoProvider>
+              </TaxaEntregaProvider>
+            )}
+          </AppWrapper>
+        </CarrinhoProvider>
+      </ConfirmacaoEnderecoProvider>
     </Suspense>
   );
 }
