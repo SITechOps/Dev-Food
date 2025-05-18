@@ -3,7 +3,7 @@ import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { IRestaurante } from "@/interface/IRestaurante";
-import { showError, showInfo, showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
+import { showError, showInfo, showSuccess } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useRestaurantAccount = () => {
   const { logout, userData } = useAuth();
@@ -125,6 +125,7 @@ export const useRestaurantAccount = () => {
         tipo: null,
       });
     } catch (error) {
+      showError("Erro ao buscar restaurante:");
       console.error("Erro ao buscar restaurante:", error);
     } finally {
       setIsLoading(false);

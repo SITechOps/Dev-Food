@@ -8,6 +8,7 @@ import { useEndereco } from "../../hooks/useAddress";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { useSearchParams } from "react-router-dom";
+import { showError } from "../ui/AlertasPersonalizados/toastAlerta";
 
 const CadastroEndereco = () => {
   const {
@@ -34,17 +35,15 @@ const CadastroEndereco = () => {
     if (enderecoParam) {
       try {
         const parsedEndereco = JSON.parse(decodeURIComponent(enderecoParam));
-        // Preencha os campos do formulário com os dados do endereço
         if (parsedEndereco) {
           setNumero(parsedEndereco.numero.toString());
           setComplemento(parsedEndereco.complemento);
-          // set search input
           if (searchInput.current) {
             searchInput.current.value = `${parsedEndereco.logradouro}, ${parsedEndereco.numero}, ${parsedEndereco.bairro}, ${parsedEndereco.cidade}, ${parsedEndereco.estado}`;
           }
-          // Você pode adicionar mais campos conforme necessário
         }
       } catch (error) {
+        showError("Erro ao parsear o endereço");
         console.error("Erro ao parsear o endereço:", error);
       }
     }

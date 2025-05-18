@@ -111,14 +111,16 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
           if (coords) {
             setClienteCoords(coords);
             setGeoCliente(enderecoPadraoId);
-            await processarRestaurantes(coords, restaurantes);
+            return restaurantesCompletos
           }
         } else {
           showInfo("Usando coordenadas já salvas.");
           if (storageGeoEndereco?.coords) {
             setClienteCoords(storageGeoEndereco.coords);
-            setGeoCliente(enderecoPadraoId);
-            await processarRestaurantes(storageGeoEndereco.coords, restaurantes);
+            setGeoCliente(enderecoPadraoId)
+            const restaurantes = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
+
+            setRestaurantesCompletos(restaurantes)
           }
         }
       } catch (error) {
@@ -172,13 +174,9 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
               coords: clienteCoords,
             };
 
-            const cacheKey = `restaurante_completo_${rest.id}_${destino.lat}_${destino.lng}`;
-            localStorage.setItem(cacheKey, JSON.stringify(dadosCompletos));
             localStorage.setItem("geoCoordenadasCliente", JSON.stringify(geoCliente));
-
             return dadosCompletos;
           } catch (err) {
-            showError(`Erro ao calcular distância para ${rest.nome}`);
             console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
             return {
               ...rest,
@@ -191,6 +189,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
       );
 
       setRestaurantesCompletos(atualizados);
+      localStorage.setItem("cacheRestaurante", JSON.stringify(atualizados));
       return atualizados;
     } catch (error) {
       showError("Erro ao processar restaurantes:");
