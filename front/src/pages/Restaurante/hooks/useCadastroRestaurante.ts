@@ -1,7 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../connection/axios";
+import { api } from "@/connection/axios";
 import axios from "axios";
+import { decodeToken } from "@/utils/decodeToken";
 
 export const useCadastroRestaurante = () => {
   const [formList, setFormList] = useState({
@@ -31,7 +32,7 @@ export const useCadastroRestaurante = () => {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [codigoEnviado, setCodigoEnviado] = useState("");
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
   async function validarEmail() {
@@ -48,6 +49,26 @@ export const useCadastroRestaurante = () => {
       alert("Erro na tentativa do envio do codigo");
     }
   }
+
+  const uploadRestauranteImage = async (
+    restauranteId: string,
+    image: File,
+  ): Promise<string | null> => {
+    const formData = new FormData();
+    formData.append("image", image);
+    console.log("Entrou no uploadRestauranteImage");
+
+    try {
+      const response = await api.post(
+        `/restaurante/upload-image/${restauranteId}`,
+        formData,
+      );
+      return response.data.image_url;
+    } catch (error) {
+      console.error("Erro no upload da imagem:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     if (cepLimpo.length === 8) {
@@ -74,6 +95,7 @@ export const useCadastroRestaurante = () => {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const requestBody = {
       nome: formList.nome,
       descricao: formList.descricao,
@@ -98,19 +120,27 @@ export const useCadastroRestaurante = () => {
       },
     };
 
-    await api
-      .post("/restaurante", { data: requestBody })
-      .then((response) => {
-        alert("Restaurante cadastrado com sucesso!");
-        console.log("Restaurante cadastrado com sucesso!", response.data);
-        return navigate("/account");
-      })
-      .catch((error) => {
-        if (error.response.status === 409) {
-          alert("Esse endereço já foi cadastrado por outro restaurante!");
-        }
-        console.error("Erro ao cadastrar restaurante:", error);
-      });
+    try {
+      const response = await api.post("/restaurante", { data: requestBody });
+
+      const token = response.data.properties.token;
+      const userData = decodeToken(token);
+      const restauranteId = userData?.sub;
+      if (imageFile) {
+        console.log("Chamando upload da imagem...");
+        await uploadRestauranteImage(restauranteId!, imageFile);
+      } else {
+        console.warn("Nenhuma imagem foi selecionada.");
+      }
+
+      alert("Restaurante cadastrado com sucesso!");
+      return navigate("/account");
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        alert("Esse endereço já foi cadastrado por outro restaurante!");
+      }
+      console.error("Erro ao cadastrar restaurante:", error);
+    }
   }
 
   return {
@@ -123,8 +153,11 @@ export const useCadastroRestaurante = () => {
     setCepLimpo,
     mostrarModal,
     setMostrarModal,
+    uploadRestauranteImage,
     codigoEnviado,
     setCodigoEnviado,
     handleSubmit,
+    imageFile,
+    setImageFile,
   };
 };

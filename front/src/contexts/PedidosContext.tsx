@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { IPedido } from "../interface/IPedidos";
-import { usePedidosFetch } from "@/pages/Pedido/hooks/usePedidosFetch";
+import { usePedidosFetch } from "@/pages/Restaurante/hooks/usePedidosFetch";
 import { socket } from "../utils/socket";
 
 interface PedidosContextData {

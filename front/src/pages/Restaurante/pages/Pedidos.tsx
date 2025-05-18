@@ -1,8 +1,8 @@
-import EntregadorContent from "../components/Pedidos/EntregadorContent";
 import { useAuth } from "@/contexts/AuthContext";
 import { PedidosProvider } from "@/contexts/PedidosContext";
+import PedidosContent from "../components/Pedidos/PedidosContent";
 
-export default function Entregador() {
+export default function Pedidos() {
   const { userData } = useAuth();
   const idRestaurante = userData?.sub;
 
@@ -14,7 +14,7 @@ export default function Entregador() {
 
   return (
     <PedidosProvider idRestaurante={idRestaurante}>
-      <EntregadorContent />
+      <PedidosContent />
     </PedidosProvider>
   );
 }
