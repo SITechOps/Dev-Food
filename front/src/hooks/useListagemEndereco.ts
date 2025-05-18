@@ -1,3 +1,4 @@
+import { showError } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 import { api } from "@/connection/axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
@@ -45,6 +46,7 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 				setEnderecoSelecionado(enderecosData[0] || null);
 			}
 		} catch (error) {
+			showError("Erro ao buscar endereços");
 			console.error("Erro ao buscar endereços:", error);
 		}
 	}, [idUsuario, token, enderecoPadraoId]);
@@ -56,6 +58,7 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 			});
 			await buscarEnderecos();
 		} catch (error) {
+			showError("Erro ao excluir endereço:");
 			console.error("Erro ao excluir endereço:", error);
 		}
 	};

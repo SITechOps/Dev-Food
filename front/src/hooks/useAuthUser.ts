@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../connection/axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { showError, showSuccess } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useAuthUserComponent = () => {
   const { setAuth } = useAuth();
@@ -40,8 +41,8 @@ export const useAuthUserComponent = () => {
     try {
       setCodigoEnviado(response.data.properties.verificationCode);
     } catch (error) {
+      showError("Erro na tentativa do envio do codigo");
       console.error("Erro na tentativa do envio do codigo:", error);
-      alert("Erro na tentativa do envio do codigo");
     }
   }
 
@@ -54,9 +55,10 @@ export const useAuthUserComponent = () => {
       if (token) {
         setAuth(token);
         navigate("/");
-        alert("Cadastro realizado com sucesso!");
+        showSuccess("Cadastro realizado com sucesso!");
       }
     } catch (cadastroError) {
+      showError("Erro ao tentar cadastrar");
       console.error("Erro ao tentar cadastrar:", cadastroError);
     }
   }
@@ -67,7 +69,7 @@ export const useAuthUserComponent = () => {
     });
     const token = loginResp?.data?.properties?.token;
     setAuth(token);
-    alert("Login realizado com sucesso!");
+    showSuccess("Login realizado com sucesso!");
     navigate("/");
   }
   return {

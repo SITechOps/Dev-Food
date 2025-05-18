@@ -60,6 +60,11 @@
   .input {
     @apply bg-gray-light outline-gray-medium mt-1 w-full rounded-sm px-4 py-3 [&::-ms-reveal]:hidden;
   }
+
+  .toast-custom-width {
+    @apply !w-150 mt-[4rem];
+  }
+
   .custom-scroll::-webkit-scrollbar {
     width: 8px;
   }

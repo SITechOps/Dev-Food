@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/interface/IRestaurante";
 import Categorias from "./RestaurantesDisponiveis/Filtros/Categoria/FiltroCategorias";
 import CardRestaurante from "./RestaurantesDisponiveis/Cards/CardRestaurante";
+import { showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -42,15 +43,16 @@ export default function Home() {
       setMensagemErro("");
     } else {
       setRestaurantesFiltrados([]);
+      showWarning('Nenhum restaurante encontrado com a categoria'); 
       setMensagemErro(`Nenhum restaurante encontrado com a categoria "${category}"`);
     }
   };
 
-useEffect(() => {
-  if (clienteCoords && restaurantes.length > 0) {
-    processarRestaurantes(clienteCoords, restaurantes);
-  }
-}, [clienteCoords, restaurantes]);
+  useEffect(() => {
+    if (clienteCoords && restaurantes.length > 0) {
+      processarRestaurantes(clienteCoords, restaurantes);
+    }
+  }, [clienteCoords, restaurantes]);
 
   const listaFinal = restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
   return (
