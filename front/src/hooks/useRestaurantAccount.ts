@@ -3,6 +3,7 @@ import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { IRestaurante } from "@/interface/IRestaurante";
+import { showError, showInfo, showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useRestaurantAccount = () => {
   const { logout, userData } = useAuth();
@@ -161,6 +162,7 @@ export const useRestaurantAccount = () => {
       fetchUserData();
       setIsEditing(false);
     } catch (error) {
+      showError("Erro ao editar restaurante:");
       console.error("Erro ao editar restaurante:", error);
     }
   }
@@ -168,7 +170,7 @@ export const useRestaurantAccount = () => {
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!idRestaurante) {
-      alert("ID do restaurante não encontrado.");
+      showInfo("ID do restaurante não encontrado.");
       return;
     }
     await alterarDadosRestaurante(idRestaurante, formList, imageFile);
@@ -180,10 +182,10 @@ export const useRestaurantAccount = () => {
       await api.patch(`/restaurante/${idRestaurante}/financeiro`, {
         data: formListBancario,
       });
-      alert("Dados bancários alterados com sucesso!");
+      showSuccess("Dados bancários alterados com sucesso!");
       setIsEditing(false);
     } catch (error) {
-      alert("Erro ao alterar dados bancários. Tente novamente.");
+      showError("Erro ao alterar dados bancários. Tente novamente.");
     }
     fetchUserData();
   }
@@ -192,7 +194,7 @@ export const useRestaurantAccount = () => {
     event.preventDefault();
 
     if (!idRestaurante) {
-      alert(
+      showInfo(
         "ID do restaurante não encontrado. Tente recarregar a página ou fazer login novamente.",
       );
       return;
@@ -213,22 +215,22 @@ export const useRestaurantAccount = () => {
         },
       });
 
-      alert("Endereço atualizado com sucesso!");
+      showSuccess("Endereço atualizado com sucesso!");
       setIsEditing(false);
     } catch (error) {
-      alert("Erro ao atualizar o endereço. Tente novamente.");
+      showError("Erro ao atualizar o endereço. Tente novamente.");
     }
   }
 
   async function deletarDados() {
     try {
       await api.delete(`/restaurante/${idRestaurante}`);
-      alert("restaurante removido com sucesso!");
+      showSuccess("restaurante removido com sucesso!");
       localStorage.clear();
       navigate("/auth");
     } catch (error) {
       console.error(error);
-      alert("Erro ao deletar restaurante. Tente novamente.");
+      showError("Erro ao deletar restaurante. Tente novamente.");
     }
   }
 

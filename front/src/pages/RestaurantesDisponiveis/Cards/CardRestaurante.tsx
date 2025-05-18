@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IRestaurante } from "@/interface/IRestaurante";
 import { Link } from "react-router-dom";
 import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import { Loader2 } from "lucide-react";
 
 type RestauranteProps = {
   restaurante: IRestaurante & {
@@ -10,6 +11,14 @@ type RestauranteProps = {
 
 export default function CardRestaurante({ restaurante }: RestauranteProps) {
   const [loading, setLoading] = useState(true);
+
+  // Simula carregamento de dados (pode ser removido se já tiver loading real)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 500); // tempo fictício
+    return () => clearTimeout(timeout);
+  }, []);
 
   const formattedDuration = useMemo(
     () => ((restaurante.duration ?? 0) / 60).toFixed(0),
@@ -35,15 +44,24 @@ export default function CardRestaurante({ restaurante }: RestauranteProps) {
           <h3 className="truncate font-semibold">{restaurante.nome}</h3>
 
           <p className="text-blue text-sm">
-            {restaurante.especialidade} • {restaurante.distancia ?? ""} km
+            {loading ? (
+              <Loader2 className="animate-spin inline w-4 h-4" />
+            ) : (
+              <>
+                {restaurante.especialidade} • {restaurante.distancia ?? ""} km
+              </>
+            )}
           </p>
           <p className="text-blue text-sm">
             {formattedDuration} min •{" "}
             <span className="text-green-dark">
-              {restaurante.taxa_entrega === 0 ||
-                restaurante.taxa_entrega === undefined
-                ? "Grátis"
-                : `R$ ${restaurante.taxa_entrega.toFixed(2)}`}
+              {loading ? (
+                <Loader2 className="animate-spin inline w-4 h-4" />
+              ) : restaurante.taxa_entrega == null || restaurante.taxa_entrega === 0 ? (
+                "Grátis"
+              ) : (
+                `R$ ${Number(restaurante.taxa_entrega).toFixed(2)}`
+              )}
             </span>
           </p>
         </div>

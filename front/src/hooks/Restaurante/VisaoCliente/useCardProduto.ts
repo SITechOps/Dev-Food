@@ -1,3 +1,4 @@
+import { showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { IProduto } from "@/interface/IProduto";
 import { IRestaurante } from "@/interface/IRestaurante";
@@ -6,8 +7,6 @@ import { useContext, useState } from "react";
 export function useCardProdutos(produto: IProduto, restaurante: IRestaurante) {
 	const [quantidade, setQuantidade] = useState(0);
 	const { atualizarQuantidadeTotal } = useContext(CarrinhoContext);
-
-
 	const incrementar = () => setQuantidade((q) => q + 1);
 	const decrementar = () => setQuantidade((q) => (q > 0 ? q - 1 : 0));
 
@@ -27,7 +26,7 @@ export function useCardProdutos(produto: IProduto, restaurante: IRestaurante) {
 			const cnpjNoCarrinho = carrinho[0].restaurante.cnpj;
 
 			if (cnpjNoCarrinho !== restaurante?.cnpj) {
-				alert("Opa! Já existe um pedido de outro restaurante. Finalize ou limpe o carrinho para adicionar novos itens.");
+				showWarning("Opa! Já existe um pedido de outro restaurante. Finalize ou limpe o carrinho para adicionar novos itens.");
 				return;
 			}
 		}
@@ -38,8 +37,7 @@ export function useCardProdutos(produto: IProduto, restaurante: IRestaurante) {
 			const itemExistente = carrinho[itemIndex];
 
 			if (itemExistente.quantidade === addItem.quantidade) {
-				console.log("A quantidade permanece a mesma. Nenhuma alteração feita.");
-				return;
+				return showWarning("A quantidade permanece a mesma, nenhuma alteração feita.");
 			}
 
 			const novaQuantidade = addItem.quantidade;
@@ -55,6 +53,7 @@ export function useCardProdutos(produto: IProduto, restaurante: IRestaurante) {
 		localStorage.setItem("carrinho", JSON.stringify(carrinho));
 		atualizarQuantidadeTotal();
 		setQuantidade(0);
+		showSuccess("Produto adicionado ao carrinho!")
 	}
 
 	return {

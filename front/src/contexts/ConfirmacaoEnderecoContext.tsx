@@ -14,6 +14,7 @@ import { initMapScript } from "@/utils/initMapScript";
 import { IEndereco } from "@/interface/IEndereco";
 import { useRestauranteProduto } from "./VisaoCliente/Restaurante&ProdutoContext";
 import { useNavigate } from "react-router";
+import { showError, showInfo } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 interface Coordenadas {
   lat: number;
@@ -54,9 +55,9 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   const navigate = useNavigate();
 
   const setEnderecoPadraoIdSync = (id: string | null) => {
-    const atual = localStorage.getItem("enderecoPadraoId");
     setEnderecoPadraoId(id);
-    if (atual === id) return; 
+    const atual = localStorage.getItem("enderecoPadraoId");
+    if (atual === id) return;
 
     id ? localStorage.setItem("enderecoPadraoId", id) : localStorage.removeItem("enderecoPadraoId");
   };
@@ -65,7 +66,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   const cancelarConfirmacao = () => setConfirmacaoPadrao({ show: false, endereco: null });
 
   const confirmarEnderecoPadrao = (endereco: IEndereco) => {
-    if (!endereco.id) return alert("Endereço não encontrado");
+    if (!endereco.id) return showError("Endereço não encontrado");
 
     localStorage.setItem("enderecoPadrao", JSON.stringify(endereco));
     setEnderecoPadraoIdSync(endereco.id);
@@ -79,11 +80,17 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   }
 
   useEffect(() => {
+    const idSalvo = localStorage.getItem("enderecoPadraoId");
+    if (idSalvo) setEnderecoPadraoId(idSalvo);
+  }, []);
+
+
+  useEffect(() => {
     const geocodificar = async () => {
-    if (!enderecoPadraoId || geoCliente === enderecoPadraoId) {
-      setLoading(false);
-      return;
-    }
+      if (!enderecoPadraoId || geoCliente === enderecoPadraoId) {
+        setLoading(false);
+        return;
+      }
 
       const enderecoStr = localStorage.getItem("enderecoPadrao");
       const coordenadasSalvasStr = localStorage.getItem("geoCoordenadasCliente");
@@ -99,7 +106,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
         console.log("Comparação estrita:", idSalvo !== idAtual);
 
         if (!idSalvo || idSalvo !== idAtual) {
-          console.log("Coordenadas novas serão buscadas...");
+          showInfo("Coordenadas novas serão buscadas...");
           const coords = await geocodeTexto(enderecoCompleto);
           if (coords) {
             setClienteCoords(coords);
@@ -107,7 +114,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
             await processarRestaurantes(coords, restaurantes);
           }
         } else {
-          console.log("Usando coordenadas já salvas.");
+          showInfo("Usando coordenadas já salvas.");
           if (storageGeoEndereco?.coords) {
             setClienteCoords(storageGeoEndereco.coords);
             setGeoCliente(enderecoPadraoId);
@@ -115,6 +122,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
           }
         }
       } catch (error) {
+        showError("Erro ao processar coordenadas do endereço");
         console.error("Erro ao processar coordenadas do endereço:", error);
       } finally {
         setLoading(false);
@@ -170,6 +178,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
 
             return dadosCompletos;
           } catch (err) {
+            showError(`Erro ao calcular distância para ${rest.nome}`);
             console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
             return {
               ...rest,
@@ -184,6 +193,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
       setRestaurantesCompletos(atualizados);
       return atualizados;
     } catch (error) {
+      showError("Erro ao processar restaurantes:");
       console.error("Erro ao processar restaurantes:", error);
       return [];
     } finally {

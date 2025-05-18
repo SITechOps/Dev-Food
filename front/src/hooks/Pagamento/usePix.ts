@@ -4,6 +4,7 @@ import { IPagePix, IResponsePagePix, StatusChave, statusTipo } from "@/interface
 import { usePagamento } from "./usePagamento";
 import QRCode from 'qrcode';
 import { usePagamentoContext } from "@/contexts/PagamaentoContext";
+import { showError, showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const usePixComponent = () => {
 	const [key, setKey] = useState(0);
@@ -36,6 +37,7 @@ export const usePixComponent = () => {
 			setStatusPagamento(novoStatus);
 
 			if (novoStatus === "aprovado") {
+				showSuccess("Pagamento Realizado com sucesso!")
 				setShowModal(true);
 				break;
 			}
@@ -65,6 +67,7 @@ export const usePixComponent = () => {
 			setTimeout(() => {
 				resetPagamento();
 			}, 0);
+			showError("erro qrCodeGenerico")
 			console.log("erro qrCodeGenerico:", error)
 		} finally {
 			setLoadingGenerico(false);
@@ -107,13 +110,14 @@ export const usePixComponent = () => {
 						});
 						setKey(prevKey => prevKey + 1);
 					} else {
-						alert('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
+						showWarning('Não foi possível gerar o QR Code. Parece que sua chave não está habilitada no Mercado Pago. Por favor, volte e clique em "simular o pagamento".')
 					}
 				}
 			} catch (error) {
 				setTimeout(() => {
 					resetPagamento();
 				}, 0);
+				showError("erro qrCodeMercadoPago")
 				console.log("erro qrCodeMercadoPago:", error)
 			} finally {
 				setLoadingMP(false);
@@ -137,24 +141,25 @@ export const usePixComponent = () => {
 
 			switch (status) {
 				case "approved":
+					showSuccess("Pagamento Realizado com sucesso!")
 					setStatusPagamento("aprovado");
 					setShowModal(true);
 					break;
 
 				case "pending":
 					setStatusPagamento("pendente");
-					console.log("pedido pendente de pagamento")
+					showWarning("pedido pendente de pagamento.")
 					break;
 
 				case "rejected":
 					setStatusPagamento("rejeitado");
-					alert("Pagamento rejeitado. Por favor, tente novamente.");
+					showWarning("Pagamento rejeitado. Por favor, tente novamente.");
 					resetPagamento();
 					break;
 
 				default:
 					resetPagamento();
-					console.warn(`Status desconhecido recebido: ${status}`);
+					showWarning(`Status desconhecido recebido: ${status}`);
 					break;
 			}
 
@@ -162,6 +167,7 @@ export const usePixComponent = () => {
 			setTimeout(() => {
 				resetPagamento();
 			}, 0);
+			showError("erro stausPagamentoPix")
 			console.log("erro stausPagamentoPix:", error)
 		}
 	}

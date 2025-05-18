@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { api } from "@/connection/axios";
 import { IRestaurante } from "@/interface/IRestaurante";
 import { IProduto } from "@/interface/IProduto";
+import { showError } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 
 let cacheRestaurantes: IRestaurante[] = [];
@@ -54,6 +55,7 @@ export const RestauranteProdutoProvider = ({ children }: { children: React.React
       }
 
     } catch (erroGeral) {
+      showError("Erro ao buscar dados de restaurante/produtos");
       console.error("Erro ao buscar dados de restaurante/produtos:", erroGeral);
     }
 
@@ -71,6 +73,7 @@ export const RestauranteProdutoProvider = ({ children }: { children: React.React
       cacheProdutosAll = produtosData;
 
     } catch (erroProduto) {
+      showError("Erro ao buscar todos os produtos");
       console.error("Erro ao buscar todos os produtos:", erroProduto);
     } finally {
       setLoading(false);
