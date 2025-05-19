@@ -1,13 +1,16 @@
 import { useEffect } from "react";
-import { useTimer } from 'react-timer-hook';
+import { useTimer } from "react-timer-hook";
 import BarraProgresso from "@/components/ui/BarraProgresso";
 
 interface VisualizacaoConometroProps {
   onExpire: () => void;
-  segundosTotais?: number; 
+  segundosTotais?: number;
 }
 
-export default function VisualizacaoConometro({ onExpire, segundosTotais = 600 }: VisualizacaoConometroProps) {
+export default function VisualizacaoConometro({
+  onExpire,
+  segundosTotais = 600,
+}: VisualizacaoConometroProps) {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + segundosTotais);
 
@@ -16,7 +19,7 @@ export default function VisualizacaoConometro({ onExpire, segundosTotais = 600 }
     minutes,
     totalSeconds,
     start,
-    restart,
+    // restart,
   } = useTimer({
     expiryTimestamp,
     autoStart: false,
@@ -28,17 +31,17 @@ export default function VisualizacaoConometro({ onExpire, segundosTotais = 600 }
   }, []);
 
   const formatTime = () => {
-    const min = String(minutes).padStart(2, '0');
-    const sec = String(seconds).padStart(2, '0');
+    const min = String(minutes).padStart(2, "0");
+    const sec = String(seconds).padStart(2, "0");
     return `${min}:${sec}`;
   };
 
   const progresso = (totalSeconds / segundosTotais) * 100;
 
   return (
-    <div className='my-2'>
+    <div className="my-2">
       <p className="font-bold">O tempo para você pagar acaba em:</p>
-      <p className="text-2xl my-2 text-brown-normal">{formatTime()}</p>
+      <p className="text-brown-normal my-2 text-2xl">{formatTime()}</p>
       <BarraProgresso progress={progresso} />
     </div>
   );

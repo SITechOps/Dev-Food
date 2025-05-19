@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../connection/axios";
+import { api } from "@/connection/axios";
 import { FormEvent, useEffect, useState } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { IRestaurante } from "@/interface/IRestaurante";
 import {
   showError,
