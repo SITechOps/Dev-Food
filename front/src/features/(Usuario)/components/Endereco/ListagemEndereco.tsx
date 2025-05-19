@@ -1,8 +1,8 @@
 import { IoIosArrowDown } from "react-icons/io";
-import Modal from "@/components/ui/Modal";
+import Modal from "@/shared/components/ui/Modal";
 import EnderecoItem from "./EnderecoItem";
 import TechOpsLogo from "@/assets/techops.png";
-import Button from "../../../../components/ui/Button";
+import Button from "../../../../shared/components/ui/Button";
 import { useListaEndereco } from "@/features/(Usuario)/hooks/useListagemEndereco";
 
 interface ListagemEnderecoProps {

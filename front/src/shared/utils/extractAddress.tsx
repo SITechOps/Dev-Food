@@ -1,4 +1,4 @@
-import { IEndereco } from "../interface/IEndereco";
+import { IEndereco } from "../interfaces/IEndereco";
 
 export const extractAddress = (
   place: google.maps.places.PlaceResult,

@@ -1,8 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "@/connection/axios";
+import { api } from "@/lib/axios";
 import axios from "axios";
-import { decodeToken } from "@/utils/decodeToken";
+import { decodeToken } from "@/shared/utils/decodeToken";
 
 export const useCadastroRestaurante = () => {
   const [formList, setFormList] = useState({

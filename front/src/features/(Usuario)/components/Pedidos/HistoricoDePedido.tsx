@@ -1,13 +1,13 @@
-import { api } from "@/connection/axios";
+import { api } from "@/lib/axios";
 import { useEffect, useState } from "react";
-import { IMeusPedidos } from "@/interface/IMeusPedidos";
-import { Props } from "@/interface/IMeusPedidos";
+import { IMeusPedidos } from "@/features/(Usuario)/interface/IMeusPedidos";
+import { Props } from "@/features/(Usuario)/interface/IMeusPedidos";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Button from "../../../../components/ui/Button";
+import Button from "../../../../shared/components/ui/Button";
 import ModalDetalhePedido from "./ModalDetalhePedido";
-import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
 
 export default function HistoricoDePedido({ tipo }: Props) {
   const { userData } = useAuth();

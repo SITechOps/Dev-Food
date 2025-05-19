@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { Loading } from "./components/shared/Loading";
-import Menu from "./components/shared/Menu";
+import { Loading } from "./shared/components/Loading";
+import Menu from "./shared/components/Menu";
 import LayoutRestaurante from "./features/(Restaurante)";
 import AppRoutes from "./routes/AppRoutes";
 import { useAuth } from "./contexts/AuthContext";
@@ -9,7 +9,7 @@ import { TaxaEntregaProvider } from "./contexts/TaxaEntregaContext";
 import { PagamentoProvider } from "./contexts/PagamaentoContext";
 import { RestauranteProdutoProvider } from "./contexts/VisaoCliente/Restaurante&ProdutoContext";
 import { ConfirmacaoEnderecoProvider } from "./contexts/ConfirmacaoEnderecoContext";
-import AlertasPersonalizados from "./components/ui/AlertasPersonalizados/Alertas";
+import AlertasPersonalizados from "./shared/components/ui/AlertasPersonalizados/Alertas";
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (

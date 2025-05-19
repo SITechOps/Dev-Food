@@ -1,7 +1,7 @@
-import { IPedido } from "../../../../interface/IPedidos";
-import Button from "@/components/ui/Button";
+import { IPedido } from "../../interface/IPedidos";
+import Button from "@/shared/components/ui/Button";
 import { usePedidosContext } from "@/contexts/usePedidosContext";
-import { pedidosUtils } from "../../../../utils/pedidosUtils";
+import { pedidosUtils } from "../../../../shared/utils/pedidosUtils";
 import { Package, CreditCard, MapPin, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 

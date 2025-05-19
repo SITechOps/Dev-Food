@@ -1,5 +1,5 @@
 import { useRestaurantAccount } from "../hooks/useRestaurantAccount";
-import FormComponent from "../../../components/ui/FormComponent";
+import FormComponent from "../../../shared/components/ui/FormComponent";
 
 export default function Financeiro() {
   const {

@@ -4,7 +4,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/shared/components/ui/carousel";
 
 import CategoryCard from "./CategoriaCard";
 import { categories } from "./categories";

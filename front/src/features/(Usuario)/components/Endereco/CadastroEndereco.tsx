@@ -5,10 +5,10 @@ import { IoBusiness } from "react-icons/io5";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useEndereco } from "../../hooks/useEndereco";
-import Input from "../../../../components/ui/Input";
-import Button from "../../../../components/ui/Button";
+import Input from "../../../../shared/components/ui/Input";
+import Button from "../../../../shared/components/ui/Button";
 import { useSearchParams } from "react-router-dom";
-import { showError } from "../../../../components/ui/AlertasPersonalizados/toastAlerta";
+import { showError } from "../../../../shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 const CadastroEndereco = () => {
   const {

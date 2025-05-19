@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Button from "@/components/ui/Button";
+import Button from "@/shared/components/ui/Button";
 
 interface FiltroDistanciaModalProps {
   aberto: boolean;

@@ -1,9 +1,9 @@
 import { Minus, Plus } from "lucide-react";
-import Button from "../../../../../components/ui/Button";
+import Button from "../../../../../shared/components/ui/Button";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useCardProdutos } from "@/features/(Home)/hooks/useCardProduto";
-import { CardProdutosProps } from "@/interface/IProduto";
-import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import { CardProdutosProps } from "@/shared/interfaces/IProduto";
+import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
 
 export default function CardProdutos(props: CardProdutosProps) {
   const { nome, descricao, image_url, valor_unitario, dadosRestaurante } =

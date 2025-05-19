@@ -1,10 +1,10 @@
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import ImageUploadButton from "@/components/ui/ImageUploadButton";
+import Input from "@/shared/components/ui/Input";
+import Button from "@/shared/components/ui/Button";
+import ImageUploadButton from "@/shared/components/ui/ImageUploadButton";
 import { NumberFormatValues, PatternFormat } from "react-number-format";
 import { useCadastroRestaurante } from "../hooks/useCadastroRestaurante";
-import ModalCodigoVerificacao from "../../../components/shared/ModalCodigoVerificacao";
-import IconAction from "@/components/ui/IconAction";
+import ModalCodigoVerificacao from "../../../shared/components/ModalCodigoVerificacao";
+import IconAction from "@/shared/components/ui/IconAction";
 
 export default function CadastroRestaurante() {
   const {

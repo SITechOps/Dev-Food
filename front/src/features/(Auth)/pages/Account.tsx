@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import UserForm from "../../(Usuario)/pages/UserForm";
 import RestaurantForm from "../../(Restaurante)/pages/RestaurantForm";
-import Button from "../../../components/ui/Button";
+import Button from "../../../shared/components/ui/Button";
 import { useAuth } from "../../../contexts/AuthContext";
 
 export default function Account() {

@@ -1,5 +1,5 @@
-import { api } from "../../../connection/axios";
-import { IPedido } from "../../../interface/IPedidos";
+import { api } from "../../../lib/axios";
+import { IPedido } from "../interface/IPedidos";
 
 export function usePedidosFetch() {
   const fetchPedidos = async (

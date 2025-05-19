@@ -1,11 +1,11 @@
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import Button from "@/shared/components/ui/Button";
+import Input from "@/shared/components/ui/Input";
 import ModalProduto from "@/features/(Restaurante)/components/ModalProduto";
 import { Search } from "lucide-react";
 import useProdutos from "@/features/(Restaurante)/hooks/useProducts";
-import { ImagemDeEntidade } from "../../../components/ui/ImagemEntidade";
+import { ImagemDeEntidade } from "../../../shared/components/ui/ImagemEntidade";
 
 const Cardapios = () => {
   const iconStyle =

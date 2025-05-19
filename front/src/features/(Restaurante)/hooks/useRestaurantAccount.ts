@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "@/connection/axios";
+import { api } from "@/lib/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { IRestaurante } from "@/interface/IRestaurante";
+import { IRestaurante } from "@/shared/interfaces/IRestaurante";
 import {
   showError,
   showInfo,
   showSuccess,
-} from "@/components/ui/AlertasPersonalizados/toastAlerta";
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useRestaurantAccount = () => {
   const { logout, userData } = useAuth();

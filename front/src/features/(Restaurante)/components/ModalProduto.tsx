@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
-import Input from "../../../components/ui/Input";
-import Button from "@/components/ui/Button";
-import ImageUploadButton from "@/components/ui/ImageUploadButton";
-import { IProduto } from "@/interface/IProduto";
+import Input from "../../../shared/components/ui/Input";
+import Button from "@/shared/components/ui/Button";
+import ImageUploadButton from "@/shared/components/ui/ImageUploadButton";
+import { IProduto } from "@/shared/interfaces/IProduto";
 
 interface ModalProdutoProps {
   isOpen: boolean;

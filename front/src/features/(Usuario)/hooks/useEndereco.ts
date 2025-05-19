@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { extractAddress } from "@/utils/extractAddress";
-import { reverseGeoCode } from "@/utils/geolocation";
-import { api } from "@/connection/axios";
+import { extractAddress } from "@/shared/utils/extractAddress";
+import { reverseGeoCode } from "@/shared/utils/geolocation";
+import { api } from "@/lib/axios";
 import { useAuth } from "@/contexts/AuthContext";
-import { IEndereco } from "@/interface/IEndereco";
+import { IEndereco } from "@/shared/interfaces/IEndereco";
 import { useNavigate } from "react-router-dom";
-import { initMapScript } from "@/utils/initMapScript";
+import { initMapScript } from "@/shared/utils/initMapScript";
 import {
   showError,
   showSuccess,
   showWarning,
-} from "@/components/ui/AlertasPersonalizados/toastAlerta";
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useEndereco = () => {
   const { userData } = useAuth();

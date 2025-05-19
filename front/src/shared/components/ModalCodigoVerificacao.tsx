@@ -1,8 +1,8 @@
 import CodeInput from "react-code-input";
-import Button from "../ui/Button";
+import Button from "./ui/Button";
 import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { showInfo, showSuccess } from "../ui/AlertasPersonalizados/toastAlerta";
+import { showInfo, showSuccess } from "./ui/AlertasPersonalizados/toastAlerta";
 
 interface ModalCodigoVerificacaoPros {
   qtd_digitos: number;

@@ -1,4 +1,4 @@
-import { IEndereco } from "../interface/IEndereco";
+import { IEndereco } from "../interfaces/IEndereco";
 import { extractAddress } from "./extractAddress";
 
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;

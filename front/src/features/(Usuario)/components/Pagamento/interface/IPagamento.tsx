@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import { IEndereco } from "./IEndereco";
-import { IRestaurante } from "./IRestaurante";
+import { IEndereco } from "../../../../../shared/interfaces/IEndereco";
+import { IRestaurante } from "../../../../../shared/interfaces/IRestaurante";
 
 export interface IPagePix {
   email_comprador: string;

@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { ITokenData } from "../interface/ITokenData";
+import { ITokenData } from "../interfaces/ITokenData";
 
 export const decodeToken = (token: string): ITokenData | null => {
   if (!token) return null;

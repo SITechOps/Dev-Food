@@ -1,5 +1,5 @@
-import Modal from "@/components/ui/Modal";
-import Button from "@/components/ui/Button";
+import Modal from "@/shared/components/ui/Modal";
+import Button from "@/shared/components/ui/Button";
 import { GoClockFill } from "react-icons/go";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";

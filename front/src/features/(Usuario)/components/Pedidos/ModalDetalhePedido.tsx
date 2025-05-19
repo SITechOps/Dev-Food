@@ -1,4 +1,4 @@
-import { IMeusPedidos } from "@/interface/IMeusPedidos";
+import { IMeusPedidos } from "@/features/(Usuario)/interface/IMeusPedidos";
 
 interface ModalDetalhePedidoProps {
   pedido: IMeusPedidos;

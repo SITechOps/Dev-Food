@@ -1,11 +1,11 @@
-import Input from "../../../components/ui/Input";
-import Button from "../../../components/ui/Button";
+import Input from "../../../shared/components/ui/Input";
+import Button from "../../../shared/components/ui/Button";
 import AuthGoogle from "../components/AuthGoogle";
 import AuthFacebook from "../components/AuthFacebook";
-import ModalCodigoVerificacao from "../../../components/shared/ModalCodigoVerificacao";
+import ModalCodigoVerificacao from "../../../shared/components/ModalCodigoVerificacao";
 import { PatternFormat, NumberFormatValues } from "react-number-format";
 import { useAuthUserComponent } from "../hooks/useAuthUser";
-import IconAction from "@/components/ui/IconAction";
+import IconAction from "@/shared/components/ui/IconAction";
 
 export default function AuthUser() {
   const {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { api } from "@/connection/axios";
+import { api } from "@/lib/axios";
 import { useAuth } from "@/contexts/AuthContext";
-import { IProduto } from "@/interface/IProduto";
+import { IProduto } from "@/shared/interfaces/IProduto";
 
 const useProdutos = () => {
   const { userData } = useAuth();

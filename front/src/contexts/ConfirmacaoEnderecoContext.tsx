@@ -5,18 +5,18 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { IRestaurante } from "@/interface/IRestaurante";
-import { geocodeTexto } from "@/utils/useGeocode";
-import { calcularDistancia } from "@/utils/useDistanceMatrix";
-import { calcularTaxaEntrega } from "@/utils/calculateDeliveryFee";
-import { initMapScript } from "@/utils/initMapScript";
-import { IEndereco } from "@/interface/IEndereco";
+import { IRestaurante } from "@/shared/interfaces/IRestaurante";
+import { geocodeTexto } from "@/shared/utils/useGeocode";
+import { calcularDistancia } from "@/shared/utils/useDistanceMatrix";
+import { calcularTaxaEntrega } from "@/shared/utils/calculateDeliveryFee";
+import { initMapScript } from "@/shared/utils/initMapScript";
+import { IEndereco } from "@/shared/interfaces/IEndereco";
 // import { useRestauranteProduto } from "./VisaoCliente/Restaurante&ProdutoContext";
 import { useNavigate } from "react-router";
 import {
   showError,
   showInfo,
-} from "@/components/ui/AlertasPersonalizados/toastAlerta";
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 interface Coordenadas {
   lat: number;

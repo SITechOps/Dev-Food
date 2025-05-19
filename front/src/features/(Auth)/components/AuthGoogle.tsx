@@ -5,7 +5,7 @@ import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useAuthUserComponent } from "../hooks/useAuthUser";
-import Button from "../../../components/ui/Button";
+import Button from "../../../shared/components/ui/Button";
 
 interface AuthGoogleProps {
   setEtapa: React.Dispatch<React.SetStateAction<"telefone" | "email">>;

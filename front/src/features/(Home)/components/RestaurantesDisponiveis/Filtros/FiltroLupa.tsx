@@ -2,16 +2,16 @@ import React, { useMemo, useState } from "react";
 import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
 import CardProdutos from "../Cards/CardProdutos";
-import Input from "@/components/ui/Input";
-import IconAction from "@/components/ui/IconAction";
+import Input from "@/shared/components/ui/Input";
+import IconAction from "@/shared/components/ui/IconAction";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import Button from "@/components/ui/Button";
+import Button from "@/shared/components/ui/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import CardRestaurante from "../Cards/CardRestaurante";
-import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
-import { IProduto } from "@/interface/IProduto";
-import { IRestaurante } from "@/interface/IRestaurante";
+import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
+import { IProduto } from "@/shared/interfaces/IProduto";
+import { IRestaurante } from "@/shared/interfaces/IRestaurante";
 
 export default function FiltroLupa() {
   const navigate = useNavigate();
@@ -36,36 +36,46 @@ export default function FiltroLupa() {
       return (
         restaurante.nome.toLowerCase().includes(searchTermLower) ||
         restaurante.especialidade.toLowerCase().includes(searchTermLower) ||
-        (restaurante.descricao?.toLowerCase().includes(searchTermLower) ?? false) ||
+        (restaurante.descricao?.toLowerCase().includes(searchTermLower) ??
+          false) ||
         (restaurante.endereco?.logradouro
           ?.toLowerCase()
-          .includes(searchTermLower) ?? false) ||
+          .includes(searchTermLower) ??
+          false) ||
         (restaurante.endereco?.bairro
           ?.toLowerCase()
-          .includes(searchTermLower) ?? false) ||
+          .includes(searchTermLower) ??
+          false) ||
         (restaurante.endereco?.cidade
           ?.toLowerCase()
-          .includes(searchTermLower) ?? false)
+          .includes(searchTermLower) ??
+          false)
       );
     });
-  }, [searchTerm, restaurantesCompletos, restaurantes, isAuthenticated, searchTermLower]);
+  }, [
+    searchTerm,
+    restaurantesCompletos,
+    restaurantes,
+    isAuthenticated,
+    searchTermLower,
+  ]);
 
   const produtosFiltrados = useMemo(() => {
     if (!searchTerm.trim()) return [];
     return produtosAll
       .filter((produto) =>
-        produto.nome?.toLowerCase().includes(searchTermLower)
+        produto.nome?.toLowerCase().includes(searchTermLower),
       )
       .map((produto) => ({
         ...produto,
         restaurante: restaurantesCompletos.find(
-          (r) => r.id === produto.id_restaurante
+          (r) => r.id === produto.id_restaurante,
         ),
       }));
   }, [searchTerm, produtosAll, restaurantesCompletos, searchTermLower]);
 
   const produtosAgrupadosPorRestaurante = useMemo(() => {
-	 if (!isAuthenticated) return {};
+    if (!isAuthenticated) return {};
     return produtosFiltrados.reduce(
       (acc, produto) => {
         const restId = produto.restaurante!.id;
@@ -78,7 +88,7 @@ export default function FiltroLupa() {
         acc[restId].produtos.push(produto);
         return acc;
       },
-      {} as Record<string, { restaurante: IRestaurante; produtos: IProduto[] }>
+      {} as Record<string, { restaurante: IRestaurante; produtos: IProduto[] }>,
     );
   }, [produtosFiltrados]);
 
@@ -109,7 +119,7 @@ export default function FiltroLupa() {
           value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Buscar..."
-          className="!bg-white border hover:border-blue w-full rounded-md px-4 py-2 shadow-sm  border-brown-normal cursor-pointer"
+          className="hover:border-blue border-brown-normal w-full cursor-pointer rounded-md border !bg-white px-4 py-2 shadow-sm"
         />
       </form>
 
@@ -141,11 +151,14 @@ export default function FiltroLupa() {
           {restaurantesFiltrados.length > 0 ? (
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
               {restaurantesFiltrados.map((restaurante) => (
-                <CardRestaurante key={restaurante.id} restaurante={restaurante} />
+                <CardRestaurante
+                  key={restaurante.id}
+                  restaurante={restaurante}
+                />
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-center mt-2">
+            <p className="text-muted-foreground mt-2 text-center">
               Nenhum resultado encontrado.
             </p>
           )}
@@ -156,11 +169,14 @@ export default function FiltroLupa() {
         <>
           {!isAuthenticated ? (
             <>
-              <p className="text-muted-foreground text-center mt-4">
+              <p className="text-muted-foreground mt-4 text-center">
                 Para consultar os produtos disponíveis, realize o LOGIN.
               </p>
-              <div className="flex justify-center mt-4">
-                <Button onClick={() => navigate("/intermediaria")} className="w-80">
+              <div className="mt-4 flex justify-center">
+                <Button
+                  onClick={() => navigate("/intermediaria")}
+                  className="w-80"
+                >
                   Realizar Login
                 </Button>
               </div>
@@ -199,11 +215,11 @@ export default function FiltroLupa() {
                       ))}
                     </div>
                   </div>
-                )
+                ),
               )}
             </div>
           ) : (
-            <p className="text-muted-foreground text-center mt-4">
+            <p className="text-muted-foreground mt-4 text-center">
               Nenhum produto encontrado.
             </p>
           )}

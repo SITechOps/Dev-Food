@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { api } from "../../../connection/axios";
+import { api } from "../../../lib/axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import {
   showError,
   showSuccess,
-} from "@/components/ui/AlertasPersonalizados/toastAlerta";
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useAuthUserComponent = () => {
   const { setAuth } = useAuth();

@@ -1,5 +1,5 @@
-import { IRestaurante } from "./IRestaurante";
-import { IEndereco } from "./IEndereco";
+import { IRestaurante } from "../../../shared/interfaces/IRestaurante";
+import { IEndereco } from "../../../shared/interfaces/IEndereco";
 export interface IMeusPedidos {
   Id: number;
   id_usuario: string;
@@ -31,5 +31,5 @@ export interface IMeusPedidos {
 export interface Props {
   tipo: "meuPedido" | "historico";
   pedidos: IMeusPedidos[];
-  loading?: boolean; 
+  loading?: boolean;
 }

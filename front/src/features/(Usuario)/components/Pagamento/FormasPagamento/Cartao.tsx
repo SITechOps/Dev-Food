@@ -1,8 +1,8 @@
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import Button from "@/shared/components/ui/Button";
+import Input from "@/shared/components/ui/Input";
 import CardsOpcoes from "../components/CardsOpcoes";
 import { FaCcMastercard } from "react-icons/fa";
-import Modal from "@/components/ui/Modal";
+import Modal from "@/shared/components/ui/Modal";
 import { Loader2 } from "lucide-react";
 import { useCartaoComponent } from "@/features/(Usuario)/hooks/Pagamento/useCartao";
 

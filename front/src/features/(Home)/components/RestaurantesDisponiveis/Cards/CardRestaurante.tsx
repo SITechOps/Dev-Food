@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { IRestaurante } from "@/interface/IRestaurante";
+import { IRestaurante } from "@/shared/interfaces/IRestaurante";
 import { Link } from "react-router-dom";
-import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
 import { Loader2 } from "lucide-react";
 
 type RestauranteProps = {

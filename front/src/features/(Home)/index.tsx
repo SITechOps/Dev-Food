@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import Input from "@/components/ui/Input";
+import Input from "@/shared/components/ui/Input";
 import React from "react";
 import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
 import { useNavigate } from "react-router-dom";
-import { IRestaurante } from "@/interface/IRestaurante";
+import { IRestaurante } from "@/shared/interfaces/IRestaurante";
 import Categorias from "./components/RestaurantesDisponiveis/Filtros/Categoria/FiltroCategorias";
 import CardRestaurante from "./components/RestaurantesDisponiveis/Cards/CardRestaurante";
-import { showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
+import { showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 import FiltroDistanciaModal from "./components/RestaurantesDisponiveis/Filtros/FiltroPorDistancia";
 import ButtonDistance from "./components/RestaurantesDisponiveis/Filtros/ButtonDistance";
 

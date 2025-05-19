@@ -1,11 +1,11 @@
-import Button from "../../../components/ui/Button";
+import Button from "../../../shared/components/ui/Button";
 import { SiPix } from "react-icons/si";
 import { TfiMapAlt } from "react-icons/tfi";
 import { BsCreditCardFill } from "react-icons/bs";
 import PagePix from "../components/Pagamento/FormasPagamento/Pix";
 import PageCartao from "../components/Pagamento/FormasPagamento/Cartao";
 import CardsOpcoes from "../components/Pagamento/components/CardsOpcoes";
-import IconAction from "@/components/ui/IconAction";
+import IconAction from "@/shared/components/ui/IconAction";
 import { usePagamento } from "@/features/(Usuario)/hooks/Pagamento/usePagamento";
 import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
 

@@ -1,4 +1,4 @@
-import FormComponent from "@/components/ui/FormComponent";
+import FormComponent from "@/shared/components/ui/FormComponent";
 import { useUserAccount } from "../hooks/useUserAccount";
 
 export default function UserForm() {

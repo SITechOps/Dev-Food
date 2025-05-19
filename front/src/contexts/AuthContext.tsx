@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { decodeToken } from "../utils/decodeToken";
-import { api } from "@/connection/axios";
+import { decodeToken } from "../shared/utils/decodeToken";
+import { api } from "@/lib/axios";
 
 interface UserData {
   role: string;

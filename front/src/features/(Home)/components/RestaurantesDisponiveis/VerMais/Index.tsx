@@ -1,7 +1,7 @@
 import { Clock, MapPin } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { useRestaurante } from "../../../hooks/useRestaurante";
-import { Loading } from "../../../../../components/shared/Loading";
+import { Loading } from "../../../../../shared/components/Loading";
 
 export default function VerMaisRestaurante({ onClose }: any) {
   const { restaurante, loading } = useRestaurante();

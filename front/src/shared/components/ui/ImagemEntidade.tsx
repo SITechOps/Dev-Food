@@ -1,5 +1,5 @@
 import React from "react";
-import { API_BASE_URL } from "@/connection/apiConfig";
+import { API_BASE_URL } from "@/lib/apiConfig";
 
 type ImagemDeEntidadeProps = {
   src?: string;

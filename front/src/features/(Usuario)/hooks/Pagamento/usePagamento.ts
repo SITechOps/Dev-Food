@@ -1,11 +1,19 @@
-import { showError, showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
-import { api } from "@/connection/axios";
+import {
+  showError,
+  showSuccess,
+  showWarning,
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
+import { api } from "@/lib/axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { CarrinhoContext } from "@/contexts/CarrinhoContext";
 import { usePagamentoContext } from "@/contexts/PagamaentoContext";
 import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
-import { IItens, IPedido, IRespPedido } from "@/interface/IPagamento";
-import { IUsuarioCliente } from "@/interface/IUser";
+import {
+  IItens,
+  IPedido,
+  IRespPedido,
+} from "@/features/(Usuario)/components/Pagamento/interface/IPagamento";
+import { IUsuarioCliente } from "@/features/(Usuario)/interface/IUser";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -25,7 +33,9 @@ export const usePagamento = () => {
   const { taxaEntregaSelecionada, tipoEntregaSelecionada } = useTaxaEntrega();
   const { atualizarQuantidadeTotal } = useContext(CarrinhoContext);
   const storageEnderecoId = localStorage.getItem("enderecoPadraoId");
-  const storageEndereco = JSON.parse(localStorage.getItem("enderecoPadrao") || "null");
+  const storageEndereco = JSON.parse(
+    localStorage.getItem("enderecoPadrao") || "null",
+  );
   const [endereco, setEndereco] = useState({
     rua: storageEndereco.logradouro,
     complemento: `${storageEndereco.bairro}, ${storageEndereco.cidade}, ${storageEndereco.estado} - ${storageEndereco.pais}`,
@@ -36,7 +46,7 @@ export const usePagamento = () => {
     setModeloPagamento,
     etapa,
     setEtapa,
-    resetPagamento
+    resetPagamento,
   } = usePagamentoContext();
 
   useEffect(() => {
@@ -46,7 +56,7 @@ export const usePagamento = () => {
     }
     if (taxaEntregaSelecionada === 0) {
       navigate("/");
-      showWarning("Não foi encontrado o valor da taxa, para prosseguir.")
+      showWarning("Não foi encontrado o valor da taxa, para prosseguir.");
     }
 
     if (endereco.id === null) {
@@ -69,7 +79,6 @@ export const usePagamento = () => {
     }
   }
 
-
   async function getDadosUser() {
     try {
       const { data } = await api.get(`/user/${idUsuario}`);
@@ -77,8 +86,8 @@ export const usePagamento = () => {
       setUser(dados);
       return dados;
     } catch (error) {
-      showError("erro getDadoUser:")
-      console.log("erro getDadoUser:", error)
+      showError("erro getDadoUser:");
+      console.log("erro getDadoUser:", error);
     }
   }
 
@@ -86,30 +95,42 @@ export const usePagamento = () => {
     setIsLoading(true);
     try {
       if (!storedCompra) {
-       return showWarning("Carrinho não encontrado. Adicione itens antes de prosseguir.");
+        return showWarning(
+          "Carrinho não encontrado. Adicione itens antes de prosseguir.",
+        );
       }
       const compra = JSON.parse(storedCompra);
-      const pedidoPayload: IPedido = construirPedidoPayload(compra, formaPagamento);
-      const resp = await api.post<IRespPedido>("/pedido", { pedido: pedidoPayload });
+      const pedidoPayload: IPedido = construirPedidoPayload(
+        compra,
+        formaPagamento,
+      );
+      const resp = await api.post<IRespPedido>("/pedido", {
+        pedido: pedidoPayload,
+      });
 
-      if (resp.status === 201) { 
-        postNF(resp.data.id_pedido)
+      if (resp.status === 201) {
+        postNF(resp.data.id_pedido);
         localStorage.removeItem("quantidadeTotal");
         localStorage.removeItem("compraAtual");
         localStorage.removeItem("carrinho");
         atualizarQuantidadeTotal();
-        showSuccess("Pedido realizado com sucesso! Obrigado por comprar conosco.");
+        showSuccess(
+          "Pedido realizado com sucesso! Obrigado por comprar conosco.",
+        );
       }
     } catch (error) {
-      showError("erro postPedido")
-      console.log("erro postPedido:", error)
+      showError("erro postPedido");
+      console.log("erro postPedido:", error);
       setTimeout(() => {
         resetPagamento();
       }, 0);
     }
   }
 
-  function construirPedidoPayload(compra: any, formaPagamento: "pix" | "cartao"): IPedido {
+  function construirPedidoPayload(
+    compra: any,
+    formaPagamento: "pix" | "cartao",
+  ): IPedido {
     return {
       id_usuario: userData?.sub,
       id_restaurante: compra.itens[0]?.restaurante.id,
@@ -119,11 +140,13 @@ export const usePagamento = () => {
       valor_total: valoresCarrinho.total,
       tipo_entrega: tipoEntregaSelecionada,
       forma_pagamento: formaPagamento,
-      itens: compra.itens.map((item: any): IItens => ({
-        id_produto: item.id,
-        qtd_itens: item.quantidade,
-        valor_calculado: item.subtotal,
-      })),
+      itens: compra.itens.map(
+        (item: any): IItens => ({
+          id_produto: item.id,
+          qtd_itens: item.quantidade,
+          valor_calculado: item.subtotal,
+        }),
+      ),
     };
   }
 
@@ -136,8 +159,8 @@ export const usePagamento = () => {
       navigate("/historico");
       return resp;
     } catch (error) {
-      console.log("erro postNF:", error)
-      showError("erro postNF")
+      console.log("erro postNF:", error);
+      showError("erro postNF");
     }
   }
 
@@ -158,5 +181,5 @@ export const usePagamento = () => {
     postPedido,
     getDadosUser,
     taxaEntregaSelecionada,
-  }
-}
+  };
+};

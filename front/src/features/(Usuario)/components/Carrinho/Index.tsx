@@ -1,5 +1,5 @@
 import { IoClose } from "react-icons/io5";
-import Button from "@/components/ui/Button";
+import Button from "@/shared/components/ui/Button";
 import { Minus, Plus } from "lucide-react";
 import { useCarrinho } from "@/features/(Usuario)/hooks/useCarrinho";
 import TechOpsLogo from "@/assets/techops.png";

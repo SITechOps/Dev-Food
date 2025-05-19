@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "@/connection/axios";
+import { api } from "@/lib/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   showError,
   showSuccess,
   showWarning,
-} from "@/components/ui/AlertasPersonalizados/toastAlerta";
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useUserAccount = () => {
   const navigate = useNavigate();

@@ -9,9 +9,9 @@ import {
 } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import { api } from "../../../connection/axios";
-import { socket } from "../../../utils/socket";
-import { IPedido } from "@/interface/IPedidos";
+import { api } from "../../../lib/axios";
+import { socket } from "../../../shared/utils/socket";
+import { IPedido } from "@/features/(Restaurante)/interface/IPedidos";
 
 const MenuRestaurante = () => {
   const [isOpen, setIsOpen] = useState(false);

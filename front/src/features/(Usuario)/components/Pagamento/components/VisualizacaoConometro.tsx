@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTimer } from "react-timer-hook";
-import BarraProgresso from "@/components/ui/BarraProgresso";
+import BarraProgresso from "@/shared/components/ui/BarraProgresso";
 
 interface VisualizacaoConometroProps {
   onExpire: () => void;

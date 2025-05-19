@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { api } from "../../../connection/axios";
-import { socket } from "../../../utils/socket";
+import { api } from "../../../lib/axios";
+import { socket } from "../../../shared/utils/socket";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useUserAccount } from "../hooks/useUserAccount";
-import { pedidosUtils } from "../../../utils/pedidosUtils";
-import IconAction from "@/components/ui/IconAction";
+import { pedidosUtils } from "../../../shared/utils/pedidosUtils";
+import IconAction from "@/shared/components/ui/IconAction";
 import { useNavigate } from "react-router";
 
 const statusMessages: { [key: string]: string } = {

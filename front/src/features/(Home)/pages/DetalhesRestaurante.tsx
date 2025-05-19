@@ -1,12 +1,12 @@
 import { Star, ChevronRight } from "lucide-react";
-import Button from "../../../components/ui/Button";
+import Button from "../../../shared/components/ui/Button";
 import CardProdutos from "../components/RestaurantesDisponiveis/Cards/CardProdutos";
 import { useRestaurante } from "../hooks/useRestaurante";
-import { Loading } from "../../../components/shared/Loading";
+import { Loading } from "../../../shared/components/Loading";
 import VerMaisRestaurante from "../components/RestaurantesDisponiveis/VerMais/Index";
-import IconAction from "@/components/ui/IconAction";
+import IconAction from "@/shared/components/ui/IconAction";
 import { useAuth } from "@/contexts/AuthContext";
-import { ImagemDeEntidade } from "@/components/ui/ImagemEntidade";
+import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
 
 export default function DetalhesRestaurante() {
   const { isAuthenticated } = useAuth();

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAuthUserComponent } from "../hooks/useAuthUser";
-import Button from "@/components/ui/Button";
+import Button from "@/shared/components/ui/Button";
 import { FaFacebook } from "react-icons/fa";
 
 interface AuthFacebookProps {

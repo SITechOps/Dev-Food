@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import ModalCodigoVerificacao from "@/components/shared/ModalCodigoVerificacao";
-import { api } from "@/connection/axios";
-import Button from "@/components/ui/Button";
+import ModalCodigoVerificacao from "@/shared/components/ModalCodigoVerificacao";
+import { api } from "@/lib/axios";
+import Button from "@/shared/components/ui/Button";
 import { usePedidosFetch } from "@/features/(Restaurante)/hooks/usePedidosFetch";
-import { IPedido } from "@/interface/IPedidos";
+import { IPedido } from "@/features/(Restaurante)/interface/IPedidos";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function EntregadorContent() {
