@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { usePedidosContext } from "@/contexts/usePedidosContext";
+import { usePedidosContext } from "@/shared/contexts/usePedidosContext";
 import DetalhesPedido from "./DetalhesPedido";
 import PainelPedidos from "./PainelPedidos";
 

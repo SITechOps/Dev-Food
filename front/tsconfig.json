@@ -9,11 +9,11 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/assets/*": ["src/assets/*"],
-      "@/components/*": ["src/shared/*"],
-      "@/contexts/*": ["src/contexts/*"],
-      "@/interface/*": ["src/shared/interfaces/*"],
-      "@/connection/*": ["src/connection/*"],
-      "@/utils/*": ["src/shared/utils/*"]
+      "@/components/*": ["src/shared/components/*"],
+      "@/contexts/*": ["src/shared/contexts/*"],
+      "@/interfaces/*": ["src/shared/interfaces/*"],
+      "@/utils/*": ["src/shared/utils/*"],
+      "@/features/*": ["src/features/*"]
     }
   }
 }

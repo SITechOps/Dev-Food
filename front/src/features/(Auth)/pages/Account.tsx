@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import UserForm from "../../(Usuario)/pages/UserForm";
 import RestaurantForm from "../../(Restaurante)/pages/RestaurantForm";
 import Button from "../../../shared/components/ui/Button";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../shared/contexts/AuthContext";
 
 export default function Account() {
   const { userData, isAuthenticated } = useAuth();

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { extractAddress } from "@/shared/utils/extractAddress";
 import { reverseGeoCode } from "@/shared/utils/geolocation";
 import { api } from "@/lib/axios";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import { IEndereco } from "@/shared/interfaces/IEndereco";
 import { useNavigate } from "react-router-dom";
 import { initMapScript } from "@/shared/utils/initMapScript";

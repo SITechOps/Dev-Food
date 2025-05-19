@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PedidosContext } from "@/contexts/PedidosContext";
+import { PedidosContext } from "@/shared/contexts/PedidosContext";
 
 export function usePedidosContext() {
   const context = useContext(PedidosContext);

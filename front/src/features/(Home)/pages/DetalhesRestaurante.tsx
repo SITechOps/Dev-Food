@@ -5,7 +5,7 @@ import { useRestaurante } from "../hooks/useRestaurante";
 import { Loading } from "../../../shared/components/Loading";
 import VerMaisRestaurante from "../components/RestaurantesDisponiveis/VerMais/Index";
 import IconAction from "@/shared/components/ui/IconAction";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
 
 export default function DetalhesRestaurante() {

@@ -8,7 +8,7 @@ import {
   Package,
 } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../shared/contexts/AuthContext";
 import { api } from "../../../lib/axios";
 import { socket } from "../../../shared/utils/socket";
 import { IPedido } from "@/features/(Restaurante)/interface/IPedidos";

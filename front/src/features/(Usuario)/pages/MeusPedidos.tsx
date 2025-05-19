@@ -1,7 +1,7 @@
 import HistoricoDePedido from "@/features/(Usuario)/components/Pedidos/HistoricoDePedido";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/axios";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import { IMeusPedidos } from "@/features/(Usuario)/interface/IMeusPedidos";
 
 export default function MeusPedidos() {

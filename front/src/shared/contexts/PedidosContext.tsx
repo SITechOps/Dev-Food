@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
-import { IPedido } from "../features/(Restaurante)/interface/IPedidos";
+import { IPedido } from "../../features/(Restaurante)/interface/IPedidos";
 import { usePedidosFetch } from "@/features/(Restaurante)/hooks/usePedidosFetch";
-import { socket } from "../shared/utils/socket";
+import { socket } from "../utils/socket";
 
 interface PedidosContextData {
   pedidos: IPedido[];

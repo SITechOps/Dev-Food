@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { IMeusPedidos } from "@/features/(Usuario)/interface/IMeusPedidos";
 import { Props } from "@/features/(Usuario)/interface/IMeusPedidos";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../../shared/components/ui/Button";
 import ModalDetalhePedido from "./ModalDetalhePedido";

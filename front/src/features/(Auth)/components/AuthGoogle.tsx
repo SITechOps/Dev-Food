@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 import { AiFillGoogleCircle } from "react-icons/ai";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../shared/contexts/AuthContext";
 import { useAuthUserComponent } from "../hooks/useAuthUser";
 import Button from "../../../shared/components/ui/Button";
 

@@ -4,10 +4,10 @@ import {
   showWarning,
 } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 import { api } from "@/lib/axios";
-import { useAuth } from "@/contexts/AuthContext";
-import { CarrinhoContext } from "@/contexts/CarrinhoContext";
-import { usePagamentoContext } from "@/contexts/PagamaentoContext";
-import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
+import { CarrinhoContext } from "@/shared/contexts/CarrinhoContext";
+import { usePagamentoContext } from "@/shared/contexts/PagamaentoContext";
+import { useTaxaEntrega } from "@/shared/contexts/TaxaEntregaContext";
 import {
   IItens,
   IPedido,

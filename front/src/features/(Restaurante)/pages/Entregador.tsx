@@ -1,6 +1,6 @@
 import EntregadorContent from "../components/Pedidos/EntregadorContent";
-import { useAuth } from "@/contexts/AuthContext";
-import { PedidosProvider } from "@/contexts/PedidosContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
+import { PedidosProvider } from "@/shared/contexts/PedidosContext";
 
 export default function Entregador() {
   const { userData } = useAuth();

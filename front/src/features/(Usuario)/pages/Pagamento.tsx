@@ -7,7 +7,7 @@ import PageCartao from "../components/Pagamento/FormasPagamento/Cartao";
 import CardsOpcoes from "../components/Pagamento/components/CardsOpcoes";
 import IconAction from "@/shared/components/ui/IconAction";
 import { usePagamento } from "@/features/(Usuario)/hooks/Pagamento/usePagamento";
-import { useTaxaEntrega } from "@/contexts/TaxaEntregaContext";
+import { useTaxaEntrega } from "@/shared/contexts/TaxaEntregaContext";
 
 export default function Pagamento() {
   const {

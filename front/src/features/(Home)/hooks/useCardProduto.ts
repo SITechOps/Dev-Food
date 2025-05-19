@@ -2,7 +2,7 @@ import {
   showSuccess,
   showWarning,
 } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
-import { CarrinhoContext } from "@/contexts/CarrinhoContext";
+import { CarrinhoContext } from "@/shared/contexts/CarrinhoContext";
 import { IProduto } from "@/shared/interfaces/IProduto";
 import { IRestaurante } from "@/shared/interfaces/IRestaurante";
 import { useContext, useState } from "react";

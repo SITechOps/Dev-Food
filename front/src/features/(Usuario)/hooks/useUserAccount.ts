@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { api } from "@/lib/axios";
 import { FormEvent, useEffect, useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import {
   showError,
   showSuccess,

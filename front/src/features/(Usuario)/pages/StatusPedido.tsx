@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../lib/axios";
 import { socket } from "../../../shared/utils/socket";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../shared/contexts/AuthContext";
 import { useUserAccount } from "../hooks/useUserAccount";
 import { pedidosUtils } from "../../../shared/utils/pedidosUtils";
 import IconAction from "@/shared/components/ui/IconAction";

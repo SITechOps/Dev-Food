@@ -1,5 +1,5 @@
-import { useAuth } from "@/contexts/AuthContext";
-import { PedidosProvider } from "@/contexts/PedidosContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
+import { PedidosProvider } from "@/shared/contexts/PedidosContext";
 import PedidosContent from "../components/Pedidos/PedidosContent";
 
 export default function Pedidos() {

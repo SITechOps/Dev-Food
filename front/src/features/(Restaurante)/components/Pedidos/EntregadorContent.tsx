@@ -4,7 +4,7 @@ import { api } from "@/lib/axios";
 import Button from "@/shared/components/ui/Button";
 import { usePedidosFetch } from "@/features/(Restaurante)/hooks/usePedidosFetch";
 import { IPedido } from "@/features/(Restaurante)/interface/IPedidos";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
 
 export default function EntregadorContent() {
   const [pedidos, setPedidos] = useState<IPedido[]>([]);

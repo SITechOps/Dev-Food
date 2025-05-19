@@ -4,10 +4,10 @@ import TechOpsLogo from "@/assets/techops.png";
 import { CiUser } from "react-icons/ci";
 import Button from "./ui/Button";
 import ListagemEndereco from "../../features/(Usuario)/components/Endereco/ListagemEndereco";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { TbShoppingBag } from "react-icons/tb";
 import Carrinho from "../../features/(Usuario)/components/Carrinho/Index";
-import { CarrinhoContext } from "../../contexts/CarrinhoContext";
+import { CarrinhoContext } from "../contexts/CarrinhoContext";
 
 export default function Menu() {
   const navigate = useNavigate();

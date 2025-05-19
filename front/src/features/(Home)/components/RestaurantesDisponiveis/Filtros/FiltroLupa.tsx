@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { useRestauranteProduto } from "@/contexts/VisaoCliente/Restaurante&ProdutoContext";
-import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
+import { useRestauranteProduto } from "@/shared/contexts/VisaoCliente/Restaurante&ProdutoContext";
+import { useConfirmacaoEndereco } from "@/shared/contexts/ConfirmacaoEnderecoContext";
 import CardProdutos from "../Cards/CardProdutos";
 import Input from "@/shared/components/ui/Input";
 import IconAction from "@/shared/components/ui/IconAction";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import Button from "@/shared/components/ui/Button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import CardRestaurante from "../Cards/CardRestaurante";
 import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
 import { IProduto } from "@/shared/interfaces/IProduto";

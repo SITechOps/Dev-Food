@@ -1,7 +1,7 @@
 import { showError } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 import { api } from "@/lib/axios";
-import { useAuth } from "@/contexts/AuthContext";
-import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
+import { useAuth } from "@/shared/contexts/AuthContext";
+import { useConfirmacaoEndereco } from "@/shared/contexts/ConfirmacaoEnderecoContext";
 import { IEndereco } from "@/shared/interfaces/IEndereco";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
