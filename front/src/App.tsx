@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Loading } from "./components/shared/Loading";
 import Menu from "./components/shared/Menu";
-import LayoutRestaurante from "./pages/Restaurante";
+import LayoutRestaurante from "./features/(Restaurante)";
 import AppRoutes from "./routes/AppRoutes";
 import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";

@@ -4,39 +4,51 @@ import ProtectedRoute from "./ProtectedRoute";
 import RoleBasedRoute from "./RoleBasedRoute";
 import RestrictRestauranteOnly from "./RestrictRestaurant";
 
-const Entregador = lazy(() => import("../pages/Restaurante/pages/Entregador"));
-const Error404 = lazy(() => import("@/pages/Error404"));
-const Home = lazy(() => import("../pages/Home"));
+const Entregador = lazy(
+  () => import("../features/(Restaurante)/pages/Entregador"),
+);
+const Error404 = lazy(() => import("@/features/Error404"));
+const Home = lazy(() => import("../features/(Home)"));
 const FiltroLupa = lazy(
   () =>
     import(
-      "../pages/Home/components/RestaurantesDisponiveis/Filtros/FiltroLupa"
+      "../features/(Home)/components/RestaurantesDisponiveis/Filtros/FiltroLupa"
     ),
 );
-const AuthUser = lazy(() => import("../pages/Auth/pages/AuthUser"));
-const Intermediaria = lazy(() => import("../pages/Auth/pages/Intermediaria"));
-const Account = lazy(() => import("../pages/Auth/pages/Account"));
-const Cardapio = lazy(() => import("../pages/Restaurante/pages/Cardapios"));
-const Financeiro = lazy(() => import("../pages/Restaurante/pages/Financeiro"));
-const StatusPedido = lazy(() => import("../pages/Usuario/pages/StatusPedido"));
+const AuthUser = lazy(() => import("../features/(Auth)/pages/AuthUser"));
+const Intermediaria = lazy(
+  () => import("../features/(Auth)/pages/Intermediaria"),
+);
+const Account = lazy(() => import("../features/(Auth)/pages/Account"));
+const Cardapio = lazy(
+  () => import("../features/(Restaurante)/pages/Cardapios"),
+);
+const Financeiro = lazy(
+  () => import("../features/(Restaurante)/pages/Financeiro"),
+);
+const StatusPedido = lazy(
+  () => import("../features/(Usuario)/pages/StatusPedido"),
+);
 const CadastroEndereco = lazy(
-  () => import("../pages/Usuario/components/Endereco/CadastroEndereco"),
+  () => import("../features/(Usuario)/components/Endereco/CadastroEndereco"),
 );
 const CadastroRestaurante = lazy(
-  () => import("../pages/Restaurante/pages/CadastroRestaurante"),
+  () => import("../features/(Restaurante)/pages/CadastroRestaurante"),
 );
 const DetalhesRestaurante = lazy(
-  () => import("../pages/Home/pages/DetalhesRestaurante"),
+  () => import("../features/(Home)/pages/DetalhesRestaurante"),
 );
 const AlterarEnderecoRestaurante = lazy(
-  () => import("../pages/Restaurante/pages/Endereco"),
+  () => import("../features/(Restaurante)/pages/Endereco"),
 );
-const Pagamento = lazy(() => import("../pages/Usuario/pages/Pagamento"));
-const Pedidos = lazy(() => import("../pages/Restaurante/pages/Pedidos"));
+const Pagamento = lazy(() => import("../features/(Usuario)/pages/Pagamento"));
+const Pedidos = lazy(() => import("../features/(Restaurante)/pages/Pedidos"));
 
-const MeusPedidos = lazy(() => import("../pages/Usuario/pages/MeusPedidos"));
+const MeusPedidos = lazy(
+  () => import("../features/(Usuario)/pages/MeusPedidos"),
+);
 const ListagemEndereco = lazy(
-  () => import("../pages/Usuario/components/Endereco/ListagemEndereco"),
+  () => import("../features/(Usuario)/components/Endereco/ListagemEndereco"),
 );
 
 const AppRoutes = () => {
