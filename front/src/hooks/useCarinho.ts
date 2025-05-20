@@ -2,23 +2,27 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
+
 export const useCarrinho = () => {
 	const [dados, setDados] = useState<any>([]);
 	const navigate = useNavigate();
 	const { isAuthenticated } = useAuth();
 	const subtotal = dados.reduce((sum: any, item: any) => sum + item.subtotal, 0);
-	const [taxaEntrega, setTaxaEntrega] = useState(0);
-	const total = subtotal + taxaEntrega;
+	const [taxa_entrega, setTaxaEntrega] = useState(0);
 	const storedCarrinho = localStorage.getItem("carrinho");
-    const [distancia, setDistancia] = useState<number | null>(null);
-    const [tempoEntrega, setTempoEntrega] = useState<number | null>(null);
-    const [restauranteId, setRestauranteId] = useState<string | null>(null);
+	const [distancia, setDistancia] = useState<number | null>(null);
+	const [tempoEntrega, setTempoEntrega] = useState<number | null>(null);
+	const [restauranteId, setRestauranteId] = useState<string | null>(null);
+	const resSelecionado = localStorage.getItem("restauranteSelecionado");
+	const taxaEntregaRestaurante = resSelecionado
+		? JSON.parse(resSelecionado).taxa_entrega
+		: 0;
 
 	useEffect(() => {
-	
+		setTaxaEntrega(taxaEntregaRestaurante);
 		if (storedCarrinho) {
 			const carrinho = JSON.parse(storedCarrinho);
-	
+
 			if (Array.isArray(carrinho) && carrinho.length > 0) {
 				const carrinhoAgrupado = Object.values(
 					carrinho.reduce((acc: any, item: any) => {
@@ -31,46 +35,38 @@ export const useCarrinho = () => {
 						return acc;
 					}, {})
 				);
-	
+
 				setDados(carrinhoAgrupado);
 			}
 		} else {
 			console.log("Carrinho não encontrado no localStorage.");
 		}
-		const storedFrete = JSON.parse(localStorage.getItem("freteRestaurante") || "null");
-        if (storedFrete) {
-            setTaxaEntrega(storedFrete.taxaEntrega || 0); // Garantir que taxaEntrega seja atualizada
-            setDistancia(storedFrete.distancia || null);
-            setTempoEntrega(storedFrete.duracao || null);
-        }
 	}, []);
 
-	// Recupera os dados de frete e taxa de entrega
 
 	useEffect(() => {
 		if (dados.length > 0) {
 			const compra = {
 				itens: dados,
 				subtotal,
-				taxaEntrega,
-				total,
-                distancia,
-                tempoEntrega,
-                restauranteId: dados[0].restauranteId,
+				taxa_entrega,
+				distancia,
+				tempoEntrega,
+				restauranteId: dados[0].restauranteId,
 			};
-	
+
 			localStorage.setItem("compraAtual", JSON.stringify(compra));
 			localStorage.setItem("carrinho", JSON.stringify(dados));
 		} else {
 			localStorage.removeItem("compraAtual");
 			localStorage.removeItem("carrinho");
 		}
-	}, [dados, subtotal, taxaEntrega, total]);
+	}, [dados, subtotal, taxa_entrega]);
 
 	function incrementar(id: number) {
 		setDados((prevDados: any) =>
 			prevDados.map((item: any) =>
-				item.id === id 
+				item.id === id
 					? {
 						...item,
 						quantidade: item.quantidade + 1,
@@ -79,7 +75,6 @@ export const useCarrinho = () => {
 					: item
 			)
 		);
-		console.log("dados", dados)
 	};
 
 	function decrementar(id: number) {
@@ -92,10 +87,9 @@ export const useCarrinho = () => {
 						subtotal: item.subtotal - parseFloat(item.valor_unitario),
 					}
 					: item
-			
-				)
+
+			)
 		);
-		console.log("dados", dados)
 	};
 
 	function removerItem(id: string) {
@@ -118,18 +112,17 @@ export const useCarrinho = () => {
 	};
 
 	return {
-        navigate,
-        dados,
-        incrementar,
-        decrementar,
-        removerItem,
-        subtotal,
-        taxaEntrega,
-        total,
-        distancia,
-        tempoEntrega,
-        restauranteId,
-        setDados,
-        escolherFormaPagamento,
+		navigate,
+		dados,
+		incrementar,
+		decrementar,
+		removerItem,
+		subtotal,
+		taxa_entrega,
+		distancia,
+		tempoEntrega,
+		restauranteId,
+		setDados,
+		escolherFormaPagamento,
 	};
 }

@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { IEndereco } from "../interface/IEndereco";
 import { useNavigate } from "react-router-dom";
 import { initMapScript } from "@/utils/initMapScript";
+import { showError, showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useEndereco = () => {
   const { userData } = useAuth();
@@ -107,6 +108,7 @@ export const useEndereco = () => {
       });
       return response.data[0]?.id ?? null;
     } catch (error) {
+      showError("Erro ao obter ID do endereço");
       console.error("Erro ao obter ID do endereço:", error);
       return null;
     }
@@ -126,8 +128,8 @@ export const useEndereco = () => {
   ) => {
     e.preventDefault();
     if (!address || !numero)
-      return alert("Por favor, preencha todos os campos do endereço.");
-    if (!idUsuario) return alert("Erro ao obter ID do usuário.");
+      return showWarning("Por favor, preencha todos os campos do endereço.");
+    if (!idUsuario) return showWarning("Erro ao obter ID do usuário.");
 
     const url = tipo === "cadastrar" ? "/endereco" : `/endereco/${enderecoId}`;
     const method = tipo === "cadastrar" ? api.post : api.put;
@@ -136,21 +138,21 @@ export const useEndereco = () => {
       await method(url, {
         data: buildEnderecoPayload(),
       });
-      alert(
+      showSuccess(
         `Endereço ${tipo === "cadastrar" ? "cadastrado" : "atualizado"} com sucesso!`,
       );
       limparCampos();
       navigate("/");
     } catch (error) {
       console.error(`Erro ao ${tipo} endereço:`, error);
-      alert(`Erro ao ${tipo} endereço. Tente novamente.`);
+      showError(`Erro ao ${tipo} endereço. Tente novamente.`);
     }
   };
 
   const handleCadastrar = (e: React.FormEvent) => handleSubmit(e, "cadastrar");
 
   const handleEditar = (e: React.FormEvent) => {
-    if (!enderecoId) return alert("Endereço não encontrado para edição.");
+    if (!enderecoId) return showError("Endereço não encontrado para edição.");
     handleSubmit(e, "editar");
   };
 
@@ -160,6 +162,7 @@ export const useEndereco = () => {
         await initMapScript();
         initAutocomplete();
       } catch (error) {
+        showError("Erro ao carregar o Google Maps");
         console.error("Erro ao carregar o Google Maps", error);
       }
     };

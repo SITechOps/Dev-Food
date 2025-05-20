@@ -3,20 +3,49 @@ import { IEndereco } from "./IEndereco";
 export interface IRestaurante {
   nome: string;
   descricao?: string;
-  especialidade?: string;
+  especialidade: string;
   endereco: IEndereco;
   horario_funcionamento?: string;
-  agencia?: string;
+  agencia: string;
   banco?: string;
-  cnpj?: string;
-  email?: string;
+  cnpj: string;
+  email: string;
   id: string;
   logo: string;
-  nro_conta?: string;
-  razao_social?: string;
-  telefone?: string;
-  tipo_conta?: string;
-  distancia?: number;
-  duration?: number | null;
-  taxaEntrega?: number;
+  nro_conta: string;
+  razao_social: string;
+  telefone: string;
+  distancia?: number | undefined | null;  
+  taxa_entrega?: number | undefined | null;
+  duration?: number | undefined | null;  
+  tipo_conta: string;
 }
+
+export const restauranteProps: IRestaurante = {
+  nome: "",
+  descricao: "",
+  especialidade: "",
+  endereco: {
+    id: "",
+    logradouro: "",
+    bairro: "",
+    cidade: "",
+    estado: "",
+    pais: "",
+    numero: 0,
+    tipo: "",
+    complemento: "",
+  },
+  horario_funcionamento: "",
+  agencia: "",
+  banco: "",
+  cnpj: "",
+  email: "",
+  id: "",
+  logo: "",
+  nro_conta: "",
+  razao_social: "",
+  telefone: "",
+  tipo_conta: "",
+};
+

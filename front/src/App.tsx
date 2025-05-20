@@ -7,7 +7,9 @@ import { useAuth } from "./contexts/AuthContext";
 import { CarrinhoProvider } from "./contexts/CarrinhoContext";
 import { TaxaEntregaProvider } from "./contexts/TaxaEntregaContext";
 import { PagamentoProvider } from "./contexts/PagamaentoContext";
-import { ConfirmacaoEnderecoProvider } from "./contexts/ListagemEDistanciaEnderecoContext";
+import { RestauranteProdutoProvider } from "./contexts/VisaoCliente/Restaurante&ProdutoContext";
+import { ConfirmacaoEnderecoProvider } from "./contexts/ConfirmacaoEnderecoContext";
+import AlertasPersonalizados from "./components/ui/AlertasPersonalizados/Alertas";
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -29,23 +31,26 @@ export default function App() {
 
   return (
     <Suspense fallback={<Loading />}>
-      <ConfirmacaoEnderecoProvider>
-        <CarrinhoProvider>
-          <AppWrapper>
-            {isAuthenticated && userData?.role === "restaurante" ? (
-              <LayoutRestaurante>
-                <AppRoutes />
-              </LayoutRestaurante>
-            ) : (
-              <TaxaEntregaProvider>
-                <PagamentoProvider>
+      <AlertasPersonalizados />
+        <ConfirmacaoEnderecoProvider>
+          <CarrinhoProvider>
+            <AppWrapper>
+              {isAuthenticated && userData?.role === "restaurante" ? (
+                <LayoutRestaurante>
                   <AppRoutes />
-                </PagamentoProvider>
-              </TaxaEntregaProvider>
-            )}
-          </AppWrapper>
-        </CarrinhoProvider>
-      </ConfirmacaoEnderecoProvider>
+                </LayoutRestaurante>
+              ) : (
+                <TaxaEntregaProvider>
+                  <PagamentoProvider>
+                    <RestauranteProdutoProvider>
+                      <AppRoutes />
+                    </RestauranteProdutoProvider>
+                  </PagamentoProvider>
+                </TaxaEntregaProvider>
+              )}
+            </AppWrapper>
+          </CarrinhoProvider>
+        </ConfirmacaoEnderecoProvider>
     </Suspense>
   );
 }

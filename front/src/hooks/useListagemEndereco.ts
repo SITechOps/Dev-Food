@@ -1,13 +1,14 @@
+import { showError } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 import { api } from "@/connection/axios";
 import { useAuth } from "@/contexts/AuthContext";
-import { useConfirmacaoEndereco } from "@/contexts/ListagemEDistanciaEnderecoContext";
-import { IAddress } from "@/interface/IAddress";
+import { useConfirmacaoEndereco } from "@/contexts/ConfirmacaoEnderecoContext";
+import { IEndereco } from "@/interface/IEndereco";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 export const useListaEndereco = (onCloseModal?: () => void) => {
-	const [enderecos, setEnderecos] = useState<IAddress[]>([]);
-	const [enderecoSelecionado, setEnderecoSelecionado] = useState<IAddress | null>(null);
+	const [enderecos, setEnderecos] = useState<IEndereco[]>([]);
+	const [enderecoSelecionado, setEnderecoSelecionado] = useState<IEndereco | null>(null);
 	const [showModal, setShowModal] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const { userData, token } = useAuth();
@@ -45,6 +46,7 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 				setEnderecoSelecionado(enderecosData[0] || null);
 			}
 		} catch (error) {
+			showError("Erro ao buscar endereços");
 			console.error("Erro ao buscar endereços:", error);
 		}
 	}, [idUsuario, token, enderecoPadraoId]);
@@ -56,13 +58,20 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 			});
 			await buscarEnderecos();
 		} catch (error) {
+			showError("Erro ao excluir endereço:");
 			console.error("Erro ao excluir endereço:", error);
 		}
 	};
 
 	useEffect(() => {
+		if (enderecoPadraoId) {
+			buscarEnderecos();
+		}
+	}, [enderecoPadraoId]);
+
+
+	useEffect(() => {
 		carregarEnderecoPadraoLocal();
-		buscarEnderecos();
 	}, [carregarEnderecoPadraoLocal, buscarEnderecos]);
 
 	useEffect(() => {
@@ -86,7 +95,7 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 	return {
 		enderecoSelecionado,
 		setEnderecoSelecionado,
-		enderecos,	
+		enderecos,
 		setEnderecos,
 		showModal,
 		setShowModal,
@@ -106,6 +115,6 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
 		idUsuario,
 		token,
 		navigate,
-		location,				
+		location,
 	};
 };

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../connection/axios";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { showError, showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useUserAccount = () => {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ export const useUserAccount = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      showError("Erro ao buscar usuário");
       console.error("Erro ao buscar usuário:", error);
     }
   }
@@ -54,21 +56,20 @@ export const useUserAccount = () => {
 
     try {
       await api.put(`/user/${idUsuario}`, { data: userFormList });
-      alert("Usuário alterado com sucesso!");
+      showWarning("Usuário alterado com sucesso!");
       setLoading(false);
       setIsEditing(false);
     } catch (error) {
       setLoading(false);
-      alert("Erro ao alterar usuário. Tente novamente.");
+      showError("Erro ao alterar usuário. Tente novamente.");
     }
-
     fetchUserData();
   }
 
   async function deletarDados() {
     try {
       await api.delete(`/user/${idUsuario}`);
-      alert("Usuário removido com sucesso!");
+      showSuccess("Usuário removido com sucesso!");
 
       localStorage.clear();
       setLoading(false);
@@ -76,7 +77,7 @@ export const useUserAccount = () => {
     } catch (error) {
       console.error(error);
       setLoading(false);
-      alert("Erro ao deletar usuário. Tente novamente.");
+      showError("Erro ao deletar usuário. Tente novamente.");
     }
   }
 

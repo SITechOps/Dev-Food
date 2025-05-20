@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { usePagamento } from "./usePagamento";
 import { ICreatFormCartao, ITokenCartao } from "@/interface/IPagamento";
 import { api } from "@/connection/axios";
-import { AppSuccess } from "@/utils/success";
 import { usePagamentoContext } from "@/contexts/PagamaentoContext";
+import { showError, showSuccess, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 export { };
 
 declare global {
@@ -34,11 +34,11 @@ export const useCartaoComponent = () => {
 	function emissaoCartaoMercadoPago() {
 
 		if (!window.MercadoPago) {
-			throw new Error("SDK do Mercado Pago não carregado.");
+			showError("SDK do Mercado Pago não carregado.");
 		}
 
 		if (cardFormRef.current) {
-			console.warn("CardForm já foi montado, evitando recriação.");
+			showWarning("CardForm já foi montado, evitando recriação.");
 			return;
 		}
 
@@ -64,10 +64,10 @@ export const useCartaoComponent = () => {
 			callbacks: {
 				onFormMounted: () => {
 					setIsCardFormReady(true);
-					console.log("Formulário montado com sucesso");
+					showSuccess("Formulário montado com sucesso");
 				},
 				onError: (error: any) => {
-					console.log("erro form:", error)
+					showError("erro form:", error)
 				},
 			}
 		});
@@ -78,19 +78,20 @@ export const useCartaoComponent = () => {
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		if (!isCardFormReady) {
-			throw new Error("O formulário ainda não foi montado.");
+			showError("O formulário ainda não foi montado.");
 		}
 
 		try {
 			const formData = cardFormInstanceRef.current?.getCardFormData?.();
 			if (!formData) {
-				throw new Error("Falha ao obter dados do cartão.");
+				showError("Falha ao obter dados do cartão.");
 			}
 
 			if (formData.token) {
 				await postCartao(formData)
 			}
 		} catch (error) {
+			showError("erro handleSubmit:")
 			console.log("erro handleSubmit:", error)
 		}
 	}
@@ -110,7 +111,7 @@ export const useCartaoComponent = () => {
 			}
 
 			const response = await api.post<ITokenCartao>("/cartao", payload);
-			new AppSuccess("Pagamento realizado com sucesso");
+			showSuccess("Pagamento realizado com sucesso");
 			console.log("Pagamento realizado com sucesso:", response.data);
 
 			if (response) {
@@ -136,7 +137,7 @@ export const useCartaoComponent = () => {
 
 		const dadosMock = {
 			token: "85f87b05-2c23-4018-919b-20851de3dfe8",
-			amount: "40",
+			amount: valoresCarrinho.total.toFixed(2),
 			installments: "3",
 			identificationType: "CPF",
 			identificationNumber: "12345678909",
@@ -152,10 +153,10 @@ export const useCartaoComponent = () => {
 		setTimeout(() => {
 			postCartao(dadosMock)
 				.then(() => {
-					console.log("Simulação concluída.");
+					showSuccess("Simulação concluída.");
 				})
 				.catch((error) => {
-					console.error("Erro ao processar o pagamento:", error);
+					showError("Erro ao processar o pagamento:", error);
 				})
 				.finally(() => {
 					setLoadingGenerico(false);

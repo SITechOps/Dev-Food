@@ -1,4 +1,6 @@
 import { IMeusPedidos } from "@/interface/IMeusPedidos";
+import { api } from "@/connection/axios"; // ajuste o caminho se necessário
+import Button from "../ui/Button";
 
 interface ModalDetalhePedidoProps {
   pedido: IMeusPedidos;
@@ -9,20 +11,17 @@ export default function ModalDetalhePedido({
   pedido,
   onClose,
 }: ModalDetalhePedidoProps) {
-  // Função para verificar se algum item contém o texto
   const contem = (texto: string) =>
     pedido.itens.some((item) =>
       item.produto.toLowerCase().includes(texto.toLowerCase()),
     );
 
-  // Função para pegar todas as imagens de acordo com os itens
   const imagensProdutos: string[] = [];
 
   if (contem("feijão tropeiro")) imagensProdutos.push("img/feijaoTropeiro.jpg");
   if (contem("feijoada")) imagensProdutos.push("img/feijoada.webp");
   if (contem("picanha")) imagensProdutos.push("img/picanha.jpg");
 
-  // Se não tiver nenhuma imagem especial, exibe imagem do restaurante baseado no nome
   if (imagensProdutos.length === 0) {
     if (pedido.restaurante.nome.toLowerCase().includes("sushi")) {
       imagensProdutos.push("img/temaki.jpg");
@@ -31,13 +30,31 @@ export default function ModalDetalhePedido({
     }
   }
 
+  const gerarNotaFiscal = async () => {
+    try {
+      const response = await api.post("/nota-fiscal", {
+        id_pedido: pedido.id,
+      });
+
+      alert("Nota fiscal gerada com sucesso!");
+      console.log(response.data);
+    } catch (error: any) {
+      console.error(error);
+      if (error.response && error.response.data?.error_message) {
+        alert(`Erro: ${error.response.data.error_message}`);
+      } else {
+        alert("Falha ao gerar nota fiscal.");
+      }
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md rounded-2xl border border-gray-300 bg-white p-6 shadow-md"
+        className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-gray-300 bg-white p-6 shadow-md"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -47,7 +64,6 @@ export default function ModalDetalhePedido({
           ✕
         </button>
 
-        {/* Imagem e título */}
         <div className="mb-6 flex items-center gap-4">
           <img
             src={pedido.restaurante.logo || "img/SushiRest.webp"}
@@ -80,7 +96,6 @@ export default function ModalDetalhePedido({
           </p>
         </div>
 
-        {/* Imagens dos produtos */}
         <div className="mt-6 flex gap-4 overflow-x-auto">
           {imagensProdutos.map((img, index) => (
             <img
@@ -103,7 +118,6 @@ export default function ModalDetalhePedido({
           </ul>
         </div>
 
-        {/* Resumo de valores */}
         <div className="mt-6 border-t border-gray-300 pt-6">
           <h3 className="mb-4 font-semibold text-gray-800">
             Resumo de valores
@@ -123,6 +137,13 @@ export default function ModalDetalhePedido({
               <span>Total:</span> R$ {pedido.valor_total - 12}
             </p>
           </div>
+        </div>
+
+        {/* Botão de gerar nota fiscal */}
+        <div className="mt-6 text-center">
+          <Button onClick={gerarNotaFiscal} className="p-2">
+            Gerar Nota Fiscal
+          </Button>
         </div>
       </div>
     </div>

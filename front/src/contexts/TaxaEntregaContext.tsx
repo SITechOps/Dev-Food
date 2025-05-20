@@ -21,7 +21,7 @@ export const TaxaEntregaProvider: React.FC<{ children: ReactNode }> = ({ childre
 	const [taxaEntregaPadrao, setTaxaEntregaPadrao] = useState(0.0);
 	const [taxaEntregaRapida, setTaxaEntregaRapida] = useState(0.0);
 	const [selecionado, setSelecionado] = useState<"padrão" | "rápida">("padrão");
-
+	
 	useEffect(() => {
 		setTaxaEntregaSelecionada(taxaEntregaPadrao);
 	}, [taxaEntregaPadrao]);
@@ -29,8 +29,8 @@ export const TaxaEntregaProvider: React.FC<{ children: ReactNode }> = ({ childre
 	useEffect(() => {
 		const storedFrete = JSON.parse(localStorage.getItem("restauranteSelecionado") || "null");
 		if (storedFrete) {
-			setTaxaEntregaPadrao(storedFrete.taxaEntrega || 0);
-			setTaxaEntregaRapida(storedFrete.taxaEntrega * 1.15 || 0);
+			setTaxaEntregaPadrao(storedFrete.taxa_entrega || 0);
+			setTaxaEntregaRapida(storedFrete.taxa_entrega * 1.15 || 0);
 			setDuracaoPadrao(
 				storedFrete.duration
 					? `${Math.floor(storedFrete.duration / 60)}-${Math.floor(storedFrete.duration / 60) + 10} min`
