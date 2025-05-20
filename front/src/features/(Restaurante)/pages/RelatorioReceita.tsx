@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import Input from "@/shared/components/ui/Input";
 import Button from "@/shared/components/ui/Button";
+import DateInputWithIcon from "@/shared/components/ui/DateInput";
 import { api } from "@/lib/axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 type Receita = {
   nome: string;
@@ -10,8 +14,8 @@ type Receita = {
 };
 
 const RelatorioReceita = () => {
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataFim, setDataFim] = useState("");
+  const [dataInicio, setDataInicio] = useState<Date | null>(null);
+  const [dataFim, setDataFim] = useState<Date | null>(null);
   const [relatorio, setRelatorio] = useState<Receita[]>([]);
   const [carregando, setCarregando] = useState(false);
 
@@ -19,7 +23,12 @@ const RelatorioReceita = () => {
     setCarregando(true);
     try {
       const params =
-        dataInicio && dataFim ? { dataInicio, dataFim } : undefined;
+        dataInicio && dataFim
+          ? {
+              dataInicio: format(dataInicio, "yyyy-MM-dd"),
+              dataFim: format(dataFim, "yyyy-MM-dd"),
+            }
+          : undefined;
 
       const response = await api.get("/restaurante/relatorio-receita", {
         params,
@@ -47,33 +56,56 @@ const RelatorioReceita = () => {
         Relatório de Receita
       </h2>
 
-      <div className="mb-6 flex flex-wrap items-end gap-6">
-        <div className="flex flex-col">
-          <label className="text-blue text-sm">Data Início</label>
-          <Input
-            type="date"
-            value={dataInicio}
-            onChange={(value) => setDataInicio(value)}
-          />
+      <div className="mb-6">
+        <div className="flex flex-wrap items-end gap-6">
+          <div className="flex flex-col">
+            <label className="text-blue pb-2 text-sm">Data Início</label>
+            <DatePicker
+              selected={dataInicio}
+              onChange={(date) => setDataInicio(date)}
+              dateFormat="dd/MM/yyyy"
+              locale={ptBR}
+              placeholderText="dd/mm/yyyy"
+              customInput={<DateInputWithIcon placeholder="dd/mm/yyyy" />}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-blue pb-2 text-sm">Data Fim</label>
+            <DatePicker
+              selected={dataFim}
+              onChange={(date) => setDataFim(date)}
+              dateFormat="dd/MM/yyyy"
+              locale={ptBR}
+              placeholderText="dd/mm/yyyy"
+              customInput={<DateInputWithIcon />}
+            />
+          </div>
+
+          <div>
+            <Button
+              onClick={buscarRelatorio}
+              disabled={carregando}
+              className="w-40 py-3"
+            >
+              {carregando ? "Carregando..." : "Filtrar"}
+            </Button>
+          </div>
         </div>
 
-        <div className="flex flex-col">
-          <label className="text-blue text-sm">Data Fim</label>
-          <Input
-            type="date"
-            value={dataFim}
-            onChange={(value) => setDataFim(value)}
-          />
-        </div>
-
-        <div className="ml-10">
-          <Button
-            onClick={buscarRelatorio}
-            disabled={carregando}
-            className="w-40"
-          >
-            {carregando ? "Carregando..." : "Filtrar"}
-          </Button>
+        <div className="mt-2 flex">
+          <div className="flex flex-col">
+            <Button
+              color="plain"
+              className="text-blue w-fit px-0 text-sm underline"
+              onClick={() => {
+                setDataInicio(null);
+                setDataFim(null);
+                buscarRelatorio();
+              }}
+            >
+              Limpar Filtros
+            </Button>
+          </div>
         </div>
       </div>
 

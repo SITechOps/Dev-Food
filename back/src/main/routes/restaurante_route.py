@@ -771,6 +771,22 @@ def get_relatorio_receita():
                         type: number
                         format: float
                         description: Porcentagem da receita em relação ao total
+            examples:
+              application/json:
+                value:
+                  data:
+                    - nome: "Aladdin Palace"
+                      receita_bruta: 225
+                      porcentagem_total: 40.91
+                    - nome: "El Chapulín"
+                      receita_bruta: 115
+                      porcentagem_total: 20.91
+                    - nome: "Cantina Italiana"
+                      receita_bruta: 160
+                      porcentagem_total: 29.09
+                    - nome: "Sushi Express"
+                      receita_bruta: 50
+                      porcentagem_total: 9.09
       "400":
         description: Erro nos parâmetros da requisição
         content:
