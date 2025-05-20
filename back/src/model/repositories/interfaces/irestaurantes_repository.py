@@ -45,3 +45,8 @@ class IRestaurantesRepository(ABC):
     @abstractmethod
     def update_image_path(self, id_restaurante: str, image_url: str) -> None:
         raise NotImplementedError("Subclasses devem implementar este método")
+
+
+    @abstractmethod
+    def relatorio_receita_bruta(self, data_inicio: str, data_fim: str) -> list[dict]:
+        raise NotImplementedError("Subclasses devem implementar este método")

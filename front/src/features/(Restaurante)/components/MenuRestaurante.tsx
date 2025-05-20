@@ -6,6 +6,7 @@ import {
   MapPin,
   DollarSign,
   Package,
+  BarChart2,
 } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../shared/contexts/AuthContext";
@@ -85,6 +86,12 @@ const MenuRestaurante = () => {
       link: "/cardapios",
     },
     { name: "Financeiro", icon: <DollarSign size={20} />, link: "/financeiro" },
+    {
+      name: "Relatório",
+      icon: <BarChart2 size={20} />,
+      link: "/relatorio-receita",
+    },
+
     {
       name: "Sair",
       icon: <LogOut size={20} className="text-brown-dark" />,

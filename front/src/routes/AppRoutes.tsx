@@ -48,6 +48,10 @@ const ListagemEndereco = lazy(
   () => import("../features/(Usuario)/components/Endereco/ListagemEndereco"),
 );
 
+const RelatorioReceita = lazy(
+  () => import("../features/(Restaurante)/pages/RelatorioReceita"),
+);
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -86,6 +90,7 @@ const AppRoutes = () => {
         <Route path="/cardapios" element={<Cardapio />} />
         <Route path="/financeiro" element={<Financeiro />} />
         <Route path="/entregador" element={<Entregador />} />
+        <Route path="/relatorio-receita" element={<RelatorioReceita />} />
       </Route>
       <Route path="*" element={<Error404 />} />
     </Routes>

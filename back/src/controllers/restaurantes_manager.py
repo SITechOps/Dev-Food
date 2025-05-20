@@ -5,6 +5,7 @@ from src.main.utils.response_formatter import ResponseFormatter
 from flask_jwt_extended import create_access_token
 from src.services.image_service import ImageService
 from werkzeug.datastructures import FileStorage
+from datetime import datetime
 
 class RestaurantesManager:
     def __init__(self, restaurante_repo: IRestaurantesRepository) -> None:
@@ -96,6 +97,27 @@ class RestaurantesManager:
 
         self.__restaurante_repo.delete(id_restaurante)
         return ResponseFormatter.display_operation(self.class_name, "deletado")
+
+
+    def get_relatorio_receita(self, http_request: HttpRequest) -> HttpResponse:
+        try:
+            params = http_request.params or {}
+            data_inicio = params.get("dataInicio")
+            data_fim = params.get("dataFim")
+
+            if data_inicio and data_fim:
+                try:
+                    datetime.strptime(data_inicio, "%Y-%m-%d")
+                    datetime.strptime(data_fim, "%Y-%m-%d")
+                except ValueError:
+                    return HttpResponse(status_code=400, body={"error": "Formato de data inválido. Use YYYY-MM-DD."})
+
+            relatorio = self.__restaurante_repo.relatorio_receita_bruta(data_inicio, data_fim)
+
+            return HttpResponse(status_code=200, body={"data": relatorio})
+
+        except Exception as e:
+            return HttpResponse(status_code=500, body={"error": str(e)})
     
 
     def update_image(self, http_request: HttpRequest, file: FileStorage) -> HttpResponse:

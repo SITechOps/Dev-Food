@@ -4,9 +4,12 @@ from src.main.handlers.custom_exceptions import RestaurantAlreadyExists, Restaur
 from src.model.entities.restaurante import Restaurante
 from src.model.entities.endereco import Endereco
 from src.model.entities.usuario_endereco import UsuarioEndereco
+from src.model.entities.usuario import Usuario
+from src.model.entities.pedido import Pedido
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
-
+from sqlalchemy import func
+from datetime import datetime, timedelta
 class RestaurantesRepository(IRestaurantesRepository):
 
 
@@ -227,6 +230,44 @@ class RestaurantesRepository(IRestaurantesRepository):
                 raise exception
             
 
+    def relatorio_receita_bruta(self, data_inicio: str = None, data_fim: str = None) -> list[dict]:
+        with DBConnectionHandler() as db:
+            try:
+                query = (
+                    db.session.query(
+                        Restaurante.nome.label("nome"),
+                        func.sum(Pedido.valor_total).label("receita_bruta")
+                    )
+                    .select_from(Pedido)
+                    .join(Restaurante, Restaurante.id == Pedido.id_restaurante)
+                    .group_by(Restaurante.nome)
+                )
+
+                if data_inicio and data_fim:
+                    data_inicio_dt = datetime.strptime(data_inicio, "%Y-%m-%d")
+                    data_fim_dt = datetime.strptime(data_fim, "%Y-%m-%d") + timedelta(days=1) 
+
+                    query = query.filter(Pedido.created_at >= data_inicio_dt)
+                    query = query.filter(Pedido.created_at < data_fim_dt) 
+
+                resultados = query.all()
+
+                receita_total = sum(row.receita_bruta for row in resultados)
+
+                relatorio = [
+                    {
+                        "nome": row.nome,
+                        "receita_bruta": float(row.receita_bruta),
+                        "porcentagem_total": round((row.receita_bruta / receita_total) * 100, 2) if receita_total > 0 else 0.0
+                    }
+                    for row in resultados
+                ]
+                return relatorio
+
+            except Exception as e:
+                raise e
+
+
     def update_image_path(self, id_restaurante: str, image_url: str) -> None:
         with DBConnectionHandler() as db:
             try:
@@ -263,3 +304,5 @@ class RestaurantesRepository(IRestaurantesRepository):
                     query = query.filter(Restaurante.id != ignorar_id)
                 if query.first():
                     raise RestaurantAlreadyExists(f"Já existe um restaurante com esta razão social!")
+                
+            
