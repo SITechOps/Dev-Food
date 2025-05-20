@@ -20,6 +20,7 @@ export const useCadastroRestaurante = () => {
     cnpj: "",
     especialidade: "",
     descricao: "",
+    horario_funcionamento: "",
     banco: "",
     cAgencia: "",
     cCorrente: "",
@@ -104,7 +105,7 @@ export const useCadastroRestaurante = () => {
       razao_social: formList.razaoSocial,
       especialidade: formList.especialidade,
       telefone: formList.telefone,
-      horario_funcionamento: "",
+      horario_funcionamento: formList.horario_funcionamento,
       banco: formList.banco,
       agencia: formList.cAgencia,
       nro_conta: formList.cCorrente,
@@ -122,7 +123,6 @@ export const useCadastroRestaurante = () => {
 
     try {
       const response = await api.post("/restaurante", { data: requestBody });
-
       const token = response.data.properties.token;
       const userData = decodeToken(token);
       const restauranteId = userData?.sub;

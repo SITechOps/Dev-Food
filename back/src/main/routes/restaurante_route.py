@@ -88,7 +88,6 @@ def create_new_restaurant():
         description: Requisição inválida
     """
     http_request = HttpRequest(body=request.json)
-
     restaurante_repo = RestaurantesRepository()
     restaurante_manager = RestaurantesManager(restaurante_repo)
 
@@ -685,7 +684,7 @@ def upload_restaurante_image(id):
         return jsonify({'error': 'Arquivo não enviado'}), 400
 
     file = request.files['image']
-    http_request = HttpRequest(params={"id_restaurante": id})
+    http_request = HttpRequest(params={"id": id})
 
     restaurantes_repo = RestaurantesRepository()
     restaurantes_manager = RestaurantesManager(restaurantes_repo)

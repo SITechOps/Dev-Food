@@ -282,6 +282,18 @@ export default function CadastroRestaurante() {
                 }
                 type="text"
               />
+              <Input
+                textLabel="Horário de funcionamento:"
+                className={`${styleInput}`}
+                id="horario_funcionamento"
+                name="horario_funcionamento"
+                placeholder="11:00 - 22:00"
+                value={formList.horario_funcionamento}
+                onChange={(value) =>
+                  setFormList({ ...formList, horario_funcionamento: value })
+                }
+                type="text"
+              />
 
               <div id="compo-select">
                 <label className="mb-1 block font-medium text-gray-700">
