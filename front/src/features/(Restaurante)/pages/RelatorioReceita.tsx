@@ -47,7 +47,7 @@ const RelatorioReceita = () => {
         Relatório de Receita
       </h2>
 
-      <div className="mb-6 flex flex-wrap items-end gap-4">
+      <div className="mb-6 flex flex-wrap items-end gap-6">
         <div className="flex flex-col">
           <label className="text-blue text-sm">Data Início</label>
           <Input
@@ -66,7 +66,7 @@ const RelatorioReceita = () => {
           />
         </div>
 
-        <div className="pt-1">
+        <div className="ml-10">
           <Button
             onClick={buscarRelatorio}
             disabled={carregando}
