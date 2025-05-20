@@ -18,9 +18,11 @@ services:
     container_name: ngrok_container
     environment:
       - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
-    command: http host.docker.internal:5000
+    command: start --config /ngrok.yml --all
     ports:
       - "4040:4040"
+    volumes:
+      - ./ngrok.yml:/ngrok.yml
     tty: true
 
 volumes:

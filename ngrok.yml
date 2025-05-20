@@ -1,0 +1,8 @@
+version: 2
+tunnels:
+  backend-python:
+    addr: host.docker.internal:5000
+    proto: http
+  frontend-react:
+    addr: host.docker.internal:5173
+    proto: http
