@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from src.services.payment_service import PaymentService
 from src.http_types.http_request import HttpRequest
+from src.main.server.configs import socketio
 
 pagamento_route_bp = Blueprint('pagamento_route', __name__)
 
@@ -184,3 +185,15 @@ def process_credit_card_payment():
     pagamento = PaymentService()
     http_response = pagamento.create_credit_card_payment(http_request)
     return jsonify(http_response.body), http_response.status_code
+
+
+@pagamento_route_bp.post("/webhook")
+def webhook():
+  try:
+      data = request.get_json(force=True)  # força JSON mesmo que header esteja errado
+      print("Webhook recebido:", data)
+      socketio.emit("pix_concluido")
+      return jsonify({"status": "ok"}), 200
+  except Exception as e:
+      print("Erro ao processar webhook:", e)
+      return jsonify({"error": str(e)}), 400
