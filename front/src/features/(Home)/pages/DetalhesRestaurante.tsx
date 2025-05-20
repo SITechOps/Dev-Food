@@ -1,9 +1,9 @@
 import { Star, ChevronRight } from "lucide-react";
 import Button from "../../../shared/components/ui/Button";
-import CardProdutos from "../components/RestaurantesDisponiveis/Cards/CardProdutos";
+import CardProdutos from "../components/Cards/CardProdutos";
 import { useRestaurante } from "../hooks/useRestaurante";
 import { Loading } from "../../../shared/components/Loading";
-import VerMaisRestaurante from "../components/RestaurantesDisponiveis/VerMais/Index";
+import VerMaisRestaurante from "../components/VerMais/Index";
 import IconAction from "@/shared/components/ui/IconAction";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";

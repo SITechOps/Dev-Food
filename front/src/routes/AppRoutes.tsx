@@ -10,10 +10,7 @@ const Entregador = lazy(
 const Error404 = lazy(() => import("@/features/Error404"));
 const Home = lazy(() => import("../features/(Home)"));
 const FiltroLupa = lazy(
-  () =>
-    import(
-      "../features/(Home)/components/RestaurantesDisponiveis/Filtros/FiltroLupa"
-    ),
+  () => import("../features/(Home)/components/Filtros/FiltroLupa"),
 );
 const AuthUser = lazy(() => import("../features/(Auth)/pages/AuthUser"));
 const Intermediaria = lazy(

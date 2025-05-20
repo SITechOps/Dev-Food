@@ -5,11 +5,11 @@ import { useRestauranteProduto } from "@/shared/contexts/Restaurante&ProdutoCont
 import { useConfirmacaoEndereco } from "@/shared/contexts/ConfirmacaoEnderecoContext";
 import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/shared/interfaces/IRestaurante";
-import Categorias from "./components/RestaurantesDisponiveis/Filtros/Categoria/FiltroCategorias";
-import CardRestaurante from "./components/RestaurantesDisponiveis/Cards/CardRestaurante";
+import Categorias from "./components/Filtros/Categoria/FiltroCategorias";
+import CardRestaurante from "./components/Cards/CardRestaurante";
 import { showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
-import FiltroDistanciaModal from "./components/RestaurantesDisponiveis/Filtros/FiltroPorDistancia";
-import ButtonDistance from "./components/RestaurantesDisponiveis/Filtros/ButtonDistance";
+import FiltroDistanciaModal from "./components/Filtros/FiltroPorDistancia";
+import ButtonDistance from "./components/Filtros/ButtonDistance";
 
 export default function Home() {
   const navigate = useNavigate();

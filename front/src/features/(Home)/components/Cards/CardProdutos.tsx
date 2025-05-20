@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import Button from "../../../../../shared/components/ui/Button";
+import Button from "../../../../shared/components/ui/Button";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useCardProdutos } from "@/features/(Home)/hooks/useCardProduto";
 import { CardProdutosProps } from "@/shared/interfaces/IProduto";
