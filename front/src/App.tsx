@@ -6,8 +6,8 @@ import AppRoutes from "./routes/AppRoutes";
 import { useAuth } from "./shared/contexts/AuthContext";
 import { CarrinhoProvider } from "./shared/contexts/CarrinhoContext";
 import { TaxaEntregaProvider } from "./shared/contexts/TaxaEntregaContext";
-import { PagamentoProvider } from "./shared/contexts/PagamaentoContext";
-import { RestauranteProdutoProvider } from "./shared/contexts/VisaoCliente/Restaurante&ProdutoContext";
+import { PagamentoProvider } from "./shared/contexts/PagamentoContext";
+import { RestauranteProdutoProvider } from "./shared/contexts/Restaurante&ProdutoContext";
 import { ConfirmacaoEnderecoProvider } from "./shared/contexts/ConfirmacaoEnderecoContext";
 import AlertasPersonalizados from "./shared/components/ui/AlertasPersonalizados/Alertas";
 

@@ -6,7 +6,7 @@ import {
 import { api } from "@/lib/axios";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { CarrinhoContext } from "@/shared/contexts/CarrinhoContext";
-import { usePagamentoContext } from "@/shared/contexts/PagamaentoContext";
+import { usePagamentoContext } from "@/shared/contexts/PagamentoContext";
 import { useTaxaEntrega } from "@/shared/contexts/TaxaEntregaContext";
 import {
   IItens,

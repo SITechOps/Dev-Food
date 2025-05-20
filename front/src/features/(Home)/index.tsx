@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Input from "@/shared/components/ui/Input";
 import React from "react";
-import { useRestauranteProduto } from "@/shared/contexts/VisaoCliente/Restaurante&ProdutoContext";
+import { useRestauranteProduto } from "@/shared/contexts/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/shared/contexts/ConfirmacaoEnderecoContext";
 import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/shared/interfaces/IRestaurante";

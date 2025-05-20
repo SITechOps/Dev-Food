@@ -8,7 +8,7 @@ import {
 } from "@/features/(Usuario)/components/Pagamento/interface/IPagamento";
 import { usePagamento } from "./usePagamento";
 import QRCode from "qrcode";
-import { usePagamentoContext } from "@/shared/contexts/PagamaentoContext";
+import { usePagamentoContext } from "@/shared/contexts/PagamentoContext";
 import {
   showError,
   showSuccess,

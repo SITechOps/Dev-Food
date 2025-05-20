@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useRestauranteProduto } from "@/shared/contexts/VisaoCliente/Restaurante&ProdutoContext";
+import { useRestauranteProduto } from "@/shared/contexts/Restaurante&ProdutoContext";
 import { useConfirmacaoEndereco } from "@/shared/contexts/ConfirmacaoEnderecoContext";
 import CardProdutos from "../Cards/CardProdutos";
 import Input from "@/shared/components/ui/Input";

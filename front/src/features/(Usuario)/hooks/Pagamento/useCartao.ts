@@ -5,7 +5,7 @@ import {
   ITokenCartao,
 } from "@/features/(Usuario)/components/Pagamento/interface/IPagamento";
 import { api } from "@/lib/axios";
-import { usePagamentoContext } from "@/shared/contexts/PagamaentoContext";
+import { usePagamentoContext } from "@/shared/contexts/PagamentoContext";
 import {
   showError,
   showSuccess,
