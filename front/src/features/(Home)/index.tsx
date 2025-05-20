@@ -5,7 +5,7 @@ import { useRestauranteProduto } from "@/shared/contexts/Restaurante&ProdutoCont
 import { useConfirmacaoEndereco } from "@/shared/contexts/ConfirmacaoEnderecoContext";
 import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/shared/interfaces/IRestaurante";
-import Categorias from "./components/Filtros/Categoria/FiltroCategorias";
+import Categorias from "./components/Filtros/FiltroCategorias";
 import CardRestaurante from "./components/Cards/CardRestaurante";
 import { showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 import FiltroDistanciaModal from "./components/Filtros/FiltroPorDistancia";

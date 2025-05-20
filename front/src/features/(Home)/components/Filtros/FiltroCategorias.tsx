@@ -7,7 +7,7 @@ import {
 } from "@/shared/components/ui/carousel";
 
 import CategoryCard from "./CategoriaCard";
-import { categories } from "./categories";
+import { categories } from "./Categoria/categories";
 
 interface CategoriasProps {
   onCategoryClick: (category: string) => void;
