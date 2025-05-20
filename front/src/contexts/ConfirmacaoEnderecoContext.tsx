@@ -12,9 +12,9 @@ import { calcularDistancia } from "@/utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "@/utils/calculateDeliveryFee";
 import { initMapScript } from "@/utils/initMapScript";
 import { IEndereco } from "@/interface/IEndereco";
-import { useRestauranteProduto } from "./VisaoCliente/Restaurante&ProdutoContext";
 import { useNavigate } from "react-router";
 import { showError, showInfo } from "@/components/ui/AlertasPersonalizados/toastAlerta";
+import { useAuth } from "./AuthContext";
 
 interface Coordenadas {
   lat: number;
@@ -51,7 +51,7 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   const [clienteCoords, setClienteCoords] = useState<Coordenadas | null>(null);
   const [restaurantesCompletos, setRestaurantesCompletos] = useState<IRestaurante[]>([]);
   const cacheCoordenadasRestaurantes = new Map<string, Coordenadas>();
-  const { restaurantes } = useRestauranteProduto();
+ const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const setEnderecoPadraoIdSync = (id: string | null) => {
@@ -76,8 +76,18 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
   };
 
   function montarEnderecoCompleto(endereco: IEndereco): string {
-    return `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
+    const partes = [
+      endereco.logradouro,
+      endereco.numero,
+      endereco.bairro,
+      endereco.cidade,
+      endereco.estado,
+      endereco.pais,
+    ].filter(Boolean); 
+
+    return partes.join(", ");
   }
+
 
   useEffect(() => {
     const idSalvo = localStorage.getItem("enderecoPadraoId");
@@ -92,12 +102,11 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
         return;
       }
 
-      const enderecoStr = localStorage.getItem("enderecoPadrao");
       const coordenadasSalvasStr = localStorage.getItem("geoCoordenadasCliente");
       const storageGeoEndereco = coordenadasSalvasStr ? JSON.parse(coordenadasSalvasStr) : null;
 
       try {
-        const endereco: IEndereco = JSON.parse(enderecoStr || "");
+        const endereco: IEndereco  = JSON.parse(localStorage.getItem("enderecoPadrao") || "null");
         const enderecoCompleto = montarEnderecoCompleto(endereco);
         const idSalvo = storageGeoEndereco?.id?.trim?.();
         const idAtual = enderecoPadraoId.trim();
@@ -114,13 +123,14 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
             return restaurantesCompletos
           }
         } else {
-          showInfo("Usando coordenadas já salvas.");
-          if (storageGeoEndereco?.coords) {
-            setClienteCoords(storageGeoEndereco.coords);
-            setGeoCliente(enderecoPadraoId)
-            const restaurantes = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
-
-            setRestaurantesCompletos(restaurantes)
+          if(isAuthenticated ){
+            if (storageGeoEndereco?.coords) {
+              setClienteCoords(storageGeoEndereco.coords);
+              setGeoCliente(enderecoPadraoId)
+              const restaurantes = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
+              
+              setRestaurantesCompletos(restaurantes)
+            }
           }
         }
       } catch (error) {
@@ -137,15 +147,15 @@ export const ConfirmacaoEnderecoProvider = ({ children }: { children: ReactNode 
 
   async function calcularCoordenadaRestaurante(rest: IRestaurante, clienteCoords: Coordenadas) {
     const chaveCache = `${rest.id}_${clienteCoords.lat}_${clienteCoords.lng}`;
-    const storageKey = `geoCoordenadasRestaurante_${rest.id}`;
+    const storageKey = `geoCoordenadasRestaurante`;
 
     const enderecoCompleto = montarEnderecoCompleto(rest.endereco);
     const coord = await geocodeTexto(enderecoCompleto);
 
     if (coord) {
       cacheCoordenadasRestaurantes.set(chaveCache, coord);
-      localStorage.setItem(storageKey, JSON.stringify(coord));
     }
+    localStorage.setItem(storageKey, JSON.stringify(coord));
     return coord;
   }
 
