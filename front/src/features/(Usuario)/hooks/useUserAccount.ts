@@ -86,6 +86,7 @@ export const useUserAccount = () => {
   }
 
   function handleLogout() {
+    localStorage.clear();
     logout();
     navigate("/Auth");
   }

@@ -11,12 +11,12 @@ import { calcularDistancia } from "@/shared/utils/useDistanceMatrix";
 import { calcularTaxaEntrega } from "@/shared/utils/calculateDeliveryFee";
 import { initMapScript } from "@/shared/utils/initMapScript";
 import { IEndereco } from "@/shared/interfaces/IEndereco";
-// import { useRestauranteProduto } from "./VisaoCliente/Restaurante&ProdutoContext";
 import { useNavigate } from "react-router";
 import {
   showError,
   showInfo,
 } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
+import { useAuth } from "./AuthContext";
 
 interface Coordenadas {
   lat: number;
@@ -67,7 +67,7 @@ export const ConfirmacaoEnderecoProvider = ({
     IRestaurante[]
   >([]);
   const cacheCoordenadasRestaurantes = new Map<string, Coordenadas>();
-  // const { restaurantes } = useRestauranteProduto();
+   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const setEnderecoPadraoIdSync = (id: string | null) => {
@@ -75,15 +75,11 @@ export const ConfirmacaoEnderecoProvider = ({
     const atual = localStorage.getItem("enderecoPadraoId");
     if (atual === id) return;
 
-    id
-      ? localStorage.setItem("enderecoPadraoId", id)
-      : localStorage.removeItem("enderecoPadraoId");
+    id ? localStorage.setItem("enderecoPadraoId", id) : localStorage.removeItem("enderecoPadraoId");
   };
 
-  const mostrarConfirmacao = (endereco: IEndereco) =>
-    setConfirmacaoPadrao({ show: true, endereco });
-  const cancelarConfirmacao = () =>
-    setConfirmacaoPadrao({ show: false, endereco: null });
+  const mostrarConfirmacao = (endereco: IEndereco) => setConfirmacaoPadrao({ show: true, endereco });
+  const cancelarConfirmacao = () => setConfirmacaoPadrao({ show: false, endereco: null });
 
   const confirmarEnderecoPadrao = (endereco: IEndereco) => {
     if (!endereco.id) return showError("Endereço não encontrado");
@@ -96,13 +92,24 @@ export const ConfirmacaoEnderecoProvider = ({
   };
 
   function montarEnderecoCompleto(endereco: IEndereco): string {
-    return `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.estado}, ${endereco.pais}`;
+    const partes = [
+      endereco.logradouro,
+      endereco.numero,
+      endereco.bairro,
+      endereco.cidade,
+      endereco.estado,
+      endereco.pais,
+    ].filter(Boolean); 
+
+    return partes.join(", ");
   }
+
 
   useEffect(() => {
     const idSalvo = localStorage.getItem("enderecoPadraoId");
     if (idSalvo) setEnderecoPadraoId(idSalvo);
   }, []);
+
 
   useEffect(() => {
     const geocodificar = async () => {
@@ -111,27 +118,16 @@ export const ConfirmacaoEnderecoProvider = ({
         return;
       }
 
-      const enderecoStr = localStorage.getItem("enderecoPadrao");
-      const coordenadasSalvasStr = localStorage.getItem(
-        "geoCoordenadasCliente",
-      );
-      const storageGeoEndereco = coordenadasSalvasStr
-        ? JSON.parse(coordenadasSalvasStr)
-        : null;
+      const coordenadasSalvasStr = localStorage.getItem("geoCoordenadasCliente");
+      const storageGeoEndereco = coordenadasSalvasStr ? JSON.parse(coordenadasSalvasStr) : null;
 
       try {
-        const endereco: IEndereco = JSON.parse(enderecoStr || "");
+        const endereco: IEndereco  = JSON.parse(localStorage.getItem("enderecoPadrao") || "null");
         const enderecoCompleto = montarEnderecoCompleto(endereco);
         const idSalvo = storageGeoEndereco?.id?.trim?.();
         const idAtual = enderecoPadraoId.trim();
 
-        console.log(
-          "Valores:",
-          "(Geocode)",
-          idSalvo,
-          "(Endereço Selecionado)",
-          idAtual,
-        );
+        console.log("Valores:", "(Geocode)", idSalvo, "(Endereço Selecionado)", idAtual);
         console.log("Comparação estrita:", idSalvo !== idAtual);
 
         if (!idSalvo || idSalvo !== idAtual) {
@@ -140,18 +136,17 @@ export const ConfirmacaoEnderecoProvider = ({
           if (coords) {
             setClienteCoords(coords);
             setGeoCliente(enderecoPadraoId);
-            return restaurantesCompletos;
+            return restaurantesCompletos
           }
         } else {
-          showInfo("Usando coordenadas já salvas.");
-          if (storageGeoEndereco?.coords) {
-            setClienteCoords(storageGeoEndereco.coords);
-            setGeoCliente(enderecoPadraoId);
-            const restaurantes = JSON.parse(
-              localStorage.getItem("cacheRestaurante") || "null",
-            );
-
-            setRestaurantesCompletos(restaurantes);
+          if(isAuthenticated ){
+            if (storageGeoEndereco?.coords) {
+              setClienteCoords(storageGeoEndereco.coords);
+              setGeoCliente(enderecoPadraoId)
+              const restaurantes = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
+              
+              setRestaurantesCompletos(restaurantes)
+            }
           }
         }
       } catch (error) {
@@ -165,27 +160,22 @@ export const ConfirmacaoEnderecoProvider = ({
     geocodificar();
   }, [enderecoPadraoId]);
 
-  async function calcularCoordenadaRestaurante(
-    rest: IRestaurante,
-    clienteCoords: Coordenadas,
-  ) {
+
+  async function calcularCoordenadaRestaurante(rest: IRestaurante, clienteCoords: Coordenadas) {
     const chaveCache = `${rest.id}_${clienteCoords.lat}_${clienteCoords.lng}`;
-    const storageKey = `geoCoordenadasRestaurante_${rest.id}`;
+    const storageKey = `geoCoordenadasRestaurante`;
 
     const enderecoCompleto = montarEnderecoCompleto(rest.endereco);
     const coord = await geocodeTexto(enderecoCompleto);
 
     if (coord) {
       cacheCoordenadasRestaurantes.set(chaveCache, coord);
-      localStorage.setItem(storageKey, JSON.stringify(coord));
     }
+    localStorage.setItem(storageKey, JSON.stringify(coord));
     return coord;
   }
 
-  async function processarRestaurantes(
-    coords: Coordenadas,
-    restaurantes: IRestaurante[],
-  ): Promise<IRestaurante[]> {
+  async function processarRestaurantes(coords: Coordenadas, restaurantes: IRestaurante[]): Promise<IRestaurante[]> {
     try {
       await initMapScript();
 
@@ -196,9 +186,7 @@ export const ConfirmacaoEnderecoProvider = ({
 
           try {
             const distanciaInfo = await calcularDistancia(coords, destino);
-            const taxa_entrega = distanciaInfo.distance
-              ? calcularTaxaEntrega(distanciaInfo.distance)
-              : undefined;
+            const taxa_entrega = distanciaInfo.distance ? calcularTaxaEntrega(distanciaInfo.distance) : undefined;
 
             const dadosCompletos = {
               ...rest,
@@ -212,10 +200,7 @@ export const ConfirmacaoEnderecoProvider = ({
               coords: clienteCoords,
             };
 
-            localStorage.setItem(
-              "geoCoordenadasCliente",
-              JSON.stringify(geoCliente),
-            );
+            localStorage.setItem("geoCoordenadasCliente", JSON.stringify(geoCliente));
             return dadosCompletos;
           } catch (err) {
             console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
@@ -226,7 +211,7 @@ export const ConfirmacaoEnderecoProvider = ({
               taxa_entrega: undefined,
             };
           }
-        }),
+        })
       );
 
       setRestaurantesCompletos(atualizados);
@@ -240,6 +225,7 @@ export const ConfirmacaoEnderecoProvider = ({
       setLoading(false);
     }
   }
+
 
   return (
     <ConfirmacaoEnderecoContext.Provider
@@ -266,9 +252,7 @@ export const ConfirmacaoEnderecoProvider = ({
 export const useConfirmacaoEndereco = (): ConfirmacaoEnderecoContextProps => {
   const context = useContext(ConfirmacaoEnderecoContext);
   if (!context) {
-    throw new Error(
-      "useConfirmacaoEndereco deve ser usado dentro de ConfirmacaoEnderecoProvider",
-    );
+    throw new Error("useConfirmacaoEndereco deve ser usado dentro de ConfirmacaoEnderecoProvider");
   }
   return context;
 };
