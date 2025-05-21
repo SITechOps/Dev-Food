@@ -67,7 +67,7 @@ export const ConfirmacaoEnderecoProvider = ({
     IRestaurante[]
   >([]);
   const cacheCoordenadasRestaurantes = new Map<string, Coordenadas>();
-   const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const setEnderecoPadraoIdSync = (id: string | null) => {
@@ -99,7 +99,7 @@ export const ConfirmacaoEnderecoProvider = ({
       endereco.cidade,
       endereco.estado,
       endereco.pais,
-    ].filter(Boolean); 
+    ].filter(Boolean);
 
     return partes.join(", ");
   }
@@ -122,7 +122,7 @@ export const ConfirmacaoEnderecoProvider = ({
       const storageGeoEndereco = coordenadasSalvasStr ? JSON.parse(coordenadasSalvasStr) : null;
 
       try {
-        const endereco: IEndereco  = JSON.parse(localStorage.getItem("enderecoPadrao") || "null");
+        const endereco: IEndereco = JSON.parse(localStorage.getItem("enderecoPadrao") || "null");
         const enderecoCompleto = montarEnderecoCompleto(endereco);
         const idSalvo = storageGeoEndereco?.id?.trim?.();
         const idAtual = enderecoPadraoId.trim();
@@ -139,12 +139,11 @@ export const ConfirmacaoEnderecoProvider = ({
             return restaurantesCompletos
           }
         } else {
-          if(isAuthenticated ){
+          if (isAuthenticated) {
             if (storageGeoEndereco?.coords) {
               setClienteCoords(storageGeoEndereco.coords);
               setGeoCliente(enderecoPadraoId)
               const restaurantes = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
-              
               setRestaurantesCompletos(restaurantes)
             }
           }
@@ -171,7 +170,9 @@ export const ConfirmacaoEnderecoProvider = ({
     if (coord) {
       cacheCoordenadasRestaurantes.set(chaveCache, coord);
     }
-    localStorage.setItem(storageKey, JSON.stringify(coord));
+    if (isAuthenticated) {
+      localStorage.setItem(storageKey, JSON.stringify(coord));
+    }
     return coord;
   }
 
@@ -200,7 +201,9 @@ export const ConfirmacaoEnderecoProvider = ({
               coords: clienteCoords,
             };
 
-            localStorage.setItem("geoCoordenadasCliente", JSON.stringify(geoCliente));
+            if (isAuthenticated) {
+              localStorage.setItem("geoCoordenadasCliente", JSON.stringify(geoCliente));
+            }
             return dadosCompletos;
           } catch (err) {
             console.error(`Erro ao calcular distância para ${rest.nome}:`, err);
@@ -215,7 +218,9 @@ export const ConfirmacaoEnderecoProvider = ({
       );
 
       setRestaurantesCompletos(atualizados);
-      localStorage.setItem("cacheRestaurante", JSON.stringify(atualizados));
+      if (isAuthenticated) {
+        localStorage.setItem("cacheRestaurante", JSON.stringify(atualizados));
+      }
       return atualizados;
     } catch (error) {
       showError("Erro ao processar restaurantes:");
