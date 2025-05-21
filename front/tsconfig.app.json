@@ -11,12 +11,11 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/assets/*": ["src/assets/*"],
-      "@/components/*": ["src/components/*"],
-      "@/hooks/*": ["src/hooks/*"],
-      "@/contexts/*": ["src/contexts/*"],
-      "@/interface/*": ["src/interface/*"],
-      "@/connection/*": ["src/connection/*"],
-      "@/utils/*": ["src/utils/*"]
+      "@/components/*": ["src/shared/components/*"],
+      "@/contexts/*": ["src/shared/contexts/*"],
+      "@/interfaces/*": ["src/shared/interfaces/*"],
+      "@/utils/*": ["src/shared/utils/*"],
+      "@/features/*": ["src/features/*"]
     },
 
     /* Bundler mode */
