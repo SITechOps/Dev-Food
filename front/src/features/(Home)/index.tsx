@@ -65,6 +65,8 @@ export default function Home() {
   useEffect(() => {
     if (isAuthenticated) {
       showInfo("Usando coordenadas já salvas.");
+    }else{
+      localStorage.clear();
     }
   }, []);
 
