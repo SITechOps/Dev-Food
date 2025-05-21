@@ -7,8 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/interface/IRestaurante";
 import Categorias from "./RestaurantesDisponiveis/Filtros/Categoria/FiltroCategorias";
 import CardRestaurante from "./RestaurantesDisponiveis/Cards/CardRestaurante";
-import { showInfo, showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
-import { useAuth } from "@/contexts/AuthContext";
+import { showWarning } from "@/components/ui/AlertasPersonalizados/toastAlerta";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -18,7 +17,6 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
   const [restaurantesFiltrados, setRestaurantesFiltrados] = useState<IRestaurante[]>([]);
   const { processarRestaurantes, clienteCoords, restaurantesCompletos } = useConfirmacaoEndereco();
-  const { isAuthenticated } = useAuth();
 
 
   const handleCategoryClick = (category: string) => {
@@ -55,13 +53,6 @@ export default function Home() {
       processarRestaurantes(clienteCoords, restaurantes);
     }
   }, [clienteCoords, restaurantes]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-       showInfo("Usando coordenadas já salvas.");
-    }
-  }, []);
-
 
   const listaFinal = restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
   return (

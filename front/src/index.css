@@ -62,7 +62,7 @@
   }
 
   .toast-custom-width {
-    @apply !w-150;
+    @apply !w-150 mt-[4rem];
   }
 
   .custom-scroll::-webkit-scrollbar {

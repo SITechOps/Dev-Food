@@ -236,7 +236,6 @@ export const useRestaurantAccount = () => {
   }
 
   function handleLogout() {
-    localStorage.clear();
     logout();
     navigate("/Auth");
   }
