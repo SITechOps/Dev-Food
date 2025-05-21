@@ -88,7 +88,6 @@ def create_new_restaurant():
         description: Requisição inválida
     """
     http_request = HttpRequest(body=request.json)
-
     restaurante_repo = RestaurantesRepository()
     restaurante_manager = RestaurantesManager(restaurante_repo)
 
@@ -685,7 +684,7 @@ def upload_restaurante_image(id):
         return jsonify({'error': 'Arquivo não enviado'}), 400
 
     file = request.files['image']
-    http_request = HttpRequest(params={"id_restaurante": id})
+    http_request = HttpRequest(params={"id": id})
 
     restaurantes_repo = RestaurantesRepository()
     restaurantes_manager = RestaurantesManager(restaurantes_repo)
@@ -722,4 +721,95 @@ def serve_restaurante_image(filename):
     """
     upload_folder = current_app.config['UPLOAD_FOLDER']
     return send_from_directory(os.path.join(upload_folder, 'restaurante/images'), filename)
+
+
+@restaurante_route_bp.get('/restaurante/relatorio-receita')
+def get_relatorio_receita():
+    """
+    Gerar relatório de receita por restaurante
+    ---
+    tags:
+      - Restaurantes
+    summary: Retorna um relatório de receita dos restaurantes dentro de um intervalo de datas
+    parameters:
+      - name: dataInicio
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: Data inicial do intervalo (formato YYYY-MM-DD)
+      - name: dataFim
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: Data final do intervalo (formato YYYY-MM-DD)
+    responses:
+      "200":
+        description: Relatório de receita retornado com sucesso
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                        description: Nome do restaurante
+                      receita_bruta:
+                        type: number
+                        format: float
+                        description: Valor total da receita bruta
+                      porcentagem_total:
+                        type: number
+                        format: float
+                        description: Porcentagem da receita em relação ao total
+            examples:
+              application/json:
+                value:
+                  data:
+                    - nome: "Aladdin Palace"
+                      receita_bruta: 225
+                      porcentagem_total: 40.91
+                    - nome: "El Chapulín"
+                      receita_bruta: 115
+                      porcentagem_total: 20.91
+                    - nome: "Cantina Italiana"
+                      receita_bruta: 160
+                      porcentagem_total: 29.09
+                    - nome: "Sushi Express"
+                      receita_bruta: 50
+                      porcentagem_total: 9.09
+      "400":
+        description: Erro nos parâmetros da requisição
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+      "500":
+        description: Erro interno ao gerar relatório
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+    """
+    restaurante_manager = RestaurantesManager(RestaurantesRepository())
+
+    http_request = HttpRequest(params=request.args.to_dict())
+
+    http_response = restaurante_manager.get_relatorio_receita(http_request)
+    return jsonify(http_response.body), http_response.status_code
+
 

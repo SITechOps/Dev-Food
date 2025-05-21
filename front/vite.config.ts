@@ -10,12 +10,10 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@assets": path.resolve(__dirname, "./src/assets"),
-      "@components": path.resolve(__dirname, "./src/components"),
-      "@hooks": path.resolve(__dirname, "./src/hooks"),
-      "@contexts": path.resolve(__dirname, "./src/contexts"),
-      "@interface": path.resolve(__dirname, "./src/interface"),
-      "@connection": path.resolve(__dirname, "./src/connection"),
-      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@contexts": path.resolve(__dirname, "./src/shared/contexts"),
+      "@interfaces": path.resolve(__dirname, "./src/shared/interface"),
+      "@utils": path.resolve(__dirname, "./src/shared/utils"),
+      "@features": path.resolve(__dirname, "./src/features"),
     },
   },
   server: {
