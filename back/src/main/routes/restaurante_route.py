@@ -813,3 +813,94 @@ def get_relatorio_receita():
     return jsonify(http_response.body), http_response.status_code
 
 
+@restaurante_route_bp.get('/restaurante/relatorio-pedidos')
+def get_relatorio_qtd_pedidos():
+    """
+    Gerar relatório de quantidade de pedidos por restaurante
+    ---
+    tags:
+      - Restaurantes
+    summary: Retorna um relatório com a quantidade de pedidos dos restaurantes dentro de um intervalo de datas
+    parameters:
+      - name: dataInicio
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: Data inicial do intervalo (formato YYYY-MM-DD)
+      - name: dataFim
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: Data final do intervalo (formato YYYY-MM-DD)
+    responses:
+      "200":
+        description: Relatório de quantidade de pedidos retornado com sucesso
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                        description: Nome do restaurante
+                      quantidade_pedidos:
+                        type: integer
+                        description: Número total de pedidos
+                      porcentagem_total:
+                        type: number
+                        format: float
+                        description: Porcentagem dos pedidos em relação ao total
+            examples:
+              application/json:
+                value:
+                  data:
+                    - nome: "Aladdin Palace"
+                      quantidade_pedidos: 45
+                      porcentagem_total: 36.59
+                    - nome: "El Chapulín"
+                      quantidade_pedidos: 30
+                      porcentagem_total: 24.39
+                    - nome: "Cantina Italiana"
+                      quantidade_pedidos: 35
+                      porcentagem_total: 28.46
+                    - nome: "Sushi Express"
+                      quantidade_pedidos: 13
+                      porcentagem_total: 10.57
+      "400":
+        description: Erro nos parâmetros da requisição
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+      "500":
+        description: Erro interno ao gerar relatório
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+    """
+    restaurante_manager = RestaurantesManager(RestaurantesRepository())
+
+    http_request = HttpRequest(params=request.args.to_dict())
+
+    http_response = restaurante_manager.get_relatorio_qtd_pedidos(http_request)
+    return jsonify(http_response.body), http_response.status_code
+
+
+
+

@@ -49,7 +49,7 @@ const ListagemEndereco = lazy(
 );
 
 const RelatorioReceita = lazy(
-  () => import("../features/(Restaurante)/pages/RelatorioReceita"),
+  () => import("../features/(Restaurante)/pages/Relatorios"),
 );
 
 const AppRoutes = () => {

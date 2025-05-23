@@ -118,7 +118,28 @@ class RestaurantesManager:
 
         except Exception as e:
             return HttpResponse(status_code=500, body={"error": str(e)})
+        
     
+    def get_relatorio_qtd_pedidos(self, http_request: HttpRequest) -> HttpResponse:
+        try:
+            params = http_request.params or {}
+            data_inicio = params.get("dataInicio")
+            data_fim = params.get("dataFim")
+
+            if data_inicio and data_fim:
+                try:
+                    datetime.strptime(data_inicio, "%Y-%m-%d")
+                    datetime.strptime(data_fim, "%Y-%m-%d")
+                except ValueError:
+                    return HttpResponse(status_code=400, body={"error": "Formato de data inválido. Use YYYY-MM-DD."})
+
+            relatorio = self.__restaurante_repo.relatorio_qtd_pedidos(data_inicio, data_fim)
+
+            return HttpResponse(status_code=200, body={"data": relatorio})
+
+        except Exception as e:
+            return HttpResponse(status_code=500, body={"error": str(e)})
+
 
     def update_image(self, http_request: HttpRequest, file: FileStorage) -> HttpResponse:
         id_restaurante = http_request.params.get("id")

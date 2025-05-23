@@ -241,14 +241,15 @@ class RestaurantesRepository(IRestaurantesRepository):
                     .select_from(Pedido)
                     .join(Restaurante, Restaurante.id == Pedido.id_restaurante)
                     .group_by(Restaurante.nome)
+                    .order_by(func.sum(Pedido.valor_total).desc())  
                 )
 
                 if data_inicio and data_fim:
                     data_inicio_dt = datetime.strptime(data_inicio, "%Y-%m-%d")
-                    data_fim_dt = datetime.strptime(data_fim, "%Y-%m-%d") + timedelta(days=1) 
+                    data_fim_dt = datetime.strptime(data_fim, "%Y-%m-%d") + timedelta(days=1)
 
                     query = query.filter(Pedido.created_at >= data_inicio_dt)
-                    query = query.filter(Pedido.created_at < data_fim_dt) 
+                    query = query.filter(Pedido.created_at < data_fim_dt)
 
                 resultados = query.all()
 
@@ -266,6 +267,47 @@ class RestaurantesRepository(IRestaurantesRepository):
 
             except Exception as e:
                 raise e
+
+
+    def relatorio_qtd_pedidos(self, data_inicio: str = None, data_fim: str = None) -> list[dict]:
+        with DBConnectionHandler() as db:
+            try:
+                query = (
+                    db.session.query(
+                        Restaurante.nome.label("nome"),
+                        func.count(Pedido.id).label("quantidade_pedidos")
+                    )
+                    .select_from(Pedido)
+                    .join(Restaurante, Restaurante.id == Pedido.id_restaurante)
+                    .group_by(Restaurante.nome)
+                    .order_by(func.count(Pedido.id).desc())  
+                )
+
+                if data_inicio and data_fim:
+                    data_inicio_dt = datetime.strptime(data_inicio, "%Y-%m-%d")
+                    data_fim_dt = datetime.strptime(data_fim, "%Y-%m-%d") + timedelta(days=1)
+
+                    query = query.filter(Pedido.created_at >= data_inicio_dt)
+                    query = query.filter(Pedido.created_at < data_fim_dt)
+
+                resultados = query.all()
+
+                total_pedidos = sum(row.quantidade_pedidos for row in resultados)
+
+                relatorio = [
+                    {
+                        "nome": row.nome,
+                        "quantidade_pedidos": row.quantidade_pedidos,
+                        "porcentagem_total": round((row.quantidade_pedidos / total_pedidos) * 100, 2) if total_pedidos > 0 else 0.0
+                    }
+                    for row in resultados
+                ]
+
+                return relatorio
+
+            except Exception as e:
+                raise e
+
 
 
     def update_image_path(self, id_restaurante: str, image_url: str) -> None:
