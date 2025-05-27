@@ -7,7 +7,7 @@ from src.model.configs.base import Base
 class DBConnectionHandler:
 
     def __init__(self):
-        self.__connection_string = 'mysql+mysqlconnector://dev_user:dev1234@localhost:3307/devfood'
+        self.__connection_string = 'sqlite:///back/devfood.db'
         self.__engine = self.__create_database_engine()
         self.session = None
         self.__reset_if_necessary()
