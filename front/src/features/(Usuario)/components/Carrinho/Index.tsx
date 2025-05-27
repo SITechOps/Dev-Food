@@ -69,6 +69,7 @@ export default function Carrinho({
                         <Button
                           color="plain"
                           onClick={() => decrementar(item.id)}
+                          disabled={item.quantidade === 0}
                           className="p-1"
                         >
                           <Minus size={20} className="stroke-2" />
@@ -79,6 +80,7 @@ export default function Carrinho({
                         <Button
                           color="plain"
                           onClick={() => incrementar(item.id)}
+                          disabled={item.quantidade >= item.qtd_estoque}
                           className="p-1"
                         >
                           <Plus size={20} className="stroke-2" />
@@ -94,10 +96,6 @@ export default function Carrinho({
                     </div>
                   </div>
                 ))}
-                <p className="my-2 flex items-center justify-between">
-                  Subtotal
-                  <span>R$ {subtotal.toFixed(2)}</span>
-                </p>
               </div>
 
               <div className="mt-10">

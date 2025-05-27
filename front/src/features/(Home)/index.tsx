@@ -7,14 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { IRestaurante } from "@/shared/interfaces/IRestaurante";
 import Categorias from "./components/Filtros/FiltroCategorias";
 import CardRestaurante from "./components/Cards/CardRestaurante";
-import { showInfo, showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
+import { showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 import FiltroDistanciaModal from "./components/Filtros/FiltroPorDistancia";
 import ButtonDistance from "./components/Filtros/ButtonDistance";
-import { useAuth } from "@/shared/contexts/AuthContext";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const { restaurantes } = useRestauranteProduto();
   const CardRestauranteMemo = React.memo(CardRestaurante);
   const [mensagemErro, setMensagemErro] = useState<string>("");
@@ -62,12 +60,6 @@ export default function Home() {
     }
   }, [clienteCoords, restaurantes]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      showInfo("Usando coordenadas já salvas.");
-    }
-  }, []);
-
   const listaFinal =
     restaurantesCompletos.length > 0 ? restaurantesCompletos : restaurantes;
 
@@ -75,7 +67,7 @@ export default function Home() {
   const [modalAberto, setModalAberto] = useState(false);
   const [distanciaSelecionada, setDistanciaSelecionada] = useState(10);
   return (
-    <div className="mt-[5rem]">
+    <div className="my-[5rem]">
       <FiltroDistanciaModal
         aberto={modalAberto}
         onClose={() => setModalAberto(false)}

@@ -6,6 +6,7 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import { useAuthUserComponent } from "../hooks/useAuthUser";
 import Button from "../../../shared/components/ui/Button";
+import { showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 interface AuthGoogleProps {
   setEtapa: React.Dispatch<React.SetStateAction<"telefone" | "email">>;
@@ -48,6 +49,7 @@ export default function AuthGoogle({ setEtapa, setFormList }: AuthGoogleProps) {
         }
       })
       .catch((err) => {
+        showWarning("Erro ao buscar informações do Google");
         console.error("Erro ao buscar informações do Google:", err);
       });
   }, [user, setAuth, navigate]);

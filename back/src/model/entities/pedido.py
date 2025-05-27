@@ -11,9 +11,9 @@ class Pedido(Base):
     forma_pagamento = Column(String(20), nullable=False)
     status = Column(String(20), default="Pendente")
     tipo_entrega = Column(String(10), default="Padrão")
-    sub_total = Column(Numeric(5, 2), nullable=False)
-    taxa_entrega = Column(Numeric(5, 2), nullable=False)
-    valor_total = Column(Numeric(6, 2), nullable=False)
+    sub_total = Column(Numeric(15, 2), nullable=False)
+    taxa_entrega = Column(Numeric(15, 2), nullable=False)
+    valor_total = Column(Numeric(15, 2), nullable=False)
 
     def to_dict(self):
         return {
