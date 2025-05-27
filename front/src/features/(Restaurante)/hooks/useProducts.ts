@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "@/lib/axios";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { IProduto } from "@/shared/interfaces/IProduto";
+import { showError, showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 const useProdutos = () => {
   const { userData } = useAuth();
@@ -24,6 +25,7 @@ const useProdutos = () => {
       setProdutos(response.data?.data?.attributes || []);
       if (callback) callback();
     } catch (error) {
+      showError("Erro ao buscar produtos");
       console.error("Erro ao buscar produtos:", error);
     }
   }
@@ -61,6 +63,7 @@ const useProdutos = () => {
       setSearchTerm("");
     } catch (error) {
       console.error("Erro ao criar produto:", error);
+      showError("Erro ao criar produto");
     } finally {
       setIsUploading(false);
     }
@@ -92,6 +95,7 @@ const useProdutos = () => {
       setProdutos(updatedProdutos);
       setSearchTerm("");
     } catch (error) {
+      showError("Erro ao editar produto");
       console.error("Erro ao editar produto:", error);
     } finally {
       setIsUploading(false);
@@ -99,13 +103,14 @@ const useProdutos = () => {
   }
 
   function deletarProduto(id: string) {
-    console.log("Deletando produto com id:", id);
+    showWarning(`Deletando produto com id: ${id}`);
     api
       .delete(`/produto/${id}`)
       .then(() => {
         listarProdutos();
       })
       .catch((error) => {
+        showError("Erro ao deletar produto");
         console.error("Erro ao deletar produto:", error);
       });
   }

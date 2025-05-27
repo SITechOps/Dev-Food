@@ -6,6 +6,7 @@ import { useUserAccount } from "../hooks/useUserAccount";
 import { pedidosUtils } from "../../../shared/utils/pedidosUtils";
 import IconAction from "@/shared/components/ui/IconAction";
 import { useNavigate } from "react-router";
+import { showError, showSuccess, showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 const statusMessages: { [key: string]: string } = {
   Pendente: "Aguardando a confirmação do restaurante.",
@@ -37,8 +38,10 @@ export default function OrderStatusTracker() {
     try {
       const response = await api.get(`/pedidos/usuario/${idUsuario}`);
       setPedidos(response.data.pedidos || []);
+      showSuccess("Pedidos atualizados com sucesso");
     } catch (error) {
       console.error("Erro ao buscar pedidos do usuário:", error);
+      showError("Erro ao buscar pedidos do usuário");
     } finally {
       setIsLoading(false);
     }
@@ -58,6 +61,7 @@ export default function OrderStatusTracker() {
 
   useEffect(() => {
     console.log("Pedidos atualizados:", pedidos);
+    showWarning("Pedidos atualizados");
   }, [pedidos]);
 
   const getCodigoPedido = (pedidoId: string) => {

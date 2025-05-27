@@ -146,7 +146,7 @@ export const ConfirmacaoEnderecoProvider = ({
           if (isAuthenticated) {
             const restaurantesSalvos = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
             setRestaurantesCompletos(restaurantesSalvos);
-            showWarning('Atualizar com dados de restaurante Salvos', restaurantesSalvos)
+            showWarning('Recuperando taxas de restaurantes salvos', restaurantesSalvos)
           }
         }
       } catch (error) {

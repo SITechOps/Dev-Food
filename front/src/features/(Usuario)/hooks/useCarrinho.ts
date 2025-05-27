@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import { showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
+const entregaInfo = {
+  distancia: null as number | null,
+  tempoEntrega: null as number | null,
+  restauranteId: null as string | null,
+};
+
 export const useCarrinho = () => {
   const [dados, setDados] = useState<any>([]);
   const navigate = useNavigate();
@@ -13,9 +19,7 @@ export const useCarrinho = () => {
   );
   const [taxa_entrega, setTaxaEntrega] = useState(0);
   const storedCarrinho = localStorage.getItem("carrinho");
-  const [distancia, setDistancia] = useState<number | null>(null);
-  const [tempoEntrega, setTempoEntrega] = useState<number | null>(null);
-  const [restauranteId, setRestauranteId] = useState<string | null>(null);
+  const { distancia, tempoEntrega, restauranteId } = entregaInfo;
   const resSelecionado = localStorage.getItem("restauranteSelecionado");
   const taxaEntregaRestaurante = resSelecionado
     ? JSON.parse(resSelecionado).taxa_entrega
