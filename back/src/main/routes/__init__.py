@@ -7,6 +7,7 @@ from .pedido_route import pedido_route_bp
 from .pagamento_route import pagamento_route_bp
 from .sms_route import sms_route_bp
 from .nota_fiscal_route import nota_fiscal_bp
+from .cnpj_route import proxy_api_bp
 
 __all__ = [
     "usuario_route_bp",
@@ -17,5 +18,6 @@ __all__ = [
     "pedido_route_bp",
     "pagamento_route_bp",
     "sms_route_bp",
-    "nota_fiscal_bp"
+    "nota_fiscal_bp",
+    "proxy_api_bp",
 ]

@@ -60,7 +60,9 @@ def configure_swagger(app):
             {"name": "Produtos", "description": "Operações relacionadas a produtos"},
             {"name": "Pedidos", "description": "Operações relacionadas a pedidos"},
             {"name": "Pagamentos", "description": "Operações relacionadas a pagamentos"},
-            {"name": "Nota Fiscal", "description": "Operações relacionadas a envio de nota fiscal"}
+            {"name": "Nota Fiscal", "description": "Operações relacionadas a envio de nota fiscal"},
+            {"name": "CNPJ", "description": "Operações relacionadas a consulta de CNPJ"},
+
         ]
     }
     Swagger(app, template=template)

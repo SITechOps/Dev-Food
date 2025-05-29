@@ -1,7 +1,7 @@
 import Input from "@/shared/components/ui/Input";
 import Button from "@/shared/components/ui/Button";
 import ImageUploadButton from "@/shared/components/ui/ImageUploadButton";
-import { NumberFormatValues, PatternFormat } from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { useCadastroRestaurante } from "../hooks/useCadastroRestaurante";
 import ModalCodigoVerificacao from "../../../shared/components/ModalCodigoVerificacao";
 import IconAction from "@/shared/components/ui/IconAction";
@@ -15,12 +15,24 @@ export default function CadastroRestaurante() {
     setEtapa,
     validarEmail,
     setCepLimpo,
+    isLoadingCep,
+    cepError,
     mostrarModal,
     setMostrarModal,
     codigoEnviado,
     handleSubmit,
     setImageFile,
+    fetchnomeFantasiaPorCNPJ,
+    isLoadingNomeFantasia,
+    nomeFantasiaError,
+    isNomeRestauranteLocked, // !!! IMPORTANTE: Adicione este estado ao seu hook useCadastroRestaurante
   } = useCadastroRestaurante();
+
+  const handleCnpjValueChange = (cnpjLimpo: string) => {
+    // A lógica de verificar o tamanho e chamar a API
+    // já está dentro de fetchnomeFantasiaPorCNPJ no hook.
+    fetchnomeFantasiaPorCNPJ(cnpjLimpo);
+  };
 
   return (
     <>
@@ -50,18 +62,50 @@ export default function CadastroRestaurante() {
                 seu restaurante
               </p>
               <div className="mt-6 space-y-4 text-left">
+                {/* CNPJ na primeira etapa usando PatternFormat para consistência */}
+                <label htmlFor="cnpjDadosLoja" className="font-medium">
+                  CNPJ do restaurante:
+                </label>
+                <PatternFormat
+                  id="cnpjDadosLoja"
+                  name="cnpj"
+                  format="##.###.###/####-##"
+                  mask="_"
+                  allowEmptyFormatting
+                  value={formList.cnpj} // Assumindo que formList.cnpj no hook armazena o valor limpo
+                  onValueChange={(values) => {
+                    // values.value é o valor limpo (só números)
+                    setFormList(prev => ({ ...prev, cnpj: values.value }));
+                    handleCnpjValueChange(values.value);
+                  }}
+                  className="input" // Garanta que a classe 'input' está definida e estilizada
+                  placeholder="00.000.000/0000-00"
+                  required
+                  type="tel" // Para melhor UX em mobile
+                />
+                {/* Feedback para consulta de CNPJ */}
+                {isLoadingNomeFantasia && (
+                  <p className="mt-1 text-sm text-blue-600">Consultando dados do CNPJ...</p>
+                )}
+                {nomeFantasiaError && (
+                  <p className="mt-1 text-sm text-red-600">{nomeFantasiaError}</p>
+                )}
+
                 <Input
                   id="nome"
                   name="nome"
                   textLabel="Nome fantasia do restaurante:"
                   value={formList.nome}
-                  onChange={(value) =>
-                    setFormList({ ...formList, nome: value })
-                  }
+                  onChange={(value) => {
+                    // Permite edição manual apenas se não estiver bloqueado pela API
+                    if (!isNomeRestauranteLocked) {
+                      setFormList({ ...formList, nome: value });
+                    }
+                  }}
                   type="text"
                   required
+                  disabled={isNomeRestauranteLocked} // Desabilita se preenchido pela API
                 />
-
                 <label htmlFor="telefone" className="font-medium">
                   Insira seu telefone:
                 </label>
@@ -70,18 +114,18 @@ export default function CadastroRestaurante() {
                   mask="_"
                   allowEmptyFormatting
                   value={formList.telefone}
-                  onValueChange={(values: NumberFormatValues) =>
-                    setFormList((prev) => ({ ...prev, telefone: values.value }))
+                  onValueChange={(values) =>
+                    setFormList((prev) => ({ ...prev, telefone: values.value })) // values.value é o valor limpo
                   }
                   className="input"
-                  placeholder="(XX) 99999-9999"
+                  placeholder="(XX) XXXXX-XXXX"
                   type="tel"
                   id="telefone"
                   required
                 />
 
                 <Input
-                  textLabel="Infome seu e-mail:"
+                  textLabel="Informe seu e-mail:"
                   id="email"
                   name="email"
                   placeholder="exemplo@gmail.com"
@@ -96,7 +140,13 @@ export default function CadastroRestaurante() {
               <Button
                 className="mt-6"
                 type="button"
-                disabled={!formList.nome || !formList.email}
+                disabled={
+                  !formList.cnpj ||
+                  formList.cnpj.length !== 14 || // Verifica se o CNPJ limpo tem 14 dígitos
+                  !formList.nome ||
+                  !formList.email ||
+                  isLoadingNomeFantasia // Desabilita enquanto o CNPJ está sendo consultado
+                }
                 onClick={validarEmail}
               >
                 Continuar
@@ -110,8 +160,7 @@ export default function CadastroRestaurante() {
                 className="mb-3"
                 onClick={() => setEtapa("dadosLoja")}
               />
-
-              <h1 className="text-center font-bold">Infomações da Loja</h1>
+              <h1 className="text-center font-bold">Informações da Loja</h1>
               <p className="my-4 text-center">
                 Digite o CEP e complete as informações
               </p>
@@ -123,22 +172,30 @@ export default function CadastroRestaurante() {
                 format="#####-###"
                 mask="_"
                 allowEmptyFormatting
-                value={formList.cep}
-                onValueChange={(values: NumberFormatValues) => {
-                  const rawCep = values.value;
-                  setFormList((prev) => ({ ...prev, cep: rawCep }));
-                  setCepLimpo(rawCep.replace(/\D/g, ""));
+                value={formList.cep} // Assumindo que formList.cep no hook é o valor limpo
+                onValueChange={(values) => {
+                  // setFormList((prev) => ({ ...prev, cep: values.value })); // values.value é o limpo
+                  // setCepLimpo já deve atualizar formList.cep no hook se necessário,
+                  // ou o componente pode atualizar o formList.cep formatado/limpo aqui.
+                  // A chamada setCepLimpo(values.value) deve ser suficiente se o hook gerencia formList.cep.
+                  // Para manter o input exibindo o valor formatado enquanto digita,
+                  // e o formList.cep sendo o valor limpo:
+                  setFormList((prev) => ({ ...prev, cep: values.formattedValue })); // Mostra formatado
+                  setCepLimpo(values.value); // Envia limpo para o hook
                 }}
                 className={`${styleInput} input`}
                 id="cep"
                 name="cep"
                 placeholder="00000-000"
+                type="tel"
                 required
               />
+              {isLoadingCep && <p className="mt-1 text-sm text-blue-600">Consultando CEP...</p>}
+              {cepError && <p className="mt-1 text-sm text-red-600">{cepError}</p>}
 
               <Input
                 textLabel="Endereço:"
-                className={styleInput}
+                className={styleInput} // Removido `mt-3` daqui pois PatternFormat de CEP não tem margin bottom por padrão
                 id="endereço"
                 name="endereço"
                 placeholder="Exemplo: Avenida Brasil"
@@ -147,8 +204,8 @@ export default function CadastroRestaurante() {
                   setFormList({ ...formList, endereco: value })
                 }
                 type="text"
+                readOnly={isLoadingCep || !!formList.endereco} // Mais específico: desabilitar se API preencheu
               />
-
               <Input
                 textLabel="Bairro:"
                 className={`${styleInput} mt-3`}
@@ -160,8 +217,8 @@ export default function CadastroRestaurante() {
                   setFormList({ ...formList, bairro: value })
                 }
                 type="text"
+                readOnly={isLoadingCep || !!formList.bairro}
               />
-
               <div className="mt-2 flex gap-4">
                 <Input
                   textLabel="Número:"
@@ -173,7 +230,7 @@ export default function CadastroRestaurante() {
                   onChange={(value) =>
                     setFormList({ ...formList, numero: value })
                   }
-                  type="number"
+                  type="number" // Idealmente type="text" pattern="\d*" para evitar problemas com formatação/locale de número
                 />
                 <Input
                   textLabel="Complemento:"
@@ -199,6 +256,7 @@ export default function CadastroRestaurante() {
                     setFormList({ ...formList, estado: value })
                   }
                   type="text"
+                  readOnly={isLoadingCep || !!formList.estado}
                 />
                 <Input
                   textLabel="Cidade:"
@@ -210,6 +268,7 @@ export default function CadastroRestaurante() {
                     setFormList({ ...formList, cidade: value })
                   }
                   type="text"
+                  readOnly={isLoadingCep || !!formList.cidade}
                 />
               </div>
 
@@ -217,11 +276,11 @@ export default function CadastroRestaurante() {
                 className="mt-5"
                 type="button"
                 disabled={
-                  !formList.cep ||
+                  !formList.cep || // Idealmente verificar formList.cep.length === 8 (limpo)
                   !formList.endereco ||
-                  !formList.estado ||
-                  !formList.cidade ||
-                  !formList.bairro
+                  !formList.numero ||
+                  !formList.bairro ||
+                  isLoadingCep
                 }
                 onClick={() => setEtapa("complementoLoja")}
               >
@@ -236,44 +295,56 @@ export default function CadastroRestaurante() {
                 className="mb-3"
                 onClick={() => setEtapa("enderecoLoja")}
               />
-
               <h1 className="text-center font-bold">Negócio e Responsável</h1>
               <h3 className="my-5 font-bold">
                 Agora, nos fale mais sobre seu negócio
               </h3>
-
               <Input
-                id="razaoSocial"
-                name="razaoSocial"
+                id="apiNomeFantasia"
+                name="apiNomeFantasia"
                 className={`${styleInput}`}
-                textLabel="Infome a Razão Social:"
-                value={formList.razaoSocial}
-                onChange={(value) =>
-                  setFormList({ ...formList, razaoSocial: value })
-                }
+                textLabel="Nome Fantasia (Consultado):"
+                value={formList.nomeFantasia}
+                onChange={(value) => {
+                  // Permitir edição se não estiver bloqueado ou se for um campo diferente do `formList.nome` original
+                  // Se este campo puder ser editado independentemente do `formList.nome` da primeira etapa:
+                  setFormList({ ...formList, nomeFantasia: value });
+                }}
                 type="text"
+                // Se este campo também deve ser bloqueado quando o CNPJ é consultado, adicione:
+                // disabled={isNomeRestauranteLocked}
+                // readOnly={isNomeRestauranteLocked} // Ou readOnly se preferir
                 required
               />
+              {/* Mensagem de erro e loading para o Nome Fantasia (vindo da consulta CNPJ) */}
+              {/* Estas mensagens são as mesmas da primeira etapa, talvez precise diferenciá-las ou mostrá-las apenas uma vez */}
+              {isLoadingNomeFantasia && <p className="mt-1 text-sm text-blue-600">Consultando dados do CNPJ...</p>}
+              {nomeFantasiaError && <p className="mt-1 text-sm text-red-600">{nomeFantasiaError}</p>}
 
-              <label htmlFor="cnpj" className="font-medium">
-                Insira seu CNPJ:
+              <label htmlFor="cnpjComplemento" className="font-medium mt-3 block">
+                CNPJ:
               </label>
               <PatternFormat
                 format="##.###.###/####-##"
                 mask="_"
                 allowEmptyFormatting
-                value={formList.cnpj}
-                onValueChange={(values: NumberFormatValues) =>
-                  setFormList((prev) => ({ ...prev, cnpj: values.value }))
-                }
+                value={formList.cnpj} // CNPJ limpo vindo do formList
+                onValueChange={(values) => {
+                  const cnpjApenasNumeros = values.value;
+                  setFormList((prev) => ({ ...prev, cnpj: cnpjApenasNumeros }));
+                  handleCnpjValueChange(cnpjApenasNumeros); // Dispara a consulta se o CNPJ mudar aqui também
+                }}
                 className={`${styleInput} input`}
-                id="cnpj"
+                id="cnpjComplemento"
                 name="cnpj"
+                placeholder="00.000.000/0000-00"
+                type="tel"
                 required
               />
+              
               <Input
                 textLabel="Descrição do restaurante:"
-                className={`${styleInput}`}
+                className={`${styleInput} mt-3`}
                 id="descricao"
                 name="descricao"
                 value={formList.descricao}
@@ -284,10 +355,10 @@ export default function CadastroRestaurante() {
               />
               <Input
                 textLabel="Horário de funcionamento:"
-                className={`${styleInput}`}
+                className={`${styleInput}`} // Removido mt-3
                 id="horario_funcionamento"
                 name="horario_funcionamento"
-                placeholder="11:00 - 22:00"
+                placeholder="Ex: 08:00 - 18:00 / Seg-Sex, 09:00 - 13:00 / Sab"
                 value={formList.horario_funcionamento}
                 onChange={(value) =>
                   setFormList({ ...formList, horario_funcionamento: value })
@@ -295,7 +366,7 @@ export default function CadastroRestaurante() {
                 type="text"
               />
 
-              <div id="compo-select">
+              <div id="compo-select" className="mt-3"> {/* Adicionado mt-3 para espaçamento */}
                 <label className="mb-1 block font-medium text-gray-700">
                   Especialidade:
                 </label>
@@ -332,9 +403,11 @@ export default function CadastroRestaurante() {
                 className="mt-6"
                 type="button"
                 disabled={
-                  !formList.cnpj ||
+                  !formList.cnpj || formList.cnpj.length !== 14 ||
+                  !formList.nomeFantasia ||
                   !formList.especialidade ||
-                  !formList.descricao
+                  !formList.descricao ||
+                  isLoadingNomeFantasia
                 }
                 onClick={() => setEtapa("dadosBancarioLoja")}
               >
@@ -349,11 +422,9 @@ export default function CadastroRestaurante() {
                 className="mb-3"
                 onClick={() => setEtapa("complementoLoja")}
               />
-
               <h1 className="my-5 text-center font-bold">
-                Agora, nos informe seu dados bancários
+                Agora, nos informe seus dados bancários
               </h1>
-
               <Input
                 textLabel="Banco:"
                 className={`${styleInput}`}
@@ -363,7 +434,6 @@ export default function CadastroRestaurante() {
                 type="text"
                 onChange={(value) => setFormList({ ...formList, banco: value })}
               />
-
               <div className="flex gap-6">
                 <Input
                   textLabel="Código da agência:"
@@ -371,7 +441,7 @@ export default function CadastroRestaurante() {
                   id="cAgencia"
                   name="cAgencia"
                   value={formList.cAgencia}
-                  type="text"
+                  type="text" // Poderia ser "number" mas "text" com pattern é mais flexível
                   onChange={(value) =>
                     setFormList({ ...formList, cAgencia: value })
                   }
@@ -382,13 +452,12 @@ export default function CadastroRestaurante() {
                   id="cCorrente"
                   name="cCorrente"
                   value={formList.cCorrente}
-                  type="text"
+                  type="text" // Poderia ser "number"
                   onChange={(value) =>
                     setFormList({ ...formList, cCorrente: value })
                   }
                 />
               </div>
-
               <Button
                 className="mt-3"
                 type="submit"

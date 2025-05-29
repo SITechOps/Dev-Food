@@ -39,6 +39,7 @@ def create_app():
     app.register_blueprint(sms_route_bp)
     app.register_blueprint(nota_fiscal_bp)
     app.register_blueprint(handlers_bp)
+    app.register_blueprint(proxy_api_bp)
 
     DBConnectionHandler()
     load_sample_restaurants()
