@@ -349,7 +349,7 @@ def upload_produto_image(id):
     return jsonify(http_response.body), http_response.status_code
 
 
-@produto_route_bp.get('/produto/images/<path:filename>')
+@produto_route_bp.get('/produto/<path:filename>')
 def serve_produto_image(filename):
-    image_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], 'produto/images')
+    image_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], 'produto')
     return send_from_directory(image_folder, filename)
