@@ -98,6 +98,10 @@ export default function ListagemEndereco({
               {confirmacaoPadrao.endereco?.numero} -{" "}
               {confirmacaoPadrao.endereco?.bairro},{" "}
               {confirmacaoPadrao.endereco?.cidade}" como seu endereço padrão?
+              <p className="text-orange mt-4 font-semibold">
+                OBS: Ao confirmar o endereço, o frete será recalculado. Por
+                isso, será necessário refazer o pedido.
+              </p>
             </p>
             <div className="flex justify-end space-x-2">
               <Button onClick={cancelarConfirmacao} color="secondary">

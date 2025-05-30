@@ -4,7 +4,7 @@ export interface IProduto {
   id: string;
   nome: string;
   descricao: string;
-  qtd_estoque?: number;
+  qtd_estoque: number;
   image_url: string;
   valor_unitario: number;
   id_restaurante?: string;

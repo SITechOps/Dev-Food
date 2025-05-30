@@ -76,7 +76,7 @@ export default function DetalhesRestaurante() {
           </div>
           <div
             id="produtos"
-            className="mt-5 mb-[5rem] grid gap-12 min-[600px]:grid-cols-1 min-[601px]:grid-cols-2 min-[1100px]:grid-cols-3"
+            className="mt-5 mb-[5rem] grid gap-12 min-[600px]:grid-cols-1 min-[1100px]:grid-cols-2 min-[1300px]:grid-cols-3"
           >
             {dadosProdutos.length === 0 ? (
               <p className="text-muted-foreground text-center">
@@ -86,11 +86,7 @@ export default function DetalhesRestaurante() {
               dadosProdutos.map((produto, index) => (
                 <CardProdutos
                   key={index}
-                  id={produto.id}
-                  nome={produto.nome}
-                  descricao={produto.descricao}
-                  image_url={produto.image_url}
-                  valor_unitario={produto.valor_unitario}
+                  {...produto}
                   dadosRestaurante={restaurante}
                 />
               ))

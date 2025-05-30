@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "@/lib/axios";
 import axios from "axios";
 import { decodeToken } from "@/shared/utils/decodeToken";
+import { showError, showInfo, showSuccess, showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useCadastroRestaurante = () => {
   const [formList, setFormList] = useState({
@@ -47,7 +48,7 @@ export const useCadastroRestaurante = () => {
       setCodigoEnviado(response.data.properties.verificationCode);
     } catch (error) {
       console.error("Erro na tentativa do envio do codigo:", error);
-      alert("Erro na tentativa do envio do codigo");
+      showWarning("Erro na tentativa do envio do codigo");
     }
   }
 
@@ -64,8 +65,10 @@ export const useCadastroRestaurante = () => {
         `/restaurante/upload-image/${restauranteId}`,
         formData,
       );
+      showSuccess("Sucesso no upload da imagem");
       return response.data.image_url;
     } catch (error) {
+      showError("Erro no upload da imagem");
       console.error("Erro no upload da imagem:", error);
       return null;
     }
@@ -85,10 +88,11 @@ export const useCadastroRestaurante = () => {
               endereco: res.data.logradouro,
             }));
           } else {
-            console.warn("CEP não encontrado.");
+            showInfo("CEP não encontrado.");
           }
         })
         .catch((err) => {
+          showError("Erro ao buscar o CEP");
           console.error("Erro ao buscar o CEP:", err);
         });
     }
@@ -130,15 +134,16 @@ export const useCadastroRestaurante = () => {
         console.log("Chamando upload da imagem...");
         await uploadRestauranteImage(restauranteId!, imageFile);
       } else {
-        console.warn("Nenhuma imagem foi selecionada.");
+        showInfo("Nenhuma imagem foi selecionada.");
       }
 
-      alert("Restaurante cadastrado com sucesso!");
+      showSuccess("Restaurante cadastrado com sucesso!");
       return navigate("/account");
     } catch (error: any) {
       if (error.response?.status === 409) {
-        alert("Esse endereço já foi cadastrado por outro restaurante!");
+        showInfo("Esse endereço já foi cadastrado por outro restaurante!");
       }
+      showError("Erro ao cadastrar restaurante");
       console.error("Erro ao cadastrar restaurante:", error);
     }
   }

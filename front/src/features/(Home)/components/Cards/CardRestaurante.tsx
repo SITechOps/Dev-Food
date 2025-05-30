@@ -11,11 +11,10 @@ type RestauranteProps = {
 export default function CardRestaurante({ restaurante }: RestauranteProps) {
   const [loading, setLoading] = useState(true);
 
-  // Simula carregamento de dados (pode ser removido se já tiver loading real)
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 500); // tempo fictício
+    }, 500); 
     return () => clearTimeout(timeout);
   }, []);
 

@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../shared/contexts/AuthContext";
+import { showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
+
+const entregaInfo = {
+  distancia: null as number | null,
+  tempoEntrega: null as number | null,
+  restauranteId: null as string | null,
+};
 
 export const useCarrinho = () => {
   const [dados, setDados] = useState<any>([]);
@@ -12,9 +19,7 @@ export const useCarrinho = () => {
   );
   const [taxa_entrega, setTaxaEntrega] = useState(0);
   const storedCarrinho = localStorage.getItem("carrinho");
-  const [distancia, setDistancia] = useState<number | null>(null);
-  const [tempoEntrega, setTempoEntrega] = useState<number | null>(null);
-  const [restauranteId, setRestauranteId] = useState<string | null>(null);
+  const { distancia, tempoEntrega, restauranteId } = entregaInfo;
   const resSelecionado = localStorage.getItem("restauranteSelecionado");
   const taxaEntregaRestaurante = resSelecionado
     ? JSON.parse(resSelecionado).taxa_entrega
@@ -66,15 +71,21 @@ export const useCarrinho = () => {
 
   function incrementar(id: number) {
     setDados((prevDados: any) =>
-      prevDados.map((item: any) =>
-        item.id === id
-          ? {
+      prevDados.map((item: any) => {
+        if (item.id === id) {
+          if (item.quantidade < item.qtd_estoque) {
+            return {
               ...item,
               quantidade: item.quantidade + 1,
               subtotal: item.subtotal + parseFloat(item.valor_unitario),
-            }
-          : item,
-      ),
+            };
+          } else {
+            showWarning("Limite de estoque atingido para este produto.");
+            return item;
+          }
+        }
+        return item;
+      })
     );
   }
 
@@ -83,10 +94,10 @@ export const useCarrinho = () => {
       prevDados.map((item: any) =>
         item.id === id && item.quantidade > 1
           ? {
-              ...item,
-              quantidade: item.quantidade - 1,
-              subtotal: item.subtotal - parseFloat(item.valor_unitario),
-            }
+            ...item,
+            quantidade: item.quantidade - 1,
+            subtotal: item.subtotal - parseFloat(item.valor_unitario),
+          }
           : item,
       ),
     );
@@ -102,7 +113,7 @@ export const useCarrinho = () => {
     setIsCarrinhoOpen: React.Dispatch<React.SetStateAction<boolean>>,
   ) {
     if (!isAuthenticated) {
-      alert(
+      showWarning(
         "Verificamos que você não está logado. Por favor, faça login para continuar.",
       );
       setIsCarrinhoOpen(false);

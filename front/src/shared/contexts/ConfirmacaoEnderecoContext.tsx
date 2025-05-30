@@ -14,9 +14,10 @@ import { IEndereco } from "@/shared/interfaces/IEndereco";
 import { useNavigate } from "react-router";
 import {
   showError,
-  showInfo,
+  showWarning,
 } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 import { useAuth } from "./AuthContext";
+import { CarrinhoContext } from "./CarrinhoContext";
 
 interface Coordenadas {
   lat: number;
@@ -69,6 +70,7 @@ export const ConfirmacaoEnderecoProvider = ({
   const cacheCoordenadasRestaurantes = new Map<string, Coordenadas>();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { atualizarQuantidadeTotal } = useContext(CarrinhoContext);
 
   const setEnderecoPadraoIdSync = (id: string | null) => {
     setEnderecoPadraoId(id);
@@ -85,6 +87,9 @@ export const ConfirmacaoEnderecoProvider = ({
     if (!endereco.id) return showError("Endereço não encontrado");
 
     localStorage.setItem("enderecoPadrao", JSON.stringify(endereco));
+    localStorage.removeItem("carrinho");
+    localStorage.removeItem("compraAtual");
+    atualizarQuantidadeTotal();
     setEnderecoPadraoIdSync(endereco.id);
     setConfirmacaoPadrao({ show: false, endereco: null });
     setLoading(false);
@@ -131,7 +136,6 @@ export const ConfirmacaoEnderecoProvider = ({
         console.log("Comparação estrita:", idSalvo !== idAtual);
 
         if (!idSalvo || idSalvo !== idAtual) {
-          showInfo("Coordenadas novas serão buscadas...");
           const coords = await geocodeTexto(enderecoCompleto);
           if (coords) {
             setClienteCoords(coords);
@@ -140,12 +144,9 @@ export const ConfirmacaoEnderecoProvider = ({
           }
         } else {
           if (isAuthenticated) {
-            if (storageGeoEndereco?.coords) {
-              setClienteCoords(storageGeoEndereco.coords);
-              setGeoCliente(enderecoPadraoId)
-              const restaurantes = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
-              setRestaurantesCompletos(restaurantes)
-            }
+            const restaurantesSalvos = JSON.parse(localStorage.getItem("cacheRestaurante") || "null");
+            setRestaurantesCompletos(restaurantesSalvos);
+            showWarning('Recuperando taxas de restaurantes salvos', restaurantesSalvos)
           }
         }
       } catch (error) {
