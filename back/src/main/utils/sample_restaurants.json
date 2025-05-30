@@ -27,28 +27,28 @@
         "nome": "Feijoada Completa",
         "valor_unitario": 45.0,
         "qtd_estoque": 50,
-        "image_url": "produto/feijoada-completa.webp",
+        "image_url": "/produto/feijoada-completa.webp",
         "descricao": "Tradicional feijoada brasileira com feijão preto, carnes diversas e acompanhamentos típicos. Uma refeição rica e saborosa para celebrar a culinária do Brasil."
       },
       {
         "nome": "Picanha na Chapa",
         "valor_unitario": 68.0,
         "qtd_estoque": 40,
-        "image_url": "produto/picanha-na-chapa.webp",
+        "image_url": "/produto/picanha-na-chapa.webp",
         "descricao": "Saborosa picanha grelhada na chapa, com temperos realçados e corte macio, servida com acompanhamentos que destacam o melhor da carne."
       },
       {
         "nome": "Moqueca de Peixe",
         "valor_unitario": 55.0,
         "qtd_estoque": 30,
-        "image_url": "produto/moqueca-de-peixe.webp",
+        "image_url": "/produto/moqueca-de-peixe.webp",
         "descricao": "Moqueca de peixe com sabor marcante, elaborada com peixe fresco, leite de coco, dendê e temperos que remetem à culinária baiana."
       },
       {
         "nome": "Brigadeiro Gourmet",
         "valor_unitario": 8.0,
         "qtd_estoque": 100,
-        "image_url": "produto/brigadeiro-gourmet.webp",
+        "image_url": "/produto/brigadeiro-gourmet.webp",
         "descricao": "Delicioso brigadeiro gourmet preparado com chocolate de alta qualidade e ingredientes selecionados, perfeito para fechar a refeição com doçura."
       }
     ]
@@ -81,28 +81,28 @@
         "nome": "Feijão Tropeiro",
         "valor_unitario": 38.0,
         "qtd_estoque": 45,
-        "image_url": "produto/feijao-tropeiro.webp",
+        "image_url": "/produto/feijao-tropeiro.webp",
         "descricao": "Feijão tropeiro preparado com feijão, farinha, linguiça, bacon e ovos. Um prato típico mineiro cheio de sabor e tradição."
       },
       {
         "nome": "Frango com Quiabo",
         "valor_unitario": 42.0,
         "qtd_estoque": 35,
-        "image_url": "produto/frango-com-quiabo.webp",
+        "image_url": "/produto/frango-com-quiabo.webp",
         "descricao": "Frango caipira cozido lentamente com quiabo fresco e temperos mineiros, servido com angu cremoso."
       },
       {
         "nome": "Costelinha com Tutu",
         "valor_unitario": 52.0,
         "qtd_estoque": 25,
-        "image_url": "produto/costelinha-com-tutu.webp",
+        "image_url": "/produto/costelinha-com-tutu.webp",
         "descricao": "Costelinha suína assada lentamente com temperos especiais, acompanhada de tutu de feijão e couve refogada."
       },
       {
         "nome": "Doce de Leite com Queijo",
         "valor_unitario": 12.0,
         "qtd_estoque": 70,
-        "image_url": "produto/doce-de-leite-com-queijo.webp",
+        "image_url": "/produto/doce-de-leite-com-queijo.webp",
         "descricao": "Tradicional sobremesa mineira com doce de leite caseiro servido com fatias de queijo minas curado."
       }
     ]
@@ -135,28 +135,28 @@
         "nome": "Baião de Dois",
         "valor_unitario": 42.0,
         "qtd_estoque": 40,
-        "image_url": "produto/baião-de-dois.webp",
+        "image_url": "/produto/baiao-de-dois.webp",
         "descricao": "Prato tradicional nordestino com arroz, feijão de corda, queijo coalho, carne seca desfiada e temperos regionais, servido com paçoca de carne de sol."
       },
       {
         "nome": "Carne de Sol com Mandioca",
         "valor_unitario": 48.0,
         "qtd_estoque": 35,
-        "image_url": "produto/carne-de-sol-com-mandioca.webp",
+        "image_url": "/produto/carne-de-sol-com-mandioca.webp",
         "descricao": "Carne de sol macia e suculenta, servida com mandioca cozida na manteiga de garrafa, cebola roxa e vinagrete de coentro."
       },
       {
         "nome": "Cartola",
         "valor_unitario": 22.0,
         "qtd_estoque": 50,
-        "image_url": "produto/cartola.webp",
+        "image_url": "/produto/cartola.webp",
         "descricao": "Sobremesa típica pernambucana com banana frita na manteiga, coberta com queijo coalho gratinado, canela e açúcar."
       },
       {
         "nome": "Tapioca Especial",
         "valor_unitario": 18.0,
         "qtd_estoque": 60,
-        "image_url": "produto/tapioca-especial.webp",
+        "image_url": "/produto/tapioca-especial.webp",
         "descricao": "Tapioca nordestina recheada com carne de sol desfiada, queijo coalho, cebola caramelizada e manteiga de garrafa."
       }
     ]
@@ -189,28 +189,28 @@
         "nome": "Spaghetti à Bolonhesa",
         "valor_unitario": 39.9,
         "qtd_estoque": 60,
-        "image_url": "produto/spaghetti-a-bolonhesa.webp",
+        "image_url": "/produto/spaghetti-a-bolonhesa.webp",
         "descricao": "Clássico spaghetti com molho à bolonhesa rico e aromático, preparado com carne moída e temperos italianos, servido com queijo parmesão."
       },
       {
         "nome": "Lasanha Quatro Queijos",
         "valor_unitario": 42.0,
         "qtd_estoque": 50,
-        "image_url": "produto/lasanha-quatro-queijos.webp",
+        "image_url": "/produto/lasanha-quatro-queijos.webp",
         "descricao": "Lasanha cremosa com quatro tipos de queijo, camada sobre camada de massa fresca, gratinada ao forno para um sabor irresistível."
       },
       {
         "nome": "Risoto de Funghi",
         "valor_unitario": 47.0,
         "qtd_estoque": 30,
-        "image_url": "produto/risoto-de-funghi.webp",
+        "image_url": "/produto/risoto-de-funghi.webp",
         "descricao": "Risoto de funghi preparado com cogumelos frescos, caldo especial e finalizado com manteiga e queijo, trazendo o autêntico sabor italiano."
       },
       {
         "nome": "Tiramisu",
         "valor_unitario": 16.0,
         "qtd_estoque": 80,
-        "image_url": "produto/tiramisu.webp",
+        "image_url": "/produto/tiramisu.webp",
         "descricao": "Sobremesa clássica italiana com camadas de biscoitos embebidos em café, creme de mascarpone e finalizada com um toque de cacau."
       }
     ]
@@ -243,21 +243,21 @@
         "nome": "Gnocchi ao Pomodoro",
         "valor_unitario": 45.0,
         "qtd_estoque": 40,
-        "image_url": "produto/gnocchi-ao-pomodoro.webp",
+        "image_url": "/produto/gnocchi-ao-pomodoro.webp",
         "descricao": "Gnocchi caseiro de batata preparado artesanalmente, servido com molho de tomate fresco e manjericão, finalizado com parmesão ralado."
       },
       {
         "nome": "Carpaccio di Manzo",
         "valor_unitario": 38.0,
         "qtd_estoque": 45,
-        "image_url": "produto/carpaccio-di-manzo.webp",
+        "image_url": "/produto/carpaccio-di-manzo.webp",
         "descricao": "Finas fatias de filé mignon cru, regadas com azeite extra virgem, alcaparras e lascas de parmesão, acompanhadas de torradas."
       },
       {
         "nome": "Panna Cotta",
         "valor_unitario": 18.0,
         "qtd_estoque": 60,
-        "image_url": "produto/panna-cotta.webp",
+        "image_url": "/produto/panna-cotta.webp",
         "descricao": "Sobremesa cremosa de leite e baunilha, servida com calda de frutas vermelhas frescas e um toque de hortelã."
       }
     ]
@@ -290,21 +290,21 @@
         "nome": "Sushi Especial",
         "valor_unitario": 45.0,
         "qtd_estoque": 80,
-        "image_url": "produto/sushi-especial.webp",
+        "image_url": "/produto/sushi-especial.webp",
         "descricao": "Seleção especial de sushi, combinando arroz temperado e peixe fresco, que oferece equilíbrio perfeito de sabores e texturas."
       },
       {
         "nome": "Temaki Salmão",
         "valor_unitario": 28.0,
         "qtd_estoque": 60,
-        "image_url": "produto/temaki-salmao.webp",
+        "image_url": "/produto/temaki-salmao.webp",
         "descricao": "Temaki de salmão preparado com arroz, algas e tiras de salmão fresco, finalizado com molho especial para uma experiência leve."
       },
       {
         "nome": "Uramaki de Atum",
         "valor_unitario": 35.0,
         "qtd_estoque": 40,
-        "image_url": "produto/uramaki-de-atum.webp",
+        "image_url": "/produto/uramaki-de-atum.webp",
         "descricao": "Uramaki com recheio generoso de atum fresco, combinando ingredientes que harmonizam sabores para um prato tradicional e inovador."
       }
     ]
@@ -337,21 +337,21 @@
         "nome": "Omakase",
         "valor_unitario": 180.0,
         "qtd_estoque": 20,
-        "image_url": "produto/omakase.webp",
+        "image_url": "/produto/omakase.webp",
         "descricao": "Experiência gastronômica onde o chef seleciona os melhores peixes e frutos do mar do dia, preparados e servidos no balcão tradicional."
       },
       {
         "nome": "Ramen Tonkotsu",
         "valor_unitario": 42.0,
         "qtd_estoque": 35,
-        "image_url": "produto/ramen-tonkotsu.webp",
+        "image_url": "/produto/ramen-tonkotsu.webp",
         "descricao": "Tradicional ramen japonês com caldo rico de porco cozido lentamente, macarrão artesanal, chashu e ovo marinado."
       },
       {
         "nome": "Dorayaki",
         "valor_unitario": 15.0,
         "qtd_estoque": 50,
-        "image_url": "produto/dorayaki.webp",
+        "image_url": "/produto/dorayaki.webp",
         "descricao": "Tradicional doce japonês feito com dois pequenos bolos em formato de panqueca recheados com pasta de feijão doce (anko)."
       }
     ]
@@ -384,21 +384,21 @@
         "nome": "Taco de Carne",
         "valor_unitario": 18.0,
         "qtd_estoque": 100,
-        "image_url": "produto/taco-de-carne.webp",
+        "image_url": "/produto/taco-de-carne.webp",
         "descricao": "Taco de carne suculenta, recheado com temperos mexicanos e servido em tortilhas crocantes, com guarnições que realçam o sabor autêntico."
       },
       {
         "nome": "Burrito de Frango",
         "valor_unitario": 22.0,
         "qtd_estoque": 60,
-        "image_url": "produto/burrito-de-frango.webp",
+        "image_url": "/produto/burrito-de-frango.webp",
         "descricao": "Burrito recheado com frango temperado, feijão e arroz, envolto em tortilla macia, oferecendo o verdadeiro sabor da culinária mexicana."
       },
       {
         "nome": "Guacamole com Nachos",
         "valor_unitario": 16.0,
         "qtd_estoque": 80,
-        "image_url": "produto/guacamole-com-nachos.webp",
+        "image_url": "/produto/guacamole-com-nachos.webp",
         "descricao": "Guacamole fresco preparado com abacate e temperos equilibrados, servido com nachos crocantes, ideal para compartilhar entre amigos."
       }
     ]
@@ -431,21 +431,21 @@
         "nome": "Enchiladas Verdes",
         "valor_unitario": 35.0,
         "qtd_estoque": 45,
-        "image_url": "produto/enchiladas-verdes.webp",
+        "image_url": "/produto/enchiladas-verdes.webp",
         "descricao": "Tortillas recheadas com frango ou queijo, banhadas em molho verde de tomatillo e cobertas com creme azedo e queijo."
       },
       {
         "nome": "Chiles en Nogada",
         "valor_unitario": 52.0,
         "qtd_estoque": 25,
-        "image_url": "produto/chiles-en-nogada.webp",
+        "image_url": "/produto/chiles-en-nogada.webp",
         "descricao": "Prato tradicional mexicano com pimentões poblano recheados com carne e frutas, cobertos com molho de nozes e romã."
       },
       {
         "nome": "Tres Leches",
         "valor_unitario": 22.0,
         "qtd_estoque": 40,
-        "image_url": "produto/tres-leches.webp",
+        "image_url": "/produto/tres-leches.webp",
         "descricao": "Bolo delicado embebido em três tipos de leite (condensado, evaporado e integral), coberto com chantilly e canela."
       }
     ]
@@ -478,21 +478,21 @@
         "nome": "Mezze Completo",
         "valor_unitario": 68.0,
         "qtd_estoque": 30,
-        "image_url": "produto/mezze-completo.webp",
+        "image_url": "/produto/mezze-completo.webp",
         "descricao": "Seleção de entradas árabes com homus, babaganuche, tabule, quibe cru, esfihas e pão sírio, ideal para compartilhar."
       },
       {
         "nome": "Kafta no Espeto",
         "valor_unitario": 45.0,
         "qtd_estoque": 40,
-        "image_url": "produto/kafta-no-espeto.webp",
+        "image_url": "/produto/kafta-no-espeto.webp",
         "descricao": "Kafta preparada com carne moída e temperos árabes tradicionais, grelhada no espeto e servida com arroz de especiarias."
       },
       {
         "nome": "Baklava",
         "valor_unitario": 18.0,
         "qtd_estoque": 60,
-        "image_url": "produto/baklava.webp",
+        "image_url": "/produto/baklava.webp",
         "descricao": "Tradicional doce árabe de massa folhada com nozes, pistache e calda de mel, servido com sorvete de cardamomo."
       }
     ]
@@ -525,21 +525,21 @@
         "nome": "Classic Burger",
         "valor_unitario": 32.0,
         "qtd_estoque": 100,
-        "image_url": "produto/classic-burger.webp",
+        "image_url": "/produto/classic-burger.webp",
         "descricao": "Hambúrguer de carne angus (180g) com queijo cheddar, alface, tomate e molho especial da casa, servido em pão brioche."
       },
       {
         "nome": "Cheese Fries",
         "valor_unitario": 25.0,
         "qtd_estoque": 70,
-        "image_url": "produto/cheese-fries.webp",
+        "image_url": "/produto/cheese-fries.webp",
         "descricao": "Batatas fritas crocantes cobertas com queijo cheddar cremoso, bacon crocante e cebolinha."
       },
       {
         "nome": "Milkshake de Chocolate",
         "valor_unitario": 18.0,
         "qtd_estoque": 60,
-        "image_url": "produto/milkshake-de-chocolate.webp",
+        "image_url": "/produto/milkshake-de-chocolate.webp",
         "descricao": "Milkshake cremoso de chocolate belga, servido com chantilly, calda de chocolate e cerejas."
       }
     ]
@@ -572,21 +572,21 @@
         "nome": "Marmita Fit",
         "valor_unitario": 34.0,
         "qtd_estoque": 60,
-        "image_url": "produto/marmita-fit.webp",
+        "image_url": "/produto/marmita-fit.webp",
         "descricao": "Marmita balanceada com proteína magra, carboidratos complexos e legumes no vapor, disponível em diferentes combinações diárias."
       },
       {
         "nome": "Salada Low Carb",
         "valor_unitario": 29.0,
         "qtd_estoque": 50,
-        "image_url": "produto/salada-low-carb.webp",
+        "image_url": "/produto/salada-low-carb.webp",
         "descricao": "Salada nutritiva com rúcula, espinafre, queijo de cabra, nozes, tomate cereja e molho de azeite com limão, opção baixa em carboidratos."
       },
       {
         "nome": "Protein Shake",
         "valor_unitario": 18.0,
         "qtd_estoque": 70,
-        "image_url": "produto/protein-shake.webp",
+        "image_url": "/produto/protein-shake.webp",
         "descricao": "Shake proteico natural feito com whey protein, banana, aveia e pasta de amendoim, perfeito para recuperação muscular."
       }
     ]
