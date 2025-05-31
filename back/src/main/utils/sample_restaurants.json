@@ -12,7 +12,7 @@
     "agencia": "3245",
     "nro_conta": "56789-0",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/sabor-brasileiro.webp",
+    "logo": "/restaurante/images/sabor_brasileiro.webp",
     "endereco": {
       "logradouro": "Avenida Paulista",
       "numero": "1500",
@@ -27,28 +27,28 @@
         "nome": "Feijoada Completa",
         "valor_unitario": 45.0,
         "qtd_estoque": 50,
-        "image_url": "/produto/feijoada-completa.webp",
+        "image_url": "/produto/feijoada_completa.webp",
         "descricao": "Tradicional feijoada brasileira com feijão preto, carnes diversas e acompanhamentos típicos. Uma refeição rica e saborosa para celebrar a culinária do Brasil."
       },
       {
         "nome": "Picanha na Chapa",
         "valor_unitario": 68.0,
         "qtd_estoque": 40,
-        "image_url": "/produto/picanha-na-chapa.webp",
+        "image_url": "/produto/picanha_na_chapa.webp",
         "descricao": "Saborosa picanha grelhada na chapa, com temperos realçados e corte macio, servida com acompanhamentos que destacam o melhor da carne."
       },
       {
         "nome": "Moqueca de Peixe",
         "valor_unitario": 55.0,
         "qtd_estoque": 30,
-        "image_url": "/produto/moqueca-de-peixe.webp",
+        "image_url": "/produto/moqueca_de_peixe.webp",
         "descricao": "Moqueca de peixe com sabor marcante, elaborada com peixe fresco, leite de coco, dendê e temperos que remetem à culinária baiana."
       },
       {
         "nome": "Brigadeiro Gourmet",
         "valor_unitario": 8.0,
         "qtd_estoque": 100,
-        "image_url": "/produto/brigadeiro-gourmet.webp",
+        "image_url": "/produto/brigadeiro_gourmet.webp",
         "descricao": "Delicioso brigadeiro gourmet preparado com chocolate de alta qualidade e ingredientes selecionados, perfeito para fechar a refeição com doçura."
       }
     ]
@@ -66,7 +66,7 @@
     "agencia": "4265",
     "nro_conta": "78901-2",
     "tipo_conta": "Empresarial",
-    "logo": "/restaurante/images/mineiro-de-coracao.webp",
+    "logo": "/restaurante/images/mineiro_de_coracao.webp",
     "endereco": {
       "logradouro": "Rua Oscar Freire",
       "numero": "780",
@@ -81,28 +81,28 @@
         "nome": "Feijão Tropeiro",
         "valor_unitario": 38.0,
         "qtd_estoque": 45,
-        "image_url": "/produto/feijao-tropeiro.webp",
+        "image_url": "/produto/feijao_tropeiro.webp",
         "descricao": "Feijão tropeiro preparado com feijão, farinha, linguiça, bacon e ovos. Um prato típico mineiro cheio de sabor e tradição."
       },
       {
         "nome": "Frango com Quiabo",
         "valor_unitario": 42.0,
         "qtd_estoque": 35,
-        "image_url": "/produto/frango-com-quiabo.webp",
+        "image_url": "/produto/frango_com_quiabo.webp",
         "descricao": "Frango caipira cozido lentamente com quiabo fresco e temperos mineiros, servido com angu cremoso."
       },
       {
         "nome": "Costelinha com Tutu",
         "valor_unitario": 52.0,
         "qtd_estoque": 25,
-        "image_url": "/produto/costelinha-com-tutu.webp",
+        "image_url": "/produto/costelinha_com_tutu.webp",
         "descricao": "Costelinha suína assada lentamente com temperos especiais, acompanhada de tutu de feijão e couve refogada."
       },
       {
         "nome": "Doce de Leite com Queijo",
         "valor_unitario": 12.0,
         "qtd_estoque": 70,
-        "image_url": "/produto/doce-de-leite-com-queijo.webp",
+        "image_url": "/produto/doce_de_leite_com_queijo.webp",
         "descricao": "Tradicional sobremesa mineira com doce de leite caseiro servido com fatias de queijo minas curado."
       }
     ]
@@ -120,7 +120,7 @@
     "agencia": "5678",
     "nro_conta": "98765-4",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/sabores-do-sertao.webp",
+    "logo": "/restaurante/images/sabores_do_sertao.webp",
     "endereco": {
       "logradouro": "Rua Itapura",
       "numero": "456",
@@ -135,14 +135,14 @@
         "nome": "Baião de Dois",
         "valor_unitario": 42.0,
         "qtd_estoque": 40,
-        "image_url": "/produto/baiao-de-dois.webp",
+        "image_url": "/produto/baiao_de_dois.webp",
         "descricao": "Prato tradicional nordestino com arroz, feijão de corda, queijo coalho, carne seca desfiada e temperos regionais, servido com paçoca de carne de sol."
       },
       {
         "nome": "Carne de Sol com Mandioca",
         "valor_unitario": 48.0,
         "qtd_estoque": 35,
-        "image_url": "/produto/carne-de-sol-com-mandioca.webp",
+        "image_url": "/produto/carne_de_sol_com_mandioca.webp",
         "descricao": "Carne de sol macia e suculenta, servida com mandioca cozida na manteiga de garrafa, cebola roxa e vinagrete de coentro."
       },
       {
@@ -156,7 +156,7 @@
         "nome": "Tapioca Especial",
         "valor_unitario": 18.0,
         "qtd_estoque": 60,
-        "image_url": "/produto/tapioca-especial.webp",
+        "image_url": "/produto/tapioca_especial.webp",
         "descricao": "Tapioca nordestina recheada com carne de sol desfiada, queijo coalho, cebola caramelizada e manteiga de garrafa."
       }
     ]
@@ -174,7 +174,7 @@
     "agencia": "1789",
     "nro_conta": "12345-6",
     "tipo_conta": "Empresarial",
-    "logo": "/restaurante/images/cantina-italiana.webp",
+    "logo": "/restaurante/images/cantina_italiana.webp",
     "endereco": {
       "logradouro": "Rua Augusta",
       "numero": "789",
@@ -189,21 +189,21 @@
         "nome": "Spaghetti à Bolonhesa",
         "valor_unitario": 39.9,
         "qtd_estoque": 60,
-        "image_url": "/produto/spaghetti-a-bolonhesa.webp",
+        "image_url": "/produto/spaghetti_a_bolonhesa.webp",
         "descricao": "Clássico spaghetti com molho à bolonhesa rico e aromático, preparado com carne moída e temperos italianos, servido com queijo parmesão."
       },
       {
         "nome": "Lasanha Quatro Queijos",
         "valor_unitario": 42.0,
         "qtd_estoque": 50,
-        "image_url": "/produto/lasanha-quatro-queijos.webp",
+        "image_url": "/produto/lasanha_quatro_queijos.webp",
         "descricao": "Lasanha cremosa com quatro tipos de queijo, camada sobre camada de massa fresca, gratinada ao forno para um sabor irresistível."
       },
       {
         "nome": "Risoto de Funghi",
         "valor_unitario": 47.0,
         "qtd_estoque": 30,
-        "image_url": "/produto/risoto-de-funghi.webp",
+        "image_url": "/produto/risoto_de_funghi.webp",
         "descricao": "Risoto de funghi preparado com cogumelos frescos, caldo especial e finalizado com manteiga e queijo, trazendo o autêntico sabor italiano."
       },
       {
@@ -228,7 +228,7 @@
     "agencia": "2578",
     "nro_conta": "78901-3",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/forno-di-napoli.webp",
+    "logo": "/restaurante/images/forno_di_napoli.webp",
     "endereco": {
       "logradouro": "Rua Amauri",
       "numero": "328",
@@ -243,21 +243,21 @@
         "nome": "Gnocchi ao Pomodoro",
         "valor_unitario": 45.0,
         "qtd_estoque": 40,
-        "image_url": "/produto/gnocchi-ao-pomodoro.webp",
+        "image_url": "/produto/gnocchi_ao_pomodoro.webp",
         "descricao": "Gnocchi caseiro de batata preparado artesanalmente, servido com molho de tomate fresco e manjericão, finalizado com parmesão ralado."
       },
       {
         "nome": "Carpaccio di Manzo",
         "valor_unitario": 38.0,
         "qtd_estoque": 45,
-        "image_url": "/produto/carpaccio-di-manzo.webp",
+        "image_url": "/produto/carpaccio_di_manzo.webp",
         "descricao": "Finas fatias de filé mignon cru, regadas com azeite extra virgem, alcaparras e lascas de parmesão, acompanhadas de torradas."
       },
       {
         "nome": "Panna Cotta",
         "valor_unitario": 18.0,
         "qtd_estoque": 60,
-        "image_url": "/produto/panna-cotta.webp",
+        "image_url": "/produto/panna_cotta.webp",
         "descricao": "Sobremesa cremosa de leite e baunilha, servida com calda de frutas vermelhas frescas e um toque de hortelã."
       }
     ]
@@ -275,7 +275,7 @@
     "agencia": "0123",
     "nro_conta": "987654-3",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/sushi-express.webp",
+    "logo": "/restaurante/images/sushi_express.webp",
     "endereco": {
       "logradouro": "Rua Liberdade",
       "numero": "123",
@@ -290,28 +290,28 @@
         "nome": "Sushi Especial",
         "valor_unitario": 45.0,
         "qtd_estoque": 80,
-        "image_url": "/produto/sushi-especial.webp",
+        "image_url": "/produto/sushi_especial.webp",
         "descricao": "Seleção especial de sushi, combinando arroz temperado e peixe fresco, que oferece equilíbrio perfeito de sabores e texturas."
       },
       {
         "nome": "Temaki Salmão",
         "valor_unitario": 28.0,
         "qtd_estoque": 60,
-        "image_url": "/produto/temaki-salmao.webp",
+        "image_url": "/produto/temaki_salmao.webp",
         "descricao": "Temaki de salmão preparado com arroz, algas e tiras de salmão fresco, finalizado com molho especial para uma experiência leve."
       },
       {
         "nome": "Uramaki de Atum",
         "valor_unitario": 35.0,
         "qtd_estoque": 40,
-        "image_url": "/produto/uramaki-de-atum.webp",
+        "image_url": "/produto/uramaki_de_atum.webp",
         "descricao": "Uramaki com recheio generoso de atum fresco, combinando ingredientes que harmonizam sabores para um prato tradicional e inovador."
       }
     ]
   },
   {
     "nome": "Sakura Japan",
-    "descricao": "Imersão na autêntica culinária japonesa. Ambiente tranquilo que remete aos restaurantes de Tóquio. Pratos preparados na hora por chefs japoneses tradicionais, garantindo a melhor experiência oriental.",
+    "descricao": "Imersão na autêntica culinária japonesa. Ambiente tranquilo que remete aos restaurante/imagess de Tóquio. Pratos preparados na hora por chefs japoneses tradicionais, garantindo a melhor experiência oriental.",
     "email": "contato@sakurajapan.com.br",
     "cnpj": "56789012345678",
     "razao_social": "Sakura Japan LTDA",
@@ -322,7 +322,7 @@
     "agencia": "3672",
     "nro_conta": "54321-9",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/sakura-japan.webp",
+    "logo": "/restaurante/images/sakura_japan.webp",
     "endereco": {
       "logradouro": "Rua Thomaz Gonzaga",
       "numero": "56",
@@ -344,7 +344,7 @@
         "nome": "Ramen Tonkotsu",
         "valor_unitario": 42.0,
         "qtd_estoque": 35,
-        "image_url": "/produto/ramen-tonkotsu.webp",
+        "image_url": "/produto/ramen_tonkotsu.webp",
         "descricao": "Tradicional ramen japonês com caldo rico de porco cozido lentamente, macarrão artesanal, chashu e ovo marinado."
       },
       {
@@ -369,7 +369,7 @@
     "agencia": "1452",
     "nro_conta": "34567-8",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/la-taqueria.webp",
+    "logo": "/restaurante/images/la_taqueria.webp",
     "endereco": {
       "logradouro": "Rua dos Três Irmãos",
       "numero": "500",
@@ -384,21 +384,21 @@
         "nome": "Taco de Carne",
         "valor_unitario": 18.0,
         "qtd_estoque": 100,
-        "image_url": "/produto/taco-de-carne.webp",
+        "image_url": "/produto/taco_de_carne.webp",
         "descricao": "Taco de carne suculenta, recheado com temperos mexicanos e servido em tortilhas crocantes, com guarnições que realçam o sabor autêntico."
       },
       {
         "nome": "Burrito de Frango",
         "valor_unitario": 22.0,
         "qtd_estoque": 60,
-        "image_url": "/produto/burrito-de-frango.webp",
+        "image_url": "/produto/burrito_de_frango.webp",
         "descricao": "Burrito recheado com frango temperado, feijão e arroz, envolto em tortilla macia, oferecendo o verdadeiro sabor da culinária mexicana."
       },
       {
         "nome": "Guacamole com Nachos",
         "valor_unitario": 16.0,
         "qtd_estoque": 80,
-        "image_url": "/produto/guacamole-com-nachos.webp",
+        "image_url": "/produto/guacamole_com_nachos.webp",
         "descricao": "Guacamole fresco preparado com abacate e temperos equilibrados, servido com nachos crocantes, ideal para compartilhar entre amigos."
       }
     ]
@@ -416,7 +416,7 @@
     "agencia": "3789",
     "nro_conta": "89012-3",
     "tipo_conta": "Empresarial",
-    "logo": "/restaurante/images/el-chapulin.webp",
+    "logo": "/restaurante/images/el_chapulin.webp",
     "endereco": {
       "logradouro": "Alameda Santos",
       "numero": "1520",
@@ -431,21 +431,21 @@
         "nome": "Enchiladas Verdes",
         "valor_unitario": 35.0,
         "qtd_estoque": 45,
-        "image_url": "/produto/enchiladas-verdes.webp",
+        "image_url": "/produto/enchiladas_verdes.webp",
         "descricao": "Tortillas recheadas com frango ou queijo, banhadas em molho verde de tomatillo e cobertas com creme azedo e queijo."
       },
       {
         "nome": "Chiles en Nogada",
         "valor_unitario": 52.0,
         "qtd_estoque": 25,
-        "image_url": "/produto/chiles-en-nogada.webp",
+        "image_url": "/produto/chiles_en_nogada.webp",
         "descricao": "Prato tradicional mexicano com pimentões poblano recheados com carne e frutas, cobertos com molho de nozes e romã."
       },
       {
         "nome": "Tres Leches",
         "valor_unitario": 22.0,
         "qtd_estoque": 40,
-        "image_url": "/produto/tres-leches.webp",
+        "image_url": "/produto/tres_leches.webp",
         "descricao": "Bolo delicado embebido em três tipos de leite (condensado, evaporado e integral), coberto com chantilly e canela."
       }
     ]
@@ -463,7 +463,7 @@
     "agencia": "4876",
     "nro_conta": "65432-1",
     "tipo_conta": "Empresarial",
-    "logo": "/restaurante/images/aladdin-palace.webp",
+    "logo": "/restaurante/images/aladdin_palace.webp",
     "endereco": {
       "logradouro": "Avenida Rebouças",
       "numero": "3200",
@@ -478,14 +478,14 @@
         "nome": "Mezze Completo",
         "valor_unitario": 68.0,
         "qtd_estoque": 30,
-        "image_url": "/produto/mezze-completo.webp",
+        "image_url": "/produto/mezze_completo.webp",
         "descricao": "Seleção de entradas árabes com homus, babaganuche, tabule, quibe cru, esfihas e pão sírio, ideal para compartilhar."
       },
       {
         "nome": "Kafta no Espeto",
         "valor_unitario": 45.0,
         "qtd_estoque": 40,
-        "image_url": "/produto/kafta-no-espeto.webp",
+        "image_url": "/produto/kafta_no_espeto.webp",
         "descricao": "Kafta preparada com carne moída e temperos árabes tradicionais, grelhada no espeto e servida com arroz de especiarias."
       },
       {
@@ -510,7 +510,7 @@
     "agencia": "6543",
     "nro_conta": "76543-2",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/american-burguer.webp",
+    "logo": "/restaurante/images/american_burguer.webp",
     "endereco": {
       "logradouro": "Rua dos Pinheiros",
       "numero": "275",
@@ -525,21 +525,21 @@
         "nome": "Classic Burger",
         "valor_unitario": 32.0,
         "qtd_estoque": 100,
-        "image_url": "/produto/classic-burger.webp",
+        "image_url": "/produto/classic_burger.webp",
         "descricao": "Hambúrguer de carne angus (180g) com queijo cheddar, alface, tomate e molho especial da casa, servido em pão brioche."
       },
       {
         "nome": "Cheese Fries",
         "valor_unitario": 25.0,
         "qtd_estoque": 70,
-        "image_url": "/produto/cheese-fries.webp",
+        "image_url": "/produto/cheese_fries.webp",
         "descricao": "Batatas fritas crocantes cobertas com queijo cheddar cremoso, bacon crocante e cebolinha."
       },
       {
         "nome": "Milkshake de Chocolate",
         "valor_unitario": 18.0,
         "qtd_estoque": 60,
-        "image_url": "/produto/milkshake-de-chocolate.webp",
+        "image_url": "/produto/milkshake_de_chocolate.webp",
         "descricao": "Milkshake cremoso de chocolate belga, servido com chantilly, calda de chocolate e cerejas."
       }
     ]
@@ -557,7 +557,7 @@
     "agencia": "9876",
     "nro_conta": "54321-0",
     "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/fit-and-fresh.webp",
+    "logo": "/restaurante/images/fit_and_fresh.webp",
     "endereco": {
       "logradouro": "Avenida Brigadeiro Faria Lima",
       "numero": "3900",
@@ -572,21 +572,21 @@
         "nome": "Marmita Fit",
         "valor_unitario": 34.0,
         "qtd_estoque": 60,
-        "image_url": "/produto/marmita-fit.webp",
+        "image_url": "/produto/marmita_fit.webp",
         "descricao": "Marmita balanceada com proteína magra, carboidratos complexos e legumes no vapor, disponível em diferentes combinações diárias."
       },
       {
         "nome": "Salada Low Carb",
         "valor_unitario": 29.0,
         "qtd_estoque": 50,
-        "image_url": "/produto/salada-low-carb.webp",
+        "image_url": "/produto/salada_low_carb.webp",
         "descricao": "Salada nutritiva com rúcula, espinafre, queijo de cabra, nozes, tomate cereja e molho de azeite com limão, opção baixa em carboidratos."
       },
       {
         "nome": "Protein Shake",
         "valor_unitario": 18.0,
         "qtd_estoque": 70,
-        "image_url": "/produto/protein-shake.webp",
+        "image_url": "/produto/protein_shake.webp",
         "descricao": "Shake proteico natural feito com whey protein, banana, aveia e pasta de amendoim, perfeito para recuperação muscular."
       }
     ]

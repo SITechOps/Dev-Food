@@ -230,7 +230,7 @@ export const useRestaurantAccount = () => {
   async function deletarDados() {
     try {
       await api.delete(`/restaurante/${idRestaurante}`);
-      showSuccess("restaurante removido com sucesso!");
+      showSuccess("Restaurante removido com sucesso!");
       localStorage.clear();
       navigate("/auth");
     } catch (error) {

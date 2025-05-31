@@ -80,7 +80,7 @@ class ProdutosManager:
         nome_produto = produto.nome 
 
         try:
-            image_url = ImageService.update_image(file, "produto/", nome_produto)
+            image_url = ImageService.update_image(file, "produto", nome_produto)
             self.__produtos_repo.update_image_path(id_produto, image_url)
             return HttpResponse(body={"image_url": image_url}, status_code=200)
         except ValueError as e:

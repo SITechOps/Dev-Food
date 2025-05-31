@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { api } from "@/lib/axios";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { IProduto } from "@/shared/interfaces/IProduto";
-import { showError, showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
+import {
+  showError,
+  showWarning,
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 const useProdutos = () => {
   const { userData } = useAuth();
@@ -102,8 +105,8 @@ const useProdutos = () => {
     }
   }
 
-  function deletarProduto(id: string) {
-    showWarning(`Deletando produto com id: ${id}`);
+  function deletarProduto(id: string, nome: string) {
+    showWarning(`Deletando Produto: ${nome}`);
     api
       .delete(`/produto/${id}`)
       .then(() => {

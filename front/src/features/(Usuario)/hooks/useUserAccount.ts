@@ -77,7 +77,7 @@ export const useUserAccount = () => {
 
       localStorage.clear();
       setLoading(false);
-      window.location.href = "/";
+      navigate("/auth");
     } catch (error) {
       console.error(error);
       setLoading(false);

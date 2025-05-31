@@ -111,7 +111,7 @@ const Cardapios = () => {
                 <div
                   id="deletar"
                   className={iconStyle}
-                  onClick={() => deletarProduto(product.id)}
+                  onClick={() => deletarProduto(product.id, product.nome)}
                 >
                   <AiOutlineDelete className="icon" />
                 </div>
