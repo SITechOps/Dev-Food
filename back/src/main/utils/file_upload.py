@@ -30,7 +30,7 @@ def save_file(file, upload_folder, filename=None):
 
     convert_to_webp(file, filepath)
 
-    return f"/produto/images/{filename}"
+    return f"/produto/{filename}"
 
 
 def delete_file(file_path: str) -> None:

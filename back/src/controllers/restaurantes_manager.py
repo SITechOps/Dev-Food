@@ -6,6 +6,7 @@ from flask_jwt_extended import create_access_token
 from src.services.image_service import ImageService
 from werkzeug.datastructures import FileStorage
 from datetime import datetime
+from werkzeug.utils import secure_filename
 
 class RestaurantesManager:
     def __init__(self, restaurante_repo: IRestaurantesRepository) -> None:
@@ -151,8 +152,9 @@ class RestaurantesManager:
         nome_restaurante = restaurante.nome
 
         try:
-            logo = ImageService.update_image(file, "restaurante/images", nome_restaurante)
-            self.__restaurante_repo.update_image_path(id_restaurante, logo)
+            logo = ImageService.update_image(file, "restaurante", nome_restaurante)
+            safe_name = secure_filename(nome_restaurante.strip().lower().replace(" ", "_"))
+            self.__restaurante_repo.update_image_path(id_restaurante, f"/restaurante/images/{safe_name}.webp")
             return HttpResponse(body={"image_url": logo}, status_code=200)
         except ValueError as e:
             return HttpResponse(body={"error": str(e)}, status_code=400)

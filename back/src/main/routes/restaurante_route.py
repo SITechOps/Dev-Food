@@ -658,7 +658,7 @@ def upload_restaurante_image(id):
                   example: "Imagem enviada com sucesso"
                 image_url:
                   type: string
-                  example: "/restaurante/images/550e8400-e29b-41d4-a716-446655440000.jpg"
+                  example: "/restaurante/nome-restaurante.jpg"
       "400":
         description: Arquivo não enviado
         content:
@@ -719,8 +719,8 @@ def serve_restaurante_image(filename):
       "404":
         description: Imagem não encontrada
     """
-    upload_folder = current_app.config['UPLOAD_FOLDER']
-    return send_from_directory(os.path.join(upload_folder, 'restaurante/images'), filename)
+
+    return send_from_directory(os.path.join(current_app.config['UPLOAD_FOLDER'], 'restaurante'), filename)
 
 
 @restaurante_route_bp.get('/restaurante/relatorio-receita')

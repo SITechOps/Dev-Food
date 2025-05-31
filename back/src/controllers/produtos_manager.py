@@ -4,7 +4,6 @@ from src.model.repositories.interfaces.iprodutos_repository import IProdutosRepo
 from src.http_types.http_response import HttpResponse
 from src.http_types.http_request import HttpRequest
 from src.main.utils.response_formatter import ResponseFormatter
-from src.main.utils.file_upload import save_file, allowed_file, delete_file
 from flask import current_app
 from werkzeug.datastructures import FileStorage
 from src.services.image_service import ImageService
@@ -81,7 +80,7 @@ class ProdutosManager:
         nome_produto = produto.nome 
 
         try:
-            image_url = ImageService.update_image(file, "produto/images", nome_produto)
+            image_url = ImageService.update_image(file, "produto/", nome_produto)
             self.__produtos_repo.update_image_path(id_produto, image_url)
             return HttpResponse(body={"image_url": image_url}, status_code=200)
         except ValueError as e:
@@ -109,7 +108,7 @@ class ProdutosManager:
     def __delete_product_image(self, image_url: str) -> None:
         upload_folder = current_app.config['UPLOAD_FOLDER']
         print(f"URL da imagem: {image_url}")
-        image_path = os.path.join(upload_folder, image_url.lstrip('/produto/images/'))
+        image_path = os.path.join(upload_folder, image_url.lstrip('/produto/'))
         print(f"Caminho completo da imagem: {image_path}")
 
         if os.path.exists(image_path):
