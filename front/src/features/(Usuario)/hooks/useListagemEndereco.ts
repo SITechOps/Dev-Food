@@ -80,12 +80,6 @@ export const useListaEndereco = (onCloseModal?: () => void) => {
     if (showModal) buscarEnderecos();
   }, [showModal, buscarEnderecos]);
 
-  useEffect(() => {
-    if (location.pathname === "/account" && showModal) {
-      setShowModal(false);
-    }
-  }, [location.pathname, showModal]);
-
   const fecharModalEndereco = () => {
     onCloseModal ? onCloseModal() : setShowModal(false);
   };

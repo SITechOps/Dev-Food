@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { api } from "@/lib/axios";
 import axios from "axios";
 import { decodeToken } from "@/shared/utils/decodeToken";
-import { showError, showInfo, showSuccess, showWarning } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
+import {
+  showError,
+  showInfo,
+  showSuccess,
+  showWarning,
+} from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
 
 export const useCadastroRestaurante = () => {
   const [formList, setFormList] = useState({
@@ -65,7 +70,7 @@ export const useCadastroRestaurante = () => {
         `/restaurante/upload-image/${restauranteId}`,
         formData,
       );
-      showSuccess("Sucesso no upload da imagem");
+      // showSuccess("Sucesso no upload da imagem");
       return response.data.image_url;
     } catch (error) {
       showError("Erro no upload da imagem");

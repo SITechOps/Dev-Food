@@ -56,8 +56,25 @@ class RestaurantesManager:
      
         restaurante_info = http_request.body.get("data")
         id_restaurante = http_request.params.get("id")
-        self.__restaurante_repo.update(id_restaurante, restaurante_info)
 
+        nome_antigo = self.__restaurante_repo.find_by_id(id_restaurante).nome
+        nome_novo = restaurante_info.get("nome")
+
+        if nome_antigo != nome_novo:
+            try:
+                novo_caminho = ImageService.rename_image(
+                    folder_prefix="restaurante",
+                    old_name=nome_antigo,
+                    new_name=nome_novo,
+                )
+
+                restaurante_info["logo"] = novo_caminho
+
+            except Exception as e:
+                return ResponseFormatter.format_error("Erro ao renomear imagem:", 500, {"error": str(e)})
+
+        self.__restaurante_repo.update(id_restaurante, restaurante_info)
+        
         if image_file:
             self.update_image(http_request, image_file)
 
@@ -92,9 +109,11 @@ class RestaurantesManager:
 
     def delete(self, http_request: HttpRequest) -> HttpResponse:
         id_restaurante = http_request.params.get("id")
+        restaurante = self.__restaurante_repo.find_by_id(id_restaurante)
 
-        if not id_restaurante:
-            return ResponseFormatter.display_error("ID do restaurante é obrigatório.", 400)
+        if restaurante.logo:
+            corrected_logo_path = restaurante.logo.replace("/restaurante/images/", "/restaurante/")
+            ImageService.delete_image(corrected_logo_path)
 
         self.__restaurante_repo.delete(id_restaurante)
         return ResponseFormatter.display_operation(self.class_name, "deletado")

@@ -50,8 +50,23 @@ class ProdutosManager:
     def update(self, http_request: HttpRequest, image_file: FileStorage = None) -> HttpResponse:
         id_produto = http_request.params.get("id_produto")
         self.__check_if_product_exists(id_produto)
-
+        
         produto_info = http_request.body.get("data")
+        nome_antigo = self.__produtos_repo.find_by_id(id_produto).nome
+        nome_novo = produto_info.get("nome")
+        if nome_antigo != nome_novo:
+            try:
+                novo_caminho = ImageService.rename_image(
+                    folder_prefix="produto",
+                    old_name=nome_antigo,
+                    new_name=nome_novo,
+                )
+
+                produto_info["image_url"] = novo_caminho
+
+            except Exception as e:
+                return ResponseFormatter.format_error("Erro ao renomear imagem:", 500, {"error": str(e)})            
+
         self.__produtos_repo.update(id_produto, produto_info)
 
         if image_file:
@@ -66,7 +81,7 @@ class ProdutosManager:
 
         produto = self.__produtos_repo.find_by_id(id_produto)
         if produto.image_url:
-            self.__delete_product_image(produto.image_url)
+            ImageService.delete_image(produto.image_url)
 
         self.__produtos_repo.delete(id_produto)
         return ResponseFormatter.display_operation(self.class_name, "deletado")
@@ -108,7 +123,7 @@ class ProdutosManager:
     def __delete_product_image(self, image_url: str) -> None:
         upload_folder = current_app.config['UPLOAD_FOLDER']
         print(f"URL da imagem: {image_url}")
-        image_path = os.path.join(upload_folder, image_url.lstrip('/produto/'))
+        image_path = os.path.join(upload_folder, image_url)
         print(f"Caminho completo da imagem: {image_path}")
 
         if os.path.exists(image_path):
