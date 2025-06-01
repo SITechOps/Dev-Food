@@ -55,3 +55,8 @@ class IRestaurantesRepository(ABC):
     @abstractmethod
     def relatorio_qtd_pedidos(self, data_inicio: str = None, data_fim: str = None) -> list[dict]:
         raise NotImplementedError("Subclasses devem implementar este método")
+
+    
+    @abstractmethod
+    def relatorio_forma_pagamento_mais_usada(self, data_inicio: str = None, data_fim: str = None) -> list[dict]:
+        raise NotImplementedError("Subclasses devem implementar este método")

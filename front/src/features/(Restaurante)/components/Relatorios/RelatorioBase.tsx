@@ -23,6 +23,7 @@ type RelatorioBaseProps = {
   campoTotal?: string;
   prefixoMoeda?: boolean;
   autoLoad?: boolean;
+  renderExtra?: (dados: RelatorioItem[]) => React.ReactNode;
 };
 
 const RelatorioBase = ({
@@ -33,6 +34,7 @@ const RelatorioBase = ({
   campoTotal,
   prefixoMoeda = false,
   autoLoad = false,
+  renderExtra,
 }: RelatorioBaseProps) => {
   const [dataInicio, setDataInicio] = useState<Date | null>(null);
   const [dataFim, setDataFim] = useState<Date | null>(null);
@@ -176,6 +178,9 @@ const RelatorioBase = ({
           </tbody>
         </table>
       </div>
+      {renderExtra && relatorio.length > 0 && (
+        <div className="mt-8">{renderExtra(relatorio)}</div>
+      )}
     </div>
   );
 };

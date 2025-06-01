@@ -902,5 +902,85 @@ def get_relatorio_qtd_pedidos():
     return jsonify(http_response.body), http_response.status_code
 
 
+@restaurante_route_bp.get('/restaurante/relatorio-forma-pagamento')
+def get_relatorio_forma_pagamento():
+    """
+    Gerar relatório de formas de pagamento mais utilizadas por restaurante
+    ---
+    tags:
+      - Restaurantes
+    summary: Retorna a(s) forma(s) de pagamento mais utilizada(s) por restaurante dentro de um intervalo de datas
+    parameters:
+      - name: dataInicio
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Data inicial do intervalo (formato YYYY-MM-DD)
+      - name: dataFim
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Data final do intervalo (formato YYYY-MM-DD)
+    responses:
+      "200":
+        description: Relatório de formas de pagamento retornado com sucesso
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                        description: Nome do restaurante
+                      forma_pagamento_mais_usada:
+                        type: string
+                        description: Forma(s) de pagamento mais utilizada(s)
+                      total_usos:
+                        type: integer
+                        description: Número de vezes que a(s) forma(s) de pagamento foi/foram utilizada(s)
+            examples:
+              application/json:
+                value:
+                  data:
+                    - nome: "Sushi Express"
+                      forma_pagamento_mais_usada: "Pix"
+                      total_usos: 42
+                    - nome: "Cantina Italiana"
+                      forma_pagamento_mais_usada: "Pix/Cartão"
+                      total_usos: 27
+                    - nome: "El Chapulín"
+                      forma_pagamento_mais_usada: "Dinheiro"
+                      total_usos: 19
+      "400":
+        description: Erro nos parâmetros da requisição
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+      "500":
+        description: Erro interno ao gerar relatório
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+    """
+    restaurante_manager = RestaurantesManager(RestaurantesRepository())
 
-
+    http_request = HttpRequest(params=request.args.to_dict())
+    http_response = restaurante_manager.get_relatorio_forma_pagamento(http_request)
+    return jsonify(http_response.body), http_response.status_code

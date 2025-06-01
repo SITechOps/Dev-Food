@@ -12,6 +12,11 @@ class PedidosRepository:
 
 
     @db_scope
+    def list_all_pedidos(self, db) -> list[Pedido]:
+        return db.session.query(Pedido).all()
+
+
+    @db_scope
     def list_pedidos_by_usuario(self, db, id_usuario: str) -> list[Pedido]:
         return (
             db.session

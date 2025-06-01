@@ -1,36 +1,48 @@
 import { useState } from "react";
 import RelatorioReceita from "../components/Relatorios/RelatorioReceita";
 import RelatorioPedidos from "../components/Relatorios/RelatorioPedidos";
+import RelatorioPagamentos from "../components/Relatorios/RelatorioPagamentos";
+
+enum TipoRelatorio {
+  Receita = "receita",
+  Pedidos = "pedidos",
+  Pagamentos = "pagamentos",
+}
+
+const componentesRelatorio: Record<TipoRelatorio, React.ReactNode> = {
+  [TipoRelatorio.Receita]: <RelatorioReceita />,
+  [TipoRelatorio.Pedidos]: <RelatorioPedidos />,
+  [TipoRelatorio.Pagamentos]: <RelatorioPagamentos />,
+};
+
+const rotulos: Record<TipoRelatorio, string> = {
+  [TipoRelatorio.Receita]: "Receita",
+  [TipoRelatorio.Pedidos]: "Pedidos",
+  [TipoRelatorio.Pagamentos]: "Pagamentos",
+};
 
 const RelatoriosPage = () => {
-  const [tipo, setTipo] = useState<"receita" | "pedidos">("receita");
+  const [tipo, setTipo] = useState<TipoRelatorio>(TipoRelatorio.Receita);
 
   return (
     <div className="rounded-xl bg-white p-6">
       <div className="mb-6 flex gap-4">
-        <button
-          onClick={() => setTipo("receita")}
-          className={`rounded px-4 py-2 font-medium ${
-            tipo === "receita"
-              ? "bg-brown-normal text-white"
-              : "bg-gray-light text-gray-medium"
-          }`}
-        >
-          Receita
-        </button>
-        <button
-          onClick={() => setTipo("pedidos")}
-          className={`rounded px-4 py-2 font-medium ${
-            tipo === "pedidos"
-              ? "bg-brown-normal text-white"
-              : "bg-gray-light text-gray-medium"
-          }`}
-        >
-          Pedidos
-        </button>
+        {Object.values(TipoRelatorio).map((item) => (
+          <button
+            key={item}
+            onClick={() => setTipo(item)}
+            className={`rounded px-4 py-2 font-medium ${
+              tipo === item
+                ? "bg-brown-normal text-white"
+                : "bg-gray-light text-gray-medium"
+            }`}
+          >
+            {rotulos[item]}
+          </button>
+        ))}
       </div>
 
-      {tipo === "receita" ? <RelatorioReceita /> : <RelatorioPedidos />}
+      {componentesRelatorio[tipo]}
     </div>
   );
 };
