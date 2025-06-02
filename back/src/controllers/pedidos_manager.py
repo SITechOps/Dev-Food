@@ -37,6 +37,12 @@ class PedidosManager:
         )
 
 
+    def get_all_pedidos(self) -> HttpResponse:
+        pedidos = self.pedidos_repo.list_all_pedidos()
+        pedidos_formatados = self.format_response(pedidos)
+        return HttpResponse(body=pedidos_formatados, status_code=200)
+
+
     def get_pedidos(self, http_request: HttpRequest):
         id_usuario = http_request.params.get("id_usuario")
         id_restaurante = http_request.params.get("id_restaurante")

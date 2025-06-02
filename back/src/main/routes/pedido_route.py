@@ -111,6 +111,179 @@ def create_new_pedido():
     return jsonify(http_response.body), http_response.status_code
 
 
+@pedido_route_bp.get('/pedidos')
+def get_all_pedidos():
+    """
+    Listar todos os pedidos
+    ---
+    tags:
+      - Pedidos
+    summary: Retorna todos os pedidos cadastrados no sistema
+    description: Lista completa de pedidos com os detalhes do cliente, restaurante, itens e status.
+    responses:
+      200:
+        description: Lista de pedidos retornada com sucesso.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pedidos:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Id:
+                        type: string
+                        description: ID do pedido.
+                        example: "1110"
+                      atualizado_em:
+                        type: string
+                        format: date-time
+                        example: "2025-05-06T16:45:20Z"
+                      cliente:
+                        type: string
+                        example: "Usuário Teste"
+                      codigo:
+                        type: string
+                        example: "4321"
+                      data_pedido:
+                        type: string
+                        format: date-time
+                        example: "2025-05-06T16:45:20Z"
+                      email:
+                        type: string
+                        format: email
+                        example: "teste@devfood.com"
+                      endereco:
+                        type: object
+                        properties:
+                          bairro:
+                            type: string
+                            example: "Jardim Colorado"
+                          cidade:
+                            type: string
+                            example: "São Paulo"
+                          complemento:
+                            type: string
+                            example: "Bloco A"
+                          estado:
+                            type: string
+                            example: "SP"
+                          logradouro:
+                            type: string
+                            example: "Rua Saraiva Leão"
+                          numero:
+                            type: integer
+                            example: 38
+                      forma_pagamento:
+                        type: string
+                        example: "Cartão"
+                      itens:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            produto:
+                              type: string
+                              example: "Guacamole com Nachos"
+                            qtd_itens:
+                              type: integer
+                              example: 3
+                            valor_calculado:
+                              type: number
+                              format: float
+                              example: 150.00
+                      restaurante:
+                        type: object
+                        properties:
+                          cnpj:
+                            type: string
+                            example: "78945612398765"
+                          endereco:
+                            type: object
+                            properties:
+                              bairro:
+                                type: string
+                                example: "Vila Mariana"
+                              cidade:
+                                type: string
+                                example: "São Paulo"
+                              complemento:
+                                type: string
+                                example: "Loja 2"
+                              estado:
+                                type: string
+                                example: "SP"
+                              id:
+                                type: string
+                                format: uuid
+                                example: "16c301d6-8c87-4c1e-aa49-a37de6cf7ca5"
+                              logradouro:
+                                type: string
+                                example: "Rua dos Três Irmãos"
+                              numero:
+                                type: integer
+                                example: 500
+                              pais:
+                                type: string
+                                example: "Brasil"
+                          logo:
+                            type: string
+                            example: "/img/restaurantes/la-taqueria.webp"
+                          nome:
+                            type: string
+                            example: "La Taquería"
+                          telefone:
+                            type: string
+                            example: "(11) 5678-9012"
+                      status:
+                        type: string
+                        example: "Pendente"
+                      sub_total:
+                        type: number
+                        format: float
+                        example: 150.00
+                      taxa_entrega:
+                        type: number
+                        format: float
+                        example: 10.00
+                      telefone:
+                        type: string
+                        example: "11987654321"
+                      tipo_entrega:
+                        type: string
+                        example: "Padrão"
+                      valor_total:
+                        type: number
+                        format: float
+                        example: 160.00
+      500:
+        description: Erro ao listar pedidos
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  example: "Erro interno ao buscar pedidos"
+    """
+    pedidos_repo = PedidosRepository()
+    itens_repo = ItensRepository()
+    usuarios_repo = UsuariosRepository()
+    restaurantes_repo = RestaurantesRepository()
+    enderecos_repo = EnderecosRepository()
+    produtos_repo = ProdutosRepository()
+
+    pedidos_manager = PedidosManager(
+        pedidos_repo, itens_repo, usuarios_repo, restaurantes_repo, enderecos_repo, produtos_repo
+    )
+
+    http_response = pedidos_manager.get_all_pedidos()
+    return jsonify(http_response.body), http_response.status_code
+
+
 @pedido_route_bp.get('/pedidos/usuario/<id>')
 @pedido_route_bp.get('/pedidos/restaurante/<id>')
 def get_pedidos(id):
