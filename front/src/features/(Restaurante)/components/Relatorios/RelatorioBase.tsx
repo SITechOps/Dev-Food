@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Loading } from "@/shared/components/Loading";
 
 type RelatorioItem = Record<string, string | number>;
 
@@ -130,54 +131,60 @@ const RelatorioBase = ({
         </div>
       </div>
 
-      <div className="border-gray-light overflow-x-auto rounded-md border">
-        <table className="text-blue min-w-full text-left text-sm">
-          <thead className="bg-brown-light text-brown-dark">
-            <tr>
-              {colunas.map((col) => (
-                <th key={col.chave} className="px-4 py-3">
-                  {col.titulo}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {relatorio.length === 0 ? (
+      {carregando ? (
+        <div className="flex items-center justify-center py-16">
+          <Loading />
+        </div>
+      ) : (
+        <div className="border-gray-light overflow-x-auto rounded-md border">
+          <table className="text-blue min-w-full text-left text-sm">
+            <thead className="bg-brown-light text-brown-dark">
               <tr>
-                <td
-                  colSpan={colunas.length}
-                  className="px-4 py-5 text-center text-gray-500"
-                >
-                  Nenhum dado encontrado.
-                </td>
-              </tr>
-            ) : (
-              <>
-                {relatorio.map((item, index) => (
-                  <tr key={index} className="border-t">
-                    {colunas.map((col) => (
-                      <td key={col.chave} className="px-4 py-3">
-                        {col.formatador
-                          ? col.formatador(item[col.chave])
-                          : item[col.chave]}
-                      </td>
-                    ))}
-                  </tr>
+                {colunas.map((col) => (
+                  <th key={col.chave} className="px-4 py-3">
+                    {col.titulo}
+                  </th>
                 ))}
-                {mostrarTotal && campoTotal && (
-                  <tr className="text-brown-dark border-t font-semibold">
-                    <td className="px-4 py-3">Total</td>
-                    <td className="px-4 py-3">
-                      {prefixoMoeda ? `R$ ${total.toFixed(2)}` : total}
-                    </td>
-                    <td className="px-4 py-3">100%</td>
-                  </tr>
-                )}
-              </>
-            )}
-          </tbody>
-        </table>
-      </div>
+              </tr>
+            </thead>
+            <tbody>
+              {relatorio.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={colunas.length}
+                    className="px-4 py-5 text-center text-gray-500"
+                  >
+                    Nenhum dado encontrado.
+                  </td>
+                </tr>
+              ) : (
+                <>
+                  {relatorio.map((item, index) => (
+                    <tr key={index} className="border-t">
+                      {colunas.map((col) => (
+                        <td key={col.chave} className="px-4 py-3">
+                          {col.formatador
+                            ? col.formatador(item[col.chave])
+                            : item[col.chave]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                  {mostrarTotal && campoTotal && (
+                    <tr className="text-brown-dark border-t font-semibold">
+                      <td className="px-4 py-3">Total</td>
+                      <td className="px-4 py-3">
+                        {prefixoMoeda ? `R$ ${total.toFixed(2)}` : total}
+                      </td>
+                      <td className="px-4 py-3">100%</td>
+                    </tr>
+                  )}
+                </>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
       {renderExtra && relatorio.length > 0 && (
         <div className="mt-8">{renderExtra(relatorio)}</div>
       )}
