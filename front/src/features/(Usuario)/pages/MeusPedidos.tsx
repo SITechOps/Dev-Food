@@ -1,8 +1,9 @@
-import HistoricoDePedido from "@/features/(Usuario)/components/Pedidos/HistoricoDePedido";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/axios";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { IMeusPedidos } from "@/features/(Usuario)/interface/IMeusPedidos";
+import HistoricoDePedido from "@/features/(Usuario)/components/Pedidos/HistoricoDePedido";
+import Loading from "../components/Pedidos/Loading";
 
 export default function MeusPedidos() {
   const { userData } = useAuth();
@@ -27,8 +28,13 @@ export default function MeusPedidos() {
     buscarPedidos();
   }, [userData?.sub]);
 
+  // Tela de carregamento com barra de progresso
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <div className="mt-[5rem]">
+    <div className="mt-[5rem] px-4">
       <h1 className="mb-6 text-2xl font-bold">Meus pedidos</h1>
       <HistoricoDePedido tipo="meuPedido" pedidos={pedidos} loading={loading} />
 
