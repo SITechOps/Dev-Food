@@ -14,6 +14,21 @@ const RelatorioPagamento = () => {
       ]}
       campoTotal="total_usos"
       autoLoad={true}
+      renderTotal={(dados) => {
+        if (!dados.length) return "—";
+
+        const contagem = dados.reduce<Record<string, number>>((acc, item) => {
+          const forma = String(item.forma_pagamento_mais_usada);
+          acc[forma] = (acc[forma] || 0) + 1;
+          return acc;
+        }, {});
+
+        const [maisUsada] = Object.entries(contagem).sort(
+          (a, b) => b[1] - a[1],
+        )[0];
+
+        return maisUsada;
+      }}
       renderExtra={(dados) => (
         <GraficoFormaPagamento dados={dados as FormaPagamentoItem[]} />
       )}

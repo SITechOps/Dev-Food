@@ -6,14 +6,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Loading } from "@/shared/components/Loading";
+import { Loader2 } from "lucide-react";
 
 type RelatorioItem = Record<string, string | number>;
 
 type Coluna = {
   chave: string;
   titulo: string;
-  formatador?: (valor: any) => string;
+  formatador?: (valor: string | number) => string;
 };
 
 type RelatorioBaseProps = {
@@ -24,6 +24,7 @@ type RelatorioBaseProps = {
   campoTotal?: string;
   prefixoMoeda?: boolean;
   autoLoad?: boolean;
+  renderTotal?: (dados: RelatorioItem[]) => React.ReactNode;
   renderExtra?: (dados: RelatorioItem[]) => React.ReactNode;
 };
 
@@ -36,6 +37,7 @@ const RelatorioBase = ({
   prefixoMoeda = false,
   autoLoad = false,
   renderExtra,
+  renderTotal,
 }: RelatorioBaseProps) => {
   const [dataInicio, setDataInicio] = useState<Date | null>(null);
   const [dataFim, setDataFim] = useState<Date | null>(null);
@@ -54,6 +56,7 @@ const RelatorioBase = ({
               dataFim: format(dataFim, "yyyy-MM-dd"),
             }
           : undefined;
+
       const response = await api.get(endpoint, { params });
       setRelatorio(response.data.data || []);
     } catch (err) {
@@ -111,9 +114,12 @@ const RelatorioBase = ({
           <Button
             onClick={() => buscarRelatorio()}
             disabled={carregando}
-            className="w-40 py-3"
+            className="flex w-40 items-center justify-center gap-2 py-3"
           >
-            {carregando ? "Carregando..." : "Filtrar"}
+            {carregando && (
+              <Loader2 className="h-4 w-4 animate-spin text-white" />
+            )}
+            {carregando ? "Carregando" : "Filtrar"}
           </Button>
         </div>
         <div className="mt-2 flex">
@@ -131,64 +137,76 @@ const RelatorioBase = ({
         </div>
       </div>
 
-      {carregando ? (
-        <div className="flex items-center justify-center py-16">
-          <Loading />
-        </div>
-      ) : (
-        <div className="border-gray-light overflow-x-auto rounded-md border">
-          <table className="text-blue min-w-full text-left text-sm">
-            <thead className="bg-brown-light text-brown-dark">
-              <tr>
-                {colunas.map((col) => (
-                  <th key={col.chave} className="px-4 py-3">
-                    {col.titulo}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {relatorio.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={colunas.length}
-                    className="px-4 py-5 text-center text-gray-500"
-                  >
-                    Nenhum dado encontrado.
-                  </td>
-                </tr>
-              ) : (
-                <>
-                  {relatorio.map((item, index) => (
-                    <tr key={index} className="border-t">
-                      {colunas.map((col) => (
-                        <td key={col.chave} className="px-4 py-3">
-                          {col.formatador
-                            ? col.formatador(item[col.chave])
-                            : item[col.chave]}
-                        </td>
-                      ))}
-                    </tr>
+      <div className="border-gray-light overflow-x-auto rounded-md border">
+        <table className="text-blue min-w-full text-left text-sm">
+          <thead className="bg-brown-light text-brown-dark">
+            <tr>
+              {colunas.map((col) => (
+                <th key={col.chave} className="px-4 py-3">
+                  {col.titulo}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {carregando ? (
+              Array.from({ length: 5 }).map((_, idx) => (
+                <tr key={idx} className="border-t">
+                  {colunas.map((_, colIdx) => (
+                    <td key={colIdx} className="px-4 py-3">
+                      <div className="bg-brown-light h-4 w-3/4 animate-pulse rounded" />
+                    </td>
                   ))}
-                  {mostrarTotal && campoTotal && (
-                    <tr className="text-brown-dark border-t font-semibold">
-                      <td className="px-4 py-3">Total</td>
-                      <td className="px-4 py-3">
-                        {prefixoMoeda ? `R$ ${total.toFixed(2)}` : total}
+                </tr>
+              ))
+            ) : relatorio.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={colunas.length}
+                  className="text-gray-medium px-4 py-5 text-center"
+                >
+                  Nenhum dado encontrado.
+                </td>
+              </tr>
+            ) : (
+              <>
+                {relatorio.map((item, index) => (
+                  <tr key={index} className="border-t">
+                    {colunas.map((col) => (
+                      <td key={col.chave} className="px-4 py-3">
+                        {col.formatador
+                          ? col.formatador(item[col.chave])
+                          : item[col.chave]}
                       </td>
-                      <td className="px-4 py-3">100%</td>
-                    </tr>
-                  )}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+                    ))}
+                  </tr>
+                ))}
+                {mostrarTotal && (
+                  <tr className="text-brown-dark border-t font-semibold">
+                    <td className="px-4 py-3">Total</td>
+                    <td className="px-4 py-3" colSpan={colunas.length - 2}>
+                      {renderTotal
+                        ? renderTotal(relatorio)
+                        : campoTotal
+                          ? prefixoMoeda
+                            ? `R$ ${total.toFixed(2)}`
+                            : total
+                          : null}
+                    </td>
+                    <td className="px-4 py-3">100%</td>
+                  </tr>
+                )}
+              </>
+            )}
+          </tbody>
+        </table>
+      </div>
+
       {renderExtra && relatorio.length > 0 && (
         <div className="mt-8">{renderExtra(relatorio)}</div>
       )}
     </div>
   );
 };
+
 export default RelatorioBase;

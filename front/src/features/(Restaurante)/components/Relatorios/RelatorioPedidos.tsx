@@ -18,7 +18,6 @@ const RelatorioPedidos = () => {
         },
       ]}
       campoTotal="quantidade_pedidos"
-      prefixoMoeda
       autoLoad={true}
     />
   );
