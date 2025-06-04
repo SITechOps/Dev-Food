@@ -28,7 +28,6 @@ export default function MeusPedidos() {
     buscarPedidos();
   }, [userData?.sub]);
 
-  // Tela de carregamento com barra de progresso
   if (loading) {
     return <Loading />;
   }
@@ -36,10 +35,10 @@ export default function MeusPedidos() {
   return (
     <div className="mt-[5rem] px-4">
       <h1 className="mb-6 text-2xl font-bold">Meus pedidos</h1>
-      <HistoricoDePedido tipo="meuPedido" pedidos={pedidos} loading={loading} />
+      <HistoricoDePedido tipo="meuPedido" pedidos={pedidos} />
 
       <h1 className="mb-6 text-2xl font-bold">Histórico</h1>
-      <HistoricoDePedido tipo="historico" pedidos={pedidos} loading={loading} />
+      <HistoricoDePedido tipo="historico" pedidos={pedidos} />
     </div>
   );
 }

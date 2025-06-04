@@ -1,38 +1,23 @@
-import { api } from "@/lib/axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IMeusPedidos } from "@/features/(Usuario)/interface/IMeusPedidos";
-import { Props } from "@/features/(Usuario)/interface/IMeusPedidos";
-
-import { useAuth } from "@/shared/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import Button from "../../../../shared/components/ui/Button";
 import ModalDetalhePedido from "./ModalDetalhePedido";
 import { ImagemDeEntidade } from "@/shared/components/ui/ImagemEntidade";
+import { useNavigate } from "react-router-dom";
 
-export default function HistoricoDePedido({ tipo }: Props) {
-  const { userData } = useAuth();
-  const id_usuario = userData?.sub;
-  const [pedidos, setPedidos] = useState<IMeusPedidos[]>([]);
+interface HistoricoDePedidoProps {
+  tipo: "meuPedido" | "historico";
+  pedidos: IMeusPedidos[];
+}
+
+export default function HistoricoDePedido({
+  tipo,
+  pedidos,
+}: HistoricoDePedidoProps) {
   const [pedidoSelecionado, setPedidoSelecionado] =
     useState<IMeusPedidos | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function buscarPedidos() {
-      if (!id_usuario) return;
-
-      try {
-        const { data } = await api.get(`/pedidos/usuario/${id_usuario}`);
-        setPedidos(data.pedidos);
-      } catch (error) {
-        console.error("Erro ao buscar pedidos:", error);
-      }
-    }
-
-    buscarPedidos();
-  }, [id_usuario]);
-
-  // Filtrar os pedidos com base no tipo
   let pedidosRenderizar: IMeusPedidos[] = [];
 
   if (tipo === "meuPedido") {
@@ -128,7 +113,6 @@ export default function HistoricoDePedido({ tipo }: Props) {
         ))
       )}
 
-      {/* Modal */}
       {pedidoSelecionado && (
         <ModalDetalhePedido
           pedido={pedidoSelecionado}
