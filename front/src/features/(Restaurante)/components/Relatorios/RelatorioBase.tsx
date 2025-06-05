@@ -26,6 +26,8 @@ type RelatorioBaseProps = {
   autoLoad?: boolean;
   renderTotal?: (dados: RelatorioItem[]) => React.ReactNode;
   renderExtra?: (dados: RelatorioItem[]) => React.ReactNode;
+  transformadorDeDados?: (respostaApi: any) => RelatorioItem[];
+  valoresTotais?: Record<string, React.ReactNode>;
 };
 
 const RelatorioBase = ({
@@ -37,7 +39,8 @@ const RelatorioBase = ({
   prefixoMoeda = false,
   autoLoad = false,
   renderExtra,
-  renderTotal,
+  valoresTotais,
+  transformadorDeDados,
 }: RelatorioBaseProps) => {
   const [dataInicio, setDataInicio] = useState<Date | null>(null);
   const [dataFim, setDataFim] = useState<Date | null>(null);
@@ -58,7 +61,12 @@ const RelatorioBase = ({
           : undefined;
 
       const response = await api.get(endpoint, { params });
-      setRelatorio(response.data.data || []);
+      const dadosBrutos = response.data;
+      const dadosTransformados = transformadorDeDados
+        ? transformadorDeDados(dadosBrutos)
+        : (dadosBrutos.data ?? []);
+
+      setRelatorio(dadosTransformados);
     } catch (err) {
       console.error("Erro ao buscar relatório:", err);
     } finally {
@@ -72,10 +80,6 @@ const RelatorioBase = ({
       buscarRelatorio(true);
     }
   }, [autoLoad]);
-
-  const total = campoTotal
-    ? relatorio.reduce((acc, item) => acc + Number(item[campoTotal] || 0), 0)
-    : 0;
 
   useEffect(() => {
     if (dataInicio === null && dataFim === null && carregadoRef.current) {
@@ -183,17 +187,64 @@ const RelatorioBase = ({
                 ))}
                 {mostrarTotal && (
                   <tr className="text-brown-dark border-t font-semibold">
-                    <td className="px-4 py-3">Total</td>
-                    <td className="px-4 py-3" colSpan={colunas.length - 2}>
-                      {renderTotal
-                        ? renderTotal(relatorio)
-                        : campoTotal
-                          ? prefixoMoeda
-                            ? `R$ ${total.toFixed(2)}`
-                            : total
-                          : null}
-                    </td>
-                    <td className="px-4 py-3">100%</td>
+                    {colunas.map((col, idx) => {
+                      if (valoresTotais && col.chave in valoresTotais) {
+                        return (
+                          <td
+                            key={col.chave}
+                            className="px-4 py-3 font-semibold"
+                          >
+                            {valoresTotais[col.chave]}
+                          </td>
+                        );
+                      }
+
+                      if (idx === 0) {
+                        return (
+                          <td
+                            key={col.chave}
+                            className="px-4 py-3 font-semibold"
+                          >
+                            Total
+                          </td>
+                        );
+                      }
+
+                      if (col.chave === campoTotal) {
+                        const somaTotal = relatorio.reduce(
+                          (acc, item) => acc + Number(item[campoTotal] || 0),
+                          0,
+                        );
+
+                        const valorFormatado = col.formatador
+                          ? col.formatador(somaTotal)
+                          : prefixoMoeda
+                            ? `R$ ${somaTotal.toFixed(2)}`
+                            : somaTotal.toLocaleString("pt-BR");
+
+                        return (
+                          <td
+                            key={col.chave}
+                            className="px-4 py-3 font-semibold"
+                          >
+                            {valorFormatado}
+                          </td>
+                        );
+                      }
+
+                      if (col.chave.toLowerCase().includes("porcentagem")) {
+                        return (
+                          <td
+                            key={col.chave}
+                            className="px-4 py-3 font-semibold"
+                          >
+                            100%
+                          </td>
+                        );
+                      }
+
+                      return <td key={col.chave} className="px-4 py-3"></td>;
+                    })}
                   </tr>
                 )}
               </>

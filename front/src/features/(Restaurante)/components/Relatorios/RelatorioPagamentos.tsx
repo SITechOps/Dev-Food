@@ -1,37 +1,61 @@
-import GraficoFormaPagamento from "./GraficoFormaPagamento";
+import { useState } from "react";
+import GraficoFormaPagamento, {
+  FormaPagamentoItem,
+} from "./GraficoFormaPagamento";
 import RelatorioBase from "./RelatorioBase";
-import { FormaPagamentoItem } from "./GraficoFormaPagamento";
 
 const RelatorioPagamento = () => {
+  const [dadosRelatorio, setDadosRelatorio] = useState<FormaPagamentoItem[]>(
+    [],
+  );
+  const [formaMaisUtilizadaGeral, setFormaMaisUtilizadaGeral] =
+    useState<string>("");
+
+  const transformarDados = (respostaApi: any): FormaPagamentoItem[] => {
+    const restaurantes = respostaApi?.data?.restaurantes ?? [];
+
+    setFormaMaisUtilizadaGeral(respostaApi?.data?.forma_mais_utilizada ?? "");
+
+    const dados: FormaPagamentoItem[] = restaurantes.flatMap(
+      (restaurante: any) =>
+        restaurante.formas_pagamento.map((forma: any) => ({
+          restaurante: restaurante.nome,
+          forma_pagamento: forma.forma_pagamento,
+          total_gasto: forma.total_gasto,
+        })),
+    );
+
+    setDadosRelatorio(dados);
+
+    return dados;
+  };
+
+  const totalGasto = dadosRelatorio.reduce(
+    (acc, item) => acc + Number(item.total_gasto),
+    0,
+  );
+
   return (
     <RelatorioBase
       titulo="Relatório Formas de Pagamento"
       endpoint="/restaurante/relatorio-forma-pagamento"
       colunas={[
-        { chave: "nome", titulo: "Restaurante" },
-        { chave: "forma_pagamento_mais_usada", titulo: "Forma de Pagamento" },
-        { chave: "total_usos", titulo: "Total de Usos" },
+        { chave: "restaurante", titulo: "Restaurante" },
+        { chave: "forma_pagamento", titulo: "Forma de Pagamento" },
+        {
+          chave: "total_gasto",
+          titulo: "Total Gasto",
+          formatador: (v) => `R$ ${Number(v).toFixed(2)}`,
+        },
       ]}
-      campoTotal="total_usos"
+      campoTotal="total_gasto"
       autoLoad={true}
-      renderTotal={(dados) => {
-        if (!dados.length) return "—";
-
-        const contagem = dados.reduce<Record<string, number>>((acc, item) => {
-          const forma = String(item.forma_pagamento_mais_usada);
-          acc[forma] = (acc[forma] || 0) + 1;
-          return acc;
-        }, {});
-
-        const [maisUsada] = Object.entries(contagem).sort(
-          (a, b) => b[1] - a[1],
-        )[0];
-
-        return maisUsada;
+      transformadorDeDados={transformarDados}
+      valoresTotais={{
+        forma_pagamento: formaMaisUtilizadaGeral,
+        total_gasto: `R$ ${totalGasto.toFixed(2)}`,
       }}
-      renderExtra={(dados) => (
-        <GraficoFormaPagamento dados={dados as FormaPagamentoItem[]} />
-      )}
+      renderExtra={() => <GraficoFormaPagamento dados={dadosRelatorio} />}
     />
   );
 };

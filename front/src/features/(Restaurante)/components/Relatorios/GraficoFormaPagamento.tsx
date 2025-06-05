@@ -8,9 +8,9 @@ import {
 } from "recharts";
 
 export type FormaPagamentoItem = {
-  forma_pagamento_mais_usada: string;
-  nome: string;
-  total_usos: number;
+  forma_pagamento: string;
+  restaurante?: string;
+  total_gasto: number;
 };
 
 type Props = {
@@ -33,8 +33,8 @@ const GraficoFormaPagamento = ({ dados }: Props) => {
   }
 
   const dadosAgrupados = dados.reduce<Record<string, number>>((acc, item) => {
-    const chave = item.forma_pagamento_mais_usada;
-    acc[chave] = (acc[chave] || 0) + item.total_usos;
+    const chave = item.forma_pagamento;
+    acc[chave] = (acc[chave] || 0) + item.total_gasto;
     return acc;
   }, {});
 

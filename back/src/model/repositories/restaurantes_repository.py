@@ -309,62 +309,59 @@ class RestaurantesRepository(IRestaurantesRepository):
                 raise e
 
     
-    def relatorio_forma_pagamento_mais_usada(self, data_inicio: str = None, data_fim: str = None) -> list[dict]:
+    def relatorio_forma_pagamento_mais_usada(self, data_inicio: str = None, data_fim: str = None) -> dict:
         with DBConnectionHandler() as db:
             try:
-                subquery = (
+                query = (
                     db.session.query(
-                        Pedido.id_restaurante,
+                        Restaurante.nome.label("nome"),
                         Pedido.forma_pagamento,
-                        func.count(Pedido.id).label("total")
+                        func.count(Pedido.id).label("qtd_usos"),
+                        func.sum(Pedido.valor_total).label("total_gasto")
                     )
-                    .group_by(Pedido.id_restaurante, Pedido.forma_pagamento)
+                    .join(Restaurante, Restaurante.id == Pedido.id_restaurante)
+                    .group_by(Restaurante.nome, Pedido.forma_pagamento)
                 )
 
                 if data_inicio and data_fim:
                     data_inicio_dt = datetime.strptime(data_inicio, "%Y-%m-%d")
                     data_fim_dt = datetime.strptime(data_fim, "%Y-%m-%d") + timedelta(days=1)
-                    subquery = subquery.filter(Pedido.created_at >= data_inicio_dt)
-                    subquery = subquery.filter(Pedido.created_at < data_fim_dt)
-
-                subquery = subquery.subquery()
-
-                query = (
-                    db.session.query(
-                        Restaurante.nome.label("nome"),
-                        subquery.c.forma_pagamento,
-                        subquery.c.total
-                    )
-                    .join(Restaurante, Restaurante.id == subquery.c.id_restaurante)
-                )
+                    query = query.filter(Pedido.created_at >= data_inicio_dt)
+                    query = query.filter(Pedido.created_at < data_fim_dt)
 
                 results = query.all()
 
-                pagamentos_por_restaurante = {}
+                relatorio = {}
+                uso_total_por_forma_pagamento = {}
+
                 for row in results:
                     nome = row.nome
-                    if nome not in pagamentos_por_restaurante:
-                        pagamentos_por_restaurante[nome] = []
-                    pagamentos_por_restaurante[nome].append({
-                        "forma_pagamento": row.forma_pagamento.capitalize(),
-                        "total": row.total
+                    forma = row.forma_pagamento.capitalize()
+                    qtd_usos = row.qtd_usos
+                    total_gasto = float(row.total_gasto)
+
+                    if nome not in relatorio:
+                        relatorio[nome] = []
+
+                    relatorio[nome].append({
+                        "forma_pagamento": forma,
+                        "qtd_usos": qtd_usos,
+                        "total_gasto": total_gasto
                     })
 
-                relatorio = []
-                for nome, pagamentos in pagamentos_por_restaurante.items():
-                    max_total = max(p["total"] for p in pagamentos)
-                    formas_mais_usadas = [
-                        p["forma_pagamento"] for p in pagamentos if p["total"] == max_total
-                    ]
-                    formas_concatenadas = " / ".join(sorted(formas_mais_usadas))
+                    uso_total_por_forma_pagamento[forma] = uso_total_por_forma_pagamento.get(forma, 0) + qtd_usos
 
-                    relatorio.append({
-                        "nome": nome,
-                        "forma_pagamento_mais_usada": formas_concatenadas,
-                        "total_usos": max_total
-                    })
+                forma_mais_utilizada = max(
+                    uso_total_por_forma_pagamento.items(), key=lambda x: x[1]
+                )[0] if uso_total_por_forma_pagamento else None
 
-                return relatorio
+                return {
+                    "restaurantes": [
+                        {"nome": nome, "formas_pagamento": formas}
+                        for nome, formas in relatorio.items()
+                    ],
+                    "forma_mais_utilizada": forma_mais_utilizada  
+                }
 
             except Exception as e:
                 raise e
