@@ -2,7 +2,6 @@ import { useState } from "react";
 import { IMeusPedidos } from "@/features/(Usuario)/interface/IMeusPedidos";
 import Button from "@/shared/components/ui/Button";
 import Modal from "@/shared/components/ui/Modal";
-import { api } from "@/lib/axios";
 
 interface ModalDetalhePedidoProps {
   pedido: IMeusPedidos;
@@ -18,7 +17,7 @@ export default function ModalDetalhePedido({
   const [mensagem, setMensagem] = useState("");
 
   const contem = (texto: string) =>
-    pedido.itens.some((item) =>
+    pedido.itens?.some((item) =>
       item.produto.toLowerCase().includes(texto.toLowerCase()),
     );
 
@@ -29,7 +28,7 @@ export default function ModalDetalhePedido({
   if (contem("picanha")) imagensProdutos.push("img/picanha.jpg");
 
   if (imagensProdutos.length === 0) {
-    if (pedido.restaurante.nome.toLowerCase().includes("sushi")) {
+    if (pedido.restaurante?.nome.toLowerCase().includes("sushi")) {
       imagensProdutos.push("img/temaki.jpg");
     } else {
       imagensProdutos.push("img/americanBurguer.jpg");
@@ -38,9 +37,9 @@ export default function ModalDetalhePedido({
 
   const gerarNotaFiscal = async () => {
     try {
-      const response = await api.post("/nota-fiscal", {
-        id_pedido: pedido.id,
-      });
+      // const response = await api.post("/nota-fiscal", {
+      //   id_pedido: pedido.id,
+      // });
 
       setNotaStatus("sucesso");
       setMensagem("Nota fiscal gerada com sucesso!");
@@ -63,7 +62,7 @@ export default function ModalDetalhePedido({
       <Modal isOpen={true} onClose={onClose} className="max-w-md">
         <div className="flex flex-col gap-4">
           <p>
-            <strong>Restaurante:</strong> {pedido.restaurante.nome}
+            <strong>Restaurante:</strong> {pedido.restaurante?.nome}
           </p>
           <p>
             <strong>Status:</strong> {pedido.status}
@@ -82,7 +81,7 @@ export default function ModalDetalhePedido({
           <div>
             <h3 className="font-semibold">Itens do pedido:</h3>
             <ul className="list-inside list-disc">
-              {pedido.itens.map((item, index) => (
+              {pedido.itens?.map((item, index) => (
                 <li key={index}>
                   {item.qtd_itens}x {item.produto}
                 </li>

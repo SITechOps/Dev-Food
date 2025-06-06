@@ -211,6 +211,7 @@ export default function FiltroLupa() {
                           image_url={produto.image_url}
                           valor_unitario={produto.valor_unitario}
                           dadosRestaurante={restaurante}
+                          qtd_estoque={produto.qtd_estoque}
                         />
                       ))}
                     </div>
