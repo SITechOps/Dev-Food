@@ -10,7 +10,6 @@ interface MenuLeteralCarrinhoProps {
 }
 
 export default function Carrinho({
-  isCarrinhoOpen,
   setIsCarrinhoOpen,
 }: MenuLeteralCarrinhoProps) {
   const {

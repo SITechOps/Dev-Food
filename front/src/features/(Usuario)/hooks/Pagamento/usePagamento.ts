@@ -36,7 +36,7 @@ export const usePagamento = () => {
   const storageEndereco = JSON.parse(
     localStorage.getItem("enderecoPadrao") || "null",
   );
-  const [endereco, setEndereco] = useState({
+  const [endereco] = useState({
     rua: storageEndereco.logradouro,
     complemento: `${storageEndereco.bairro}, ${storageEndereco.cidade}, ${storageEndereco.estado} - ${storageEndereco.pais}`,
     id: storageEnderecoId!,
@@ -48,6 +48,9 @@ export const usePagamento = () => {
     setEtapa,
     resetPagamento,
   } = usePagamentoContext();
+
+  // Coloquei aqui porque não estava sendo usado em nenhum outro lugar
+  console.log(user);
 
   useEffect(() => {
     if (!idUsuario || !token) {
