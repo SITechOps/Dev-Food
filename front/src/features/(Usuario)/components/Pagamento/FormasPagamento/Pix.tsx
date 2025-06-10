@@ -17,7 +17,6 @@ export default function PagePix() {
     setShowModal,
     statusPagamento,
     respPagamento,
-    acompanharPedido,
     setStatusPagamento,
     handleCopy,
     statusTipo,
@@ -164,18 +163,17 @@ export default function PagePix() {
         </>
       )}
 
-      <Modal isOpen={showModal} onClose={acompanharPedido} className="py-2">
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} className="py-2">
         <p className="text-green flex items-center justify-center text-[2rem]">
           <FaCheckCircle />
         </p>
-        <p className="mt-3 text-center">
+        <p className="mt-3 text-center font-bold">
           Pagamento processado com sucesso! <br />{" "}
-          <span className="font-bold">Pedido em andamento</span>
+          <span className="font-light">Agora você será redirecionado para acompanhar seu pedido</span>
         </p>
 
         <Button
           className="my-6 mt-5 mb-5 flex items-center justify-center gap-3 p-2 whitespace-nowrap"
-          onClick={acompanharPedido}
           disabled={isLoading}
         >
           {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}

@@ -33,64 +33,76 @@ export default function FiltroLupa() {
     if (!searchTerm.trim()) return baseRestaurantes;
 
     return baseRestaurantes.filter((restaurante) => {
-      return (
+      const matchRestaurante =
         restaurante.nome.toLowerCase().includes(searchTermLower) ||
         restaurante.especialidade.toLowerCase().includes(searchTermLower) ||
-        (restaurante.descricao?.toLowerCase().includes(searchTermLower) ??
-          false) ||
-        (restaurante.endereco?.logradouro
-          ?.toLowerCase()
-          .includes(searchTermLower) ??
-          false) ||
-        (restaurante.endereco?.bairro
-          ?.toLowerCase()
-          .includes(searchTermLower) ??
-          false) ||
-        (restaurante.endereco?.cidade
-          ?.toLowerCase()
-          .includes(searchTermLower) ??
-          false)
+        (restaurante.descricao?.toLowerCase().includes(searchTermLower) ?? false) ||
+        (restaurante.endereco?.logradouro?.toLowerCase().includes(searchTermLower) ?? false) ||
+        (restaurante.endereco?.bairro?.toLowerCase().includes(searchTermLower) ?? false) ||
+        (restaurante.endereco?.cidade?.toLowerCase().includes(searchTermLower) ?? false);
+
+      const matchProdutos = produtosAll.some(
+        (produto) =>
+          produto.id_restaurante === restaurante.id &&
+          (produto.nome.toLowerCase().includes(searchTermLower) ||
+            produto.descricao?.toLowerCase().includes(searchTermLower))
       );
+
+      return matchRestaurante || matchProdutos;
     });
   }, [
     searchTerm,
     restaurantesCompletos,
     restaurantes,
+    produtosAll, 
     isAuthenticated,
     searchTermLower,
   ]);
 
-  const produtosFiltrados = useMemo(() => {
-    if (!searchTerm.trim()) return [];
-    return produtosAll
-      .filter((produto) =>
-        produto.nome?.toLowerCase().includes(searchTermLower),
-      )
-      .map((produto) => ({
-        ...produto,
-        restaurante: restaurantesCompletos.find(
-          (r) => r.id === produto.id_restaurante,
-        ),
-      }));
-  }, [searchTerm, produtosAll, restaurantesCompletos, searchTermLower]);
 
   const produtosAgrupadosPorRestaurante = useMemo(() => {
     if (!isAuthenticated) return {};
-    return produtosFiltrados.reduce(
-      (acc, produto) => {
-        const restId = produto.restaurante!.id;
+
+    const todosRestaurantes = new Map<string, IRestaurante>();
+    [...restaurantesCompletos, ...restaurantes].forEach((rest) => {
+      if (!todosRestaurantes.has(rest.id)) {
+        todosRestaurantes.set(rest.id, rest);
+      }
+    });
+
+    return produtosAll
+      .filter((produto) =>
+        produto.nome?.toLowerCase().includes(searchTermLower) ||
+        produto.descricao?.toLowerCase().includes(searchTermLower)
+      )
+      .reduce((acc, produto) => {
+        const restaurante = todosRestaurantes.get(produto.id_restaurante || "");
+
+        if (!restaurante) {
+          console.warn("Produto sem restaurante encontrado:", produto.nome);
+          return acc;
+        }
+
+        const restId = restaurante.id;
+
         if (!acc[restId]) {
           acc[restId] = {
-            restaurante: produto.restaurante!,
+            restaurante,
             produtos: [] as IProduto[],
           };
         }
+
         acc[restId].produtos.push(produto);
         return acc;
-      },
-      {} as Record<string, { restaurante: IRestaurante; produtos: IProduto[] }>,
-    );
-  }, [produtosFiltrados]);
+      }, {} as Record<string, { restaurante: IRestaurante; produtos: IProduto[] }>);
+  }, [
+    isAuthenticated,
+    produtosAll,
+    restaurantesCompletos,
+    restaurantes,
+    searchTermLower,
+  ]);
+
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
@@ -125,21 +137,19 @@ export default function FiltroLupa() {
 
       <div className="mt-6 mb-6 flex border-b border-gray-300">
         <button
-          className={`px-4 py-2 font-bold ${
-            abaAtiva === "restaurantes"
-              ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold"
-              : ""
-          }`}
+          className={`px-4 py-2 font-bold ${abaAtiva === "restaurantes"
+            ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold"
+            : ""
+            }`}
           onClick={() => setAbaAtiva("restaurantes")}
         >
           Restaurantes
         </button>
         <button
-          className={`px-4 py-2 font-bold ${
-            abaAtiva === "itens"
-              ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold"
-              : ""
-          }`}
+          className={`px-4 py-2 font-bold ${abaAtiva === "itens"
+            ? "border-b-brown-normal text-brown-normal border-b-2 font-extrabold"
+            : ""
+            }`}
           onClick={() => setAbaAtiva("itens")}
         >
           Itens

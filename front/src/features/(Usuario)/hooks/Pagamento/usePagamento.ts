@@ -13,7 +13,6 @@ import {
   IPedido,
   IRespPedido,
 } from "@/features/(Usuario)/components/Pagamento/interface/IPagamento";
-import { IUsuarioCliente } from "@/features/(Usuario)/interface/IUser";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +27,6 @@ export const usePagamento = () => {
   const idUsuario = userData?.sub;
   const [isLoading, setIsLoading] = useState(false);
   const [restaurante, setRestaurante] = useState("");
-  const [user, setUser] = useState<IUsuarioCliente>();
   const storedCompra = localStorage.getItem("compraAtual");
   const { taxaEntregaSelecionada, tipoEntregaSelecionada } = useTaxaEntrega();
   const { atualizarQuantidadeTotal } = useContext(CarrinhoContext);
@@ -48,9 +46,6 @@ export const usePagamento = () => {
     setEtapa,
     resetPagamento,
   } = usePagamentoContext();
-
-  // Coloquei aqui porque não estava sendo usado em nenhum outro lugar
-  console.log(user);
 
   useEffect(() => {
     if (!idUsuario || !token) {
@@ -86,7 +81,6 @@ export const usePagamento = () => {
     try {
       const { data } = await api.get(`/user/${idUsuario}`);
       const dados = data?.data?.attributes || [];
-      setUser(dados);
       return dados;
     } catch (error) {
       showError("erro getDadoUser:");

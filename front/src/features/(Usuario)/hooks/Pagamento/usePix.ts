@@ -14,6 +14,7 @@ import {
   showSuccess,
   showWarning,
 } from "@/shared/components/ui/AlertasPersonalizados/toastAlerta";
+import { socket } from "@/shared/utils/socket";
 
 export const usePixComponent = () => {
   const [key, setKey] = useState(0);
@@ -46,6 +47,25 @@ export const usePixComponent = () => {
     if (!userData?.sub || valoresCarrinho.total === 0) return;
   }, [userData?.sub, valoresCarrinho.total, statusPagamento]);
 
+
+  useEffect(() => {
+    if (pagoComMP) {
+  
+      const handlePixConcluido = async () => {
+        setStatusPagamento("aprovado");
+        showSuccess("Pagamento PIX confirmado!");
+        await postPedido("pix");
+        setShowModal(true);
+      };
+      socket.on("pix_concluido", handlePixConcluido);
+  
+      return () => {
+        socket.off("pix_concluido", handlePixConcluido);
+      };
+    }
+  }, [pagoComMP]);
+
+
   async function processamentoPagamento(
     sequencia: StatusChave[],
     intervaloMs: number = 10000,
@@ -57,15 +77,12 @@ export const usePixComponent = () => {
 
       if (novoStatus === "aprovado") {
         showSuccess("Pagamento Realizado com sucesso!");
+        await postPedido("pix");
         setShowModal(true);
         break;
       }
       await new Promise((resolve) => setTimeout(resolve, intervaloMs));
     }
-  }
-
-  async function acompanharPedido() {
-    await postPedido("pix");
   }
 
   async function qrCodeGenerico() {
@@ -164,23 +181,24 @@ export const usePixComponent = () => {
         case "approved":
           showSuccess("Pagamento Realizado com sucesso!");
           setStatusPagamento("aprovado");
+          await postPedido("pix");
           setShowModal(true);
           break;
 
         case "pending":
           setStatusPagamento("pendente");
-          showWarning("pedido pendente de pagamento.");
+          console.log("pedido pendente de pagamento.");
           break;
 
         case "rejected":
           setStatusPagamento("rejeitado");
-          showWarning("Pagamento rejeitado. Por favor, tente novamente.");
+          console.log("Pagamento rejeitado. Por favor, tente novamente.");
           resetPagamento();
           break;
 
         default:
           resetPagamento();
-          showWarning(`Status desconhecido recebido: ${status}`);
+          console.log(`Status desconhecido recebido: ${status}`);
           break;
       }
     } catch (error) {
@@ -205,7 +223,6 @@ export const usePixComponent = () => {
     setShowModal,
     statusPagamento,
     setStatusPagamento,
-    acompanharPedido,
     respPagamento,
     setRespPagamento,
     handleCopy,
