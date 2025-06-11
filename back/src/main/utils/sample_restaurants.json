@@ -1,59 +1,5 @@
 [
   {
-    "nome": "Sabor Brasileiro",
-    "descricao": "Experiência autêntica da culinária brasileira, com pratos típicos de várias regiões do Brasil. Nosso cardápio inclui feijoada, churrasco e moqueca. Um lugar aconchegante e tradicional para momentos especiais.",
-    "email": "contato@saborbrasileiro.com.br",
-    "cnpj": "12345678901234",
-    "razao_social": "Sabor Brasileiro LTDA",
-    "especialidade": "Brasileira",
-    "telefone": "(11) 3456-7890",
-    "horario_funcionamento": "11:00 - 23:00",
-    "banco": "Banco do Brasil",
-    "agencia": "3245",
-    "nro_conta": "56789-0",
-    "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/sabor_brasileiro.webp",
-    "endereco": {
-      "logradouro": "Avenida Paulista",
-      "numero": "1500",
-      "bairro": "Bela Vista",
-      "cidade": "São Paulo",
-      "estado": "SP",
-      "complemento": "Andar 10",
-      "pais": "Brasil"
-    },
-    "produtos": [
-      {
-        "nome": "Feijoada Completa",
-        "valor_unitario": 45.0,
-        "qtd_estoque": 50,
-        "image_url": "/produto/feijoada_completa.webp",
-        "descricao": "Tradicional feijoada brasileira com feijão preto, carnes diversas e acompanhamentos típicos. Uma refeição rica e saborosa para celebrar a culinária do Brasil."
-      },
-      {
-        "nome": "Picanha na Chapa",
-        "valor_unitario": 68.0,
-        "qtd_estoque": 40,
-        "image_url": "/produto/picanha_na_chapa.webp",
-        "descricao": "Saborosa picanha grelhada na chapa, com temperos realçados e corte macio, servida com acompanhamentos que destacam o melhor da carne."
-      },
-      {
-        "nome": "Moqueca de Peixe",
-        "valor_unitario": 55.0,
-        "qtd_estoque": 30,
-        "image_url": "/produto/moqueca_de_peixe.webp",
-        "descricao": "Moqueca de peixe com sabor marcante, elaborada com peixe fresco, leite de coco, dendê e temperos que remetem à culinária baiana."
-      },
-      {
-        "nome": "Brigadeiro Gourmet",
-        "valor_unitario": 8.0,
-        "qtd_estoque": 100,
-        "image_url": "/produto/brigadeiro_gourmet.webp",
-        "descricao": "Delicioso brigadeiro gourmet preparado com chocolate de alta qualidade e ingredientes selecionados, perfeito para fechar a refeição com doçura."
-      }
-    ]
-  },
-  {
     "nome": "Mineiro de Coração",
     "descricao": "Aconchego da culinária mineira em São Paulo. Pratos típicos como feijão tropeiro, tutu de feijão e frango com quiabo. O ambiente rústico remete às fazendas de Minas Gerais, ideal para comida caseira.",
     "email": "reservas@mineirodecoração.com.br",
@@ -85,13 +31,6 @@
         "descricao": "Feijão tropeiro preparado com feijão, farinha, linguiça, bacon e ovos. Um prato típico mineiro cheio de sabor e tradição."
       },
       {
-        "nome": "Frango com Quiabo",
-        "valor_unitario": 42.0,
-        "qtd_estoque": 35,
-        "image_url": "/produto/frango_com_quiabo.webp",
-        "descricao": "Frango caipira cozido lentamente com quiabo fresco e temperos mineiros, servido com angu cremoso."
-      },
-      {
         "nome": "Costelinha com Tutu",
         "valor_unitario": 52.0,
         "qtd_estoque": 25,
@@ -104,161 +43,6 @@
         "qtd_estoque": 70,
         "image_url": "/produto/doce_de_leite_com_queijo.webp",
         "descricao": "Tradicional sobremesa mineira com doce de leite caseiro servido com fatias de queijo minas curado."
-      }
-    ]
-  },
-  {
-    "nome": "Sabores do Sertão",
-    "descricao": "Comida nordestina autêntica com temperos tradicionais. Ambiente rústico e acolhedor. Pratos típicos como baião de dois, carne de sol, buchada e tapioca, preparados com receitas de família.",
-    "email": "contato@saboresdosertao.com.br",
-    "cnpj": "78901234567890",
-    "razao_social": "Sabores do Sertão LTDA",
-    "especialidade": "Brasileira",
-    "telefone": "(11) 4321-8765",
-    "horario_funcionamento": "11:30 - 22:30",
-    "banco": "Banco do Brasil",
-    "agencia": "5678",
-    "nro_conta": "98765-4",
-    "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/sabores_do_sertao.webp",
-    "endereco": {
-      "logradouro": "Rua Itapura",
-      "numero": "456",
-      "bairro": "Tatuapé",
-      "cidade": "São Paulo",
-      "estado": "SP",
-      "complemento": "",
-      "pais": "Brasil"
-    },
-    "produtos": [
-      {
-        "nome": "Baião de Dois",
-        "valor_unitario": 42.0,
-        "qtd_estoque": 40,
-        "image_url": "/produto/baiao_de_dois.webp",
-        "descricao": "Prato tradicional nordestino com arroz, feijão de corda, queijo coalho, carne seca desfiada e temperos regionais, servido com paçoca de carne de sol."
-      },
-      {
-        "nome": "Carne de Sol com Mandioca",
-        "valor_unitario": 48.0,
-        "qtd_estoque": 35,
-        "image_url": "/produto/carne_de_sol_com_mandioca.webp",
-        "descricao": "Carne de sol macia e suculenta, servida com mandioca cozida na manteiga de garrafa, cebola roxa e vinagrete de coentro."
-      },
-      {
-        "nome": "Cartola",
-        "valor_unitario": 22.0,
-        "qtd_estoque": 50,
-        "image_url": "/produto/cartola.webp",
-        "descricao": "Sobremesa típica pernambucana com banana frita na manteiga, coberta com queijo coalho gratinado, canela e açúcar."
-      },
-      {
-        "nome": "Tapioca Especial",
-        "valor_unitario": 18.0,
-        "qtd_estoque": 60,
-        "image_url": "/produto/tapioca_especial.webp",
-        "descricao": "Tapioca nordestina recheada com carne de sol desfiada, queijo coalho, cebola caramelizada e manteiga de garrafa."
-      }
-    ]
-  },
-  {
-    "nome": "Cantina Italiana",
-    "descricao": "Tradição das cantinas italianas, com massas frescas e pizzas autênticas. Ambiente acolhedor para momentos especiais. Menu com pratos como spaghetti, lasanha e risoto, preparados com ingredientes frescos.",
-    "email": "reservas@cantinaitaliana.com.br",
-    "cnpj": "98765432109876",
-    "razao_social": "Cantina Bella Italia",
-    "especialidade": "Italiana",
-    "telefone": "(11) 2345-6789",
-    "horario_funcionamento": "18:00 - 00:00",
-    "banco": "Santander",
-    "agencia": "1789",
-    "nro_conta": "12345-6",
-    "tipo_conta": "Empresarial",
-    "logo": "/restaurante/images/cantina_italiana.webp",
-    "endereco": {
-      "logradouro": "Rua Augusta",
-      "numero": "789",
-      "bairro": "Consolação",
-      "cidade": "São Paulo",
-      "estado": "SP",
-      "complemento": "",
-      "pais": "Brasil"
-    },
-    "produtos": [
-      {
-        "nome": "Spaghetti à Bolonhesa",
-        "valor_unitario": 39.9,
-        "qtd_estoque": 60,
-        "image_url": "/produto/spaghetti_a_bolonhesa.webp",
-        "descricao": "Clássico spaghetti com molho à bolonhesa rico e aromático, preparado com carne moída e temperos italianos, servido com queijo parmesão."
-      },
-      {
-        "nome": "Lasanha Quatro Queijos",
-        "valor_unitario": 42.0,
-        "qtd_estoque": 50,
-        "image_url": "/produto/lasanha_quatro_queijos.webp",
-        "descricao": "Lasanha cremosa com quatro tipos de queijo, camada sobre camada de massa fresca, gratinada ao forno para um sabor irresistível."
-      },
-      {
-        "nome": "Risoto de Funghi",
-        "valor_unitario": 47.0,
-        "qtd_estoque": 30,
-        "image_url": "/produto/risoto_de_funghi.webp",
-        "descricao": "Risoto de funghi preparado com cogumelos frescos, caldo especial e finalizado com manteiga e queijo, trazendo o autêntico sabor italiano."
-      },
-      {
-        "nome": "Tiramisu",
-        "valor_unitario": 16.0,
-        "qtd_estoque": 80,
-        "image_url": "/produto/tiramisu.webp",
-        "descricao": "Sobremesa clássica italiana com camadas de biscoitos embebidos em café, creme de mascarpone e finalizada com um toque de cacau."
-      }
-    ]
-  },
-  {
-    "nome": "Forno di Napoli",
-    "descricao": "Um pedaço da Itália em São Paulo. Receitas tradicionais de família, desde a massa feita à mão até os molhos preparados lentamente. Ambiente romântico com iluminação suave para jantares especiais.",
-    "email": "contato@fornodinapoli.com.br",
-    "cnpj": "34567890123446",
-    "razao_social": "Forno di Napoli Alimentos LTDA",
-    "especialidade": "Italiana",
-    "telefone": "(11) 5678-9012",
-    "horario_funcionamento": "17:30 - 23:30",
-    "banco": "Bradesco",
-    "agencia": "2578",
-    "nro_conta": "78901-3",
-    "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/forno_di_napoli.webp",
-    "endereco": {
-      "logradouro": "Rua Amauri",
-      "numero": "328",
-      "bairro": "Itaim Bibi",
-      "cidade": "São Paulo",
-      "estado": "SP",
-      "complemento": "",
-      "pais": "Brasil"
-    },
-    "produtos": [
-      {
-        "nome": "Gnocchi ao Pomodoro",
-        "valor_unitario": 45.0,
-        "qtd_estoque": 40,
-        "image_url": "/produto/gnocchi_ao_pomodoro.webp",
-        "descricao": "Gnocchi caseiro de batata preparado artesanalmente, servido com molho de tomate fresco e manjericão, finalizado com parmesão ralado."
-      },
-      {
-        "nome": "Carpaccio di Manzo",
-        "valor_unitario": 38.0,
-        "qtd_estoque": 45,
-        "image_url": "/produto/carpaccio_di_manzo.webp",
-        "descricao": "Finas fatias de filé mignon cru, regadas com azeite extra virgem, alcaparras e lascas de parmesão, acompanhadas de torradas."
-      },
-      {
-        "nome": "Panna Cotta",
-        "valor_unitario": 18.0,
-        "qtd_estoque": 60,
-        "image_url": "/produto/panna_cotta.webp",
-        "descricao": "Sobremesa cremosa de leite e baunilha, servida com calda de frutas vermelhas frescas e um toque de hortelã."
       }
     ]
   },
@@ -303,103 +87,9 @@
       {
         "nome": "Uramaki de Atum",
         "valor_unitario": 35.0,
-        "qtd_estoque": 40,
+        "qtd_estoque": 0,
         "image_url": "/produto/uramaki_de_atum.webp",
         "descricao": "Uramaki com recheio generoso de atum fresco, combinando ingredientes que harmonizam sabores para um prato tradicional e inovador."
-      }
-    ]
-  },
-  {
-    "nome": "Sakura Japan",
-    "descricao": "Imersão na autêntica culinária japonesa. Ambiente tranquilo que remete aos restaurante/imagess de Tóquio. Pratos preparados na hora por chefs japoneses tradicionais, garantindo a melhor experiência oriental.",
-    "email": "contato@sakurajapan.com.br",
-    "cnpj": "56789012345678",
-    "razao_social": "Sakura Japan LTDA",
-    "especialidade": "Japonesa",
-    "telefone": "(11) 6789-0123",
-    "horario_funcionamento": "12:00 - 23:00",
-    "banco": "Itaú",
-    "agencia": "3672",
-    "nro_conta": "54321-9",
-    "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/sakura_japan.webp",
-    "endereco": {
-      "logradouro": "Rua Thomaz Gonzaga",
-      "numero": "56",
-      "bairro": "Liberdade",
-      "cidade": "São Paulo",
-      "estado": "SP",
-      "complemento": "",
-      "pais": "Brasil"
-    },
-    "produtos": [
-      {
-        "nome": "Omakase",
-        "valor_unitario": 180.0,
-        "qtd_estoque": 20,
-        "image_url": "/produto/omakase.webp",
-        "descricao": "Experiência gastronômica onde o chef seleciona os melhores peixes e frutos do mar do dia, preparados e servidos no balcão tradicional."
-      },
-      {
-        "nome": "Ramen Tonkotsu",
-        "valor_unitario": 42.0,
-        "qtd_estoque": 35,
-        "image_url": "/produto/ramen_tonkotsu.webp",
-        "descricao": "Tradicional ramen japonês com caldo rico de porco cozido lentamente, macarrão artesanal, chashu e ovo marinado."
-      },
-      {
-        "nome": "Dorayaki",
-        "valor_unitario": 15.0,
-        "qtd_estoque": 50,
-        "image_url": "/produto/dorayaki.webp",
-        "descricao": "Tradicional doce japonês feito com dois pequenos bolos em formato de panqueca recheados com pasta de feijão doce (anko)."
-      }
-    ]
-  },
-  {
-    "nome": "La Taquería",
-    "descricao": "Pratos autênticos como tacos, burritos e guacamole. Ambiente animado e colorido, perfeito para refeições divertidas. Ingredientes frescos preparados com carinho, garantindo a verdadeira experiência mexicana.",
-    "email": "atendimento@lataqueria.com.br",
-    "cnpj": "78945612398765",
-    "razao_social": "La Taquería LTDA",
-    "especialidade": "Mexicana",
-    "telefone": "(11) 5678-9012",
-    "horario_funcionamento": "11:00 - 23:00",
-    "banco": "Caixa Econômica",
-    "agencia": "1452",
-    "nro_conta": "34567-8",
-    "tipo_conta": "Corrente",
-    "logo": "/restaurante/images/la_taqueria.webp",
-    "endereco": {
-      "logradouro": "Rua dos Três Irmãos",
-      "numero": "500",
-      "bairro": "Vila Mariana",
-      "cidade": "São Paulo",
-      "estado": "SP",
-      "complemento": "Loja 2",
-      "pais": "Brasil"
-    },
-    "produtos": [
-      {
-        "nome": "Taco de Carne",
-        "valor_unitario": 18.0,
-        "qtd_estoque": 100,
-        "image_url": "/produto/taco_de_carne.webp",
-        "descricao": "Taco de carne suculenta, recheado com temperos mexicanos e servido em tortilhas crocantes, com guarnições que realçam o sabor autêntico."
-      },
-      {
-        "nome": "Burrito de Frango",
-        "valor_unitario": 22.0,
-        "qtd_estoque": 60,
-        "image_url": "/produto/burrito_de_frango.webp",
-        "descricao": "Burrito recheado com frango temperado, feijão e arroz, envolto em tortilla macia, oferecendo o verdadeiro sabor da culinária mexicana."
-      },
-      {
-        "nome": "Guacamole com Nachos",
-        "valor_unitario": 16.0,
-        "qtd_estoque": 80,
-        "image_url": "/produto/guacamole_com_nachos.webp",
-        "descricao": "Guacamole fresco preparado com abacate e temperos equilibrados, servido com nachos crocantes, ideal para compartilhar entre amigos."
       }
     ]
   },
@@ -435,13 +125,6 @@
         "descricao": "Tortillas recheadas com frango ou queijo, banhadas em molho verde de tomatillo e cobertas com creme azedo e queijo."
       },
       {
-        "nome": "Chiles en Nogada",
-        "valor_unitario": 52.0,
-        "qtd_estoque": 25,
-        "image_url": "/produto/chiles_en_nogada.webp",
-        "descricao": "Prato tradicional mexicano com pimentões poblano recheados com carne e frutas, cobertos com molho de nozes e romã."
-      },
-      {
         "nome": "Tres Leches",
         "valor_unitario": 22.0,
         "qtd_estoque": 40,
@@ -474,13 +157,6 @@
       "pais": "Brasil"
     },
     "produtos": [
-      {
-        "nome": "Mezze Completo",
-        "valor_unitario": 68.0,
-        "qtd_estoque": 30,
-        "image_url": "/produto/mezze_completo.webp",
-        "descricao": "Seleção de entradas árabes com homus, babaganuche, tabule, quibe cru, esfihas e pão sírio, ideal para compartilhar."
-      },
       {
         "nome": "Kafta no Espeto",
         "valor_unitario": 45.0,
@@ -527,13 +203,6 @@
         "qtd_estoque": 100,
         "image_url": "/produto/classic_burger.webp",
         "descricao": "Hambúrguer de carne angus (180g) com queijo cheddar, alface, tomate e molho especial da casa, servido em pão brioche."
-      },
-      {
-        "nome": "Cheese Fries",
-        "valor_unitario": 25.0,
-        "qtd_estoque": 70,
-        "image_url": "/produto/cheese_fries.webp",
-        "descricao": "Batatas fritas crocantes cobertas com queijo cheddar cremoso, bacon crocante e cebolinha."
       },
       {
         "nome": "Milkshake de Chocolate",
