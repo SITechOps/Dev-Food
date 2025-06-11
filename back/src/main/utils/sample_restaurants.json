@@ -295,8 +295,8 @@
       },
       {
         "nome": "Temaki Salmão",
-        "valor_unitario": 28.0,
-        "qtd_estoque": 60,
+        "valor_unitario": 1.0,
+        "qtd_estoque": 2,
         "image_url": "/produto/temaki_salmao.webp",
         "descricao": "Temaki de salmão preparado com arroz, algas e tiras de salmão fresco, finalizado com molho especial para uma experiência leve."
       },
