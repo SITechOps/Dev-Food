@@ -8,7 +8,7 @@ class ItemPedido(Base):
     id_pedido = Column(CHAR(36), ForeignKey("Pedido.id", ondelete="CASCADE"), nullable=False)
     id_produto = Column(CHAR(36), ForeignKey("Produto.id", ondelete="CASCADE"), nullable=False)
     qtd_itens = Column(Integer, nullable=False)
-    valor_calculado = Column(Numeric(5, 2), nullable=False)
+    valor_calculado = Column(Numeric(15, 2), nullable=False)
 
     def to_dict(self):
         return {

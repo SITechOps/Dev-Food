@@ -1,19 +1,24 @@
 import { Suspense } from "react";
-import { Loading } from "./components/shared/Loading";
-import Menu from "./components/shared/Menu";
-import LayoutRestaurante from "./components/Restaurante/LayoutRestaurante";
+import { Loading } from "./shared/components/Loading";
+import Menu from "./shared/components/Menu";
+import LayoutRestaurante from "./features/(Restaurante)";
 import AppRoutes from "./routes/AppRoutes";
-import { useAuth } from "./contexts/AuthContext";
-import { CarrinhoProvider } from "./contexts/CarrinhoContext";
-import { TaxaEntregaProvider } from "./contexts/TaxaEntregaContext";
-import { PagamentoProvider } from "./contexts/PagamaentoContext";
+import { useAuth } from "./shared/contexts/AuthContext";
+import { CarrinhoProvider } from "./shared/contexts/CarrinhoContext";
+import { TaxaEntregaProvider } from "./shared/contexts/TaxaEntregaContext";
+import { PagamentoProvider } from "./shared/contexts/PagamentoContext";
+import { RestauranteProdutoProvider } from "./shared/contexts/Restaurante&ProdutoContext";
+import { ConfirmacaoEnderecoProvider } from "./shared/contexts/ConfirmacaoEnderecoContext";
+import AlertasPersonalizados from "./shared/components/ui/AlertasPersonalizados/Alertas";
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen">
+    <>
       <Menu />
-      <main className="text-blue mx-auto w-4/5 max-w-screen-xl p-4">{children}</main>l
-    </div>
+      <div className="text-blue mx-auto w-4/5 max-w-screen-xl">
+        <main>{children}</main>
+      </div>
+    </>
   );
 };
 
@@ -26,21 +31,26 @@ export default function App() {
 
   return (
     <Suspense fallback={<Loading />}>
-      <CarrinhoProvider>
-        <AppWrapper>
-          {isAuthenticated && userData?.role === "restaurante" ? (
-            <LayoutRestaurante>
-              <AppRoutes />
-            </LayoutRestaurante>
-          ) : (
-            <PagamentoProvider>
-            <TaxaEntregaProvider>
-            <AppRoutes />
-            </TaxaEntregaProvider>
-            </PagamentoProvider>
-          )}
-        </AppWrapper>
-      </CarrinhoProvider>
+      <AlertasPersonalizados />
+      <ConfirmacaoEnderecoProvider>
+        <CarrinhoProvider>
+          <AppWrapper>
+            {isAuthenticated && userData?.role === "restaurante" ? (
+              <LayoutRestaurante>
+                <AppRoutes />
+              </LayoutRestaurante>
+            ) : (
+              <TaxaEntregaProvider>
+                <PagamentoProvider>
+                  <RestauranteProdutoProvider>
+                    <AppRoutes />
+                  </RestauranteProdutoProvider>
+                </PagamentoProvider>
+              </TaxaEntregaProvider>
+            )}
+          </AppWrapper>
+        </CarrinhoProvider>
+      </ConfirmacaoEnderecoProvider>
     </Suspense>
   );
 }

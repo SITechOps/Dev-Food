@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devfood
+      MYSQL_USER: dev_user
+      MYSQL_PASSWORD: dev1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+  # ngrok:
+  #   image: ngrok/ngrok:latest
+  #   container_name: ngrok_container
+  #   environment:
+  #     - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+  #   command: start --config /ngrok.yml --all
+  #   ports:
+  #     - "4040:4040"
+  #   volumes:
+  #     - ./ngrok.yml:/ngrok.yml
+  #   tty: true
+
+volumes:
+  mysql_data:

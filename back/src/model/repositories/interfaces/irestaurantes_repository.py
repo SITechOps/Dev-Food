@@ -41,3 +41,22 @@ class IRestaurantesRepository(ABC):
     @abstractmethod
     def delete(self, id_restaurante: str) -> None:
         raise NotImplementedError("Subclasses devem implementar este método")
+    
+    @abstractmethod
+    def update_image_path(self, id_restaurante: str, image_url: str) -> None:
+        raise NotImplementedError("Subclasses devem implementar este método")
+
+
+    @abstractmethod
+    def relatorio_receita_bruta(self, data_inicio: str, data_fim: str) -> list[dict]:
+        raise NotImplementedError("Subclasses devem implementar este método")
+
+
+    @abstractmethod
+    def relatorio_qtd_pedidos(self, data_inicio: str = None, data_fim: str = None) -> list[dict]:
+        raise NotImplementedError("Subclasses devem implementar este método")
+
+    
+    @abstractmethod
+    def relatorio_forma_pagamento_mais_usada(self, data_inicio: str = None, data_fim: str = None) -> list[dict]:
+        raise NotImplementedError("Subclasses devem implementar este método")
